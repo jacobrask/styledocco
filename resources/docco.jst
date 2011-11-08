@@ -1,5 +1,6 @@
 <%
-var root_path = relative_base(file_path, context).replace(/[^\/]+/g, '..');
+var root_path = relative_base(file_path, context);
+root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..');
 %>
 <!DOCTYPE html>
 
@@ -21,9 +22,11 @@ var root_path = relative_base(file_path, context).replace(/[^\/]+/g, '..');
               <%
               var source    = context.sources[i];
               var base_path = relative_base(source, context);
+              var base_path_padded = base_path.replace(new RegExp("/", 'g'), " / ");
+              var this_class = (source == file_path) ? "selected" : "";
               %>
-              <a class="source" href="<%= root_path + base_path + path.basename(source, path.extname(source)) %>.html">
-                <span class="base_path"><%= base_path %></span><span class="file_name"><%= path.basename(source) %></span>
+              <a class="source <%= this_class %>" href="<%= root_path + base_path + path.basename(source, path.extname(source)) %>.html">
+                <span class="base_path"><%= base_path_padded %></span><span class="file_name"><%= path.basename(source) %></span>
               </a>
             <% } %>
           </div>
@@ -34,6 +37,7 @@ var root_path = relative_base(file_path, context).replace(/[^\/]+/g, '..');
       <thead>
         <tr>
           <th class="docs">
+            <div class="filepath"><%= relative_base(file_path, context) %></div>
             <h1>
               <%= title %>
             </h1>

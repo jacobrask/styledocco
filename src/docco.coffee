@@ -177,8 +177,6 @@ languages =
     name: 'ruby', symbol: '#'
   '.py':
     name: 'python', symbol: '#'
-  '.xml':
-    name: 'xml', symbol: '<!--'
 
 # Build out the appropriate matchers and delimiters for each language.
 for ext, l of languages
@@ -204,7 +202,8 @@ get_language = (source) -> languages[path.extname(source)]
 
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath, context) ->
-  result = if context.relative_root then path.dirname(filepath)[context.relative_root.length..] + '/' else ''
+  result = path.dirname(filepath) + '/' 
+  console.log result
 
   if result == '/' then '' else result
 
@@ -256,35 +255,37 @@ parse_args = (callback) ->
   # display help?)
   return unless args.length
 
-  # The traditional way of running docco is to just pass a globed list of files
-  # to build docs for.
-  unless args.length == 1 and fs.statSync(args[0]).isDirectory()
-    return callback(args)
-
-  # If we are given a single directory, treat this as a relative root and
-  # recursively build docs that mirror its file and subdirectory structure.
-  relative_root = args[0].replace(/\/+$/, '')
+  # Collect all of the directories or file paths to then pass onto the 'find'
+  # command
+  roots = (a.replace(/\/+$/, '') for a in args)
+  roots = roots.join(" ")
+    
+  # Only include files that we know how to handle
+  lang_filter = for ext of languages 
+    " -name '*#{ext}' "
+  lang_filter = lang_filter.join ' -o '
 
   # Rather than deal with building a recursive tree walker via the fs module,
   # let's save ourselves typing and testing and drop to the shell
-  exec "find #{relative_root} -type f", (err, stdout) ->
+  exec "find #{roots} -type f \\( #{lang_filter} \\)", (err, stdout) ->
     throw err if err
 
     # Don't include hidden files, either
     sources = stdout.split("\n").filter (file) -> file != '' and path.basename(file)[0] != '.'
+    console.log sources
 
-    console.log "docco: Recursively generating docs underneath #{relative_root}/"
+    console.log "docco: Recursively generating docs underneath #{roots}/"
 
-    callback(sources, relative_root + '/')
+    callback(sources)
 
-parse_args (sources, relative_root) ->
+parse_args (sources) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
-  context = sources: sources, relative_root: relative_root
+  context = sources: sources, relative_root: ""
 
   ensure_directory 'docs', ->
     fs.writeFile 'docs/docco.css', docco_styles
-    files = sources.slice(0)
+    files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
 
