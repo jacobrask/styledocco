@@ -203,8 +203,6 @@ get_language = (source) -> languages[path.extname(source)]
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath, context) ->
   result = path.dirname(filepath) + '/' 
-  console.log result
-
   if result == '/' then '' else result
 
 # Compute the destination HTML path for an input source file path. If the source
