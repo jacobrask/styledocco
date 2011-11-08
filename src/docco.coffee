@@ -156,6 +156,35 @@ generate_html = (source, context, sections) ->
 
         write_func()
 
+
+generate_readme = (context) ->
+  title = "README"
+  dest = "docs/readme.html"
+  source = "README.md"
+  content = showdown.makeHtml readme_markdown
+  console.log content
+  html = readme_template {
+    title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json
+  }
+
+  # Generate the file's base dir as required
+  target_dir = path.dirname(dest)
+  write_func = ->
+    console.log "docco: #{source} -> #{dest}"
+    fs.writeFile dest, html, (err) -> throw err if err
+
+  fs.stat target_dir, (err, stats) ->
+    throw err if err and err.code != 'ENOENT'
+
+    return write_func() unless err
+
+    if err
+      exec "mkdir -p #{target_dir}", (err) ->
+        throw err if err
+
+        write_func()
+
+
 #### Helpers & Setup
 
 # Require our external dependencies, including **Showdown.js**
@@ -231,8 +260,22 @@ template = (str) ->
        .split('%>').join("p.push('") +
        "');}return p.join('');"
 
+file_exists = (path) ->
+  try 
+    return fs.lstatSync(path).isFile
+  catch ex
+    return false
+
 # Create the template that we will use to generate the Docco HTML page.
 docco_template  = template fs.readFileSync(__dirname + '/../resources/docco.jst').toString()
+
+# README.md template to be use to generate the main REAME file
+readme_template  = template fs.readFileSync(__dirname + '/../resources/readme.jst').toString()
+readme_path = process.cwd() + '/README.md'
+readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
+
+package_path = process.cwd() + '/package.json'
+package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
 
 # The CSS styles we'd like to apply to the documentation.
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
@@ -296,4 +339,5 @@ parse_args (sources, project_name) ->
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
+    generate_readme(context)
 

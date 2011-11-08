@@ -40,32 +40,35 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
       <thead>
         <tr>
           <th class="docs">
-            <h1>
-              <%= title %>
-            </h1>
-            <div class="filepath"><%= relative_base(file_path, context) %></div>
+          <h1></h1>
           </th>
           <th class="code">
           </th>
         </tr>
       </thead>
       <tbody>
-        <% for (var i=0, l=sections.length; i<l; i++) { %>
-          <% var section = sections[i]; %>
-          <tr id="section-<%= i + 1 %>">
-            <td class="docs">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-<%= i + 1 %>">&#182;</a>
-              </div>
-              <%= section.docs_html %>
-            </td>
-            <td class="code">
-              <%= section.code_html %>
-            </td>
-          </tr>
-        <% } %>
+        <tr>
+          <td class="docs">
+            <h3>Name</h3>
+              <p><%= package_json.name %></p>
+            <h3>Description</h3>
+             <p><%= package_json.description %></p>
+            <h3>Author</h3>
+             <p><%= package_json.author %></p>
+            <h3>Version</h3>
+             <p><%= package_json.author %></p>
+            <h3>Dependencies</h3>
+            <% for(dep in package_json.dependencies) { %>
+              <b><%= dep %></b> : <%= package_json.dependencies[dep] %><br/>
+            <% } %>
+          </td>
+          <td class="code">
+             <%= content %>
+          </td>
+        </tr>
       </tbody>
     </table>
+
     <% if(context.project_name) { %>
     <div id="projectname"><%= context.project_name %></div>
     <% } %>
