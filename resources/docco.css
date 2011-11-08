@@ -31,6 +31,19 @@ h1, h2, h3, h4, h5, h6 {
   border-left: 1px solid #e5e5ee;
   z-index: -1;
 }
+#projectname {
+  top: 2px;
+  font-style: italic;
+  -webkit-box-shadow: 0 0 25px #777;
+  -moz-box-shadow: 0 0 25px #777;
+  padding: 5px 10px;
+  left: 0;
+  position: fixed;
+  font-size: 18px;
+  left: 50px;
+  background-color: white;      
+}
+
 #jump_to, #jump_page {
   background: white;
   -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
@@ -95,9 +108,8 @@ table td {
     text-align: left;
   }
     .docs .filepath {
-      top: 25px;
-      position: absolute;
-      margin-left: -10px;
+      margin-top: -10px;
+      margin-left: 25px;
       color: #8E8A96;
     }
     .docs pre {

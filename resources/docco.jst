@@ -37,10 +37,10 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
       <thead>
         <tr>
           <th class="docs">
-            <div class="filepath"><%= relative_base(file_path, context) %></div>
             <h1>
               <%= title %>
             </h1>
+            <div class="filepath"><%= relative_base(file_path, context) %></div>
           </th>
           <th class="code">
           </th>
@@ -63,6 +63,9 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
         <% } %>
       </tbody>
     </table>
+    <% if(context.project_name) { %>
+    <div id="projectname"><%= context.project_name %></div>
+    <% } %>
   </div>
 </body>
 </html>

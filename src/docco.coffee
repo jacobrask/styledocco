@@ -247,7 +247,17 @@ highlight_end   = '</pre></div>'
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
 parse_args = (callback) ->
-  args = process.ARGV.sort()
+
+  args = process.ARGV
+  project_name = ""
+
+  # Optional Project name following -name option
+  if args[0] == "-name"
+    args.shift()
+    project_name = args.shift()
+
+  # Sort the list of files and directories
+  args = args.sort()
 
   # Preserving past behavior: if no args are given, we do nothing (eventually
   # display help?)
@@ -274,12 +284,12 @@ parse_args = (callback) ->
 
     console.log "docco: Recursively generating docs underneath #{roots}/"
 
-    callback(sources)
+    callback(sources, project_name)
 
-parse_args (sources) ->
+parse_args (sources, project_name) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
-  context = sources: sources, relative_root: ""
+  context = sources: sources, project_name: project_name
 
   ensure_directory 'docs', ->
     fs.writeFile 'docs/docco.css', docco_styles
