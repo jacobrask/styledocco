@@ -49,14 +49,22 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
       <tbody>
         <tr>
           <td class="docs">
-            <h3>Name</h3>
+            <% if(package_json.name) { %>
+              <h3>Name</h3>
               <p><%= package_json.name %></p>
-            <h3>Description</h3>
+            <% } %>
+            <% if(package_json.description) { %>
+             <h3>Description</h3>
              <p><%= package_json.description %></p>
-            <h3>Author</h3>
+            <% } %>
+            <% if(package_json.author) { %>
+             <h3>Author</h3>
              <p><%= package_json.author %></p>
-            <h3>Version</h3>
-             <p><%= package_json.author %></p>
+            <% } %>
+            <% if(package_json.version) { %>
+              <h3>Version</h3>
+              <p><%= package_json.version %></p>
+            <% } %>
             <h3>Dependencies</h3>
             <% for(dep in package_json.dependencies) { %>
               <b><%= dep %></b> : <%= package_json.dependencies[dep] %><br/>

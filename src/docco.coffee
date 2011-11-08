@@ -161,8 +161,16 @@ generate_readme = (context) ->
   title = "README"
   dest = "docs/readme.html"
   source = "README.md"
+
+  # README.md template to be use to generate the main REAME file
+  readme_template  = template fs.readFileSync(__dirname + '/../resources/readme.jst').toString()
+  readme_path = process.cwd() + '/README.md'
+  readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
+  package_path = process.cwd() + '/package.json'
+  package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
+
   content = showdown.makeHtml readme_markdown
-  console.log content
+
   html = readme_template {
     title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json
   }
@@ -269,14 +277,6 @@ file_exists = (path) ->
 # Create the template that we will use to generate the Docco HTML page.
 docco_template  = template fs.readFileSync(__dirname + '/../resources/docco.jst').toString()
 
-# README.md template to be use to generate the main REAME file
-readme_template  = template fs.readFileSync(__dirname + '/../resources/readme.jst').toString()
-readme_path = process.cwd() + '/README.md'
-readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
-
-package_path = process.cwd() + '/package.json'
-package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
-
 # The CSS styles we'd like to apply to the documentation.
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
 
@@ -323,7 +323,6 @@ parse_args = (callback) ->
 
     # Don't include hidden files, either
     sources = stdout.split("\n").filter (file) -> file != '' and path.basename(file)[0] != '.'
-    console.log sources
 
     console.log "docco: Recursively generating docs underneath #{roots}/"
 
