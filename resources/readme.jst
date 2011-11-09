@@ -65,10 +65,16 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
               <h3>Version</h3>
               <p><%= package_json.version %></p>
             <% } %>
-            <h3>Dependencies</h3>
-            <% for(dep in package_json.dependencies) { %>
-              <b><%= dep %></b> : <%= package_json.dependencies[dep] %><br/>
-            <% } %>
+              <h3>Dependencies</h3>
+              <p>
+                <% for(dep in package_json.dependencies) { %>
+                  <b><%= dep %></b> : <%= package_json.dependencies[dep] %><br/>
+                <% } %>
+                <% if(code_stats) { %>
+                  <h3>Stats</h3>
+                  <pre class="code_stats"><%= code_stats %></pre>
+                <% } %>
+              </p>
           </td>
           <td class="code">
              <%= content %>

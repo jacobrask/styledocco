@@ -157,7 +157,7 @@ generate_html = (source, context, sections) ->
         write_func()
 
 
-generate_readme = (context) ->
+generate_readme = (context, sources) ->
   title = "README"
   dest = "docs/readme.html"
   source = "README.md"
@@ -171,27 +171,33 @@ generate_readme = (context) ->
 
   content = showdown.makeHtml readme_markdown
 
-  html = readme_template {
-    title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json
-  }
+  cloc sources.join(" "), (code_stats) ->
 
-  # Generate the file's base dir as required
-  target_dir = path.dirname(dest)
-  write_func = ->
-    console.log "docco: #{source} -> #{dest}"
-    fs.writeFile dest, html, (err) -> throw err if err
+    html = readme_template {
+      title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json, code_stats: code_stats
+    }
 
-  fs.stat target_dir, (err, stats) ->
-    throw err if err and err.code != 'ENOENT'
+    # Generate the file's base dir as required
+    target_dir = path.dirname(dest)
+    write_func = ->
+      console.log "docco: #{source} -> #{dest}"
+      fs.writeFile dest, html, (err) -> throw err if err
 
-    return write_func() unless err
+    fs.stat target_dir, (err, stats) ->
+      throw err if err and err.code != 'ENOENT'
 
-    if err
-      exec "mkdir -p #{target_dir}", (err) ->
-        throw err if err
+      return write_func() unless err
 
-        write_func()
+      if err
+        exec "mkdir -p #{target_dir}", (err) ->
+          throw err if err
+          write_func()
 
+
+cloc = (paths, callback) ->
+  exec "#{__dirname}/../vendor/cloc.pl #{paths}", (err, stdout) ->
+    console.log "Calculating project stats failed #{err}" if err
+    callback stdout
 
 #### Helpers & Setup
 
@@ -326,9 +332,9 @@ parse_args = (callback) ->
 
     console.log "docco: Recursively generating docs underneath #{roots}/"
 
-    callback(sources, project_name)
+    callback(sources, project_name, args)
 
-parse_args (sources, project_name) ->
+parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
   context = sources: sources, project_name: project_name
@@ -338,5 +344,5 @@ parse_args (sources, project_name) ->
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
-    generate_readme(context)
+    generate_readme(context, raw_paths)
 

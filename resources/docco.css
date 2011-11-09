@@ -119,6 +119,9 @@ table td {
       margin: 15px 0 15px;
       padding-left: 15px;
     }
+    .docs pre.code_stats {
+      font-size: 60%;
+    }
     .docs p tt, .docs p code {
       background: #f8f8ff;
       border: 1px solid #dedede;
