@@ -19,7 +19,7 @@ task 'install', 'install the `docco` command into /usr/local (or --prefix)', (op
 
 task 'doc', 'rebuild the Docco documentation', ->
   exec([
-    'bin/docco src/docco.coffee'
+    'bin/generate src/docco.coffee'
     'sed "s/docco.css/resources\\/docco.css/" < docs/docco.html > index.html'
     'rm -r docs'
   ].join(' && '), (err) ->
