@@ -8,11 +8,11 @@ task 'build', 'continually build the docco library with --watch', ->
 
 task 'install', 'install the `docco` command into /usr/local (or --prefix)', (options) ->
   base = options.prefix or '/usr/local'
-  lib  = base + '/lib/docco'
+  lib  = base + '/lib/docco-husky'
   exec([
     'mkdir -p ' + lib
     'cp -rf bin README resources vendor lib ' + lib
-    'ln -sf ' + lib + '/bin/docco ' + base + '/bin/docco'
+    'ln -sf ' + lib + '/bin/generate ' + base + '/bin/docco-husky'
   ].join(' && '), (err, stdout, stderr) ->
    if err then console.error stderr
   )
