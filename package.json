@@ -29,7 +29,7 @@
   },
   "main": "./lib/docco",
   "bin": {
-    "docco": "./bin/docco"
+    "docco-husky": "./bin/generate"
   },
   "scripts": {
     "install": "scripts/install.sh"
