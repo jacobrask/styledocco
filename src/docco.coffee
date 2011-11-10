@@ -1,3 +1,5 @@
+# > *forked from the origina [Docco](https://github.com/jashkenas/docco) project, updated with abandon*
+#
 # **Docco** is a quick-and-dirty, hundred-line-long, literate-programming-style
 # documentation generator. It produces HTML
 # that displays your comments alongside your code. Comments are passed through
@@ -195,7 +197,7 @@ generate_readme = (context, sources) ->
 
 
 cloc = (paths, callback) ->
-  exec "#{__dirname}/../vendor/cloc.pl #{paths}", (err, stdout) ->
+  exec "#{__dirname}/../vendor/cloc.pl --quiet --read-lang-def=#{__dirname}/../resources/cloc_definitions.txt #{paths}", (err, stdout) ->
     console.log "Calculating project stats failed #{err}" if err
     callback stdout
 

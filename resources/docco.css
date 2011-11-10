@@ -43,16 +43,33 @@ h1, h2, h3, h4, h5, h6 {
   left: 50px;
   background-color: white;      
 }
-
 #content {
   padding: 10px 25px 1px 50px;
 }
+  #content pre {
+    margin: 1em 0;
+    font-size: 12px;
+    background-color: #EEE;
+    border: 1px solid #DDD;
+    padding: 5px;
+    color: #444;
+    overflow: auto;
+    -webkit-box-shadow: rgba(0,0,0,0.07) 0 1px 2px inset;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+  }
+    #content pre code {
+      padding: 0!important;
+      font-size: 12px!important;
+      background-color: #EEE!important;
+      border: none!important;
+    }
 #jump_to, #jump_page {
   background: white;
   -webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
   -webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
   font: 10px Arial;
-  text-transform: uppercase;
   cursor: pointer;
   text-align: right;
 }
@@ -72,6 +89,7 @@ h1, h2, h3, h4, h5, h6 {
       padding: 5px 0 3px;
       margin: 0 0 25px 25px;
       height: 400px;
+      min-width: 150px;
       overflow-y: auto;
     }
       #jump_page .source {
