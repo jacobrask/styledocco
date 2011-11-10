@@ -43,6 +43,12 @@ h1, h2, h3, h4, h5, h6 {
   left: 50px;
   background-color: white;      
 }
+  #projectname a {
+    text-decoration: none;
+  }
+    #projectname a:hover {
+      text-decoration: underline;
+    }
 #content {
   padding: 10px 25px 1px 50px;
 }

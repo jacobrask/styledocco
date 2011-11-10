@@ -13,7 +13,7 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
 <body>
   <div id="container">
     <div id="background"></div>
-    <% if (context.sources.length > 1) { %>
+    <% if (context.sources.length > 0) { %>
       <div id="jump_to">
         Jump To &hellip;
         <div id="jump_wrapper">
@@ -84,7 +84,7 @@ root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
     </table>
 
     <% if(context.project_name) { %>
-    <div id="projectname"><%= context.project_name %></div>
+    <div id="projectname"><a href="<%= root_path %>readme.html"><%= context.project_name %></a></div>
     <% } %>
   </div>
 </body>
