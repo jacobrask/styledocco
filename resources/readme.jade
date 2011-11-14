@@ -34,14 +34,17 @@ html
                 p #{package_json.version}
 
               h3 Dependencies 
+              ul
+                each dep, key in package_json.dependencies
+                  li 
+                    b #{key} 
+                    span #{dep}
               p
-                each dep in package_json.dependencies
-                  b #{dep}
-                  #{package_json.dependencies[dep]}
                 if code_stats
                   h3 Stats
                   pre.code_stats !{code_stats}
-            td#content.code !{content}    
+            td#content.code !{content}  
+      div#generated generated #{new Date()}  
       if context.project_name
         #projectname
           a(href="#{root_path}readme.html") #{context.project_name}

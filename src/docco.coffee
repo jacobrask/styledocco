@@ -268,7 +268,7 @@ for ext, l of languages
 
   # Since we'll only handle /* */ multilin comments for now, test for them explicitly
   if l.multi_start == "/*"
-    l.multi_start_matcher = new RegExp(/^\s*\/\*[.]*/)
+    l.multi_start_matcher = new RegExp(/^[\s]*\/\*[.]*/)
   if l.multi_end == "*/"
     l.multi_end_matcher = new RegExp(/.*\*\/.*/)
 

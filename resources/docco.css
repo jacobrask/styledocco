@@ -49,6 +49,11 @@ h1, h2, h3, h4, h5, h6 {
     #projectname a:hover {
       text-decoration: underline;
     }
+#generated {
+  margin: 10px;
+  font-size: 80%;
+  float: right;
+}
 #content {
   padding: 10px 25px 1px 50px;
 }
