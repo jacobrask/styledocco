@@ -29,7 +29,8 @@
     "url": "https://github.com/mbrevoort/docco-husky.git"
   },
   "dependencies": {
-    "coffee-script": "latest"
+    "coffee-script": "latest",
+    "dox": "0.1.2"
   },
   "directories": {
     "lib": "./lib"

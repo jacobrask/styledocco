@@ -82,11 +82,31 @@ parse = (source, code) ->
   language = get_language source
   has_code = docs_text = code_text = ''
 
+  in_multi = false
+  multi_accum = ""
+
   save = (docs, code) ->
     sections.push docs_text: docs, code_text: code
 
   for line in lines
-    if line.match(language.comment_matcher) and not line.match(language.comment_filter)
+    if line.match(new RegExp(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)) or in_multi
+      console.log "multiline #{line}"
+
+      if has_code
+        save docs_text, code_text
+        has_code = docs_text = code_text = ''
+
+      in_multi = true
+      multi_accum += line + '\n'
+      if line.match(new RegExp(/.*\*\/.*/))
+        in_multi = false
+        console.log multi_accum
+        parsed = require('dox').parseComments( multi_accum )[0]
+        for tag in parsed.tags
+          docs_text += "* **#{tag.type}** #{tag.description}\n"
+        docs_text += parsed.description.full
+        multi_accum = ''
+    else if line.match(language.comment_matcher) and not line.match(language.comment_filter)
       if has_code
         save docs_text, code_text
         has_code = docs_text = code_text = ''
