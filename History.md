@@ -1,5 +1,5 @@
 
-0.2.0 - Nov 1?, 2011
+0.2.0 - Nov 14, 2011
 
 * switched templating to Jade
 * added multiline comment support for Javascript
