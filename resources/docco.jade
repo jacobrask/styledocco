@@ -1,0 +1,31 @@
+- var root_path = relative_base(file_path, context)
+- root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
+!!! 5
+html
+  head
+    title=title
+    meta( http-equiv='Content-Type', content='text/html', charset='UTF-8')
+    link( rel='stylesheet', media='all', href="#{root_path}docco.css" )
+  body
+    div#container
+      div#background
+      if context.sources.length > 0
+        include includes/menu
+      table(cellpadding="0", cellspacing="0")
+        thead
+          tr
+            th.docs
+              h1 #{title}
+              div.filepath #{relative_base(file_path, context)}
+            th.code
+        tbody
+          each section, i in sections
+            tr(id="section-#{ i + 1}")
+              td.docs
+                div.pilwrap
+                  a.pilcrow(href="#section-#{i+1}") &#182;
+                !{section.docs_html}
+              td.code !{section.code_html}
+      if context.project_name
+        #projectname
+          a(href="#{root_path}readme.html") #{context.project_name}

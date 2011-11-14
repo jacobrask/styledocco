@@ -165,7 +165,7 @@ generate_readme = (context, sources) ->
   source = "README.md"
 
   # README.md template to be use to generate the main REAME file
-  readme_template  = template fs.readFileSync(__dirname + '/../resources/readme.jst').toString()
+  readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = process.cwd() + '/README.md'
   readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
   package_path = process.cwd() + '/package.json'
@@ -208,6 +208,7 @@ cloc = (paths, callback) ->
 fs       = require 'fs'
 path     = require 'path'
 showdown = require('./../vendor/showdown').Showdown
+jade     = require 'jade'
 {spawn, exec} = require 'child_process'
 
 # A list of the languages that Docco supports, mapping the file extension to
@@ -261,21 +262,6 @@ destination = (filepath, context) ->
 ensure_directory = (dir, callback) ->
   exec "mkdir -p #{dir}", -> callback()
 
-# Micro-templating, originally by John Resig, borrowed by way of
-# [Underscore.js](http://documentcloud.github.com/underscore/).
-template = (str) ->
-  new Function 'obj',
-    'var p=[],print=function(){p.push.apply(p,arguments);};' +
-    'with(obj){p.push(\'' +
-    str.replace(/[\r\t\n]/g, " ")
-       .replace(/'(?=[^<]*%>)/g,"\t")
-       .split("'").join("\\'")
-       .split("\t").join("'")
-       .replace(/<%=(.+?)%>/g, "',$1,'")
-       .split('<%').join("');")
-       .split('%>').join("p.push('") +
-       "');}return p.join('');"
-
 file_exists = (path) ->
   try 
     return fs.lstatSync(path).isFile
@@ -283,7 +269,7 @@ file_exists = (path) ->
     return false
 
 # Create the template that we will use to generate the Docco HTML page.
-docco_template  = template fs.readFileSync(__dirname + '/../resources/docco.jst').toString()
+docco_template  = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
 
 # The CSS styles we'd like to apply to the documentation.
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
