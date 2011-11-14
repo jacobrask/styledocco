@@ -87,25 +87,27 @@ parse = (source, code) ->
 
   save = (docs, code) ->
     sections.push docs_text: docs, code_text: code
-
   for line in lines
-    if line.match(new RegExp(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)) or in_multi
-      console.log "multiline #{line}"
+    if line.match(language.multi_start_matcher) or in_multi
 
       if has_code
         save docs_text, code_text
         has_code = docs_text = code_text = ''
 
+      # Found the start of a multiline comment line, set in_multi to true
+      # and begin accumulating lines untime we reach a line that finishes
+      # the multiline comment
       in_multi = true
       multi_accum += line + '\n'
-      if line.match(new RegExp(/.*\*\/.*/))
+
+      # If we reached the end of a multiline comment, template the result
+      # and set in_multi to false, reset multi_accum
+      if line.match(language.multi_end_matcher)
         in_multi = false
-        console.log multi_accum
-        parsed = require('dox').parseComments( multi_accum )[0]
-        for tag in parsed.tags
-          docs_text += "* **#{tag.type}** #{tag.description}\n"
-        docs_text += parsed.description.full
+        parsed = dox.parseComments( multi_accum )[0]
+        docs_text += dox_template(parsed);
         multi_accum = ''
+
     else if line.match(language.comment_matcher) and not line.match(language.comment_filter)
       if has_code
         save docs_text, code_text
@@ -185,7 +187,7 @@ generate_readme = (context, sources) ->
   source = "README.md"
 
   # README.md template to be use to generate the main REAME file
-  readme_template  = template fs.readFileSync(__dirname + '/../resources/readme.jst').toString()
+  readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = process.cwd() + '/README.md'
   readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
   package_path = process.cwd() + '/package.json'
@@ -228,6 +230,8 @@ cloc = (paths, callback) ->
 fs       = require 'fs'
 path     = require 'path'
 showdown = require('./../vendor/showdown').Showdown
+jade     = require 'jade'
+dox      = require 'dox'
 {spawn, exec} = require 'child_process'
 
 # A list of the languages that Docco supports, mapping the file extension to
@@ -237,7 +241,7 @@ languages =
   '.coffee':
     name: 'coffee-script', symbol: '#'
   '.js':
-    name: 'javascript', symbol: '//'
+    name: 'javascript', symbol: '//', multi_start: "/*", multi_end: "*/"
   '.rb':
     name: 'ruby', symbol: '#'
   '.py':
@@ -262,6 +266,12 @@ for ext, l of languages
   # Note: the class is "c" for Python and "c1" for the other languages
   l.divider_html = new RegExp('\\n*<span class="c1?">' + l.symbol + 'DIVIDER<\\/span>\\n*')
 
+  # Since we'll only handle /* */ multilin comments for now, test for them explicitly
+  if l.multi_start == "/*"
+    l.multi_start_matcher = new RegExp(/^\s*\/\*[.]*/)
+  if l.multi_end == "*/"
+    l.multi_end_matcher = new RegExp(/.*\*\/.*/)
+
 # Get the current language we're documenting, based on the extension.
 get_language = (source) -> languages[path.extname(source)]
 
@@ -281,21 +291,6 @@ destination = (filepath, context) ->
 ensure_directory = (dir, callback) ->
   exec "mkdir -p #{dir}", -> callback()
 
-# Micro-templating, originally by John Resig, borrowed by way of
-# [Underscore.js](http://documentcloud.github.com/underscore/).
-template = (str) ->
-  new Function 'obj',
-    'var p=[],print=function(){p.push.apply(p,arguments);};' +
-    'with(obj){p.push(\'' +
-    str.replace(/[\r\t\n]/g, " ")
-       .replace(/'(?=[^<]*%>)/g,"\t")
-       .split("'").join("\\'")
-       .split("\t").join("'")
-       .replace(/<%=(.+?)%>/g, "',$1,'")
-       .split('<%').join("');")
-       .split('%>').join("p.push('") +
-       "');}return p.join('');"
-
 file_exists = (path) ->
   try 
     return fs.lstatSync(path).isFile
@@ -303,7 +298,9 @@ file_exists = (path) ->
     return false
 
 # Create the template that we will use to generate the Docco HTML page.
-docco_template  = template fs.readFileSync(__dirname + '/../resources/docco.jst').toString()
+docco_template  = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
+
+dox_template = jade.compile fs.readFileSync(__dirname + '/../resources/dox.jade').toString(), { filename: __dirname + '/../resources/dox.jade' }
 
 # The CSS styles we'd like to apply to the documentation.
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()

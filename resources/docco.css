@@ -152,6 +152,28 @@ table td {
       font-size: 12px;
       padding: 0 0.2em;
     }
+    .docs .dox {
+      border-top: #eee solid 1px;
+      padding-bottom:10px;
+    }
+      .docs .dox .details {
+        padding: 10px;
+        background-color: #F5F5FF;
+        border: 1px solid #E5E5EE;
+        margin-bottom: 10px;      
+      }
+      .docs .dox .dox_tag_title {
+        font-weight: bold;
+      }
+      .docs .dox .dox_tag_detail {
+        margin-left: 10px;
+      }
+        .docs .dox .dox_tag_detail span{
+          margin-right: 5px;
+        }
+      .docs .dox .dox_type {
+        font-style: italic;
+      }
     .pilwrap {
       position: relative;
     }

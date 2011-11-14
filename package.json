@@ -8,7 +8,7 @@
     "coffeescript"
   ],
   "author": "Mike Brevoort <mike@brevoort.com>",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "licenses": [
     {
       "type": "MIT",
@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "coffee-script": "latest",
-    "dox": "0.1.2"
+    "dox": "0.1.2",
+    "jade": "0.17.0"
   },
   "directories": {
     "lib": "./lib"
