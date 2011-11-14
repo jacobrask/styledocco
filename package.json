@@ -8,7 +8,7 @@
     "coffeescript"
   ],
   "author": "Mike Brevoort <mike@brevoort.com>",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "licenses": [
     {
       "type": "MIT",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mbrevoort/docco-husky.git"
+    "url": "git://github.com/mbrevoort/docco-husky.git"
   },
   "dependencies": {
     "coffee-script": "latest",
