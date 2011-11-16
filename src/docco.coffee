@@ -104,8 +104,12 @@ parse = (source, code) ->
       # and set in_multi to false, reset multi_accum
       if line.match(language.multi_end_matcher)
         in_multi = false
-        parsed = dox.parseComments( multi_accum )[0]
-        docs_text += dox_template(parsed);
+        try
+          parsed = dox.parseComments( multi_accum )[0]
+          docs_text += dox_template(parsed);
+        catch error
+          console.log "Error parsing comments with Dox: #{error}"
+          docs_text = multi_accum
         multi_accum = ''
 
     else if line.match(language.comment_matcher) and not line.match(language.comment_filter)
@@ -269,10 +273,16 @@ for ext, l of languages
   l.divider_html = new RegExp('\\n*<span class="c1?">' + l.symbol + 'DIVIDER<\\/span>\\n*')
 
   # Since we'll only handle /* */ multilin comments for now, test for them explicitly
+  # Otherwise set the multi matchers to an unmatchable RegEx
   if l.multi_start == "/*"
     l.multi_start_matcher = new RegExp(/^[\s]*\/\*[.]*/)
+  else
+    l.multi_start_matcher = new RegExp(/a^/)
   if l.multi_end == "*/"
     l.multi_end_matcher = new RegExp(/.*\*\/.*/)
+  else
+    l.multi_end_matcher = new RegExp(/a^/)
+
 
 # Get the current language we're documenting, based on the extension.
 get_language = (source) -> languages[path.extname(source)]
