@@ -8,7 +8,7 @@
     "coffeescript"
   ],
   "author": "Mike Brevoort <mike@brevoort.com>",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "licenses": [
     {
       "type": "MIT",
@@ -16,7 +16,7 @@
     }
   ],
   "contributors": [
-    { "name": "Mike Brevoort", "email": "mike@brevoort.com"},
+    "Mike Brevoort <mike@brevoort.com>",
     "Jeremy Ashkenas"
   ],
   "engines": {
