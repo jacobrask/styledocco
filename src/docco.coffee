@@ -246,6 +246,8 @@ languages =
     name: 'ruby', symbol: '#'
   '.py':
     name: 'python', symbol: '#'
+  '.java':
+    name: 'java', symbol: '//', multi_start: "/*", multi_end: "*/"
 
 # Build out the appropriate matchers and delimiters for each language.
 for ext, l of languages

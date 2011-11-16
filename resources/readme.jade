@@ -19,26 +19,26 @@ html
         tbody
           tr(id="section")
             td.docs
+              if package_json && package_json.name
+                if package_json.name
+                  h3 Name
+                  p #{package_json.name}
+                if package_json.description
+                  h3 Description
+                  p #{package_json.description}
+                if package_json.author
+                  h3 Author
+                  p #{package_json.author}
+                if package_json.version
+                  h3 Version
+                  p #{package_json.version}
 
-              if package_json.name
-                h3 Name
-                p #{package_json.name}
-              if package_json.description
-                h3 Description
-                p #{package_json.description}
-              if package_json.author
-                h3 Author
-                p #{package_json.author}
-              if package_json.version
-                h3 Version
-                p #{package_json.version}
-
-              h3 Dependencies 
-              ul
-                each dep, key in package_json.dependencies
-                  li 
-                    b #{key} 
-                    span #{dep}
+                h3 Dependencies 
+                ul
+                  each dep, key in package_json.dependencies
+                    li 
+                      b #{key} 
+                      span #{dep}
               p
                 if code_stats
                   h3 Stats

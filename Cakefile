@@ -25,3 +25,12 @@ task 'doc', 'rebuild the Docco documentation', ->
   ].join(' && '), (err) ->
     throw err if err
   )
+
+task 'test', 'test the doc generator', ->
+  exec([
+    'rm -rf test/docs'
+    'cd test'
+    '../bin/generate .'
+  ].join(' && '), (err) ->
+    throw err if err
+  )
