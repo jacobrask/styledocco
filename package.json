@@ -8,7 +8,7 @@
     "coffeescript"
   ],
   "author": "Mike Brevoort <mike@brevoort.com>",
-  "version": "0.3.0",
+  "version": "0.2.1",
   "licenses": [
     {
       "type": "MIT",
@@ -16,6 +16,7 @@
     }
   ],
   "contributors": [
+    { "name": "Mike Brevoort", "email": "mike@brevoort.com"},
     "Jeremy Ashkenas"
   ],
   "engines": {
@@ -31,7 +32,8 @@
   "dependencies": {
     "coffee-script": "latest",
     "dox": "0.1.2",
-    "jade": "0.17.0"
+    "jade": "0.17.0",
+    "gravatar": "1.0.3"
   },
   "directories": {
     "lib": "./lib"

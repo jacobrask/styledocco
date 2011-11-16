@@ -202,7 +202,7 @@ generate_readme = (context, sources) ->
   cloc sources.join(" "), (code_stats) ->
 
     html = readme_template {
-      title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json, code_stats: code_stats
+      title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json, code_stats: code_stats, gravatar: gravatar
     }
 
     # Generate the file's base dir as required
@@ -236,6 +236,7 @@ path     = require 'path'
 showdown = require('./../vendor/showdown').Showdown
 jade     = require 'jade'
 dox      = require 'dox'
+gravatar = require 'gravatar'
 {spawn, exec} = require 'child_process'
 
 # A list of the languages that Docco supports, mapping the file extension to
@@ -322,7 +323,6 @@ highlight_start = '<div class="highlight"><pre>'
 
 # The end of each Pygments highlight block.
 highlight_end   = '</pre></div>'
-
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
