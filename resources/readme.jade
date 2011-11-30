@@ -34,10 +34,13 @@ html
             td.docs
               if package_json && package_json.name
                 if package_json.name
-                  h3 Name
-                  p #{package_json.name}
+                  h1 
+                    if package_json.homepage 
+                      a( href="#{package_json.homepage}")
+                        #{package_json.name}
+                    else
+                      #{package_json.name}
                 if package_json.description
-                  h3 Description
                   p #{package_json.description}
                 if package_json.version
                   h3 Version
