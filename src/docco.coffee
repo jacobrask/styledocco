@@ -363,16 +363,18 @@ parse_args = (callback) ->
 
     callback(sources, project_name, args)
 
-configuration = {}
-check_config = (package)->
+check_config = (context,pkg)->
   defaults = {
     css: (__dirname + '/../resources/docco.css')
+    show_timestamp: true
   }
-  unless package.docco_configuration?
-    configuration = defaults
+  context.config={}
+  unless pkg.docco_configuration?
+    context.config = defaults
   else
-    pkg_cfg = package.docco_configuration
-    if pkg_cfg.css? then configuration.css = pkg_cfg.css else configuration.css = defaults.css
+    pkg_cfg = pkg.docco_configuration
+    if pkg_cfg.css? then context.config.css = pkg_cfg.css else context.config.css = defaults.css
+    if pkg_cfg.show_timestamp? then context.config.show_timestamp = pkg_cfg.show_timestamp else context.config.show_timestamp = defaults.show_timestamp
 
 parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
@@ -381,11 +383,11 @@ parse_args (sources, project_name, raw_paths) ->
   
   package_path = process.cwd() + '/package.json'
   package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
-  check_config(package_json)
+  check_config(context,package_json)
 
   ensure_directory 'docs', ->
     generate_readme(context, raw_paths,package_json)
-    fs.writeFile 'docs/docco.css', fs.readFileSync(configuration.css).toString()
+    fs.writeFile 'docs/docco.css', fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
