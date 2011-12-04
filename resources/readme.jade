@@ -66,7 +66,8 @@ html
                   h3 Stats
                   pre.code_stats !{code_stats}
             td#content.code !{content}  
-      div#generated generated #{new Date()}  
+      if context.config.show_timestamp
+        div#generated generated #{new Date()}  
       if context.project_name
         #projectname
           a(href="#{root_path}readme.html") #{context.project_name}
