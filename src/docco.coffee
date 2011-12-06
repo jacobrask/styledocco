@@ -185,7 +185,7 @@ generate_html = (source, context, sections) ->
         write_func()
 
 
-generate_readme = (context, sources) ->
+generate_readme = (context, sources, package_json) ->
   title = "README"
   dest = "docs/readme.html"
   source = "README.md"
@@ -194,8 +194,6 @@ generate_readme = (context, sources) ->
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = process.cwd() + '/README.md'
   readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
-  package_path = process.cwd() + '/package.json'
-  package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
 
   content = showdown.makeHtml readme_markdown
 
@@ -365,15 +363,32 @@ parse_args = (callback) ->
 
     callback(sources, project_name, args)
 
+check_config = (context,pkg)->
+  defaults = {
+    css: (__dirname + '/../resources/docco.css')
+    show_timestamp: true
+  }
+  context.config={}
+  unless pkg.docco_configuration?
+    context.config = defaults
+  else
+    pkg_cfg = pkg.docco_configuration
+    if pkg_cfg.css? then context.config.css = pkg_cfg.css else context.config.css = defaults.css
+    if pkg_cfg.show_timestamp? then context.config.show_timestamp = pkg_cfg.show_timestamp else context.config.show_timestamp = defaults.show_timestamp
+
 parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
   context = sources: sources, project_name: project_name
+  
+  package_path = process.cwd() + '/package.json'
+  package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
+  check_config(context,package_json)
 
   ensure_directory 'docs', ->
-    fs.writeFile 'docs/docco.css', docco_styles
+    generate_readme(context, raw_paths,package_json)
+    fs.writeFile 'docs/docco.css', fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
-    generate_readme(context, raw_paths)
 
