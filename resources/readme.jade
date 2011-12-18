@@ -42,6 +42,9 @@ html
                       #{package_json.name}
                 if package_json.description
                   p #{package_json.description}
+
+                if content_index
+                  !{content_index}
                 if package_json.version
                   h3 Version
                   p #{package_json.version}

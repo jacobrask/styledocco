@@ -62,7 +62,7 @@ generate_documentation = (source, context, callback) ->
     throw error if error
     sections = parse source, code
     highlight source, sections, ->
-      generate_html source, context, sections
+      generate_source_html source, context, sections
       callback()
 
 # Given a string of source code, parse out each comment and the code that
@@ -160,7 +160,7 @@ highlight = (source, sections, callback) ->
 # Once all of the code is finished highlighting, we can generate the HTML file
 # and write out the documentation. Pass the completed sections into the template
 # found in `resources/docco.jst`
-generate_html = (source, context, sections) ->
+generate_source_html = (source, context, sections) ->
   title = path.basename source
   dest  = destination source, context
   html  = docco_template {
@@ -172,22 +172,55 @@ generate_html = (source, context, sections) ->
 
 generate_readme = (context, sources, package_json) ->
   title = "README"
-  dest = "#{context.config.output}/readme.html"
+  dest = "#{context.config.output}/index.html"
   source = "README.md"
 
   # README.md template to be use to generate the main REAME file
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
-  readme_path = process.cwd() + '/README.md'
-  content = parse_markdown(context, readme_path) || "There is no README.md for this project yet :( "
-
+  readme_path = "#{process.cwd()}/#{source}"
+  content_index_path = "#{process.cwd()}/#{context.config.src}/content_index.md"
+  console.log "content_index_path = #{content_index_path}"
+  
+  # generate the content index if it exists under the content sources
+  if file_exists(content_index_path) 
+    content_index = parse_markdown context, content_index_path
+  else
+    content_index = ""  
+ 
+  # parse the markdown the the readme 
+  content = parse_markdown(context, readme_path) || "There is no #{source} for this project yet :( "
+  
+  # run cloc 
   cloc sources.join(" "), (code_stats) ->
 
     html = readme_template {
-      title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json, code_stats: code_stats, gravatar: gravatar
+      title: title, 
+      context: context, 
+      content: content, 
+      content_index: content_index,
+      file_path: source, 
+      path: path, 
+      relative_base: relative_base, 
+      package_json: package_json, 
+      code_stats: code_stats, 
+      gravatar: gravatar
     }
     
     console.log "docco: #{source} -> #{dest}"
     write_file(dest, html)
+
+generate_content = (context, dir) ->
+  walker = walk.walk(dir, { followLinks: false });    
+  walker.on 'file', (root, fileStats, next) ->
+    src = "#{root}/#{fileStats.name}" 
+    dest  = destination(src.replace(context.config.src, ""), context)
+    console.log "markdown: #{src} --> #{dest}"
+    html = parse_markdown context, src
+    html = content_template {
+      title: fileStats.name, context: context, content: html, file_path: fileStats.name, path: path, relative_base: relative_base
+    }
+    write_file dest, html  
+    next()
 
 # Write a file to the filesystem
 write_file = (dest, contents) ->
@@ -209,7 +242,7 @@ write_file = (dest, contents) ->
 
 # Parse a markdown file and return the HTML 
 parse_markdown = (context, src) ->
-  markdown = if file_exists(src) then fs.readFileSync(src).toString()
+  markdown = fs.readFileSync(src).toString()
   return showdown.makeHtml markdown
 
 cloc = (paths, callback) ->
@@ -228,6 +261,7 @@ jade     = require 'jade'
 dox      = require 'dox'
 gravatar = require 'gravatar'
 _        = require 'underscore'
+walk     = require 'walk'
 {spawn, exec} = require 'child_process'
 
 # A list of the languages that Docco supports, mapping the file extension to
@@ -282,13 +316,12 @@ get_language = (source) -> languages[path.extname(source)]
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath, context) ->
   result = path.dirname(filepath) + '/' 
-  if result == '/' then '' else result
+  if result == '/' or result == '//' then '' else result
 
 # Compute the destination HTML path for an input source file path. If the source
 # is `lib/example.coffee`, the HTML will be at `docs/example.html`.
 destination = (filepath, context) ->
   base_path = relative_base filepath, context
-
   "#{context.config.output}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
 
 # Ensure that the destination directory exists.
@@ -305,6 +338,8 @@ file_exists = (path) ->
 docco_template  = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
 
 dox_template = jade.compile fs.readFileSync(__dirname + '/../resources/dox.jade').toString(), { filename: __dirname + '/../resources/dox.jade' }
+
+content_template = jade.compile fs.readFileSync(__dirname + '/../resources/content.jade').toString(), { filename: __dirname + '/../resources/content.jade' }
 
 # The CSS styles we'd like to apply to the documentation.
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
@@ -393,4 +428,4 @@ parse_args (sources, project_name, raw_paths) ->
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
-
+    generate_content context, context.config.src

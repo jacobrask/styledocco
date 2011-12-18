@@ -1,0 +1,19 @@
+- var root_path = relative_base(file_path, context)
+- root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
+!!! 5
+html
+  head
+    title=title
+    meta( http-equiv='Content-Type', content='text/html', charset='UTF-8')
+    link( rel='stylesheet', media='all', href="#{root_path}docco.css" )
+  body
+    div#container
+      if context.sources.length > 0
+        include includes/menu
+      div#page 
+        div#content
+          !{content}
+
+      if context.project_name
+        #projectname
+          a(href="#{root_path}readme.html") #{context.project_name}

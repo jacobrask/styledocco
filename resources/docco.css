@@ -131,6 +131,9 @@ h1, h2, h3, h4, h5, h6 {
           margin-right: 2px;
           margin-leftl: 2px;
         }
+#page {
+  padding-top:40px;
+}
 table td {
   border: 0;
   outline: 0;

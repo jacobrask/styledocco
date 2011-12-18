@@ -1,7 +1,7 @@
-div#jump_to Jump To &hellip;
+div#jump_to Jump To Source &hellip;
   div#jump_wrapper
     div#jump_page
-      a.source( href="#{root_path}readme.html")
+      a.source( href="#{root_path}index.html")
         span.file_name README
       each source in context.sources
         - var base_path = relative_base(source, context)
