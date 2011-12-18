@@ -28,6 +28,4 @@ html
               td.code !{section.code_html}
       if context.config.show_timestamp
         div#generated generated #{new Date()}  
-      if context.project_name
-        #projectname
-          a(href="#{root_path}readme.html") #{context.project_name}
+      include includes/project_name

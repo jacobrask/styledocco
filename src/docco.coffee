@@ -402,6 +402,9 @@ check_config = (context,pkg)->
     # output directory for generated docs
     output: "docs",
 
+    # the projectname
+    project_name: context.options.project_name || '',
+
     # source directory for any additional markdown documents including a
     # index.md that will be included in the main generated page
     src: null
@@ -411,7 +414,7 @@ check_config = (context,pkg)->
 parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
-  context = sources: sources, project_name: project_name
+  context = sources: sources, options: { project_name: project_name }
   
   package_path = process.cwd() + '/package.json'
   try
@@ -420,7 +423,7 @@ parse_args (sources, project_name, raw_paths) ->
     console.log "Error parsing package.json"
     console.log err
 
-  check_config(context,package_json)
+  check_config(context, package_json)
 
   ensure_directory context.config.output, ->
     generate_readme(context, raw_paths,package_json)

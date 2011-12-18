@@ -14,6 +14,4 @@ html
         div#content
           !{content}
 
-      if context.project_name
-        #projectname
-          a(href="#{root_path}readme.html") #{context.project_name}
+      include includes/project_name
