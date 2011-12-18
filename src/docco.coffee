@@ -106,7 +106,7 @@ parse = (source, code) ->
         in_multi = false
         try
           parsed = dox.parseComments( multi_accum )[0]
-          docs_text += dox_template(parsed);
+          docs_text += dox_template(parsed)
         catch error
           console.log "Error parsing comments with Dox: #{error}"
           docs_text = multi_accum
@@ -167,47 +167,34 @@ generate_html = (source, context, sections) ->
     title: title, file_path: source, sections: sections, context: context, path: path, relative_base: relative_base
   }
 
-  # Generate the file's base dir as required
-  target_dir = path.dirname(dest)
-  write_func = ->
-    console.log "docco: #{source} -> #{dest}"
-    fs.writeFile dest, html, (err) -> throw err if err
-
-  fs.stat target_dir, (err, stats) ->
-    throw err if err and err.code != 'ENOENT'
-
-    return write_func() unless err
-
-    if err
-      exec "mkdir -p #{target_dir}", (err) ->
-        throw err if err
-
-        write_func()
-
+  console.log "docco: #{source} -> #{dest}"
+  write_file(dest, html)
 
 generate_readme = (context, sources, package_json) ->
   title = "README"
-  dest = "docs/readme.html"
+  dest = "#{context.config.output}/readme.html"
   source = "README.md"
 
   # README.md template to be use to generate the main REAME file
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = process.cwd() + '/README.md'
-  readme_markdown = if file_exists(readme_path) then fs.readFileSync(readme_path).toString() else "There is no README.md for this project yet :( "
-
-  content = showdown.makeHtml readme_markdown
+  content = parse_markdown(context, readme_path) || "There is no README.md for this project yet :( "
 
   cloc sources.join(" "), (code_stats) ->
 
     html = readme_template {
       title: title, context: context, content: content, file_path: source, path: path, relative_base: relative_base, package_json: package_json, code_stats: code_stats, gravatar: gravatar
     }
+    
+    console.log "docco: #{source} -> #{dest}"
+    write_file(dest, html)
 
-    # Generate the file's base dir as required
+# Write a file to the filesystem
+write_file = (dest, contents) ->
+
     target_dir = path.dirname(dest)
     write_func = ->
-      console.log "docco: #{source} -> #{dest}"
-      fs.writeFile dest, html, (err) -> throw err if err
+      fs.writeFile dest, contents, (err) -> throw err if err
 
     fs.stat target_dir, (err, stats) ->
       throw err if err and err.code != 'ENOENT'
@@ -219,6 +206,11 @@ generate_readme = (context, sources, package_json) ->
           throw err if err
           write_func()
 
+
+# Parse a markdown file and return the HTML 
+parse_markdown = (context, src) ->
+  markdown = if file_exists(src) then fs.readFileSync(src).toString()
+  return showdown.makeHtml markdown
 
 cloc = (paths, callback) ->
   exec "#{__dirname}/../vendor/cloc.pl --quiet --read-lang-def=#{__dirname}/../resources/cloc_definitions.txt #{paths}", (err, stdout) ->
@@ -235,6 +227,7 @@ showdown = require('./../vendor/showdown').Showdown
 jade     = require 'jade'
 dox      = require 'dox'
 gravatar = require 'gravatar'
+_        = require 'underscore'
 {spawn, exec} = require 'child_process'
 
 # A list of the languages that Docco supports, mapping the file extension to
@@ -296,7 +289,7 @@ relative_base = (filepath, context) ->
 destination = (filepath, context) ->
   base_path = relative_base filepath, context
 
-  'docs/' + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
+  "#{context.config.output}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
 
 # Ensure that the destination directory exists.
 ensure_directory = (dir, callback) ->
@@ -365,16 +358,20 @@ parse_args = (callback) ->
 
 check_config = (context,pkg)->
   defaults = {
+    # the primary CSS file to load
     css: (__dirname + '/../resources/docco.css')
-    show_timestamp: true
+
+    # show the timestamp on generated docs
+    show_timestamp: true,
+
+    # output directory for generated docs
+    output: "docs",
+
+    # source directory for any additional markdown documents including a
+    # index.md that will be included in the main generated page
+    src: null
   }
-  context.config={}
-  unless pkg.docco_configuration?
-    context.config = defaults
-  else
-    pkg_cfg = pkg.docco_configuration
-    if pkg_cfg.css? then context.config.css = pkg_cfg.css else context.config.css = defaults.css
-    if pkg_cfg.show_timestamp? then context.config.show_timestamp = pkg_cfg.show_timestamp else context.config.show_timestamp = defaults.show_timestamp
+  context.config = _.extend(defaults, pkg.docco_configuration || {})
 
 parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
@@ -382,12 +379,17 @@ parse_args (sources, project_name, raw_paths) ->
   context = sources: sources, project_name: project_name
   
   package_path = process.cwd() + '/package.json'
-  package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
+  try
+    package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
+  catch err
+    console.log "Error parsing package.json"
+    console.log err
+
   check_config(context,package_json)
 
-  ensure_directory 'docs', ->
+  ensure_directory context.config.output, ->
     generate_readme(context, raw_paths,package_json)
-    fs.writeFile 'docs/docco.css', fs.readFileSync(context.config.css).toString()
+    fs.writeFile "#{context.config.output}/docco.css", fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
