@@ -1,4 +1,12 @@
-0.2.2 - NOv 15, 2011
+0.3.0 - Dec 18, 2011
+
+* package.json configuration support including a customized CSS stylesheet
+* additional markdown files supported
+* renamed readme.html to index.html
+* disabled Dox parsing or multiline Javascript comments because it was problematic
+
+
+0.2.2 - Nov 15, 2011
 
 * gravatar support for package.json
 * added more details from package.json

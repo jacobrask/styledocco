@@ -172,14 +172,13 @@ generate_source_html = (source, context, sections) ->
 
 generate_readme = (context, sources, package_json) ->
   title = "README"
-  dest = "#{context.config.output}/index.html"
+  dest = "#{context.config.output_dir}/index.html"
   source = "README.md"
 
   # README.md template to be use to generate the main REAME file
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = "#{process.cwd()}/#{source}"
-  content_index_path = "#{process.cwd()}/#{context.config.src}/content_index.md"
-  console.log "content_index_path = #{content_index_path}"
+  content_index_path = "#{process.cwd()}/#{context.config.content_dir}/content_index.md"
   
   # generate the content index if it exists under the content sources
   if file_exists(content_index_path) 
@@ -212,14 +211,16 @@ generate_readme = (context, sources, package_json) ->
 generate_content = (context, dir) ->
   walker = walk.walk(dir, { followLinks: false });    
   walker.on 'file', (root, fileStats, next) ->
-    src = "#{root}/#{fileStats.name}" 
-    dest  = destination(src.replace(context.config.src, ""), context)
-    console.log "markdown: #{src} --> #{dest}"
-    html = parse_markdown context, src
-    html = content_template {
-      title: fileStats.name, context: context, content: html, file_path: fileStats.name, path: path, relative_base: relative_base
-    }
-    write_file dest, html  
+    # only match files that end in *.md
+    if fileStats.name.match(new RegExp ".md$")
+      src = "#{root}/#{fileStats.name}" 
+      dest  = destination(src.replace(context.config.content_dir, ""), context)
+      console.log "markdown: #{src} --> #{dest}"
+      html = parse_markdown context, src
+      html = content_template {
+        title: fileStats.name, context: context, content: html, file_path: fileStats.name, path: path, relative_base: relative_base
+      }
+      write_file dest, html  
     next()
 
 # Write a file to the filesystem
@@ -322,7 +323,7 @@ relative_base = (filepath, context) ->
 # is `lib/example.coffee`, the HTML will be at `docs/example.html`.
 destination = (filepath, context) ->
   base_path = relative_base filepath, context
-  "#{context.config.output}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
+  "#{context.config.output_dir}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
 
 # Ensure that the destination directory exists.
 ensure_directory = (dir, callback) ->
@@ -400,16 +401,16 @@ check_config = (context,pkg)->
     show_timestamp: true,
 
     # output directory for generated docs
-    output: "docs",
+    output_dir: "docs",
 
     # the projectname
     project_name: context.options.project_name || '',
 
     # source directory for any additional markdown documents including a
     # index.md that will be included in the main generated page
-    src: null
+    content_dir: null
   }
-  context.config = _.extend(defaults, pkg.docco_configuration || {})
+  context.config = _.extend(defaults, pkg.docco_husky || {})
 
 parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
@@ -425,10 +426,10 @@ parse_args (sources, project_name, raw_paths) ->
 
   check_config(context, package_json)
 
-  ensure_directory context.config.output, ->
+  ensure_directory context.config.output_dir, ->
     generate_readme(context, raw_paths,package_json)
-    fs.writeFile "#{context.config.output}/docco.css", fs.readFileSync(context.config.css).toString()
+    fs.writeFile "#{context.config.output_dir}/docco.css", fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
     next_file = -> generate_documentation files.shift(), context, next_file if files.length
     next_file()
-    generate_content context, context.config.src
+    if context.config.content_dir then generate_content context, context.config.content_dir
