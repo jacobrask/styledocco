@@ -1,14 +1,15 @@
 {
-  "name": "docco-husky",
-  "description": "Generated static project documentation primarily for node.js projects. A fork of Docco",
+  "name": "styledocco",
+  "description": "Generate a style guide from your CSS/SASS/LESS files.",
   "keywords": [
-    "documentation",
-    "docs",
-    "generator",
-    "coffeescript"
+    "styleguide",
+    "css",
+    "sass",
+    "less",
+    "documentation"
   ],
-  "author": "Mike Brevoort <mike@brevoort.com>",
-  "version": "0.3.1",
+  "author": "Jacob Rask <jacob@jacobrask.net>",
+  "version": "0.0.1",
   "licenses": [
     {
       "type": "MIT",
@@ -16,6 +17,7 @@
     }
   ],
   "contributors": [
+    "Jacob Rask <jacob@jacobrask.net>",
     "Mike Brevoort <mike@brevoort.com>",
     "Jeremy Ashkenas"
   ],
@@ -23,11 +25,11 @@
     "node": ">=0.4.0"
   },
   "bugs": {
-    "url": "https://github.com/mbrevoort/docco-husky/issues"
+    "url": "https://github.com/jacobrask/styledocco/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mbrevoort/docco-husky.git"
+    "url": "git://github.com/jacobrask/styledocco.git"
   },
   "dependencies": {
     "coffee-script": "latest",
@@ -40,9 +42,9 @@
   "directories": {
     "lib": "./lib"
   },
-  "main": "./lib/docco",
+  "main": "./lib/main",
   "bin": {
-    "docco-husky": "./bin/generate"
+    "styledocco": "./bin/generate"
   },
   "scripts": {
     "install": "scripts/install.sh"
