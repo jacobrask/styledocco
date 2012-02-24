@@ -1,63 +1,7 @@
-# > *forked from the origina [Docco](https://github.com/jashkenas/docco) project, updated with abandon*
-#
-# **Docco** is a quick-and-dirty, hundred-line-long, literate-programming-style
-# documentation generator. It produces HTML
-# that displays your comments alongside your code. Comments are passed through
-# [Markdown](http://daringfireball.net/projects/markdown/syntax), and code is
-# passed through [Pygments](http://pygments.org/) syntax highlighting.
-# This page is the result of running Docco against its own source file.
-#
-# If you install Docco, you can run it from the command-line:
-#
-#     docco src/*.coffee
-#
-# ...will generate an HTML documentation page for each of the named source files, 
-# with a menu linking to the other pages, saving it into a `docs` folder.
-#
-# The [source for Docco](http://github.com/jashkenas/docco) is available on GitHub,
-# and released under the MIT license.
-#
-# To install Docco, first make sure you have [Node.js](http://nodejs.org/),
-# [Pygments](http://pygments.org/) (install the latest dev version of Pygments
-# from [its Mercurial repo](http://dev.pocoo.org/hg/pygments-main)), and
-# [CoffeeScript](http://coffeescript.org/). Then, with NPM:
-#
-#     sudo npm install docco
-#
-# Docco can be used to process CoffeeScript, JavaScript, Ruby or Python files.
-# Only single-line comments are processed -- block comments are ignored.
-#
-#### Partners in Crime:
-#
-# * If **Node.js** doesn't run on your platform, or you'd prefer a more 
-# convenient package, get [Ryan Tomayko](http://github.com/rtomayko)'s 
-# [Rocco](http://rtomayko.github.com/rocco/rocco.html), the Ruby port that's 
-# available as a gem. 
-# 
-# * If you're writing shell scripts, try
-# [Shocco](http://rtomayko.github.com/shocco/), a port for the **POSIX shell**,
-# also by Mr. Tomayko.
-# 
-# * If Python's more your speed, take a look at 
-# [Nick Fitzgerald](http://github.com/fitzgen)'s [Pycco](http://fitzgen.github.com/pycco/). 
-#
-# * For **Clojure** fans, [Fogus](http://blog.fogus.me/)'s 
-# [Marginalia](http://fogus.me/fun/marginalia/) is a bit of a departure from 
-# "quick-and-dirty", but it'll get the job done.
-#
-# * **Lua** enthusiasts can get their fix with 
-# [Robert Gieseke](https://github.com/rgieseke)'s [Locco](http://rgieseke.github.com/locco/).
-# 
-# * And if you happen to be a **.NET**
-# aficionado, check out [Don Wilson](https://github.com/dontangg)'s 
-# [Nocco](http://dontangg.github.com/nocco/).
-
-#### Main Documentation Generation Functions
-
 # Generate the documentation for a source file by reading it in, splitting it
 # up into comment/code sections, highlighting them for the appropriate language,
 # and merging them into an HTML template.
-generate_documentation = (source, context, callback) ->
+generateDocumentation = (source, context, callback) ->
   fs.readFile source, "utf-8", (error, code) ->
     throw error if error
     sections = parse source, code
@@ -131,32 +75,11 @@ parse = (source, code) ->
 # marker comments between each section and then splitting the result string
 # wherever our markers occur.
 highlight = (source, sections, callback) ->
-  language = get_language source
-  pygments = spawn 'pygmentize', ['-l', language.name, '-f', 'html', '-O', 'encoding=utf-8,tabsize=2']
-  output   = ''
-  
-  pygments.stderr.addListener 'data',  (error)  ->
-    console.error error.toString() if error
-    
-  pygments.stdin.addListener 'error',  (error)  ->
-    console.error "Could not use Pygments to highlight the source."
-    process.exit 1
-    
-  pygments.stdout.addListener 'data', (result) ->
-    output += result if result
-    
-  pygments.addListener 'exit', ->
-    output = output.replace(highlight_start, '').replace(highlight_end, '')
-    fragments = output.split language.divider_html
-    for section, i in sections
-      section.code_html = highlight_start + fragments[i] + highlight_end
-      section.docs_html = showdown.makeHtml section.docs_text
-    callback()
-    
-  if pygments.stdin.writable
-    pygments.stdin.write((section.code_text for section in sections).join(language.divider_text))
-    pygments.stdin.end()
-  
+  for section, i in sections
+    section.code_html = highlight_start + section.code_text + highlight_end
+    section.docs_html = showdown.makeHtml section.docs_text
+  callback()
+   
 # Once all of the code is finished highlighting, we can generate the HTML file
 # and write out the documentation. Pass the completed sections into the template
 # found in `resources/docco.jst`
@@ -175,16 +98,16 @@ generate_readme = (context, sources, package_json) ->
   dest = "#{context.config.output_dir}/index.html"
   source = "README.md"
 
-  # README.md template to be use to generate the main REAME file
+  # README.md template to be use to generate the main README file
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = "#{process.cwd()}/#{source}"
   content_index_path = "#{process.cwd()}/#{context.config.content_dir}/content_index.md"
   
   # generate the content index if it exists under the content sources
-  if file_exists(content_index_path) 
+  if file_exists(content_index_path)
     content_index = parse_markdown context, content_index_path
   else
-    content_index = ""  
+    content_index = ""
  
   # parse the markdown the the readme 
   content = parse_markdown(context, readme_path) || "There is no #{source} for this project yet :( "
@@ -193,15 +116,15 @@ generate_readme = (context, sources, package_json) ->
   cloc sources.join(" "), (code_stats) ->
 
     html = readme_template {
-      title: title, 
-      context: context, 
-      content: content, 
-      content_index: content_index,
-      file_path: source, 
-      path: path, 
-      relative_base: relative_base, 
-      package_json: package_json, 
-      code_stats: code_stats, 
+      title: title
+      context: context
+      content: content
+      content_index: content_index
+      file_path: source
+      path: path
+      relative_base: relative_base
+      package_json: package_json
+      code_stats: code_stats
       gravatar: gravatar
     }
     
@@ -209,18 +132,18 @@ generate_readme = (context, sources, package_json) ->
     write_file(dest, html)
 
 generate_content = (context, dir) ->
-  walker = walk.walk(dir, { followLinks: false });    
+  walker = walk.walk(dir, { followLinks: false })
   walker.on 'file', (root, fileStats, next) ->
     # only match files that end in *.md
     if fileStats.name.match(new RegExp ".md$")
-      src = "#{root}/#{fileStats.name}" 
+      src = "#{root}/#{fileStats.name}"
       dest  = destination(src.replace(context.config.content_dir, ""), context)
       console.log "markdown: #{src} --> #{dest}"
       html = parse_markdown context, src
       html = content_template {
         title: fileStats.name, context: context, content: html, file_path: fileStats.name, path: path, relative_base: relative_base
       }
-      write_file dest, html  
+      write_file dest, html
     next()
 
 # Write a file to the filesystem
@@ -269,16 +192,12 @@ walk     = require 'walk'
 # the name of the Pygments lexer and the symbol that indicates a comment. To
 # add another language to Docco's repertoire, add it here.
 languages =
-  '.coffee':
-    name: 'coffee-script', symbol: '#'
-  '.js':
-    name: 'javascript', symbol: '//', multi_start: "/*", multi_end: "*/"
-  '.rb':
-    name: 'ruby', symbol: '#'
-  '.py':
-    name: 'python', symbol: '#'
-  '.java':
-    name: 'java', symbol: '//', multi_start: "/*", multi_end: "*/"
+  '.css':
+    name: 'css', symbol: '//', multi_start: "/*", multi_end: "*/"
+  '.scss':
+    name: 'scss', symbol: '//', multi_start: "/*", multi_end: "*/"
+  '.less':
+    name: 'less', symbol: '//', multi_start: "/*", multi_end: "*/"
 
 # Build out the appropriate matchers and delimiters for each language.
 for ext, l of languages
@@ -330,7 +249,7 @@ ensure_directory = (dir, callback) ->
   exec "mkdir -p #{dir}", -> callback()
 
 file_exists = (path) ->
-  try 
+  try
     return fs.lstatSync(path).isFile
   catch ex
     return false
@@ -346,10 +265,10 @@ content_template = jade.compile fs.readFileSync(__dirname + '/../resources/conte
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
 
 # The start of each Pygments highlight block.
-highlight_start = '<div class="highlight"><pre>'
+highlight_start = '<pre><code>'
 
 # The end of each Pygments highlight block.
-highlight_end   = '</pre></div>'
+highlight_end   = '</code></pre>'
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
@@ -376,7 +295,7 @@ parse_args = (callback) ->
   roots = roots.join(" ")
     
   # Only include files that we know how to handle
-  lang_filter = for ext of languages 
+  lang_filter = for ext of languages
     " -name '*#{ext}' "
   lang_filter = lang_filter.join ' -o '
 
@@ -387,7 +306,6 @@ parse_args = (callback) ->
 
     # Don't include hidden files, either
     sources = stdout.split("\n").filter (file) -> file != '' and path.basename(file)[0] != '.'
-
     console.log "docco: Recursively generating docs underneath #{roots}/"
 
     callback(sources, project_name, args)
@@ -430,6 +348,6 @@ parse_args (sources, project_name, raw_paths) ->
     generate_readme(context, raw_paths,package_json)
     fs.writeFile "#{context.config.output_dir}/docco.css", fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
-    next_file = -> generate_documentation files.shift(), context, next_file if files.length
+    next_file = -> generateDocumentation files.shift(), context, next_file if files.length
     next_file()
     if context.config.content_dir then generate_content context, context.config.content_dir
