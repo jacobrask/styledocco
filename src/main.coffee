@@ -6,7 +6,6 @@ fs       = require 'fs'
 path     = require 'path'
 showdown = require('./../vendor/showdown').Showdown
 jade     = require 'jade'
-dox      = require 'dox'
 gravatar = require 'gravatar'
 _        = require 'underscore'
 walk     = require 'walk'
@@ -240,8 +239,6 @@ file_exists = (path) ->
 
 # Create the template that we will use to generate the Docco HTML page.
 docco_template  = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
-
-dox_template = jade.compile fs.readFileSync(__dirname + '/../resources/dox.jade').toString(), { filename: __dirname + '/../resources/dox.jade' }
 
 content_template = jade.compile fs.readFileSync(__dirname + '/../resources/content.jade').toString(), { filename: __dirname + '/../resources/content.jade' }
 
