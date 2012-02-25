@@ -1,84 +1,82 @@
+#### Helpers & Setup
+
+# Require our external dependencies, including **Showdown.js**
+# (the JavaScript implementation of Markdown).
+fs       = require 'fs'
+path     = require 'path'
+showdown = require('./../vendor/showdown').Showdown
+jade     = require 'jade'
+dox      = require 'dox'
+gravatar = require 'gravatar'
+_        = require 'underscore'
+walk     = require 'walk'
+{spawn, exec} = require 'child_process'
+
 # Generate the documentation for a source file by reading it in, splitting it
-# up into comment/code sections, highlighting them for the appropriate language,
-# and merging them into an HTML template.
-generateDocumentation = (source, context, callback) ->
-  fs.readFile source, "utf-8", (error, code) ->
-    throw error if error
-    sections = parse source, code
-    highlight source, sections, ->
-      generate_source_html source, context, sections
-      callback()
+# up into comment/code sections, and merging them into an HTML template.
+generateDocumentation = (sourceFile, context, cb) ->
+  fs.readFile sourceFile, "utf-8", (err, code) ->
+    throw err if err
+    sections = parse get_language(sourceFile), code
+    generate_source_html sourceFile, context, sections
+    cb()
 
 # Given a string of source code, parse out each comment and the code that
 # follows it, and create an individual **section** for it.
-# Sections take the form:
-#
-#     {
-#       docs_text: ...
-#       docs_html: ...
-#       code_text: ...
-#       code_html: ...
-#     }
-#
-parse = (source, code) ->
-  lines    = code.split '\n'
+parse = (language, data) ->
+  lines = data.split '\n'
   sections = []
-  language = get_language source
-  has_code = docs_text = code_text = ''
+  docs = code = ''
 
-  in_multi = false
-  multi_accum = ""
+  inMulti = no
+  hasCode = no
+  multiAccum = ''
 
   save = (docs, code) ->
-    sections.push docs_text: docs, code_text: code
+    sections.push {
+      docs_text: docs
+      docs_html: showdown.makeHtml docs
+      code_text: code
+      code_html: highlight_start + code + highlight_end
+    }
+
   for line in lines
-    if line.match(language.multi_start_matcher) or in_multi
 
-      if has_code
-        save docs_text, code_text
-        has_code = docs_text = code_text = ''
+    # Multi line comment
+    if line.match(language.multi_start_matcher) or inMulti
 
-      # Found the start of a multiline comment line, set in_multi to true
-      # and begin accumulating lines untime we reach a line that finishes
-      # the multiline comment
-      in_multi = true
-      multi_accum += line + '\n'
+      ## Start of a new section, save the old section
+      if hasCode
+        save docs, code
+        docs = code = ''
+        hasCode = no
 
-      # If we reached the end of a multiline comment, template the result
-      # and set in_multi to false, reset multi_accum
+      # Found the start of a multiline comment.
+      # Begin accumulating lines until we reach the end of the comment block.
+      inMulti = yes
+      multiAccum += line + '\n'
+
+      # If we reached the end of a multiline comment,
+      # set inMulti to false and reset multiAccum
       if line.match(language.multi_end_matcher)
-        in_multi = false
-        try
-          parsed = dox.parseComments( multi_accum )[0]
-          docs_text += dox_template(parsed)
-        catch error
-          console.log "Error parsing comments with Dox: #{error}"
-          docs_text = multi_accum
-        multi_accum = ''
+        inMulti = no
+        docs = multiAccum
+        multiAccum = ''
 
+    # Single line comment
     else if line.match(language.comment_matcher) and not line.match(language.comment_filter)
-      if has_code
-        save docs_text, code_text
-        has_code = docs_text = code_text = ''
-      docs_text += line.replace(language.comment_matcher, '') + '\n'
-    else
-      has_code = yes
-      code_text += line + '\n'
-  save docs_text, code_text
-  sections
+      if hasCode
+        save docs, code
+        hasCode = docs = code = ''
+      docs += line.replace(language.comment_matcher, '') + '\n'
 
-# Highlights a single chunk of CoffeeScript code, using **Pygments** over stdio,
-# and runs the text of its corresponding comment through **Markdown**, using
-# [Showdown.js](http://attacklab.net/showdown/).
-#
-# We process the entire file in a single call to Pygments by inserting little
-# marker comments between each section and then splitting the result string
-# wherever our markers occur.
-highlight = (source, sections, callback) ->
-  for section, i in sections
-    section.code_html = highlight_start + section.code_text + highlight_end
-    section.docs_html = showdown.makeHtml section.docs_text
-  callback()
+    # Code
+    else
+      hasCode = yes
+      code += line + '\n'
+
+  save docs, code
+  sections
    
 # Once all of the code is finished highlighting, we can generate the HTML file
 # and write out the documentation. Pass the completed sections into the template
@@ -173,20 +171,6 @@ cloc = (paths, callback) ->
   exec "#{__dirname}/../vendor/cloc.pl --quiet --read-lang-def=#{__dirname}/../resources/cloc_definitions.txt #{paths}", (err, stdout) ->
     console.log "Calculating project stats failed #{err}" if err
     callback stdout
-
-#### Helpers & Setup
-
-# Require our external dependencies, including **Showdown.js**
-# (the JavaScript implementation of Markdown).
-fs       = require 'fs'
-path     = require 'path'
-showdown = require('./../vendor/showdown').Showdown
-jade     = require 'jade'
-dox      = require 'dox'
-gravatar = require 'gravatar'
-_        = require 'underscore'
-walk     = require 'walk'
-{spawn, exec} = require 'child_process'
 
 # A list of the languages that Docco supports, mapping the file extension to
 # the name of the Pygments lexer and the symbol that indicates a comment. To
