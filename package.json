@@ -35,7 +35,6 @@
     "coffee-script": "latest",
     "jade": "0.17.0",
     "marked": "0.2.1",
-    "gravatar": "1.0.3",
     "underscore": "1.2.x",
     "walk": "2.0.2"
   },

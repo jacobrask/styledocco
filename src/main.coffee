@@ -2,7 +2,6 @@ fs       = require 'fs'
 path     = require 'path'
 marked   = require 'marked'
 jade     = require 'jade'
-gravatar = require 'gravatar'
 _        = require 'underscore'
 walk     = require 'walk'
 {spawn, exec} = require 'child_process'
@@ -117,8 +116,6 @@ generate_readme = (context, sources, package_json) ->
     file_path: source
     path: path
     relative_base: relative_base
-    package_json: package_json
-    gravatar: gravatar
   }
   
   console.log "docco: #{source} -> #{dest}"
@@ -282,7 +279,7 @@ parse_args = (callback) ->
 
     callback(sources, project_name, args)
 
-check_config = (context,pkg)->
+check_config = (context)->
   defaults = {
     # the primary CSS file to load
     css: (__dirname + '/../resources/docco.css')
@@ -300,24 +297,17 @@ check_config = (context,pkg)->
     # index.md that will be included in the main generated page
     content_dir: null
   }
-  context.config = _.extend(defaults, pkg.docco_husky || {})
+  context.config = _.extend(defaults)
 
 parse_args (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
   context = sources: sources, options: { project_name: project_name }
   
-  package_path = process.cwd() + '/package.json'
-  try
-    package_json = if file_exists(package_path) then JSON.parse(fs.readFileSync(package_path).toString()) else {}
-  catch err
-    console.log "Error parsing package.json"
-    console.log err
-
-  check_config(context, package_json)
+  check_config(context)
 
   ensure_directory context.config.output_dir, ->
-    generate_readme(context, raw_paths,package_json)
+    generate_readme(context, raw_paths)
     fs.writeFile "#{context.config.output_dir}/docco.css", fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
     next_file = -> generateDocumentation files.shift(), context, next_file if files.length
