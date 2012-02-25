@@ -109,24 +109,20 @@ generate_readme = (context, sources, package_json) ->
   # parse the markdown the the readme 
   content = parse_markdown(context, readme_path) || "There is no #{source} for this project yet :( "
   
-  # run cloc 
-  cloc sources.join(" "), (code_stats) ->
-
-    html = readme_template {
-      title: title
-      context: context
-      content: content
-      content_index: content_index
-      file_path: source
-      path: path
-      relative_base: relative_base
-      package_json: package_json
-      code_stats: code_stats
-      gravatar: gravatar
-    }
-    
-    console.log "docco: #{source} -> #{dest}"
-    write_file(dest, html)
+  html = readme_template {
+    title: title
+    context: context
+    content: content
+    content_index: content_index
+    file_path: source
+    path: path
+    relative_base: relative_base
+    package_json: package_json
+    gravatar: gravatar
+  }
+  
+  console.log "docco: #{source} -> #{dest}"
+  write_file(dest, html)
 
 generate_content = (context, dir) ->
   walker = walk.walk(dir, { followLinks: false })
@@ -165,11 +161,6 @@ write_file = (dest, contents) ->
 parse_markdown = (context, src) ->
   markdown = fs.readFileSync(src).toString()
   return showdown.makeHtml markdown
-
-cloc = (paths, callback) ->
-  exec "#{__dirname}/../vendor/cloc.pl --quiet --read-lang-def=#{__dirname}/../resources/cloc_definitions.txt #{paths}", (err, stdout) ->
-    console.log "Calculating project stats failed #{err}" if err
-    callback stdout
 
 # A list of the languages that Docco supports, mapping the file extension to
 # the name of the Pygments lexer and the symbol that indicates a comment. To
