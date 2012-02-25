@@ -1,15 +1,13 @@
-#### Helpers & Setup
-
-# Require our external dependencies, including **Showdown.js**
-# (the JavaScript implementation of Markdown).
 fs       = require 'fs'
 path     = require 'path'
-showdown = require('./../vendor/showdown').Showdown
+marked   = require 'marked'
 jade     = require 'jade'
 gravatar = require 'gravatar'
 _        = require 'underscore'
 walk     = require 'walk'
 {spawn, exec} = require 'child_process'
+
+marked.setOptions sanitize: false
 
 # Generate the documentation for a source file by reading it in, splitting it
 # up into comment/code sections, and merging them into an HTML template.
@@ -23,18 +21,18 @@ generateDocumentation = (sourceFile, context, cb) ->
 # Given a string of source code, parse out each comment and the code that
 # follows it, and create an individual **section** for it.
 parse = (language, data) ->
+  
   lines = data.split '\n'
+  
   sections = []
-  docs = code = ''
-
+  docs = code = multiAccum = ''
   inMulti = no
   hasCode = no
-  multiAccum = ''
 
   save = (docs, code) ->
     sections.push {
       docs_text: docs
-      docs_html: showdown.makeHtml docs
+      docs_html: marked docs
       code_text: code
       code_html: highlight_start + code + highlight_end
     }
@@ -74,7 +72,9 @@ parse = (language, data) ->
       hasCode = yes
       code += line + '\n'
 
+  # Save final code section
   save docs, code
+
   sections
    
 # Once all of the code is finished highlighting, we can generate the HTML file
@@ -87,7 +87,7 @@ generate_source_html = (source, context, sections) ->
     title: title, file_path: source, sections: sections, context: context, path: path, relative_base: relative_base
   }
 
-  console.log "docco: #{source} -> #{dest}"
+  console.log "styledocco: #{source} -> #{dest}"
   write_file(dest, html)
 
 generate_readme = (context, sources, package_json) ->
@@ -159,8 +159,8 @@ write_file = (dest, contents) ->
 
 # Parse a markdown file and return the HTML 
 parse_markdown = (context, src) ->
-  markdown = fs.readFileSync(src).toString()
-  return showdown.makeHtml markdown
+  data = fs.readFileSync(src).toString()
+  return marked data
 
 # A list of the languages that Docco supports, mapping the file extension to
 # the name of the Pygments lexer and the symbol that indicates a comment. To
@@ -278,7 +278,7 @@ parse_args = (callback) ->
 
     # Don't include hidden files, either
     sources = stdout.split("\n").filter (file) -> file != '' and path.basename(file)[0] != '.'
-    console.log "docco: Recursively generating docs underneath #{roots}/"
+    console.log "styledocco: Recursively generating docs underneath #{roots}/"
 
     callback(sources, project_name, args)
 
