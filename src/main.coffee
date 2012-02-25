@@ -1,10 +1,11 @@
-fs       = require 'fs'
-path     = require 'path'
-marked   = require 'marked'
-jade     = require 'jade'
-_        = require 'underscore'
-walk     = require 'walk'
 {spawn, exec} = require 'child_process'
+fs   = require 'fs'
+path = require 'path'
+
+marked = require 'marked'
+jade   = require 'jade'
+_      = require 'underscore'
+walk   = require 'walk'
 
 marked.setOptions sanitize: false
 
@@ -13,13 +14,13 @@ marked.setOptions sanitize: false
 generateDocumentation = (sourceFile, context, cb) ->
   fs.readFile sourceFile, "utf-8", (err, code) ->
     throw err if err
-    sections = parse get_language(sourceFile), code
+    sections = makeSections get_language(sourceFile), code
     generate_source_html sourceFile, context, sections
     cb()
 
-# Given a string of source code, parse out each comment and the code that
-# follows it, and create an individual **section** for it.
-parse = (language, data) ->
+# Given a string of source code, find each comment and the code that
+# follows it, and create an individual **section** for the code/doc pair.
+makeSections = (language, data) ->
   
   lines = data.split '\n'
   
@@ -83,7 +84,7 @@ generate_source_html = (source, context, sections) ->
   title = path.basename source
   dest  = destination source, context
   html  = docco_template {
-    title: title, file_path: source, sections: sections, context: context, path: path, relative_base: relative_base
+    title, file_path: source, sections, context, path, relative_base
   }
 
   console.log "styledocco: #{source} -> #{dest}"
@@ -108,15 +109,7 @@ generate_readme = (context, sources, package_json) ->
   # parse the markdown the the readme 
   content = parse_markdown(context, readme_path) || "There is no #{source} for this project yet :( "
   
-  html = readme_template {
-    title: title
-    context: context
-    content: content
-    content_index: content_index
-    file_path: source
-    path: path
-    relative_base: relative_base
-  }
+  html = readme_template { title, context, content, content_index, file_path: source, path, relative_base }
   
   console.log "docco: #{source} -> #{dest}"
   write_file(dest, html)
@@ -131,7 +124,7 @@ generate_content = (context, dir) ->
       console.log "markdown: #{src} --> #{dest}"
       html = parse_markdown context, src
       html = content_template {
-        title: fileStats.name, context: context, content: html, file_path: fileStats.name, path: path, relative_base: relative_base
+        title: fileStats.name, context, content: html, file_path: fileStats.name, path, relative_base
       }
       write_file dest, html
     next()
@@ -304,6 +297,7 @@ parse_args (sources, project_name, raw_paths) ->
   # that we require down the line.
   context = sources: sources, options: { project_name: project_name }
   
+
   check_config(context)
 
   ensure_directory context.config.output_dir, ->
