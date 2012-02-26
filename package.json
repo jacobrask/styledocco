@@ -4,8 +4,6 @@
   "keywords": [
     "styleguide",
     "css",
-    "sass",
-    "less",
     "documentation"
   ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
@@ -35,7 +33,6 @@
     "coffee-script": "latest",
     "jade": "0.17.0",
     "marked": "0.2.1",
-    "underscore": "1.2.x",
     "walk": "2.0.2"
   },
   "directories": {
@@ -44,9 +41,5 @@
   "main": "./lib/main",
   "bin": {
     "styledocco": "./bin/generate"
-  },
-  "scripts": {
-    "install": "scripts/install.sh"
-  },
-  "devDependencies": {}
+  }
 }

@@ -1,13 +1,12 @@
 # Dependencies
 # ============
 
-{ exec } = require 'child_process'
-fs   = require 'fs'
-path = require 'path'
+{exec} = require 'child_process'
+fs     = require 'fs'
+path   = require 'path'
 
 marked = require 'marked'
 jade   = require 'jade'
-_      = require 'underscore'
 walk   = require 'walk'
 
 
@@ -153,8 +152,8 @@ generateReadme = (context, sources) ->
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = "#{process.cwd()}/#{source}"
  
-  # parse the markdown the the readme 
-  content = parse_markdown(context, readme_path) || "There is no #{source} for this project yet :( "
+  # Parse the Markdown in the Readme
+  content = marked fs.readFileSync(readme_path).toString() or "There is no readme for this project yet."
   
   html = readme_template { title, context, content, file_path: source, path, relative_base }
   
@@ -177,12 +176,6 @@ writeFile = (dest, contents) ->
         exec "mkdir -p #{target_dir}", (err) ->
           throw err if err
           write_func()
-
-
-# Parse a markdown file and return the HTML 
-parse_markdown = (context, src) ->
-  data = fs.readFileSync(src).toString()
-  return marked data
 
 # Get the current language we're documenting, based on the extension.
 getLanguage = (source) -> languages[path.extname(source)]
