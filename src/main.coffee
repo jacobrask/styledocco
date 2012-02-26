@@ -18,12 +18,12 @@ marked.setOptions sanitize: false
 
 
 # Generate the documentation for a source file by reading it in, splitting it
-# up into comment/code sections, and merging them into an HTML template.
+# up into comment/code sections, and passing them to a Jade template.
 generateDocumentation = (sourceFile, context, cb) ->
   fs.readFile sourceFile, "utf-8", (err, code) ->
     throw err if err
     sections = makeSections getLanguage(sourceFile), code
-    generate_source_html sourceFile, context, sections
+    generateSourceHtml sourceFile, context, sections
     cb()
 
 
@@ -53,15 +53,22 @@ class Language
       str = str.replace re, ''
     str
 
+  compile: (filename, cb) ->
+    if @preprocessor?
+      exec "#{@preprocessor.cmd} #{@preprocessor.args.join(' ')} #{filename}", (err, stdout, stderr) ->
+        cb err, stdout
+    else
+      fs.readFile filename, 'utf-8', (err, data) ->
+        cb err, data
 
 # A list of the supported stylesheet languages and their comment symbols
 # and optional preprocessor command.
 languages =
-  '.css':  new Language { multi: [ "/*", "*/" ] }
-  '.scss': new Language { single: '//', multi: [ "/*", "*/" ] }, 'scss'
-  '.sass': new Language { single: '//', multi: [ "/*", "*/" ] }, 'sass'
-  '.less': new Language { single: '//', multi: [ "/*", "*/" ] }, 'less'
-  '.styl': new Language { single: '//', multi: [ "/*", "*/" ] }, 'stylus'
+  '.css':  new Language({ multi: [ "/*", "*/" ] })
+  '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'scss', args: [ '-t', 'compressed' ] })
+  '.sass': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'scss', args: [ '-t', 'compressed' ] })
+  '.less': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'lessc', args: [ '-x' ] })
+  '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'stylus', args: [ '-c', '<' ] })
 
 
 
@@ -116,22 +123,28 @@ makeSections = (lang, data) ->
   sections.push { docs: marked(docs), code }
 
   sections
-   
+
+# Run `filename` through suitable preprocessor.
+preProcess = (filename, cb) ->
+  lang = getLanguage filename
+  lang.compile filename, cb
+
 # Once all of the code is finished highlighting, we can generate the HTML file
 # and write out the documentation. Pass the completed sections into the template
-# found in `resources/docco.jst`
-generate_source_html = (source, context, sections) ->
+# found in `resources/docco.jade`
+generateSourceHtml = (source, context, sections) ->
   title = path.basename source
-  css = fs.readFileSync(source).toString()
   dest  = destination source, context
-  html  = docco_template {
-    title, file_path: source, sections, context, path, relative_base, css
-  }
 
-  console.log "styledocco: #{source} -> #{dest}"
-  write_file(dest, html)
+  preProcess source, (err, css) ->
+    throw err if err
+    html  = docco_template {
+      title, file_path: source, sections, context, path, relative_base, css
+    }
+    console.log "styledocco: #{source} -> #{dest}"
+    writeFile(dest, html)
 
-generate_readme = (context, sources, package_json) ->
+generateReadme = (context, sources) ->
   title = "README"
   dest = "#{context.config.output_dir}/index.html"
   source = "README.md"
@@ -153,9 +166,9 @@ generate_readme = (context, sources, package_json) ->
   html = readme_template { title, context, content, content_index, file_path: source, path, relative_base }
   
   console.log "docco: #{source} -> #{dest}"
-  write_file(dest, html)
+  writeFile(dest, html)
 
-generate_content = (context, dir) ->
+generateContent = (context, dir) ->
   walker = walk.walk(dir, { followLinks: false })
   walker.on 'file', (root, fileStats, next) ->
     # only match files that end in *.md
@@ -167,11 +180,11 @@ generate_content = (context, dir) ->
       html = content_template {
         title: fileStats.name, context, content: html, file_path: fileStats.name, path, relative_base
       }
-      write_file dest, html
+      writeFile dest, html
     next()
 
 # Write a file to the filesystem
-write_file = (dest, contents) ->
+writeFile = (dest, contents) ->
 
     target_dir = path.dirname(dest)
     write_func = ->
@@ -208,7 +221,7 @@ destination = (filepath, context) ->
   "#{context.config.output_dir}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
 
 # Ensure that the destination directory exists.
-ensure_directory = (dir, cb) ->
+ensureDirectory = (dir, cb) ->
   exec "mkdir -p #{dir}", -> cb()
 
 file_exists = (path) ->
@@ -217,8 +230,8 @@ file_exists = (path) ->
   catch ex
     return false
 
-# Create the template that we will use to generate the Docco HTML page.
-docco_template  = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
+# Create the template that we will use to generate the Styledocco HTML page.
+docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
 
 content_template = jade.compile fs.readFileSync(__dirname + '/../resources/content.jade').toString(), { filename: __dirname + '/../resources/content.jade' }
 
@@ -282,12 +295,12 @@ parseArgs (sources, project_name, raw_paths) ->
     project_name: project_name or ''
   }
 
-  ensure_directory context.config.output_dir, ->
-    generate_readme(context, raw_paths)
+  ensureDirectory context.config.output_dir, ->
+    generateReadme(context, raw_paths)
     files = sources[0..sources.length]
-    next_file = ->
+    nextFile = ->
       if files.length
-        generateDocumentation files.shift(), context, next_file
-    next_file()
+        generateDocumentation files.shift(), context, nextFile
+    nextFile()
     if context.config.content_dir?
-      generate_content context, context.config.content_dir
+      generateContent context, context.config.content_dir
