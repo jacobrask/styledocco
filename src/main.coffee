@@ -208,8 +208,8 @@ destination = (filepath, context) ->
   "#{context.config.output_dir}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
 
 # Ensure that the destination directory exists.
-ensure_directory = (dir, callback) ->
-  exec "mkdir -p #{dir}", -> callback()
+ensure_directory = (dir, cb) ->
+  exec "mkdir -p #{dir}", -> cb()
 
 file_exists = (path) ->
   try
@@ -224,7 +224,7 @@ content_template = jade.compile fs.readFileSync(__dirname + '/../resources/conte
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
-parse_args = (callback) ->
+parseArgs = (cb) ->
 
   args = process.ARGV
   project_name = ""
@@ -256,40 +256,38 @@ parse_args = (callback) ->
   exec "find #{roots} -type f \\( #{lang_filter} \\)", (err, stdout) ->
     throw err if err
 
-    # Don't include hidden files, either
-    sources = stdout.split("\n").filter (file) -> file != '' and path.basename(file)[0] != '.'
+    sources = stdout.split("\n").filter (file) ->
+      return false if file is ''
+      filename = path.basename file
+      # Ignore hidden files
+      return false if filename[0] is '.'
+      # Ignore SASS partials
+      return false if filename.match /^_.*\.s[ac]ss$/
+      true
+
     console.log "styledocco: Recursively generating docs underneath #{roots}/"
 
-    callback(sources, project_name, args)
+    cb sources, project_name, args
 
-check_config = (context)->
-  defaults = {
-    # show the timestamp on generated docs
-    show_timestamp: true,
-
-    # output directory for generated docs
-    output_dir: "docs",
-
-    # the projectname
-    project_name: context.options.project_name || '',
-
-    # source directory for any additional markdown documents including a
-    # index.md that will be included in the main generated page
-    content_dir: null
-  }
-  context.config = _.extend(defaults)
-
-parse_args (sources, project_name, raw_paths) ->
+parseArgs (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
-  context = sources: sources, options: { project_name: project_name }
-  
-
-  check_config(context)
+  context = {
+    sources
+    options: { project_name }
+  }
+  context.config = {
+    show_timestamp: yes
+    output_dir: 'docs'
+    project_name: project_name or ''
+  }
 
   ensure_directory context.config.output_dir, ->
     generate_readme(context, raw_paths)
     files = sources[0..sources.length]
-    next_file = -> generateDocumentation files.shift(), context, next_file if files.length
+    next_file = ->
+      if files.length
+        generateDocumentation files.shift(), context, next_file
     next_file()
-    if context.config.content_dir then generate_content context, context.config.content_dir
+    if context.config.content_dir?
+      generate_content context, context.config.content_dir
