@@ -34,13 +34,13 @@ Examples
 ```
 /* <button class="btn btn-primary">Primary</button>   
    Provides extra visual weight and identifies the primary action in a set of buttons */
-button {
+.btn.btn-primary {
   background: blue;
   color: white;
 }
 ```
 
-Would output an HTML document with one column displaying the rendered button followed by the description, and another column with the code.
+Would output an HTML document with one column displaying the rendered button followed by the description, and another column with the code. The code will also be included in a `style` element of the document.
 
 
 Acknowledgements
