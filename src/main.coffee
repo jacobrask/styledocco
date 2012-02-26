@@ -1,4 +1,7 @@
-{spawn, exec} = require 'child_process'
+# Dependencies
+# ============
+
+{ exec } = require 'child_process'
 fs   = require 'fs'
 path = require 'path'
 
@@ -7,20 +10,64 @@ jade   = require 'jade'
 _      = require 'underscore'
 walk   = require 'walk'
 
+
+# Configuration
+# =============
+
 marked.setOptions sanitize: false
+
 
 # Generate the documentation for a source file by reading it in, splitting it
 # up into comment/code sections, and merging them into an HTML template.
 generateDocumentation = (sourceFile, context, cb) ->
   fs.readFile sourceFile, "utf-8", (err, code) ->
     throw err if err
-    sections = makeSections get_language(sourceFile), code
+    sections = makeSections getLanguage(sourceFile), code
     generate_source_html sourceFile, context, sections
     cb()
 
+
+class Language
+
+  constructor: (@symbols, @preprocessor) ->
+    @regexs = {}
+    @regexs.single = new RegExp('^\\s*' + @symbols.single + '\\s?') if @symbols.single
+    # Hard coded /* */ for now
+    @regexs.multi_start = new RegExp(/^[\s]*\/\*[.]*/)
+    @regexs.multi_end = new RegExp(/.*\*\/.*/)
+
+  # Check type of string
+  checkType: (str) ->
+    if str.match @regexs.multi_start
+      'multistart'
+    else if str.match @regexs.multi_end
+      'multiend'
+    else if @regexs.single? and str.match @regexs.single
+      'single'
+    else
+      'code'
+
+  # Filter out comment symbols
+  filter: (str) ->
+    for n, re of @regexs
+      str = str.replace re, ''
+    str
+
+
+# A list of the supported stylesheet languages and their comment symbols
+# and optional preprocessor command.
+languages =
+  '.css':  new Language { multi: [ "/*", "*/" ] }
+  '.scss': new Language { single: '//', multi: [ "/*", "*/" ] }, 'scss'
+  '.sass': new Language { single: '//', multi: [ "/*", "*/" ] }, 'sass'
+  '.less': new Language { single: '//', multi: [ "/*", "*/" ] }, 'less'
+  '.styl': new Language { single: '//', multi: [ "/*", "*/" ] }, 'stylus'
+
+
+
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
-makeSections = (language, data) ->
+makeSections = (lang, data) ->
   
   lines = data.split '\n'
   
@@ -29,22 +76,14 @@ makeSections = (language, data) ->
   inMulti = no
   hasCode = no
 
-  save = (docs, code) ->
-    sections.push {
-      docs_text: docs
-      docs_html: marked docs
-      code_text: code
-      code_html: highlight_start + code + highlight_end
-    }
-
   for line in lines
 
     # Multi line comment
-    if line.match(language.multi_start_matcher) or inMulti
+    if lang.checkType(line) is 'multistart' or inMulti
 
       ## Start of a new section, save the old section
       if hasCode
-        save docs, code
+        sections.push { docs: marked(docs), code }
         docs = code = ''
         hasCode = no
 
@@ -55,17 +94,18 @@ makeSections = (language, data) ->
 
       # If we reached the end of a multiline comment,
       # set inMulti to false and reset multiAccum
-      if line.match(language.multi_end_matcher)
+      if lang.checkType(line) is 'multiend'
         inMulti = no
         docs = multiAccum
         multiAccum = ''
 
     # Single line comment
-    else if line.match(language.comment_matcher) and not line.match(language.comment_filter)
+    else if lang.checkType(line) is 'single'
       if hasCode
-        save docs, code
-        hasCode = docs = code = ''
-      docs += line.replace(language.comment_matcher, '') + '\n'
+        hasCode = no
+        sections.push { docs: marked(docs), code }
+        docs = code = ''
+      docs += lang.filter(line) + '\n'
 
     # Code
     else
@@ -73,7 +113,7 @@ makeSections = (language, data) ->
       code += line + '\n'
 
   # Save final code section
-  save docs, code
+  sections.push { docs: marked(docs), code }
 
   sections
    
@@ -152,54 +192,12 @@ parse_markdown = (context, src) ->
   data = fs.readFileSync(src).toString()
   return marked data
 
-# A list of the languages that Docco supports, mapping the file extension to
-# the name of the Pygments lexer and the symbol that indicates a comment. To
-# add another language to Docco's repertoire, add it here.
-languages =
-  '.css':
-    name: 'css', symbol: '//', multi_start: "/*", multi_end: "*/"
-  '.scss':
-    name: 'scss', symbol: '//', multi_start: "/*", multi_end: "*/"
-  '.less':
-    name: 'less', symbol: '//', multi_start: "/*", multi_end: "*/"
-
-# Build out the appropriate matchers and delimiters for each language.
-for ext, l of languages
-
-  # Does the line begin with a comment?
-  l.comment_matcher = new RegExp('^\\s*' + l.symbol + '\\s?')
-
-  # Ignore [hashbangs](http://en.wikipedia.org/wiki/Shebang_(Unix))
-  # and interpolations...
-  l.comment_filter = new RegExp('(^#![/]|^\\s*#\\{)')
-
-  # The dividing token we feed into Pygments, to delimit the boundaries between
-  # sections.
-  l.divider_text = '\n' + l.symbol + 'DIVIDER\n'
-
-  # The mirror of `divider_text` that we expect Pygments to return. We can split
-  # on this to recover the original sections.
-  # Note: the class is "c" for Python and "c1" for the other languages
-  l.divider_html = new RegExp('\\n*<span class="c1?">' + l.symbol + 'DIVIDER<\\/span>\\n*')
-
-  # Since we'll only handle /* */ multilin comments for now, test for them explicitly
-  # Otherwise set the multi matchers to an unmatchable RegEx
-  if l.multi_start == "/*"
-    l.multi_start_matcher = new RegExp(/^[\s]*\/\*[.]*/)
-  else
-    l.multi_start_matcher = new RegExp(/a^/)
-  if l.multi_end == "*/"
-    l.multi_end_matcher = new RegExp(/.*\*\/.*/)
-  else
-    l.multi_end_matcher = new RegExp(/a^/)
-
-
 # Get the current language we're documenting, based on the extension.
-get_language = (source) -> languages[path.extname(source)]
+getLanguage = (source) -> languages[path.extname(source)]
 
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath, context) ->
-  result = path.dirname(filepath) + '/' 
+  result = path.dirname(filepath) + '/'
   if result == '/' or result == '//' then '' else result
 
 # Compute the destination HTML path for an input source file path. If the source
@@ -225,12 +223,6 @@ content_template = jade.compile fs.readFileSync(__dirname + '/../resources/conte
 
 # The CSS styles we'd like to apply to the documentation.
 docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
-
-# The start of each Pygments highlight block.
-highlight_start = '<pre><code>'
-
-# The end of each Pygments highlight block.
-highlight_end   = '</code></pre>'
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
