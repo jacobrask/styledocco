@@ -152,36 +152,14 @@ generateReadme = (context, sources) ->
   # README.md template to be use to generate the main README file
   readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
   readme_path = "#{process.cwd()}/#{source}"
-  content_index_path = "#{process.cwd()}/#{context.config.content_dir}/content_index.md"
-  
-  # generate the content index if it exists under the content sources
-  if file_exists(content_index_path)
-    content_index = parse_markdown context, content_index_path
-  else
-    content_index = ""
  
   # parse the markdown the the readme 
   content = parse_markdown(context, readme_path) || "There is no #{source} for this project yet :( "
   
-  html = readme_template { title, context, content, content_index, file_path: source, path, relative_base }
+  html = readme_template { title, context, content, file_path: source, path, relative_base }
   
-  console.log "docco: #{source} -> #{dest}"
+  console.log "styledocco: #{source} -> #{dest}"
   writeFile(dest, html)
-
-generateContent = (context, dir) ->
-  walker = walk.walk(dir, { followLinks: false })
-  walker.on 'file', (root, fileStats, next) ->
-    # only match files that end in *.md
-    if fileStats.name.match(new RegExp ".md$")
-      src = "#{root}/#{fileStats.name}"
-      dest  = destination(src.replace(context.config.content_dir, ""), context)
-      console.log "markdown: #{src} --> #{dest}"
-      html = parse_markdown context, src
-      html = content_template {
-        title: fileStats.name, context, content: html, file_path: fileStats.name, path, relative_base
-      }
-      writeFile dest, html
-    next()
 
 # Write a file to the filesystem
 writeFile = (dest, contents) ->
@@ -232,8 +210,6 @@ file_exists = (path) ->
 
 # Create the template that we will use to generate the Styledocco HTML page.
 docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
-
-content_template = jade.compile fs.readFileSync(__dirname + '/../resources/content.jade').toString(), { filename: __dirname + '/../resources/content.jade' }
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
@@ -302,5 +278,3 @@ parseArgs (sources, project_name, raw_paths) ->
       if files.length
         generateDocumentation files.shift(), context, nextFile
     nextFile()
-    if context.config.content_dir?
-      generateContent context, context.config.content_dir
