@@ -64,16 +64,22 @@ class Language
 # and optional preprocessor command.
 languages =
   '.css':  new Language({ multi: [ "/*", "*/" ] })
-  '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'scss', args: [ '-t', 'compressed' ] })
-  '.sass': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'scss', args: [ '-t', 'compressed' ] })
-  '.less': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'lessc', args: [ '-x' ] })
-  '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'stylus', args: [ '-c', '<' ] })
+  '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] },
+                        { cmd: 'scss', args: [ '-t', 'compressed' ] })
+  '.sass': new Language({ single: '//', multi: [ "/*", "*/" ] },
+                        { cmd: 'scss', args: [ '-t', 'compressed' ] })
+  '.less': new Language({ single: '//', multi: [ "/*", "*/" ] },
+                        { cmd: 'lessc', args: [ '-x' ] })
+  '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
+                        { cmd: 'stylus', args: [ '-c', '<' ] })
 
-# Get the language object for a file name.
+# Get the language object from a file name.
 getLanguage = (source) -> languages[path.extname(source)]
 
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
+#
+# TODO: This stuff comes straight from docco-husky and needs some refactoring.
 makeSections = (lang, data) ->
   
   lines = data.split '\n'
@@ -124,14 +130,14 @@ makeSections = (lang, data) ->
 
   sections
 
-# Run `filename` through suitable preprocessor.
+# Run `filename` through suitable CSS preprocessor.
 preProcess = (filename, cb) ->
   lang = getLanguage filename
   lang.compile filename, cb
 
-# Once all of the code is finished highlighting, we can generate the HTML file
-# and write out the documentation. Pass the completed sections into the template
-# found in `resources/docs.jade`
+
+# Generate the HTML document and write to file.
+# TODO: split up.
 generateSourceHtml = (source, context, sections) ->
   title = path.basename source
   dest  = destination source, context
@@ -144,13 +150,14 @@ generateSourceHtml = (source, context, sections) ->
     console.log "styledocco: #{source} -> #{dest}"
     writeFile(dest, html)
 
+
+# Look for a README file and generate an index.html.
 generateReadme = (context, sources, cb) ->
   templateDir = "#{__dirname}/../resources/"
   currentDir = "#{process.cwd()}/"
   dest = "#{context.config.output_dir}/index.html"
 
   getReadme = (cb) ->
-
     # Look for readme in current dir
     fs.readdir currentDir, (err, files) ->
       return cb err if err?
@@ -178,22 +185,23 @@ generateReadme = (context, sources, cb) ->
       writeFile(dest, html)
       cb()
 
+
 # Write a file to the filesystem
 writeFile = (dest, contents) ->
 
-    target_dir = path.dirname(dest)
-    write_func = ->
-      fs.writeFile dest, contents, (err) -> throw err if err
+  target_dir = path.dirname(dest)
+  write_func = ->
+    fs.writeFile dest, contents, (err) -> throw err if err
 
-    fs.stat target_dir, (err, stats) ->
-      throw err if err and err.code != 'ENOENT'
+  fs.stat target_dir, (err, stats) ->
+    throw err if err and err.code != 'ENOENT'
 
-      return write_func() unless err
+    return write_func() unless err
 
-      if err
-        exec "mkdir -p #{target_dir}", (err) ->
-          throw err if err
-          write_func()
+    if err
+      exec "mkdir -p #{target_dir}", (err) ->
+        throw err if err
+        write_func()
 
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath, context) ->
@@ -221,6 +229,7 @@ docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docs.ja
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
+# TODO: use some argument parsing module and allow more configuration options.
 parseArgs = (cb) ->
 
   args = process.ARGV
@@ -269,6 +278,7 @@ parseArgs = (cb) ->
 parseArgs (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
   # that we require down the line.
+  # TODO: factor out the weird context stuff.
   context = {
     sources
     options: { project_name }
