@@ -8,8 +8,5 @@ html
     link(rel='stylesheet', href="#{root_path}docs.css")
   body
     include menu
-    .container
-      h1 #{title}
-      !{content}
-    if context.config.show_timestamp
-      footer.container Generated #{new Date()}
+    .container !{content}
+    footer.container Generated #{new Date()}

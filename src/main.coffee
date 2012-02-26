@@ -69,7 +69,8 @@ languages =
   '.less': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'lessc', args: [ '-x' ] })
   '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] }, { cmd: 'stylus', args: [ '-c', '<' ] })
 
-
+# Get the language object for a file name.
+getLanguage = (source) -> languages[path.extname(source)]
 
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
@@ -143,22 +144,39 @@ generateSourceHtml = (source, context, sections) ->
     console.log "styledocco: #{source} -> #{dest}"
     writeFile(dest, html)
 
-generateReadme = (context, sources) ->
-  title = "README"
+generateReadme = (context, sources, cb) ->
+  templateDir = "#{__dirname}/../resources/"
+  currentDir = "#{process.cwd()}/"
   dest = "#{context.config.output_dir}/index.html"
-  source = "README.md"
 
-  # README.md template to be use to generate the main README file
-  readme_template  = jade.compile fs.readFileSync(__dirname + '/../resources/readme.jade').toString(), { filename: __dirname + '/../resources/readme.jade' }
-  readme_path = "#{process.cwd()}/#{source}"
- 
-  # Parse the Markdown in the Readme
-  content = marked fs.readFileSync(readme_path).toString() or "There is no readme for this project yet."
-  
-  html = readme_template { title, context, content, file_path: source, path, relative_base }
-  
-  console.log "styledocco: #{source} -> #{dest}"
-  writeFile(dest, html)
+  getReadme = (cb) ->
+
+    # Look for readme in current dir
+    fs.readdir currentDir, (err, files) ->
+      return cb err if err?
+      files = files.filter (file) ->
+        file.toLowerCase().match /^readme/
+      return cb new Error('No readme found') unless files[0]?
+
+      fs.readFile currentDir + files[0], 'utf-8', (err, content) ->
+        return cb err if err? or not content.length
+        # Callback with parsed markdown and filename
+        cb null, marked(content), files[0]
+
+
+  getReadme (err, content, readmePath) ->
+    content ?= "<h1>Readme</h1><p>Please add a README file to this project.</p>"
+    readmePath ?= './'
+    title = context.config.project_name or "README"
+
+    # Template to use to generate the documentation index file
+    fs.readFile templateDir + 'readme.jade', 'utf-8', (err, tmpl) ->
+      readmeTemplate = jade.compile tmpl, filename: templateDir + 'readme.jade'
+      html = readmeTemplate { title, context, content, file_path: readmePath, path, relative_base }
+
+      console.log "styledocco: #{readmePath} -> #{dest}"
+      writeFile(dest, html)
+      cb()
 
 # Write a file to the filesystem
 writeFile = (dest, contents) ->
@@ -176,9 +194,6 @@ writeFile = (dest, contents) ->
         exec "mkdir -p #{target_dir}", (err) ->
           throw err if err
           write_func()
-
-# Get the current language we're documenting, based on the extension.
-getLanguage = (source) -> languages[path.extname(source)]
 
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath, context) ->
@@ -265,9 +280,9 @@ parseArgs (sources, project_name, raw_paths) ->
   }
 
   ensureDirectory context.config.output_dir, ->
-    generateReadme(context, raw_paths)
-    files = sources[0..sources.length]
-    nextFile = ->
-      if files.length
-        generateDocumentation files.shift(), context, nextFile
-    nextFile()
+    generateReadme context, raw_paths, ->
+      files = sources[0..sources.length]
+      nextFile = ->
+        if files.length
+          generateDocumentation files.shift(), context, nextFile
+      nextFile()
