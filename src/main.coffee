@@ -131,7 +131,7 @@ preProcess = (filename, cb) ->
 
 # Once all of the code is finished highlighting, we can generate the HTML file
 # and write out the documentation. Pass the completed sections into the template
-# found in `resources/docco.jade`
+# found in `resources/docs.jade`
 generateSourceHtml = (source, context, sections) ->
   title = path.basename source
   dest  = destination source, context
@@ -209,7 +209,7 @@ file_exists = (path) ->
     return false
 
 # Create the template that we will use to generate the Styledocco HTML page.
-docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docco.jade').toString(), { filename: __dirname + '/../resources/docco.jade' }
+docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docs.jade').toString(), { filename: __dirname + '/../resources/docs.jade' }
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
