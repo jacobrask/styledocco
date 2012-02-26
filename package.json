@@ -1,13 +1,13 @@
 {
   "name": "styledocco",
-  "description": "Generate a style guide from your CSS/SASS/LESS files.",
+  "description": "Generate a style guide from your stylesheets.",
   "keywords": [
     "styleguide",
     "css",
     "documentation"
   ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "licenses": [
     {
       "type": "MIT",
