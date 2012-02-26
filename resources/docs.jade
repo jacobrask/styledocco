@@ -4,28 +4,21 @@
 html
   head
     title=title
-    meta( http-equiv='Content-Type', content='text/html', charset='UTF-8')
-    link( rel='stylesheet', media='all', href="#{root_path}docco.css" )
+    meta(charset='utf-8')
+    style !{css}
+    link(rel='stylesheet', href="#{root_path}docs.css")
   body
-    div#container
-      div#background
-      if context.sources.length > 0
-        include includes/menu
-      table(cellpadding="0", cellspacing="0")
-        thead
-          tr
-            th.docs
-              h1 #{title}
-              div.filepath #{relative_base(file_path, context)}
-            th.code
-        tbody
-          each section, i in sections
-            tr(id="section-#{ i + 1}")
-              td.docs
-                div.pilwrap
-                  a.pilcrow(href="#section-#{i+1}") &#182;
-                !{section.docs_html}
-              td.code !{section.code_html}
-      if context.config.show_timestamp
-        div#generated generated #{new Date()}  
-      include includes/project_name
+    if context.sources.length > 0
+      include menu
+    .container
+      h1 #{title}
+        small #{relative_base(file_path, context)}
+      each section, i in sections
+        .row
+          .docs !{section.docs}
+          .code
+            if section.code != ''
+              pre
+                code !{section.code}
+    if context.config.show_timestamp
+      footer Generated #{new Date()}

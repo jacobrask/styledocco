@@ -1,75 +1,15 @@
 - var root_path = relative_base(file_path, context)
 - root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
-- var emailRegex = new RegExp(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-- function gravatarDecorator(str, gravatar) {
--   // pretty lame way of doing this for now
--   if(typeof str == 'object') {
--     str = str.name + "<" + str.email + ">";
--   }
--   var emails = str.match(emailRegex);
--   if(emails && emails.length > 0) {
--     return '<span class="gravatar"><img src="' + gravatar.url(emails[0]) + '"/>' + '<span>' + escape(str) + '</span></span>';
--   } else {
--     return str;
--   }
-- }
 !!! 5
 html
   head
     title=title
-    meta( http-equiv='Content-Type', content='text/html', charset='UTF-8')
-    link( rel='stylesheet', media='all', href="#{root_path}docco.css" )
+    meta(charset='utf-8')
+    link(rel='stylesheet', href="#{root_path}docs.css")
   body
-    div#container
-      div#background
-      if context.sources.length > 0
-        include includes/menu
-      table(cellpadding="0", cellspacing="0")
-        thead
-          tr
-            th.docs
-            th.code
-        tbody
-          tr(id="section")
-            td.docs
-              if package_json && package_json.name
-                if package_json.name
-                  h1 
-                    if package_json.homepage 
-                      a( href="#{package_json.homepage}")
-                        #{package_json.name}
-                    else
-                      #{package_json.name}
-                if package_json.description
-                  p #{package_json.description}
-
-                if content_index
-                  !{content_index}
-                if package_json.version
-                  h3 Version
-                  p #{package_json.version}
-                if package_json.author
-                  h3 Author
-                  p !{gravatarDecorator(package_json.author, gravatar)}
-                if package_json.contributors
-                  h3 Contributors
-                  each contributor in package_json.contributors
-                    p !{gravatarDecorator(contributor, gravatar)}
-                if package_json.repository && package_json.repository.type && package_json.repository.url
-                  h3 Repository
-                  p #{package_json.repository.type} - #{package_json.repository.url}
-                h3 Dependencies 
-                ul
-                  each dep, key in package_json.dependencies
-                    li 
-                      b #{key} 
-                      span #{dep}
-              p
-                if code_stats
-                  h3 Stats
-                  pre.code_stats !{code_stats}
-            td#content.code !{content}  
-      if context.config.show_timestamp
-        div#generated generated #{new Date()}  
-
-      include includes/project_name
+    include menu
+    .container
+      h1 #{title}
+      !{content}
+    if context.config.show_timestamp
+      footer.container Generated #{new Date()}
