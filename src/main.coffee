@@ -90,7 +90,7 @@ makeSections = (lang, data) ->
 
       ## Start of a new section, save the old section
       if hasCode
-        sections.push { docs: marked(docs), code }
+        sections.push { docs: marked(docs.trim()), code: code.trim() }
         docs = code = ''
         hasCode = no
 
@@ -110,7 +110,7 @@ makeSections = (lang, data) ->
     else if lang.checkType(line) is 'single'
       if hasCode
         hasCode = no
-        sections.push { docs: marked(docs), code }
+        sections.push { docs: marked(docs.trim()), code: code.trim() }
         docs = code = ''
       docs += lang.filter(line) + '\n'
 
@@ -120,7 +120,7 @@ makeSections = (lang, data) ->
       code += line + '\n'
 
   # Save final code section
-  sections.push { docs: marked(docs), code }
+  sections.push { docs: marked(docs.trim()), code: code.trim() }
 
   sections
 
