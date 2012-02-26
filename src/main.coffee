@@ -122,9 +122,10 @@ makeSections = (lang, data) ->
 # found in `resources/docco.jst`
 generate_source_html = (source, context, sections) ->
   title = path.basename source
+  css = fs.readFileSync(source).toString()
   dest  = destination source, context
   html  = docco_template {
-    title, file_path: source, sections, context, path, relative_base
+    title, file_path: source, sections, context, path, relative_base, css
   }
 
   console.log "styledocco: #{source} -> #{dest}"
@@ -221,9 +222,6 @@ docco_template  = jade.compile fs.readFileSync(__dirname + '/../resources/docco.
 
 content_template = jade.compile fs.readFileSync(__dirname + '/../resources/content.jade').toString(), { filename: __dirname + '/../resources/content.jade' }
 
-# The CSS styles we'd like to apply to the documentation.
-docco_styles    = fs.readFileSync(__dirname + '/../resources/docco.css').toString()
-
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
 parse_args = (callback) ->
@@ -266,9 +264,6 @@ parse_args = (callback) ->
 
 check_config = (context)->
   defaults = {
-    # the primary CSS file to load
-    css: (__dirname + '/../resources/docco.css')
-
     # show the timestamp on generated docs
     show_timestamp: true,
 
@@ -294,7 +289,6 @@ parse_args (sources, project_name, raw_paths) ->
 
   ensure_directory context.config.output_dir, ->
     generate_readme(context, raw_paths)
-    fs.writeFile "#{context.config.output_dir}/docco.css", fs.readFileSync(context.config.css).toString()
     files = sources[0..sources.length]
     next_file = -> generateDocumentation files.shift(), context, next_file if files.length
     next_file()
