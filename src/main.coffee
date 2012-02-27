@@ -5,13 +5,25 @@
 fs     = require 'fs'
 path   = require 'path'
 
-marked = require 'marked'
-jade   = require 'jade'
-walk   = require 'walk'
+marked   = require 'marked'
+jade     = require 'jade'
+optimist = require 'optimist'
+walk     = require 'walk'
 
 
 # Configuration
 # =============
+
+options = optimist
+  .usage('Usage: $0 [options] [INPUT]')
+  .describe('name', 'Name of the project')
+  .alias('n', 'name')
+  .demand('name')
+  .describe('out', 'Output directory')
+  .alias('o', 'out')
+  .default('out', 'docs')
+  .demand('_')
+  .argv
 
 marked.setOptions sanitize: false
 
@@ -59,6 +71,7 @@ class Language
     else
       fs.readFile filename, 'utf-8', (err, data) ->
         cb err, data
+
 
 # A list of the supported stylesheet languages and their comment symbols
 # and optional preprocessor command.
@@ -238,37 +251,20 @@ docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docs.ja
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
-# TODO: use some argument parsing module and allow more configuration options.
 parseArgs = (cb) ->
 
-  args = process.ARGV
-  project_name = ""
+  project_name = options.name
 
-  # Optional Project name following -name option
-  if args[0] == "-name"
-    args.shift()
-    project_name = args.shift()
+  # Sort the list of files and directories.
+  roots = options._.sort()
 
-  # Sort the list of files and directories
-  args = args.sort()
-
-  # Preserving past behavior: if no args are given, we do nothing (eventually
-  # display help?)
-  return unless args.length
-
-  # Collect all of the directories or file paths to then pass onto the 'find'
-  # command
-  roots = (a.replace(/\/+$/, '') for a in args)
-  roots = roots.join(" ")
-    
-  # Only include files that we know how to handle
-  lang_filter = for ext of languages
+  # Build an array of `find` options, including only files in our
+  # supported languages.
+  langFilter = for ext of languages
     " -name '*#{ext}' "
-  lang_filter = lang_filter.join ' -o '
 
-  # Rather than deal with building a recursive tree walker via the fs module,
-  # let's save ourselves typing and testing and drop to the shell
-  exec "find #{roots} -type f \\( #{lang_filter} \\)", (err, stdout) ->
+  # TODO: Replace with `walk`.
+  exec "find #{roots.join(' ')} -type f \\( #{langFilter.join(' -o ')} \\)", (err, stdout) ->
     throw err if err
 
     sources = stdout.split("\n").filter (file) ->
@@ -282,7 +278,7 @@ parseArgs = (cb) ->
 
     console.log "styledocco: Recursively generating docs underneath #{roots}/"
 
-    cb sources, project_name, args
+    cb sources, options.name, options
 
 parseArgs (sources, project_name, raw_paths) ->
   # Rather than relying on globals, let's pass around a context w/ misc info
