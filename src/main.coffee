@@ -96,23 +96,18 @@ getLanguage = (source) -> languages[path.extname(source)]
 
 trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
 
-ensureDirectory = (dir, cb) -> exec "mkdir -p #{dir}", -> cb()
-
 
 # File system utils
 # -----------------
 
-# Compute the destination HTML path for an input source file path. If the
-# source is `src/main.css`, the HTML will be at `docs/src/main.html`.
+# Make sure that `dir` exists.
+ensureDirectory = (dir, cb) -> exec "mkdir -p #{dir}", -> cb()
+
+# Compute the destination HTML path for an input source file path.
+# If the source is `src/main.css`, the HTML will be at `docs/src/main.html`.
 makeDestination = (filepath) ->
   base_path = relative_base filepath
   "#{options.out}/#{base_path}#{path.basename(filepath, path.extname(filepath))}.html"
-
-file_exists = (path) ->
-  try
-    return fs.lstatSync(path).isFile
-  catch ex
-    return false
 
 # Run `filename` through suitable CSS preprocessor.
 preProcess = (filename, cb) ->
@@ -180,28 +175,33 @@ makeSections = (lang, data) ->
   sections
 
 
+# Render `template` with `content`.
+renderTemplate = (templateName, content, cb) ->
+  templateDir = "#{__dirname}/../resources/"
+  templateFile = "#{templateDir}#{templateName}.jade"
+
+  fs.readFile templateFile, 'utf-8', (err, template) ->
+    return cb err if err?
+    compiledTemplate = jade.compile template, filename: templateFile
+    cb null, compiledTemplate content
+
 
 # Generate the HTML document and write to file.
-# TODO: split up, make async.
 generateSourceHtml = (source, sourceFiles, sections) ->
-  templateDir = "#{__dirname}/../resources/"
   title = path.basename source
   dest  = makeDestination source
 
   preProcess source, (err, css) ->
     throw err if err?
-    
-    fs.readFile templateDir + 'docs.jade', 'utf-8', (err, tmpl) ->
-      docTemplate = jade.compile tmpl, filename: templateDir + 'docs.jade'
-      html = docTemplate { title, project: { name: options.name, sources: sourceFiles }, sections, file_path: source, path, relative_base, css }
-
+    content = { title, project: { name: options.name, sources: sourceFiles }, sections, file_path: source, path, relative_base, css }
+    renderTemplate 'docs', content, (err, html) ->
+      throw err if err?
       console.log "styledocco: #{source} -> #{dest}"
       writeFile(dest, html)
 
 
 # Look for a README file and generate an index.html.
 generateReadme = (sourceFiles, cb) ->
-  templateDir = "#{__dirname}/../resources/"
   currentDir = "#{process.cwd()}/"
   dest = "#{options.out}/index.html"
 
@@ -219,16 +219,12 @@ generateReadme = (sourceFiles, cb) ->
         cb null, marked(content), files[0]
 
 
-  getReadme (err, content, readmePath) ->
-    content ?= "<h1>Readme</h1><p>Please add a README file to this project.</p>"
+  getReadme (err, html, readmePath) ->
+    html ?= "<h1>Readme</h1><p>Please add a README file to this project.</p>"
     readmePath ?= './'
     title = options.name
-
-    # Template to use to generate the documentation index file
-    fs.readFile templateDir + 'readme.jade', 'utf-8', (err, tmpl) ->
-      readmeTemplate = jade.compile tmpl, filename: templateDir + 'readme.jade'
-      html = readmeTemplate { title, project: { name: options.name, sources: sourceFiles }, content, file_path: readmePath, path, relative_base }
-
+    content = { title, project: { name: options.name, sources: sourceFiles }, content: html, file_path: readmePath, path, relative_base }
+    renderTemplate 'readme', content, (err, html) ->
       console.log "styledocco: #{readmePath} -> #{dest}"
       writeFile(dest, html)
       cb()
