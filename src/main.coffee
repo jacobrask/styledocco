@@ -67,7 +67,7 @@ languages =
   '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'scss', args: [ '-t', 'compressed' ] })
   '.sass': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'scss', args: [ '-t', 'compressed' ] })
+                        { cmd: 'sass', args: [ '-t', 'compressed' ] })
   '.less': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'lessc', args: [ '-x' ] })
   '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
