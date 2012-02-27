@@ -31,11 +31,11 @@ marked.setOptions sanitize: false
 # Generate the documentation for a source file by reading it in, splitting it
 # up into comment/code sections, and passing them to a Jade template.
 generateDocumentation = (source, sourceFiles, cb) ->
-  fs.readFile source, "utf-8", (err, code) ->
-    throw err if err
-    sections = makeSections getLanguage(source), code
-    generateSourceHtml source, sourceFiles, sections
-    cb()
+  # Read in stylesheet
+  code = fs.readFileSync source, "utf-8"
+  sections = makeSections getLanguage(source), code
+  generateSourceHtml source, sourceFiles, sections
+  cb()
 
 
 class Language
@@ -176,14 +176,12 @@ makeSections = (lang, data) ->
 
 
 # Render `template` with `content`.
-renderTemplate = (templateName, content, cb) ->
+renderTemplate = (templateName, content) ->
   templateDir = "#{__dirname}/../resources/"
   templateFile = "#{templateDir}#{templateName}.jade"
 
-  fs.readFile templateFile, 'utf-8', (err, template) ->
-    return cb err if err?
-    compiledTemplate = jade.compile template, filename: templateFile
-    cb null, compiledTemplate content
+  template = fs.readFileSync templateFile, 'utf-8'
+  jade.compile(template, filename: templateFile)(content)
 
 
 # Generate the HTML document and write to file.
@@ -193,41 +191,37 @@ generateSourceHtml = (source, sourceFiles, sections) ->
 
   preProcess source, (err, css) ->
     throw err if err?
-    content = { title, project: { name: options.name, sources: sourceFiles }, sections, file_path: source, path, relative_base, css }
-    renderTemplate 'docs', content, (err, html) ->
-      throw err if err?
-      console.log "styledocco: #{source} -> #{dest}"
-      writeFile(dest, html)
+    rootPath = relative_base(source).replace /^\//, '..'
+    data = { title, project: { name: options.name, sources: sourceFiles }, sections, file_path: source, path, relative_base, css, rootPath }
+    html = renderTemplate 'docs', data
+    console.log "styledocco: #{source} -> #{dest}"
+    writeFile(dest, html)
 
 
 # Look for a README file and generate an index.html.
-generateReadme = (sourceFiles, cb) ->
+generateReadme = (sourceFiles) ->
   currentDir = "#{process.cwd()}/"
   dest = "#{options.out}/index.html"
 
-  getReadme = (cb) ->
-    # Look for readme in current dir
-    fs.readdir currentDir, (err, files) ->
-      return cb err if err?
-      files = files.filter (file) ->
-        file.toLowerCase().match /^readme/
-      return cb new Error('No readme found') unless files[0]?
+  # Look for readme in current dir
+  files = fs.readdirSync(currentDir)
+    .filter (file) -> file.toLowerCase().match /^readme/
 
-      fs.readFile currentDir + files[0], 'utf-8', (err, content) ->
-        return cb err if err? or not content.length
-        # Callback with parsed markdown and filename
-        cb null, marked(content), files[0]
-
-
-  getReadme (err, html, readmePath) ->
-    html ?= "<h1>Readme</h1><p>Please add a README file to this project.</p>"
-    readmePath ?= './'
-    title = options.name
-    content = { title, project: { name: options.name, sources: sourceFiles }, content: html, file_path: readmePath, path, relative_base }
-    renderTemplate 'readme', content, (err, html) ->
-      console.log "styledocco: #{readmePath} -> #{dest}"
-      writeFile(dest, html)
-      cb()
+  content =
+    if files[0]?
+      # Parse Readme with markdown.
+      marked fs.readFileSync currentDir + files[0], 'utf-8'
+    else
+      "<h1>Readme</h1><p>Please add a README file to this project.</p>"
+ 
+  rootPath = relative_base(files[0]).replace /^\//, '..'
+  console.log rootPath
+  readmePath = files[0] or './'
+  title = options.name
+  data = { title, project: { name: options.name, sources: sourceFiles }, content, file_path: readmePath, path, relative_base, rootPath }
+  html = renderTemplate 'readme', data
+  console.log "styledocco: #{readmePath} -> #{dest}"
+  writeFile dest, html
 
 
 # Write a file to the filesystem
@@ -284,9 +278,9 @@ parseArgs = (cb) ->
 
 parseArgs (sourceFiles) ->
   ensureDirectory options.out, ->
-    generateReadme sourceFiles, ->
-      files = sourceFiles[0..sourceFiles.length]
-      nextFile = ->
-        if files.length
-          generateDocumentation files.shift(), sourceFiles, nextFile
-      nextFile()
+    generateReadme sourceFiles
+    files = sourceFiles[0..sourceFiles.length]
+    nextFile = ->
+      if files.length
+        generateDocumentation files.shift(), sourceFiles, nextFile
+    nextFile()

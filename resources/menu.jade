@@ -1,6 +1,6 @@
 .navbar
   nav.container
-    a.brand(href="#{root_path}index.html") #{project.name}
+    a.brand(href="#{rootPath}index.html") #{project.name}
     ul.nav
       each source in project.sources
         - var base_path = relative_base(source)
@@ -8,5 +8,5 @@
         - var this_class = (source == file_path) ? "is-active" : "";
         - var base_name = path.basename(source, path.extname(source));
         li
-          a(class="#{this_class}", href="#{root_path}#{base_path}#{base_name}.html")
+          a(class="#{this_class}", href="#{rootPath}#{base_path}#{base_name}.html")
             #{source}
