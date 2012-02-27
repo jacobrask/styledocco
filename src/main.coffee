@@ -76,6 +76,10 @@ languages =
 # Get the language object from a file name.
 getLanguage = (source) -> languages[path.extname(source)]
 
+
+trimNewLines = (str) ->
+  str.replace(/^\n*/, '').replace(/\n*$/, '')
+
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
 #
@@ -89,6 +93,11 @@ makeSections = (lang, data) ->
   inMulti = no
   hasCode = no
 
+  save = (docs, code) ->
+    sections.push
+      docs: marked trimNewLines(docs)
+      code: trimNewLines(code)
+
   for line in lines
 
     # Multi line comment
@@ -96,7 +105,7 @@ makeSections = (lang, data) ->
 
       ## Start of a new section, save the old section
       if hasCode
-        sections.push { docs: marked(docs.trim()), code: code.trim() }
+        save docs, code
         docs = code = ''
         hasCode = no
 
@@ -116,7 +125,7 @@ makeSections = (lang, data) ->
     else if lang.checkType(line) is 'single'
       if hasCode
         hasCode = no
-        sections.push { docs: marked(docs.trim()), code: code.trim() }
+        save docs, code
         docs = code = ''
       docs += lang.filter(line) + '\n'
 
@@ -126,7 +135,7 @@ makeSections = (lang, data) ->
       code += line + '\n'
 
   # Save final code section
-  sections.push { docs: marked(docs.trim()), code: code.trim() }
+  save docs, code
 
   sections
 
