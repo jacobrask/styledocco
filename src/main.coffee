@@ -30,11 +30,11 @@ marked.setOptions sanitize: false
 
 # Generate the documentation for a source file by reading it in, splitting it
 # up into comment/code sections, and passing them to a Jade template.
-generateDocumentation = (sourceFile, context, cb) ->
-  fs.readFile sourceFile, "utf-8", (err, code) ->
+generateDocumentation = (source, sourceFiles, cb) ->
+  fs.readFile source, "utf-8", (err, code) ->
     throw err if err
-    sections = makeSections getLanguage(sourceFile), code
-    generateSourceHtml sourceFile, context, sections
+    sections = makeSections getLanguage(source), code
+    generateSourceHtml source, sourceFiles, sections
     cb()
 
 
@@ -86,12 +86,39 @@ languages =
   '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'stylus', args: [ '-c', '<' ] })
 
+
 # Get the language object from a file name.
 getLanguage = (source) -> languages[path.extname(source)]
 
 
-trimNewLines = (str) ->
-  str.replace(/^\n*/, '').replace(/\n*$/, '')
+# Helper functions and utilities
+# ==============================
+
+trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
+
+ensureDirectory = (dir, cb) -> exec "mkdir -p #{dir}", -> cb()
+
+
+# File system utils
+# -----------------
+
+# Compute the destination HTML path for an input source file path. If the
+# source is `src/main.css`, the HTML will be at `docs/src/main.html`.
+makeDestination = (filepath) ->
+  base_path = relative_base filepath
+  "#{options.out}/#{base_path}#{path.basename(filepath, path.extname(filepath))}.html"
+
+file_exists = (path) ->
+  try
+    return fs.lstatSync(path).isFile
+  catch ex
+    return false
+
+# Run `filename` through suitable CSS preprocessor.
+preProcess = (filename, cb) ->
+  lang = getLanguage filename
+  lang.compile filename, cb
+
 
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
@@ -152,32 +179,31 @@ makeSections = (lang, data) ->
 
   sections
 
-# Run `filename` through suitable CSS preprocessor.
-preProcess = (filename, cb) ->
-  lang = getLanguage filename
-  lang.compile filename, cb
 
 
 # Generate the HTML document and write to file.
-# TODO: split up.
-generateSourceHtml = (source, context, sections) ->
+# TODO: split up, make async.
+generateSourceHtml = (source, sourceFiles, sections) ->
+  templateDir = "#{__dirname}/../resources/"
   title = path.basename source
-  dest  = destination source, context
+  dest  = makeDestination source
 
   preProcess source, (err, css) ->
-    throw err if err
-    html  = docco_template {
-      title, file_path: source, sections, context, path, relative_base, css
-    }
-    console.log "styledocco: #{source} -> #{dest}"
-    writeFile(dest, html)
+    throw err if err?
+    
+    fs.readFile templateDir + 'docs.jade', 'utf-8', (err, tmpl) ->
+      docTemplate = jade.compile tmpl, filename: templateDir + 'docs.jade'
+      html = docTemplate { title, project: { name: options.name, sources: sourceFiles }, sections, file_path: source, path, relative_base, css }
+
+      console.log "styledocco: #{source} -> #{dest}"
+      writeFile(dest, html)
 
 
 # Look for a README file and generate an index.html.
-generateReadme = (context, sources, cb) ->
+generateReadme = (sourceFiles, cb) ->
   templateDir = "#{__dirname}/../resources/"
   currentDir = "#{process.cwd()}/"
-  dest = "#{context.config.output_dir}/index.html"
+  dest = "#{options.out}/index.html"
 
   getReadme = (cb) ->
     # Look for readme in current dir
@@ -196,12 +222,12 @@ generateReadme = (context, sources, cb) ->
   getReadme (err, content, readmePath) ->
     content ?= "<h1>Readme</h1><p>Please add a README file to this project.</p>"
     readmePath ?= './'
-    title = context.config.project_name or "README"
+    title = options.name
 
     # Template to use to generate the documentation index file
     fs.readFile templateDir + 'readme.jade', 'utf-8', (err, tmpl) ->
       readmeTemplate = jade.compile tmpl, filename: templateDir + 'readme.jade'
-      html = readmeTemplate { title, context, content, file_path: readmePath, path, relative_base }
+      html = readmeTemplate { title, project: { name: options.name, sources: sourceFiles }, content, file_path: readmePath, path, relative_base }
 
       console.log "styledocco: #{readmePath} -> #{dest}"
       writeFile(dest, html)
@@ -226,34 +252,14 @@ writeFile = (dest, contents) ->
         write_func()
 
 # Compute the path of a source file relative to the docs folder
-relative_base = (filepath, context) ->
+relative_base = (filepath) ->
   result = path.dirname(filepath) + '/'
   if result == '/' or result == '//' then '' else result
 
-# Compute the destination HTML path for an input source file path. If the source
-# is `lib/example.coffee`, the HTML will be at `docs/example.html`.
-destination = (filepath, context) ->
-  base_path = relative_base filepath, context
-  "#{context.config.output_dir}/" + base_path + path.basename(filepath, path.extname(filepath)) + '.html'
-
-# Ensure that the destination directory exists.
-ensureDirectory = (dir, cb) ->
-  exec "mkdir -p #{dir}", -> cb()
-
-file_exists = (path) ->
-  try
-    return fs.lstatSync(path).isFile
-  catch ex
-    return false
-
-# Create the template that we will use to generate the Styledocco HTML page.
-docco_template = jade.compile fs.readFileSync(__dirname + '/../resources/docs.jade').toString(), { filename: __dirname + '/../resources/docs.jade' }
 
 # Process our arguments, passing an array of sources to generate docs for,
 # and an optional relative root.
 parseArgs = (cb) ->
-
-  project_name = options.name
 
   # Sort the list of files and directories.
   roots = options._.sort()
@@ -278,26 +284,13 @@ parseArgs = (cb) ->
 
     console.log "styledocco: Recursively generating docs underneath #{roots}/"
 
-    cb sources, options.name, options
+    cb sources, roots
 
-parseArgs (sources, project_name, raw_paths) ->
-  # Rather than relying on globals, let's pass around a context w/ misc info
-  # that we require down the line.
-  # TODO: factor out the weird context stuff.
-  context = {
-    sources
-    options: { project_name }
-  }
-  context.config = {
-    show_timestamp: yes
-    output_dir: 'docs'
-    project_name: project_name or ''
-  }
-
-  ensureDirectory context.config.output_dir, ->
-    generateReadme context, raw_paths, ->
-      files = sources[0..sources.length]
+parseArgs (sourceFiles) ->
+  ensureDirectory options.out, ->
+    generateReadme sourceFiles, ->
+      files = sourceFiles[0..sourceFiles.length]
       nextFile = ->
         if files.length
-          generateDocumentation files.shift(), context, nextFile
+          generateDocumentation files.shift(), sourceFiles, nextFile
       nextFile()
