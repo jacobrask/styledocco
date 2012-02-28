@@ -63,8 +63,9 @@ class Language
 
   compile: (filename, cb) ->
     if @preprocessor?
-      exec "#{@preprocessor.cmd} #{@preprocessor.args.join(' ')} #{filename}", (err, stdout, stderr) ->
-        cb err, stdout
+      exec "#{@preprocessor.cmd} #{@preprocessor.args.join(' ')} #{filename}",
+        (err, stdout, stderr) ->
+          cb err, stdout
     else
       fs.readFile filename, 'utf-8', (err, data) ->
         cb err, data
@@ -82,7 +83,6 @@ languages =
                         { cmd: 'lessc', args: [ '-x' ] })
   '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'stylus', args: [ '-c', '<' ] })
-
 
 
 # Helper functions and utilities
@@ -107,6 +107,7 @@ makeDestination = (file) ->
 preProcess = (filename, cb) ->
   lang = getLanguage filename
   lang.compile filename, cb
+
 
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
@@ -236,6 +237,9 @@ writeFile = (dest, contents) ->
   fs.writeFileSync dest, contents
 
 
+# Program flow starts here.
+# =========================
+
 # Make sure that specified output directory exists.
 mkdirp.sync outputDir
 
@@ -251,14 +255,14 @@ files = sources.
     return false unless fs.statSync(source).isFile() # Files only.
     return true
 
-links = files.
-  map (file) ->
-    {
-      name: path.basename file, path.extname file
-      path: file
-      href: makeDestination file
-      class: ''
-    }
+# Make `link` objects for the menu.
+links = files
+  .sort()
+  .map (file) ->
+    name: path.basename file, path.extname file
+    path: file
+    href: makeDestination file
+    class: ''
 
 # Create `index.html` file.
 generateIndex links
