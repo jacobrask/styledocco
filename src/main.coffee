@@ -38,14 +38,16 @@ class Language
 
   constructor: (@symbols, @preprocessor) ->
     @regexs = {}
-    @regexs.single = new RegExp('^\\s*' + @symbols.single + '\\s?') if @symbols.single
+    @regexs.single = new RegExp('^\\s*' + @symbols.single) if @symbols.single
     # Hard coded /* */ for now
     @regexs.multi_start = new RegExp(/^[\s]*\/\*[.]*/)
-    @regexs.multi_end = new RegExp(/.*\*\/.*/)
+    @regexs.multi_end = new RegExp(/\*\//)
 
   # Check type of string
   checkType: (str) ->
-    if str.match @regexs.multi_start
+    if str.match(@regexs.multi_start) and str.match(@regexs.multi_end)
+      'single'
+    else if str.match @regexs.multi_start
       'multistart'
     else if str.match @regexs.multi_end
       'multiend'
@@ -135,7 +137,7 @@ makeSections = (lang, data) ->
       code: trimNewLines(code)
 
   for line in lines
-
+    
     # Multi line comment
     if lang.checkType(line) is 'multistart' or inMulti
 
