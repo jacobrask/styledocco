@@ -7,5 +7,6 @@ html
   body
     if project.links.length > 0
       include menu
-    .container !{content}
-    footer.container Generated #{new Date()}
+    .container
+      .span6 !{content}
+    include footer
