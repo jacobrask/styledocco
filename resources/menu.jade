@@ -1,12 +1,8 @@
 .navbar
   nav.container
-    a.brand(href="#{rootPath}index.html") #{project.name}
+    a.brand(href="#{project.root}index.html") #{project.name}
     ul.nav
-      each source in project.sources
-        - var base_path = relative_base(source)
-        - var base_path_padded = base_path.replace(new RegExp("/", 'g'), " / ");
-        - var this_class = (source == file_path) ? "is-active" : "";
-        - var base_name = path.basename(source, path.extname(source));
+      each link in project.links
         li
-          a(class="#{this_class}", href="#{rootPath}#{base_path}#{base_name}.html")
-            #{source}
+          a(class="#{link.class}", href="#{project.root}#{link.href}", title="#{link.path}")
+            #{link.name}

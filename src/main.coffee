@@ -33,16 +33,7 @@ outputDir = options.out
 marked.setOptions sanitize: false
 
 
-# Generate the documentation for a source file by reading it in, splitting it
-# up into comment/code sections, and passing them to a Jade template.
-generateDocumentation = (source, sourceFiles, cb) ->
-  # Read in stylesheet
-  code = fs.readFileSync source, "utf-8"
-  sections = makeSections getLanguage(source), code
-  generateSourceHtml source, sourceFiles, sections
-  cb()
-
-
+# Define supported languages
 
 class Language
 
@@ -93,24 +84,24 @@ languages =
                         { cmd: 'stylus', args: [ '-c', '<' ] })
 
 
-# Get the language object from a file name.
-getLanguage = (source) -> languages[path.extname(source)]
-
 
 # Helper functions and utilities
 # ==============================
 
+# Get the language object from a file name.
+getLanguage = (source) -> languages[path.extname(source)]
+
+# Trim newlines from beginning and end of string.
 trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
 
+# Compute the destination HTML path for an input source file path,
+# relative to the output directory.
+makeDestination = (file) ->
+  [ path.dirname(file)
+    '/'
+    path.basename file, path.extname file
+    '.html' ].join ''
 
-# File system utils
-# -----------------
-
-# Compute the destination HTML path for an input source file path.
-# If the source is `src/main.css`, the HTML will be at `docs/src/main.html`.
-makeDestination = (filepath) ->
-  base_path = relative_base filepath
-  "#{options.out}/#{base_path}#{path.basename(filepath, path.extname(filepath))}.html"
 
 # Run `filename` through suitable CSS preprocessor.
 preProcess = (filename, cb) ->
@@ -120,7 +111,7 @@ preProcess = (filename, cb) ->
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
 #
-# TODO: This stuff comes straight from docco-husky and needs some refactoring.
+# This stuff comes straight from docco(-husky).
 makeSections = (lang, data) ->
   
   lines = data.split '\n'
@@ -187,23 +178,34 @@ renderTemplate = (templateName, content) ->
 
 
 # Generate the HTML document and write to file.
-generateSourceHtml = (source, sourceFiles, sections) ->
-  title = path.basename source
-  dest  = makeDestination source
+generateSourceHtml = (source, links, sections) ->
+  dest = makeDestination source
+
+  links = links.map (link) ->
+    link.class = 'is-active' if link.path is source
+    link
+
+  root = path.dirname(source).replace(/[^\/]+/g, '..')
+  root += '/' unless root.slice(-1) is '/'
 
   preProcess source, (err, css) ->
     throw err if err?
-    rootPath = relative_base(source).replace /^\//, '..'
-    data = { title, project: { name: options.name, sources: sourceFiles }, sections, file_path: source, path, relative_base, css, rootPath }
+    data = {
+      title: "#{options.name} – #{source}"
+      project: { name: options.name, links, root }
+      sections
+      css
+    }
+
     html = renderTemplate 'docs', data
-    console.log "styledocco: #{source} -> #{dest}"
+    console.log "styledocco: #{source} -> #{outputDir}/#{dest}"
     writeFile(dest, html)
 
 
 # Look for a README file and generate an index.html.
-generateIndex = (sourceFiles) ->
+generateIndex = (links) ->
   currentDir = "#{process.cwd()}/"
-  dest = "#{options.out}/index.html"
+  dest = "index.html"
 
   # Look for readme in current dir
   files = fs.readdirSync(currentDir)
@@ -215,35 +217,24 @@ generateIndex = (sourceFiles) ->
       marked fs.readFileSync currentDir + files[0], 'utf-8'
     else
       "<h1>Readme</h1><p>Please add a README file to this project.</p>"
- 
-  rootPath = relative_base(files[0]).replace /^\//, '..'
-  console.log rootPath
-  readmePath = files[0] or './'
-  title = options.name
+
   data = {
-    title
-    project: { name: options.name, sources: sourceFiles }
+    title: options.name
+    project: { name: options.name, links, root: './' }
     content
-    file_path: readmePath
-    path
-    relative_base
-    rootPath
   }
+
   html = renderTemplate 'readme', data
-  console.log "styledocco: #{readmePath} -> #{dest}"
+  console.log "styledocco: #{files[0] or './'} -> #{outputDir}/#{dest}"
   writeFile dest, html
 
 
-# Write a file to the filesystem
+# Write a file to the filesystem.
 writeFile = (dest, contents) ->
+  dest = "#{outputDir}/#{dest}"
   mkdirp.sync path.dirname dest
   fs.writeFileSync dest, contents
 
-
-# Compute the path of a source file relative to the docs folder
-relative_base = (filepath) ->
-  result = path.dirname(filepath) + '/'
-  if result == '/' or result == '//' then '' else result
 
 # Make sure that specified output directory exists.
 mkdirp.sync outputDir
@@ -254,19 +245,28 @@ sources = findit.sync inputDir
 # Filter out only our supported file types.
 files = sources.
   filter (source) ->
-    return false if source.match /\/\./ # No hidden files
-    return false if source.match /\/_.*\.s[ac]ss$/ # No SASS partials
-    return false unless path.extname(source) of languages # Only supported file types
-    return false unless fs.statSync(source).isFile() # Files only
+    return false if source.match /\/\./ # No hidden files.
+    return false if source.match /\/_.*\.s[ac]ss$/ # No SASS partials.
+    return false unless path.extname(source) of languages # Only supported file types.
+    return false unless fs.statSync(source).isFile() # Files only.
     return true
 
-# Create `index.html` file.
-generateIndex files
+links = files.
+  map (file) ->
+    {
+      name: path.basename file, path.extname file
+      path: file
+      href: makeDestination file
+      class: ''
+    }
 
-for file in files
-  # Read in stylesheet,
+# Create `index.html` file.
+generateIndex links
+
+files.forEach (file) ->
+  # Read in stylesheet.
   code = fs.readFileSync file, "utf-8"
   # Parse into code/docs sections.
   sections = makeSections getLanguage(file), code
   # Make HTML.
-  generateSourceHtml file, files, sections
+  generateSourceHtml file, links, sections

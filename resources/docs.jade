@@ -1,18 +1,14 @@
-- var root_path = relative_base(file_path)
-- root_path = (root_path == "./") ? root_path : root_path.replace(/[^\/]+/g, '..')
 !!! 5
 html
   head
     title=title
     meta(charset='utf-8')
     style !{css}
-    link(rel='stylesheet', href="#{root_path}docs.css")
+    link(rel='stylesheet', href="#{project.root}docs.css")
   body
-    if project.sources.length > 0
+    if project.links.length > 0
       include menu
     .container
-      h1 #{title}
-        small #{relative_base(file_path)}
       each section, i in sections
         .row
           .docs.span6 !{section.docs}

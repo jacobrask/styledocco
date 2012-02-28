@@ -3,8 +3,9 @@ html
   head
     title=title
     meta(charset='utf-8')
-    link(rel='stylesheet', href="#{rootPath}docs.css")
+    link(rel='stylesheet', href="#{project.root}docs.css")
   body
-    include menu
+    if project.links.length > 0
+      include menu
     .container !{content}
     footer.container Generated #{new Date()}
