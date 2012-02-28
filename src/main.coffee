@@ -23,10 +23,9 @@ options = optimist
   .describe('out', 'Output directory')
   .alias('o', 'out')
   .default('out', 'docs')
-  .demand('_')
   .argv
 
-inputDir = options._[0]
+inputDir = options._[0] or './'
 outputDir = options.out
 
 # Don't strip HTML
@@ -102,6 +101,14 @@ makeDestination = (file) ->
     path.basename file, path.extname file
     '.html' ].join ''
 
+# Build a path to the documentation root.
+buildRootPath = (str) ->
+  if path.dirname(str) is '.'
+    root = path.dirname(str)
+  else
+    root = path.dirname(str).replace(/[^\/]+/g, '..')
+  root += '/' unless root.slice(-1) is '/'
+  root
 
 # Run `filename` through suitable CSS preprocessor.
 preProcess = (filename, cb) ->
@@ -186,14 +193,15 @@ generateSourceHtml = (source, links, sections) ->
     link.class = 'is-active' if link.path is source
     link
 
-  root = path.dirname(source).replace(/[^\/]+/g, '..')
-  root += '/' unless root.slice(-1) is '/'
 
   preProcess source, (err, css) ->
     throw err if err?
     data = {
       title: "#{options.name} – #{source}"
-      project: { name: options.name, links, root }
+      project: {
+          name: options.name
+          links
+          root: buildRootPath(source) }
       sections
       css
     }
@@ -221,7 +229,10 @@ generateIndex = (links) ->
 
   data = {
     title: options.name
-    project: { name: options.name, links, root: './' }
+    project: {
+        name: options.name
+        links
+        root: './' }
     content
   }
 
@@ -262,7 +273,7 @@ links = files
     name: path.basename file, path.extname file
     path: file
     href: makeDestination file
-    class: ''
+    class: null
 
 # Create `index.html` file.
 generateIndex links
