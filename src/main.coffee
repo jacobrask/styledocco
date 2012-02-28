@@ -98,10 +98,7 @@ trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
 # Compute the destination HTML path for an input source file path,
 # relative to the output directory.
 makeDestination = (file) ->
-  [ path.dirname(file)
-    '/'
-    path.basename file, path.extname file
-    '.html' ].join ''
+  path.join path.dirname(file), path.basename(file, path.extname(file)), '.html'
 
 # Build a path to the documentation root.
 buildRootPath = (str) ->
@@ -209,7 +206,7 @@ generateSourceHtml = (source, links, sections) ->
     }
 
     html = renderTemplate 'docs', data
-    console.log "styledocco: #{source} -> #{outputDir}/#{dest}"
+    console.log "styledocco: #{source} -> #{path.join outputDir, dest}"
     writeFile(dest, html)
 
 
@@ -239,13 +236,13 @@ generateIndex = (links) ->
   }
 
   html = renderTemplate 'readme', data
-  console.log "styledocco: #{files[0] or './'} -> #{outputDir}/#{dest}"
+  console.log "styledocco: #{files[0] or './'} -> #{path.join outputDir, dest}"
   writeFile dest, html
 
 
 # Write a file to the filesystem.
 writeFile = (dest, contents) ->
-  dest = "#{outputDir}/#{dest}"
+  dest = path.join outputDir, dest
   mkdirp.sync path.dirname dest
   fs.writeFileSync dest, contents
 
