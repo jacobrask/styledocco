@@ -6,9 +6,10 @@ fs     = require 'fs'
 path   = require 'path'
 
 marked   = require 'marked'
+mkdirp   = require 'mkdirp'
+findit   = require 'findit'
 jade     = require 'jade'
 optimist = require 'optimist'
-walk     = require 'walk'
 
 
 # Configuration
@@ -25,6 +26,10 @@ options = optimist
   .demand('_')
   .argv
 
+inputDir = options._[0]
+outputDir = options.out
+
+# Don't strip HTML
 marked.setOptions sanitize: false
 
 
@@ -36,6 +41,7 @@ generateDocumentation = (source, sourceFiles, cb) ->
   sections = makeSections getLanguage(source), code
   generateSourceHtml source, sourceFiles, sections
   cb()
+
 
 
 class Language
@@ -100,9 +106,6 @@ trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
 # File system utils
 # -----------------
 
-# Make sure that `dir` exists.
-ensureDirectory = (dir, cb) -> exec "mkdir -p #{dir}", -> cb()
-
 # Compute the destination HTML path for an input source file path.
 # If the source is `src/main.css`, the HTML will be at `docs/src/main.html`.
 makeDestination = (filepath) ->
@@ -113,7 +116,6 @@ makeDestination = (filepath) ->
 preProcess = (filename, cb) ->
   lang = getLanguage filename
   lang.compile filename, cb
-
 
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
@@ -199,7 +201,7 @@ generateSourceHtml = (source, sourceFiles, sections) ->
 
 
 # Look for a README file and generate an index.html.
-generateReadme = (sourceFiles) ->
+generateIndex = (sourceFiles) ->
   currentDir = "#{process.cwd()}/"
   dest = "#{options.out}/index.html"
 
@@ -218,7 +220,15 @@ generateReadme = (sourceFiles) ->
   console.log rootPath
   readmePath = files[0] or './'
   title = options.name
-  data = { title, project: { name: options.name, sources: sourceFiles }, content, file_path: readmePath, path, relative_base, rootPath }
+  data = {
+    title
+    project: { name: options.name, sources: sourceFiles }
+    content
+    file_path: readmePath
+    path
+    relative_base
+    rootPath
+  }
   html = renderTemplate 'readme', data
   console.log "styledocco: #{readmePath} -> #{dest}"
   writeFile dest, html
@@ -226,61 +236,37 @@ generateReadme = (sourceFiles) ->
 
 # Write a file to the filesystem
 writeFile = (dest, contents) ->
+  mkdirp.sync path.dirname dest
+  fs.writeFileSync dest, contents
 
-  target_dir = path.dirname(dest)
-  write_func = ->
-    fs.writeFile dest, contents, (err) -> throw err if err
-
-  fs.stat target_dir, (err, stats) ->
-    throw err if err and err.code != 'ENOENT'
-
-    return write_func() unless err
-
-    if err
-      exec "mkdir -p #{target_dir}", (err) ->
-        throw err if err
-        write_func()
 
 # Compute the path of a source file relative to the docs folder
 relative_base = (filepath) ->
   result = path.dirname(filepath) + '/'
   if result == '/' or result == '//' then '' else result
 
+# Make sure that specified output directory exists.
+mkdirp.sync outputDir
 
-# Process our arguments, passing an array of sources to generate docs for,
-# and an optional relative root.
-parseArgs = (cb) ->
+# Get all files from input directory.
+sources = findit.sync inputDir
 
-  # Sort the list of files and directories.
-  roots = options._.sort()
+# Filter out only our supported file types.
+files = sources.
+  filter (source) ->
+    return false if source.match /\/\./ # No hidden files
+    return false if source.match /\/_.*\.s[ac]ss$/ # No SASS partials
+    return false unless path.extname(source) of languages # Only supported file types
+    return false unless fs.statSync(source).isFile() # Files only
+    return true
 
-  # Build an array of `find` options, including only files in our
-  # supported languages.
-  langFilter = for ext of languages
-    " -name '*#{ext}' "
+# Create `index.html` file.
+generateIndex files
 
-  # TODO: Replace with `walk`.
-  exec "find #{roots.join(' ')} -type f \\( #{langFilter.join(' -o ')} \\)", (err, stdout) ->
-    throw err if err
-
-    sources = stdout.split("\n").filter (file) ->
-      return false if file is ''
-      filename = path.basename file
-      # Ignore hidden files
-      return false if filename[0] is '.'
-      # Ignore SASS partials
-      return false if filename.match /^_.*\.s[ac]ss$/
-      true
-
-    console.log "styledocco: Recursively generating docs underneath #{roots}/"
-
-    cb sources, roots
-
-parseArgs (sourceFiles) ->
-  ensureDirectory options.out, ->
-    generateReadme sourceFiles
-    files = sourceFiles[0..sourceFiles.length]
-    nextFile = ->
-      if files.length
-        generateDocumentation files.shift(), sourceFiles, nextFile
-    nextFile()
+for file in files
+  # Read in stylesheet,
+  code = fs.readFileSync file, "utf-8"
+  # Parse into code/docs sections.
+  sections = makeSections getLanguage(file), code
+  # Make HTML.
+  generateSourceHtml file, files, sections
