@@ -7,7 +7,7 @@
     "documentation"
   ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "licenses": [
     {
       "type": "MIT",
@@ -30,18 +30,20 @@
     "url": "git://github.com/jacobrask/styledocco.git"
   },
   "dependencies": {
-    "coffee-script": "1.2.x",
     "findit": "0.x.x",
     "jade": "0.17.x",
     "marked": "0.2.x",
     "mkdirp": "0.x.x",
     "optimist": "0.x.x"
   },
+  "devDependencies": {
+    "coffee-script": "1.2.x"
+  },
   "directories": {
     "lib": "./lib"
   },
   "main": "./lib/main",
   "bin": {
-    "styledocco": "./bin/generate"
+    "styledocco": "./bin/styledocco"
   }
 }
