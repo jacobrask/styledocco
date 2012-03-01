@@ -123,7 +123,8 @@ makeSections = (lang, data) ->
   lines = data.split '\n'
   sections = []
 
-  formatDoc = (line) -> "#{lang.filter(line)}\n"
+  formatDocs = (line) -> "#{lang.filter line}\n"
+  formatCode = (line) -> "#{line}\n"
 
   # We loop through the array backwards because `pop` is faster than `splice`.
   while lines.length
@@ -131,21 +132,21 @@ makeSections = (lang, data) ->
 
     # Since we're looping backwards, first add the code.
     while lines.length and lang.checkType(lines[lines.length-1]) is 'code'
-      code = "#{lines.pop()}\n" + code
+      code = formatCode(lines.pop()) + code
 
-    # A multi line comment ends here, add lines until comment starts.
-    if lang.checkType(lines[lines.length-1]) is 'multiend'
-      # We want the start line, so `break` after line is added.
+    # Now check for any single line comments.
+    while lines.length and lang.checkType(lines[lines.length-1]) is 'single'
+      docs = formatDocs(lines.pop()) + docs
+
+    # A multi line comment ends here, add lines until comment start.
+    if lines.length and lang.checkType(lines[lines.length-1]) is 'multiend'
+      # We want the start line, so `break` *after* line is added.
       while lines.length
         line = lines.pop()
-        docs = formatDoc(line) + docs
+        docs = formatDocs(line) + docs
         break if lang.checkType(line) is 'multistart'
 
-    # Add single line comments but stop *before* first line of code.
-    else if lang.checkType(lines[lines.length-1]) is 'single'
-      while lines.length and lang.checkType(lines[lines.length-1]) isnt 'code'
-        docs = formatDoc(lines.pop()) + docs
-
+    # Format and save code/doc pair.
     sections.push {
       docs: marked trimNewLines docs
       code: trimNewLines code
