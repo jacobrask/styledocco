@@ -98,7 +98,7 @@ trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
 # Compute the destination HTML path for an input source file path,
 # relative to the output directory.
 makeDestination = (file) ->
-  path.join path.dirname(file), path.basename(file, path.extname(file)), '.html'
+  path.join path.dirname(file), path.basename(file, path.extname(file)) + '.html'
 
 # Build a path to the documentation root.
 buildRootPath = (str) ->
@@ -117,62 +117,39 @@ preProcess = (filename, cb) ->
 
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
-#
-# This stuff comes straight from docco(-husky).
 makeSections = (lang, data) ->
-  
   lines = data.split '\n'
-  
   sections = []
-  docs = code = multiAccum = ''
-  inMulti = no
-  hasCode = no
 
-  save = (docs, code) ->
-    sections.push
-      docs: marked trimNewLines(docs)
-      code: trimNewLines(code)
+  formatDoc = (line) -> "#{lang.filter(line)}\n"
 
-  for line in lines
-    
-    # Multi line comment
-    if lang.checkType(line) is 'multistart' or inMulti
+  # We loop through the array backwards because `pop` is faster than `splice`.
+  while lines.length
+    docs = code = ''
 
-      ## Start of a new section, save the old section
-      if hasCode
-        save docs, code
-        docs = code = ''
-        hasCode = no
+    # Since we're looping backwards, first add the code.
+    while lines.length and lang.checkType(lines[lines.length-1]) is 'code'
+      code = "#{lines.pop()}\n" + code
 
-      # Found the start of a multiline comment.
-      # Begin accumulating lines until we reach the end of the comment block.
-      inMulti = yes
-      multiAccum += line + '\n'
+    # A multi line comment ends here, add lines until comment starts.
+    if lang.checkType(lines[lines.length-1]) is 'multiend'
+      # We want the start line, so `break` after line is added.
+      while lines.length
+        line = lines.pop()
+        docs = formatDoc(line) + docs
+        break if lang.checkType(line) is 'multistart'
 
-      # If we reached the end of a multiline comment,
-      # set inMulti to false and reset multiAccum
-      if lang.checkType(line) is 'multiend'
-        inMulti = no
-        docs = multiAccum
-        multiAccum = ''
+    # Add single line comments but stop *before* first line of code.
+    else if lang.checkType(lines[lines.length-1]) is 'single'
+      while lines.length and lang.checkType(lines[lines.length-1]) isnt 'code'
+        docs = formatDoc(lines.pop()) + docs
 
-    # Single line comment
-    else if lang.checkType(line) is 'single'
-      if hasCode
-        hasCode = no
-        save docs, code
-        docs = code = ''
-      docs += lang.filter(line) + '\n'
+    sections.push {
+      docs: marked trimNewLines docs
+      code: trimNewLines code
+    }
 
-    # Code
-    else
-      hasCode = yes
-      code += line + '\n'
-
-  # Save final code section
-  save docs, code
-
-  sections
+  sections.reverse()
 
 
 # Render `template` with `content`.
