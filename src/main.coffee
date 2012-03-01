@@ -35,6 +35,7 @@ marked.setOptions sanitize: false
 
 
 # Define supported languages
+# --------------------------
 
 class Language
 
@@ -123,7 +124,7 @@ makeSections = (lang, data) ->
   lines = data.split '\n'
   sections = []
 
-  formatDocs = (line) -> "#{lang.filter line}\n"
+  formatDocs = (line) -> "#{lang.filter(line).trim()}\n"
   formatCode = (line) -> "#{line}\n"
 
   # We loop through the array backwards because `pop` is faster than `splice`.
@@ -148,7 +149,7 @@ makeSections = (lang, data) ->
 
     # Format and save code/doc pair.
     sections.push {
-      docs: marked trimNewLines docs
+      docs: marked docs.trim()
       code: trimNewLines code
     }
 
@@ -166,11 +167,6 @@ renderTemplate = (templateName, content) ->
 # Generate the HTML document and write to file.
 generateSourceHtml = (source, links, sections) ->
   dest = makeDestination source
-
-  links = links.map (link) ->
-    link.class = 'is-active' if link.path is source
-    link
-
 
   preProcess source, (err, css) ->
     throw err if err?
@@ -251,11 +247,11 @@ links = files
     name: path.basename file, path.extname file
     path: file
     href: makeDestination file
-    class: null
 
 # Create `index.html` file.
 generateIndex links
 
+# Generate documentation files.
 files.forEach (file) ->
   # Read in stylesheet.
   code = fs.readFileSync file, "utf-8"
@@ -263,3 +259,9 @@ files.forEach (file) ->
   sections = makeSections getLanguage(file), code
   # Make HTML.
   generateSourceHtml file, links, sections
+
+# Add default docs.css unless it already exists.
+cssPath = path.join outputDir, 'docs.css'
+unless path.existsSync cssPath
+  fs.writeFileSync cssPath, fs.readFileSync __dirname + '/../resources/docs.css', 'utf-8'
+  console.log "styledocco: adding docs.css"

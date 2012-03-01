@@ -4,9 +4,10 @@ html
     title=title
     meta(charset='utf-8')
     link(rel='stylesheet', href="#{project.root}docs.css")
-  body
-    if project.links.length > 0
-      include menu
-    .container
-      .span6 !{content}
-    include footer
+  body#styledocco
+    .styledocco-container
+      .styledocco-sidebar
+        include menu
+      .styledocco-content
+        .styledocco-docs !{content}
+include footer

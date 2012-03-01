@@ -3,17 +3,17 @@ html
   head
     title=title
     meta(charset='utf-8')
-    style !{css}
     link(rel='stylesheet', href="#{project.root}docs.css")
+    style !{css}
   body
-    if project.links.length > 0
-      include menu
-    .container
-      each section, i in sections
-        .row
-          .docs.span6 !{section.docs}
-          .code.span6
-            if section.code != ''
-              pre
-                code !{section.code}
-    include footer
+    .styledocco-container
+      .styledocco-sidebar
+        include menu
+      .styledocco-content
+        each section, i in sections
+          .styledocco-row
+            .styledocco-docs !{section.docs}
+            .styledocco-code
+              if section.code != ''
+                pre: code !{section.code}
+include footer

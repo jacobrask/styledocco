@@ -1,8 +1,6 @@
-.navbar
-  nav.container
-    a.brand(href="#{project.root}index.html") #{project.name}
-    ul.nav
-      each link in project.links
-        li
-          a(class="#{link.class}", href="#{project.root}#{link.href}", title="#{link.path}")
-            #{link.name}
+a.styledocco-brand(href="#{project.root}index.html") #{project.name}
+ul.styledocco-nav
+  each link in project.links
+    li
+      a(href="#{project.root}#{link.href}", title="#{link.path}")
+        #{link.name}
