@@ -20,6 +20,7 @@ options = optimist
   .describe('name', 'Name of the project')
   .alias('n', 'name')
   .demand('name')
+  .describe('tmpl', 'Template directory')
   .describe('out', 'Output directory')
   .alias('o', 'out')
   .default('out', 'docs')
@@ -27,6 +28,7 @@ options = optimist
 
 inputDir = options._[0] or './'
 outputDir = options.out
+templateDir = options.tmpl or "#{__dirname}/../resources/"
 
 # Don't strip HTML
 marked.setOptions sanitize: false
@@ -154,7 +156,6 @@ makeSections = (lang, data) ->
 
 # Render `template` with `content`.
 renderTemplate = (templateName, content) ->
-  templateDir = "#{__dirname}/../resources/"
   templateFile = "#{templateDir}#{templateName}.jade"
 
   template = fs.readFileSync templateFile, 'utf-8'
