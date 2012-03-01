@@ -11,7 +11,7 @@ About
 
 StyleDocco takes your stylesheets and generates style guide documents with the processed stylesheets applied to the documents.
 
-`styledocco main.css` will generate `docs/main.html` with all the comments from the file (passed through GitHub flavored Markdown) in one column, and all the code in another column.
+`styledocco --name 'My Site' main.css` will generate `docs/main.html` with all the comments from the file (passed through GitHub flavored Markdown) in one column, and all the code in another column.
 
 The CSS in `main.css` will be applied to the page. This means you can add sample HTML content in the comments of your CSS file, and have it rendered in the browser using that same CSS.
 
@@ -25,15 +25,24 @@ StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before
 Install
 -------
 
-*Warning*: StyleDocco is still rough around the edges. Please contribute by reporting bugs or submitting pull requests.
+StyleDocco requires [Node.js](http://nodejs.org).
 
-`npm install styledocco`
+`npm install -g styledocco`
+
+
+Usage
+-----
+
+`styledocco [options] [INPUT]`
+
+**Options**
+ * `--name, -n` - Name of the project [required]
+ * `--out, -o`  - Output directory [optional, default: "docs"]
+ * `--tmpl`     - Directory for custom `readme.jade` and `docs.jade` templates. [optional]
 
 
 Examples
 --------
-
-Live examples coming soon.
 
 ```
 /* <button class="btn btn-primary">Primary</button>   
@@ -45,6 +54,8 @@ Live examples coming soon.
 ```
 
 Would output an HTML document with one column displaying the rendered button followed by the description, and another column with the code. The code will also be included in a `style` element of the document.
+
+See the `examples` folder for more in-depth examples.
 
 
 Acknowledgements
