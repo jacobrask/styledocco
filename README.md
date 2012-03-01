@@ -38,7 +38,7 @@ Usage
 **Options**
  * `--name, -n` - Name of the project [required]
  * `--out, -o`  - Output directory [optional, default: "docs"]
- * `--tmpl`     - Directory for custom `readme.jade` and `docs.jade` templates. [optional]
+ * `--tmpl`     - Directory for custom `index.jade` and `docs.jade` templates. [optional]
 
 
 Examples

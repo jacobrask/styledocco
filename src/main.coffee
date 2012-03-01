@@ -214,7 +214,7 @@ generateIndex = (links) ->
     content
   }
 
-  html = renderTemplate 'readme', data
+  html = renderTemplate 'index', data
   console.log "styledocco: #{files[0] or './'} -> #{path.join outputDir, dest}"
   writeFile dest, html
 
