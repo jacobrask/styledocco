@@ -1,10 +1,9 @@
-```
- _______ __         __        _____
-|     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
-|__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
-|_______|____|___  |__|_____||_____/_____|____|____|_____|
-             |_____|
-```
+     _______ __         __        _____
+    |     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
+    |__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
+    |_______|____|___  |__|_____||_____/_____|____|____|_____|
+                 |_____|
+
 
 About
 -----
@@ -36,22 +35,21 @@ Usage
 `styledocco [options] [INPUT]`
 
 **Options**
- * `--name, -n` - Name of the project [required]
- * `--out, -o`  - Output directory [optional, default: "docs"]
- * `--tmpl`     - Directory for custom `index.jade` and `docs.jade` templates. [optional]
+
+ * `--name`, `-n` Name of the project *(required)*
+ * `--out`, `-o`  Output directory *(default: "docs")*
+ * `--tmpl`       Directory for custom `index.jade` and `docs.jade` templates *(optional)*
 
 
 Examples
 --------
 
-```
-/* <button class="btn btn-primary">Primary</button>   
-   Provides extra visual weight and identifies the primary action in a set of buttons */
-.btn.btn-primary {
-  background: blue;
-  color: white;
-}
-```
+    /* <button class="btn primary">Primary</button>  
+        Provides extra visual weight and identifies the primary action in a set of buttons */
+    .btn.primary {
+        background: blue;
+        color: white;
+    }
 
 Would output an HTML document with one column displaying the rendered button followed by the description, and another column with the code. The code will also be included in a `style` element of the document.
 

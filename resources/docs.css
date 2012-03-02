@@ -1,4 +1,7 @@
-/* We try to override as little as possible and define our styles carefully. */
+/* # StyleDocco 0.3.0 default styles */
+
+/* These are the only global styles we define, keep others under prefixed
+   class names to interfere as little as possible. */
 
 body {
     margin: 0;
@@ -8,28 +11,43 @@ a {
     color: #15a;
     text-decoration: none;
 }
+code {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: .1em .5em;
+    font-size: .9em;
+    font-family: monospace;
+}
+
+/* ## Sidebar
+Stays fixed to the left, with its own scrollbar. */
 .styledocco-sidebar {
     position: fixed;
     left: 0;
+    height: 100%;
+    width: 12%;
+    word-wrap: break-word;
     overflow-y: hidden;
     overflow-x: auto;
-    width: 10%;
     background: #333;
-    box-shadow: 0 0 4px rgba(0, 0, 0, .5);
-    height: 100%;
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, .5);
+    box-shadow:      0 0 4px rgba(0, 0, 0, .5);
     font: 12px/1.6 sans-serif;
 }
+/* ### Logo */
 .styledocco-brand {
     display: block;
+    padding: 0 10%;
     text-align: center;
-    color: #fff;
     background: #222;
+    color: #fff;
     font-size: 16px;
     line-height: 2;
-    padding: 0 10%;
-    text-shadow: 1px 1px 1px #000;
     font-weight: bold;
+    text-shadow: 1px 1px 1px #000;
 }
+/* ### Menu */
 .styledocco-nav {
     margin: 2em 0;
     padding: 0;
@@ -47,23 +65,31 @@ a {
 .styledocco-nav a.styledocco-is-active {
     font-weight: bold;
 }
+/* ## Main content */
 .styledocco-container {
     background-color: #eee;
 }
 .styledocco-content {
-    margin-left: 10%;
-    min-height: 100%;
     max-width: 1300px;
-    background-color: #f9f9f9;
-    /* Faux columns, and checkerboard pattern for docs to better see shadows
-       and such */
-    background-image: -webkit-linear-gradient(left, #fff 50%, #eee 50%); 
-    background-image: -moz-linear-gradient(left, #fff 50%, #eee 50%); 
-    background-image: -o-linear-gradient(left, transparent 50%, #eee 50%),
-                      -o-linear-gradient(45deg, #fcfcfc 25%, transparent 25%, transparent 75%, #fcfcfc 75%, #fcfcfc), 
-                      -o-linear-gradient(45deg, #fcfcfc 25%, transparent 25%, transparent 75%, #fcfcfc 75%, #fcfcfc);
+    margin-left: 12%;
+    background-color: #fafafa;
+    /* Using gradients for faux columns and checkerboard pattern.
+       We use a checkerboard pattern to be able to see the edges of elements regardless of their color. */
+    background-image: -webkit-linear-gradient(left, transparent 47%, #eee 47%),
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(left, transparent 47%, #eee 47%),
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:     -ms-linear-gradient(left, transparent 47%, #eee 47%),
+                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:      -o-linear-gradient(left, transparent 47%, #eee 47%),
+                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-size: auto, 20px 20px, 20px 20px;
     background-position: 0 0, 0 0, 10px 10px;
+    background-attachment: fixed;
 }
 .styledocco-code,
 .styledocco-docs {
@@ -75,32 +101,27 @@ a {
 .styledocco-code {
     float: right;
 }
-.styledocco-docs code {
-    background-color: rgba(0, 0, 0, .05);
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 5px;
-    padding: .1em .5em;
-    font-size: .9em;
-    font-family: monospace;
-}
+/* `!important` everywhere as we don't want any imported stylesheets to interfere. */
 .styledocco-code pre {
-    white-space: pre;
-    white-space: pre-wrap;
-    word-break: break-all;
-    word-wrap: break-word;
-    background: transparent;
-    border: 0;
-    padding: 0;
+    padding: 0 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    border: 0 !important;
+    background: transparent !important;
 }
 .styledocco-code code {
-    padding: 0;
-    background: transparent;
-    border: 0;
-    font-family: monospace;
-    font-size: 12px;
-    line-height: 1.3;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    font-size: 12px !important;
+    font-family: monospace !important;
+    line-height: 1.3 !important;
 }
-.styledocco-row {
+.styledocco-row:before,
+.styledocco-row:after {
+    display: table;
+    content: "";
+}
+.styledocco-row:after {
     clear: both;
-    overflow: hidden;
 }

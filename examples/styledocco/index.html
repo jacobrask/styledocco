@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><title>StyleDocco</title><meta charset="utf-8"><link rel="stylesheet" href="./docs.css"></head><body id="styledocco"><div class="styledocco-container"><div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="./resources/docs.html" title="resources/docs.css">docs
+</a></li></ul></div><div class="styledocco-content"><div class="styledocco-docs"><pre><code> _______ __         __        _____
+|     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
+|__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
+|_______|____|___  |__|_____||_____/_____|____|____|_____|
+             |_____|</code></pre>
+<h2>About</h2>
+<p>StyleDocco takes your stylesheets and generates style guide documents with the processed stylesheets applied to the documents.
+
+</p>
+<p><code>styledocco --name &#39;My Site&#39; main.css</code> will generate <code>docs/main.html</code> with all the comments from the file (passed through GitHub flavored Markdown) in one column, and all the code in another column.
+
+</p>
+<p>The CSS in <code>main.css</code> will be applied to the page. This means you can add sample HTML content in the comments of your CSS file, and have it rendered in the browser using that same CSS.
+
+</p>
+<p>To add extra default styles to your documentation, add a file named <code>docs.css</code> in your <code>docs</code> folder.
+
+</p>
+<p>If you point StyleDocco to a directory, it will add a menu to navigate between the different files. If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>.
+
+</p>
+<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. Hidden files and SASS partials will be ignored.
+
+
+</p>
+<h2>Install</h2>
+<p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>.
+
+</p>
+<p><code>npm install -g styledocco</code>
+
+
+</p>
+<h2>Usage</h2>
+<p><code>styledocco [options] [INPUT]</code>
+
+</p>
+<p><strong>Options</strong>
+
+</p>
+<ul>
+<li><code>--name</code>, <code>-n</code> Name of the project <em>(required)</em></li>
+<li><code>--out</code>, <code>-o</code>  Output directory <em>(default: &quot;docs&quot;)</em></li>
+<li><code>--tmpl</code>       Directory for custom <code>index.jade</code> and <code>docs.jade</code> templates <em>(optional)</em></li>
+</ul>
+<h2>Examples</h2>
+<pre><code>/* &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt;  
+    Provides extra visual weight and identifies the primary action in a set of buttons */
+.btn.primary {
+    background: blue;
+    color: white;
+}</code></pre>
+<p>Would output an HTML document with one column displaying the rendered button followed by the description, and another column with the code. The code will also be included in a <code>style</code> element of the document.
+
+</p>
+<p>See the <code>examples</code> folder for more in-depth examples.
+
+
+</p>
+<h2>Acknowledgements</h2>
+<p>Thanks to:
+
+</p>
+<ul>
+<li><a href="https://github.com/jashkenas/docco">jashkenas</a></li>
+<li><a href="https://github.com/mbrevoort/docco-husky">mbrevoort</a></li>
+</ul>
+</div></div></div></body></html><!-- Generated with Styledocco (https://github.com/jacobrask/styledocco) at Fri Mar 02 2012 10:02:46 GMT+0100 (CET) -->
