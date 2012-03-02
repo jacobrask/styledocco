@@ -124,7 +124,7 @@ makeSections = (lang, data) ->
   lines = data.split '\n'
   sections = []
 
-  formatDocs = (line) -> "#{lang.filter(line).trim()}\n"
+  formatDocs = (line) -> "#{lang.filter(line)}\n"
   formatCode = (line) -> "#{line}\n"
 
   # We loop through the array backwards because `pop` is faster than `splice`.
