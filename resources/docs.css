@@ -11,13 +11,24 @@ a {
     color: #15a;
     text-decoration: none;
 }
-code {
+code, pre {
     background-color: #eee;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: .1em .5em;
     font-size: .9em;
     font-family: monospace;
+}
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: .5em 1em;
+}
+pre code {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
 }
 
 /* ## Sidebar
@@ -33,7 +44,7 @@ Stays fixed to the left, with its own scrollbar. */
     background: #333;
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, .5);
     box-shadow:      0 0 4px rgba(0, 0, 0, .5);
-    font: 12px/1.6 sans-serif;
+    font: 13px/1.6 sans-serif;
 }
 /* ### Logo */
 .styledocco-brand {
@@ -57,10 +68,25 @@ Stays fixed to the left, with its own scrollbar. */
     padding: 0;
     list-style: none;
 }
+.styledocco-nav .styledocco-nav-heading {
+    background: #888;
+    font-size: 13px;
+    padding: .3em 5%;
+    margin: 1.5em 0 .5em;
+    text-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+    box-shadow:      1px 1px 2px rgba(0, 0, 0, .5);
+}
 .styledocco-nav a {
     display: block;
-    padding: 0 10%;
+    padding: .1em 10%;
     color: #ddd;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+}
+.styledocco-nav a:active,
+.styledocco-nav a:focus,
+.styledocco-nav a:hover {
+    background: #444;
 }
 .styledocco-nav a.styledocco-is-active {
     font-weight: bold;
