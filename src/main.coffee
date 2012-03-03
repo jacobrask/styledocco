@@ -28,7 +28,7 @@ options = optimist
   .describe('overwrite', 'Overwrite existing files in target dir')
   .argv
 
-inputDir = options._[0] or './'
+input = options._[0] or './'
 outputDir = options.out
 templateDir = options.tmpl or "#{__dirname}/../resources/"
 overwriteResources = options.overwrite
@@ -193,14 +193,24 @@ generateIndex = (menu) ->
   currentDir = "#{process.cwd()}/"
   dest = "index.html"
 
-  # Look for readme in current dir
-  files = fs.readdirSync(currentDir)
-    .filter (file) -> file.toLowerCase().match /^readme/
+  # Look for readme in input dir
+  if fs.statSync(input).isDirectory()
+    files = fs.readdirSync(input)
+      .filter (file) -> file.toLowerCase().match /^readme/
+    if files[0]?
+      readme = path.join input, files[0]
+
+  unless readme?
+    # Look for readme in current dir
+    files = fs.readdirSync(currentDir)
+      .filter (file) -> file.toLowerCase().match /^readme/
+    if files[0]?
+      readme = path.join currentDir, files[0]
 
   content =
-    if files[0]?
+    if readme?
       # Parse Readme with markdown.
-      marked fs.readFileSync currentDir + files[0], 'utf-8'
+      marked fs.readFileSync readme, 'utf-8'
     else
       "<h1>Readme</h1><p>Please add a README file to this project.</p>"
 
@@ -231,8 +241,8 @@ writeFile = (dest, contents) ->
 # Make sure that specified output directory exists.
 mkdirp.sync outputDir
 
-# Get all files from input directory.
-sources = findit.sync inputDir
+# Get all files from input (directory).
+sources = findit.sync input
 
 # Filter out only our supported file types.
 files = sources.
