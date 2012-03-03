@@ -1,6 +1,9 @@
 a.styledocco-brand(href="#{project.root}index.html") #{project.name}
 ul.styledocco-nav
-  each link in project.links
-    li
-      a(href="#{project.root}#{link.href}", title="#{link.path}")
-        #{link.name}
+  each links, folder in project.menu
+    unless folder == './'
+      li.styledocco-nav-heading #{folder}
+    each link in links
+      li
+        a(href="#{project.root}#{link.href}")
+          #{link.name}

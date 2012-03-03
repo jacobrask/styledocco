@@ -43,7 +43,7 @@ class Language
     @regexs = {}
     @regexs.single = new RegExp('^\\s*' + @symbols.single) if @symbols.single
     # Hard coded /* */ for now
-    @regexs.multi_start = new RegExp(/^[\s]*\/\*[.]*/)
+    @regexs.multi_start = new RegExp(/^[\s]*\/\*/)
     @regexs.multi_end = new RegExp(/\*\//)
 
   # Check type of string
@@ -165,7 +165,7 @@ renderTemplate = (templateName, content) ->
 
 
 # Generate the HTML document and write to file.
-generateSourceHtml = (source, links, sections) ->
+generateSourceHtml = (source, menu, sections) ->
   dest = makeDestination source
 
   preProcess source, (err, css) ->
@@ -174,7 +174,7 @@ generateSourceHtml = (source, links, sections) ->
       title: "#{options.name} – #{source}"
       project: {
           name: options.name
-          links
+          menu
           root: buildRootPath(source) }
       sections
       css
@@ -186,7 +186,7 @@ generateSourceHtml = (source, links, sections) ->
 
 
 # Look for a README file and generate an index.html.
-generateIndex = (links) ->
+generateIndex = (menu) ->
   currentDir = "#{process.cwd()}/"
   dest = "index.html"
 
@@ -205,7 +205,7 @@ generateIndex = (links) ->
     title: options.name
     project: {
         name: options.name
-        links
+        menu
         root: './' }
     content
   }
@@ -233,23 +233,33 @@ sources = findit.sync inputDir
 
 # Filter out only our supported file types.
 files = sources.
-  filter (source) ->
+  filter((source) ->
     return false if source.match /(\/|^)\./ # No hidden files.
     return false if source.match /(\/|^)_.*\.s[ac]ss$/ # No SASS partials.
     return false unless path.extname(source) of languages # Only supported file types.
     return false unless fs.statSync(source).isFile() # Files only.
     return true
+  ).sort()
 
 # Make `link` objects for the menu.
-links = files
-  .sort()
-  .map (file) ->
-    name: path.basename file, path.extname file
-    path: file
+menu = {}
+for file in files
+  link =
+    name: path.basename(file, path.extname file)
     href: makeDestination file
+  parts = file.split('/').splice(1)
+  key =
+    if parts.length > 1
+      parts[0]
+    else
+      './'
+  if menu[key]?
+    menu[key].push link
+  else
+    menu[key] = [ link ]
 
 # Create `index.html` file.
-generateIndex links
+generateIndex menu
 
 # Generate documentation files.
 files.forEach (file) ->
@@ -258,7 +268,7 @@ files.forEach (file) ->
   # Parse into code/docs sections.
   sections = makeSections getLanguage(file), code
   # Make HTML.
-  generateSourceHtml file, links, sections
+  generateSourceHtml file, menu, sections
 
 # Add default docs.css unless it already exists.
 cssPath = path.join outputDir, 'docs.css'
