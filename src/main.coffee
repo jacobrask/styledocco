@@ -20,15 +20,18 @@ options = optimist
   .describe('name', 'Name of the project')
   .alias('n', 'name')
   .demand('name')
-  .describe('tmpl', 'Template directory')
   .describe('out', 'Output directory')
   .alias('o', 'out')
   .default('out', 'docs')
+  .describe('tmpl', 'Template directory')
+  .boolean('overwrite')
+  .describe('overwrite', 'Overwrite existing files in target dir')
   .argv
 
 inputDir = options._[0] or './'
 outputDir = options.out
 templateDir = options.tmpl or "#{__dirname}/../resources/"
+overwriteResources = options.overwrite
 
 # Don't strip HTML
 marked.setOptions sanitize: false
@@ -272,6 +275,6 @@ files.forEach (file) ->
 
 # Add default docs.css unless it already exists.
 cssPath = path.join outputDir, 'docs.css'
-unless path.existsSync cssPath
+if overwriteResources or not path.existsSync(cssPath)
   fs.writeFileSync cssPath, fs.readFileSync __dirname + '/../resources/docs.css', 'utf-8'
-  console.log "styledocco: adding docs.css"
+  console.log "styledocco: writing #{path.join outputDir, 'docs.css'}"

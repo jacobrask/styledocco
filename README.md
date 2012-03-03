@@ -39,6 +39,7 @@ Usage
  * `--name`, `-n` Name of the project *(required)*
  * `--out`, `-o`  Output directory *(default: "docs")*
  * `--tmpl`       Directory for custom `index.jade` and `docs.jade` templates *(optional)*
+ * `--overwrite`  Overwrite existing files (`docs.css`) in target directory.
 
 
 Examples
