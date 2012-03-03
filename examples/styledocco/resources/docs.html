@@ -11,13 +11,24 @@ a {
     color: #15a;
     text-decoration: none;
 }
-code {
+code, pre {
     background-color: #eee;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: .1em .5em;
     font-size: .9em;
     font-family: monospace;
+}
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: .5em 1em;
+}
+pre code {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
 }
 
 /* ## Sidebar
@@ -33,7 +44,7 @@ Stays fixed to the left, with its own scrollbar. */
     background: #333;
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, .5);
     box-shadow:      0 0 4px rgba(0, 0, 0, .5);
-    font: 12px/1.6 sans-serif;
+    font: 13px/1.6 sans-serif;
 }
 /* ### Logo */
 .styledocco-brand {
@@ -57,10 +68,25 @@ Stays fixed to the left, with its own scrollbar. */
     padding: 0;
     list-style: none;
 }
+.styledocco-nav .styledocco-nav-heading {
+    background: #888;
+    font-size: 13px;
+    padding: .3em 5%;
+    margin: 1.5em 0 .5em;
+    text-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+    box-shadow:      1px 1px 2px rgba(0, 0, 0, .5);
+}
 .styledocco-nav a {
     display: block;
-    padding: 0 10%;
+    padding: .1em 10%;
     color: #ddd;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+}
+.styledocco-nav a:active,
+.styledocco-nav a:focus,
+.styledocco-nav a:hover {
+    background: #444;
 }
 .styledocco-nav a.styledocco-is-active {
     font-weight: bold;
@@ -122,10 +148,10 @@ Stays fixed to the left, with its own scrollbar. */
     display: table;
     content: "";
 }
-.styledocco-row:after { 
+.styledocco-row:after {
     clear: both;
 }
-</style></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="../index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="../resources/docs.html" title="resources/docs.css">docs
+</style></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="../index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="../resources/docs.html">docs
 </a></li></ul></div><div class="styledocco-content"><div class="styledocco-row"><div class="styledocco-docs"><h1>StyleDocco 0.3.0 default styles</h1>
 </div><div class="styledocco-code"></div></div><div class="styledocco-row"><div class="styledocco-docs"><p>These are the only global styles we define, keep others under prefixed
    class names to interfere as little as possible.</p>
@@ -137,13 +163,24 @@ a {
     color: #15a;
     text-decoration: none;
 }
-code {
+code, pre {
     background-color: #eee;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: .1em .5em;
     font-size: .9em;
     font-family: monospace;
+}
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: .5em 1em;
+}
+pre code {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
 }</code></pre></div></div><div class="styledocco-row"><div class="styledocco-docs"><h2>Sidebar</h2>
 <p>Stays fixed to the left, with its own scrollbar.</p>
 </div><div class="styledocco-code"><pre><code>.styledocco-sidebar {
@@ -157,7 +194,7 @@ code {
     background: #333;
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, .5);
     box-shadow:      0 0 4px rgba(0, 0, 0, .5);
-    font: 12px/1.6 sans-serif;
+    font: 13px/1.6 sans-serif;
 }</code></pre></div></div><div class="styledocco-row"><div class="styledocco-docs"><h3>Logo</h3>
 </div><div class="styledocco-code"><pre><code>.styledocco-brand {
     display: block;
@@ -179,10 +216,25 @@ code {
     padding: 0;
     list-style: none;
 }
+.styledocco-nav .styledocco-nav-heading {
+    background: #888;
+    font-size: 13px;
+    padding: .3em 5%;
+    margin: 1.5em 0 .5em;
+    text-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+    box-shadow:      1px 1px 2px rgba(0, 0, 0, .5);
+}
 .styledocco-nav a {
     display: block;
-    padding: 0 10%;
+    padding: .1em 10%;
     color: #ddd;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+}
+.styledocco-nav a:active,
+.styledocco-nav a:focus,
+.styledocco-nav a:hover {
+    background: #444;
 }
 .styledocco-nav a.styledocco-is-active {
     font-weight: bold;
@@ -241,6 +293,6 @@ code {
     display: table;
     content: "";
 }
-.styledocco-row:after { 
+.styledocco-row:after {
     clear: both;
-}</code></pre></div></div></div></div></body></html><!-- Generated with Styledocco (https://github.com/jacobrask/styledocco) at Fri Mar 02 2012 10:02:46 GMT+0100 (CET) -->
+}</code></pre></div></div></div></div></body></html><!-- Generated with StyleDocco (https://github.com/jacobrask/styledocco) at Sat Mar 03 2012 17:22:20 GMT+0100 (CET). -->
