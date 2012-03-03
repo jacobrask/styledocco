@@ -14,9 +14,9 @@ StyleDocco takes your stylesheets and generates style guide documents with the p
 
 The CSS in `main.css` will be applied to the page. This means you can add sample HTML content in the comments of your CSS file, and have it rendered in the browser using that same CSS.
 
-To add extra default styles to your documentation, add a file named `docs.css` in your `docs` folder.
+If your project includes a `README` file, it will be used as the base for an `index.html`.
 
-If you point StyleDocco to a directory, it will add a menu to navigate between the different files. If your project includes a `README` file, it will be used as the base for an `index.html`.
+StyleDocco will add `docs.css` with some default styles to your documentation, but you might want to modify it to make it fit with your project.
 
 StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. Hidden files and SASS partials will be ignored.
 
