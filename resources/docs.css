@@ -1,24 +1,28 @@
 /* # StyleDocco 0.3.0 default styles */
 
-/* These are the only global styles we define, keep others under prefixed
-   class names to interfere as little as possible. */
+/* `body`, `a`, `code` and `pre` are the only global styles we define, keep
+   others under prefixed class names to reduce risk of conflicts.*/
 
 body {
     margin: 0;
     font: 13px/1.6 sans-serif;
 }
+/* <a href="#">Link example</a> */
 a {
     color: #15a;
     text-decoration: none;
 }
+/* <code>Inline code</code> */
 code, pre {
     background-color: #eee;
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: .1em .5em;
+    padding: .05em .3em;
     font-size: .9em;
     font-family: monospace;
 }
+/* <pre><code>Code
+block</code></pre> */
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -46,7 +50,7 @@ Stays fixed to the left, with its own scrollbar. */
     box-shadow:      0 0 4px rgba(0, 0, 0, .5);
     font: 13px/1.6 sans-serif;
 }
-/* ### Logo */
+/* <span class="styledocco-brand">Project name</span> */
 .styledocco-brand {
     display: block;
     padding: 0 10%;
@@ -143,8 +147,7 @@ Stays fixed to the left, with its own scrollbar. */
     font-family: monospace !important;
     line-height: 1.3 !important;
 }
-.styledocco-row:before,
-.styledocco-row:after {
+.styledocco-row:before, .styledocco-row:after {
     display: table;
     content: "";
 }
