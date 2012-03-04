@@ -6,7 +6,7 @@
 
 
 About
------
+=====
 
 StyleDocco takes your stylesheets and generates style guide documents with the processed stylesheets applied to the documents.
 
@@ -22,7 +22,7 @@ StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before
 
 
 Install
--------
+=======
 
 StyleDocco requires [Node.js](http://nodejs.org).
 
@@ -30,11 +30,12 @@ StyleDocco requires [Node.js](http://nodejs.org).
 
 
 Usage
------
+=====
 
 `styledocco [options] [INPUT]`
 
-**Options**
+Options
+-------
 
  * `--name`, `-n` Name of the project *(required)*
  * `--out`, `-o`  Output directory *(default: "docs")*
@@ -43,7 +44,7 @@ Usage
 
 
 Examples
---------
+========
 
     /* <button class="btn primary">Primary</button>  
         Provides extra visual weight and identifies the primary action in a set of buttons */
@@ -58,7 +59,7 @@ See the `examples` folder for more in-depth examples.
 
 
 Acknowledgements
-----------------
+================
 
 Thanks to:
 
