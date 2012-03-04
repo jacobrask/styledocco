@@ -15,9 +15,6 @@ body {
     background-image:    -moz-linear-gradient(left, transparent 56%, #eee 56%),
                          -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                          -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:     -ms-linear-gradient(left, transparent 56%, #eee 56%),
-                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
-                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-image:      -o-linear-gradient(left, transparent 56%, #eee 56%),
                            -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                            -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
@@ -64,8 +61,7 @@ Stays fixed to the left, with its own scrollbar. */
     overflow-y: hidden;
     overflow-x: auto;
     background: #333;
-    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, .5);
-    box-shadow:      0 0 4px rgba(0, 0, 0, .5);
+    box-shadow: 0 0 4px rgba(0, 0, 0, .5);
     font: 13px/1.6 sans-serif;
 }
 
@@ -99,8 +95,7 @@ Stays fixed to the left, with its own scrollbar. */
     padding: .3em 5%;
     margin: 1.5em 0 .5em;
     text-shadow: 0 0 1px rgba(255, 255, 255, .5);
-    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
-    box-shadow:      1px 1px 2px rgba(0, 0, 0, .5);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
 }
 .styledocco-nav a {
     display: block;
@@ -123,6 +118,7 @@ Stays fixed to the left, with its own scrollbar. */
 .styledocco-code,
 .styledocco-docs {
     width: 50%;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0 2em;
     float: left;
@@ -222,8 +218,6 @@ body {
                       -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                          -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:     -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
-                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-image:      -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                            -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-size: 20px 20px, 20px 20px;
