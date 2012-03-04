@@ -6,6 +6,24 @@
 body {
     margin: 0;
     font: 13px/1.6 sans-serif;
+    background-color: #fafafa;
+    /* Using gradients for faux columns and checkerboard pattern.
+       We use a checkerboard pattern to be able to see the edges of elements regardless of their color. */
+    background-image: -webkit-linear-gradient(left, transparent 56%, #eee 56%),
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(left, transparent 56%, #eee 56%),
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:     -ms-linear-gradient(left, transparent 56%, #eee 56%),
+                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:      -o-linear-gradient(left, transparent 56%, #eee 56%),
+                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 100%, 20px 20px, 20px 20px;
+    background-position: 0 0, 0 0, 10px 10px;
+    background-attachment: fixed;
 }
 /* <a href="#">Link example</a> */
 a {
@@ -50,12 +68,14 @@ Stays fixed to the left, with its own scrollbar. */
     box-shadow:      0 0 4px rgba(0, 0, 0, .5);
     font: 13px/1.6 sans-serif;
 }
+
 /* <span class="styledocco-brand">Project name</span> */
 .styledocco-brand {
     display: block;
     padding: 0 10%;
     text-align: center;
     background: #222;
+    margin: 0 0 1em;
     color: #fff;
     font-size: 16px;
     line-height: 2;
@@ -64,7 +84,7 @@ Stays fixed to the left, with its own scrollbar. */
 }
 /* ### Menu */
 .styledocco-nav {
-    margin: 2em 0;
+    margin: 0;
     padding: 0;
 }
 .styledocco-nav li {
@@ -72,7 +92,8 @@ Stays fixed to the left, with its own scrollbar. */
     padding: 0;
     list-style: none;
 }
-.styledocco-nav .styledocco-nav-heading {
+.styledocco-nav-heading {
+    display: block;
     background: #888;
     font-size: 13px;
     padding: .3em 5%;
@@ -96,30 +117,8 @@ Stays fixed to the left, with its own scrollbar. */
     font-weight: bold;
 }
 /* ## Main content */
-.styledocco-container {
-    background-color: #eee;
-}
 .styledocco-content {
-    max-width: 1300px;
     margin-left: 12%;
-    background-color: #fafafa;
-    /* Using gradients for faux columns and checkerboard pattern.
-       We use a checkerboard pattern to be able to see the edges of elements regardless of their color. */
-    background-image: -webkit-linear-gradient(left, transparent 47%, #eee 47%),
-                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
-                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:    -moz-linear-gradient(left, transparent 47%, #eee 47%),
-                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
-                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:     -ms-linear-gradient(left, transparent 47%, #eee 47%),
-                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
-                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:      -o-linear-gradient(left, transparent 47%, #eee 47%),
-                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
-                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-size: auto, 20px 20px, 20px 20px;
-    background-position: 0 0, 0 0, 10px 10px;
-    background-attachment: fixed;
 }
 .styledocco-code,
 .styledocco-docs {
@@ -153,4 +152,82 @@ Stays fixed to the left, with its own scrollbar. */
 }
 .styledocco-row:after {
     clear: both;
+}
+
+/* ## Responsive styles */
+
+@media (max-width: 979px) {
+
+/* Slightly wider sidebar. */
+.styledocco-sidebar {
+    width: 16%;
+}
+.styledocco-content {
+    margin-left: 14%;
+}
+
+}
+
+
+@media (max-width: 640px) {
+
+/* Move menu to the top. */
+.styledocco-sidebar {
+    position: static;
+    height: auto;
+    width: 100%;
+    overflow: visible;
+}
+.styledocco-brand {
+    margin: 0;
+}
+/* Two menu alternatives per row, except headings. */
+.styledocco-nav-heading {
+    clear: both;
+    text-align: center;
+}
+.styledocco-nav li {
+    float: left;
+    width: 50%;
+}
+.styledocco-nav li:nth-child(odd) {
+    clear: left;
+}
+.styledocco-nav a {
+    padding: .5em 1em;
+}
+.styledocco-nav:before, .styledocco-nav:after {
+    display: table;
+    content: "";
+}
+.styledocco-nav:after {
+    clear: both;
+}
+
+/* **Hide code view**.  
+Maybe we can find a decent way to display it on demand later. */
+.styledocco-code {
+    display: none;
+}
+.styledocco-docs {
+    margin: 0;
+    width: 100%;
+}
+.styledocco-content {
+    margin: 0;
+}
+body {
+    /* Only keep the checkerboard pattern. */
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:     -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                          -ms-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:      -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                           -o-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 20px 20px, 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
 }
