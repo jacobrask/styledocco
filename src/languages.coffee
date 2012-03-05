@@ -16,14 +16,13 @@ class Language
 
   # Check type of string
   checkType: (str) ->
-    if str.match(@regexs.multi_start) and str.match(@regexs.multi_end)
+    if str.match(@regexs.multi_start) and str.match(@regexs.multi_end) \
+    or @regexs.single? and str.match @regexs.single
       'single'
     else if str.match @regexs.multi_start
       'multistart'
     else if str.match @regexs.multi_end
       'multiend'
-    else if @regexs.single? and str.match @regexs.single
-      'single'
     else
       'code'
 
