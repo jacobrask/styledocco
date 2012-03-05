@@ -5,37 +5,33 @@
                  |_____|
 
 
-About
-=====
+## About
 
-StyleDocco takes your stylesheets and generates style guide documents with the processed stylesheets applied to the documents.
+StyleDocco generates documentation and style guide documents from your stylesheets.
 
-`styledocco --name 'My Site' main.css` will generate `docs/main.html` with all the comments from the file (passed through GitHub flavored Markdown) in one column, and all the code in another column.
+It takes the comments from stylesheets and produces HTML documents that display your comments alongside your code, with any HTML snippets from the comments rendered using the processed stylesheets.
 
-The CSS in `main.css` will be applied to the page. This means you can add sample HTML content in the comments of your CSS file, and have it rendered in the browser using that same CSS.
+There is no special syntax, comments are just parsed with (GitHub flavored) Markdown. This means that the documentation will still make sense when reading the plain stylesheets, or if you decide to not keep using StyleDocco.
 
-If your project includes a `README` file, it will be used as the base for an `index.html`.
+If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
 
-StyleDocco will add `docs.css` with some default styles to your documentation, but you might want to modify it to make it fit with your project.
-
-StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. Hidden files and SASS partials will be ignored.
+StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page.
 
 
-Install
-=======
+## Install
 
 StyleDocco requires [Node.js](http://nodejs.org).
 
 `npm install -g styledocco`
 
+or checkout this repository.
 
-Usage
-=====
+
+## Usage
 
 `styledocco [options] [INPUT]`
 
-Options
--------
+### Options
 
  * `--name`, `-n` Name of the project *(required)*
  * `--out`, `-o`  Output directory *(default: "docs")*
@@ -43,8 +39,7 @@ Options
  * `--overwrite`  Overwrite existing files (`docs.css`) in target directory.
 
 
-Examples
-========
+## Examples
 
     /* <button class="btn primary">Primary</button>  
         Provides extra visual weight and identifies the primary action in a set of buttons */
@@ -58,8 +53,7 @@ Would output an HTML document with one column displaying the rendered button fol
 See the `examples` folder for more in-depth examples.
 
 
-Acknowledgements
-================
+## Acknowledgements
 
 Thanks to:
 
