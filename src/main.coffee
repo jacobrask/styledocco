@@ -1,9 +1,8 @@
 # Dependencies
 # ============
 
-{exec} = require 'child_process'
-fs     = require 'fs'
-path   = require 'path'
+fs   = require 'fs'
+path = require 'path'
 
 marked   = require 'marked'
 mkdirp   = require 'mkdirp'
@@ -11,6 +10,8 @@ findit   = require 'findit'
 jade     = require 'jade'
 optimist = require 'optimist'
 
+{ getLanguage, languages } = require './languages'
+parser = require './parser'
 
 # Configuration
 # =============
@@ -36,71 +37,6 @@ overwriteResources = options.overwrite
 # Don't strip HTML
 marked.setOptions sanitize: false
 
-
-# Define supported languages
-# --------------------------
-
-class Language
-
-  constructor: (@symbols, @preprocessor) ->
-    @regexs = {}
-    @regexs.single = new RegExp('^\\s*' + @symbols.single) if @symbols.single
-    # Hard coded /* */ for now
-    @regexs.multi_start = new RegExp(/^[\s]*\/\*/)
-    @regexs.multi_end = new RegExp(/\*\//)
-
-  # Check type of string
-  checkType: (str) ->
-    if str.match(@regexs.multi_start) and str.match(@regexs.multi_end)
-      'single'
-    else if str.match @regexs.multi_start
-      'multistart'
-    else if str.match @regexs.multi_end
-      'multiend'
-    else if @regexs.single? and str.match @regexs.single
-      'single'
-    else
-      'code'
-
-  # Filter out comment symbols
-  filter: (str) ->
-    for n, re of @regexs
-      str = str.replace re, ''
-    str
-
-  compile: (filename, cb) ->
-    if @preprocessor?
-      exec "#{@preprocessor.cmd} #{@preprocessor.args.join(' ')} #{filename}",
-        (err, stdout, stderr) ->
-          cb err, stdout
-    else
-      fs.readFile filename, 'utf-8', (err, data) ->
-        cb err, data
-
-
-# A list of the supported stylesheet languages and their comment symbols
-# and optional preprocessor command.
-languages =
-  '.css':  new Language({ multi: [ "/*", "*/" ] })
-  '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'scss', args: [ '-t', 'compressed' ] })
-  '.sass': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'sass', args: [ '-t', 'compressed' ] })
-  '.less': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'lessc', args: [ '-x' ] })
-  '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'stylus', args: [ '-c', '<' ] })
-
-
-# Helper functions and utilities
-# ==============================
-
-# Get the language object from a file name.
-getLanguage = (source) -> languages[path.extname(source)]
-
-# Trim newlines from beginning and end of string.
-trimNewLines = (str) -> str.replace(/^\n*/, '').replace(/\n*$/, '')
-
 # Compute the destination HTML path for an input source file path,
 # relative to the output directory.
 makeDestination = (file) ->
@@ -119,44 +55,6 @@ buildRootPath = (str) ->
 preProcess = (filename, cb) ->
   lang = getLanguage filename
   lang.compile filename, cb
-
-
-# Given a string of source code, find each comment and the code that
-# follows it, and create an individual **section** for the code/doc pair.
-makeSections = (lang, data) ->
-  lines = data.split '\n'
-  sections = []
-
-  formatDocs = (line) -> "#{lang.filter(line)}\n"
-  formatCode = (line) -> "#{line}\n"
-
-  # We loop through the array backwards because `pop` is faster than `splice`.
-  while lines.length
-    docs = code = ''
-
-    # Since we're looping backwards, first add the code.
-    while lines.length and lang.checkType(lines[lines.length-1]) is 'code'
-      code = formatCode(lines.pop()) + code
-
-    # Now check for any single line comments.
-    while lines.length and lang.checkType(lines[lines.length-1]) is 'single'
-      docs = formatDocs(lines.pop()) + docs
-
-    # A multi line comment ends here, add lines until comment start.
-    if lines.length and lang.checkType(lines[lines.length-1]) is 'multiend'
-      # We want the start line, so `break` *after* line is added.
-      while lines.length
-        line = lines.pop()
-        docs = formatDocs(line) + docs
-        break if lang.checkType(line) is 'multistart'
-
-    # Format and save code/doc pair.
-    sections.push {
-      docs: marked docs.trim()
-      code: trimNewLines code
-    }
-
-  sections.reverse()
 
 
 # Render `template` with `content`.
@@ -278,7 +176,7 @@ files.forEach (file) ->
   # Read in stylesheet.
   code = fs.readFileSync file, "utf-8"
   # Parse into code/docs sections.
-  sections = makeSections getLanguage(file), code
+  sections = parser getLanguage(file), code
   # Make HTML.
   generateSourceHtml file, menu, sections
 
