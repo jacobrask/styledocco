@@ -248,7 +248,6 @@ sources = findit.sync input
 files = sources.
   filter((source) ->
     return false if source.match /(\/|^)\./ # No hidden files.
-    return false if source.match /(\/|^)_.*\.s[ac]ss$/ # No SASS partials.
     return false unless path.extname(source) of languages # Only supported file types.
     return false unless fs.statSync(source).isFile() # Files only.
     return true
