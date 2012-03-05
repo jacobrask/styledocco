@@ -14,7 +14,7 @@ class Language
     @regexs.multi_start = new RegExp(/^[\s]*\/\*/)
     @regexs.multi_end = new RegExp(/\*\//)
 
-  # Check type of string
+  # Check type of string.
   checkType: (str) ->
     if str.match(@regexs.multi_start) and str.match(@regexs.multi_end) \
     or @regexs.single? and str.match @regexs.single
@@ -26,12 +26,13 @@ class Language
     else
       'code'
 
-  # Filter out comment symbols
+  # Filter out comment symbols.
   filter: (str) ->
     for n, re of @regexs
       str = str.replace re, ''
     str
 
+  # Compile to CSS.
   compile: (filename, cb) ->
     if @preprocessor?
       exec "#{@preprocessor.cmd} #{@preprocessor.args.join(' ')} #{filename}",
@@ -42,9 +43,9 @@ class Language
         cb err, data
 
 
-# A list of the supported stylesheet languages, their comment symbols
-# and optional preprocessor command.
-exports.languages = languages =
+# The supported stylesheet languages, their comment symbols and optional
+# preprocessor command.
+languages =
   '.css':  new Language({ multi: [ "/*", "*/" ] })
   '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'scss', args: [ '-t', 'compressed' ] })
@@ -55,5 +56,9 @@ exports.languages = languages =
   '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'stylus', args: [ '-c', '<' ] })
 
+
+# Determine whether a file is of a supported file type.
+exports.isSupported = (filename) -> path.extname(filename) of languages
+
 # Get the language object from a file name.
-exports.getLanguage = (source) -> languages[path.extname(source)]
+exports.getLanguage = (filename) -> languages[path.extname filename ]

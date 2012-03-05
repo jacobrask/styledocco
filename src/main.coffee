@@ -10,7 +10,7 @@ findit   = require 'findit'
 jade     = require 'jade'
 optimist = require 'optimist'
 
-{ getLanguage, languages } = require './languages'
+langs  = require './languages'
 parser = require './parser'
 
 # Configuration
@@ -53,7 +53,7 @@ buildRootPath = (str) ->
 
 # Run `filename` through suitable CSS preprocessor.
 preProcess = (filename, cb) ->
-  lang = getLanguage filename
+  lang = langs.getLanguage filename
   lang.compile filename, cb
 
 
@@ -146,7 +146,7 @@ sources = findit.sync input
 files = sources.
   filter((source) ->
     return false if source.match /(\/|^)\./ # No hidden files.
-    return false unless path.extname(source) of languages # Only supported file types.
+    return false unless langs.isSupported(source) # Only supported file types.
     return false unless fs.statSync(source).isFile() # Files only.
     return true
   ).sort()
@@ -176,7 +176,7 @@ files.forEach (file) ->
   # Read in stylesheet.
   code = fs.readFileSync file, "utf-8"
   # Parse into code/docs sections.
-  sections = parser getLanguage(file), code
+  sections = parser langs.getLanguage(file), code
   # Make HTML.
   generateSourceHtml file, menu, sections
 
