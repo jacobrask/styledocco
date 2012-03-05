@@ -26,6 +26,8 @@ StyleDocco requires [Node.js](http://nodejs.org).
 
 or checkout this repository.
 
+StyleDocco is free software, released under the MIT license.
+
 
 ## Usage
 
