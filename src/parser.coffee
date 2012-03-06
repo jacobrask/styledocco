@@ -3,7 +3,10 @@
 
 marked = require 'marked'
 
-marked.setOptions sanitize: false
+marked.setOptions
+  sanitize: no
+  gfm: on
+
 
 _ = require './utils'
 

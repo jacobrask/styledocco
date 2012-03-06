@@ -35,7 +35,9 @@ templateDir = options.tmpl or "#{__dirname}/../resources/"
 overwriteResources = options.overwrite
 
 # Don't strip HTML
-marked.setOptions sanitize: false
+marked.setOptions
+  sanitize: no
+  gfm: on
 
 # Compute the destination HTML path for an input source file path,
 # relative to the output directory.
