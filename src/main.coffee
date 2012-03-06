@@ -178,13 +178,21 @@ generateIndex menu
 files.forEach (file) ->
   # Read in stylesheet.
   code = fs.readFileSync file, "utf-8"
-  # Parse into code/docs sections.
-  sections = parser langs.getLanguage(file), code
-  sections.map (section) ->
-    {
-      docs: marked section.docs.trim()
-      code: _.trimNewLines section.code
-    }
+  tokens = marked.lexer parser.getDocs langs.getLanguage(file), code
+
+  # Split docs into sections after headings.
+  sections = []
+  while tokens.length
+    if tokens[0].type is 'heading' and tokens[0].depth <= 2
+      # Save section.
+      if section?.length
+        sections.push marked.parser section
+      # Start again on new section.
+      section = [ tokens.shift() ]
+    else
+      (section?=[]).push tokens.shift()
+      if tokens.length is 1
+        sections.push marked.parser section
 
   # Make HTML.
   generateSourceHtml file, menu, sections

@@ -2,12 +2,12 @@ parser = require '../src/parser'
 { getLanguage } = require '../src/languages'
 
 css = """
-/* foo */
+/* _foo_ */
 body { color: red; }
+/* BAR */
 """
 
-exports["Parse CSS"] = (test) ->
-  sections = parser getLanguage('test.css'), css
-  test.equal sections[0].docs.trim(), 'foo'
-  test.equal sections[0].code, "body { color: red; }\n"
+exports["Parse documentation"] = (test) ->
+  docs = parser.getDocs getLanguage('test.css'), css
+  test.equal docs.trim(), '_foo_ \n BAR'
   test.done()

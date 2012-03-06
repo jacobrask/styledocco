@@ -11,9 +11,5 @@ html
         include menu
       .styledocco-content
         each section, i in sections
-          .styledocco-row
-            .styledocco-docs !{section.docs}
-            .styledocco-code
-              if section.code != ''
-                pre: code !{section.code}
+          section !{section}
 include footer
