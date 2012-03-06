@@ -37,7 +37,8 @@
     "optimist": "0.x.x"
   },
   "devDependencies": {
-    "coffee-script": "1.2.x"
+    "coffee-script": "1.2.x",
+    "nodeunit": "0.7.4"
   },
   "directories": {
     "lib": "./lib"
