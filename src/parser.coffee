@@ -1,3 +1,6 @@
+# The code/comment parser
+# =======================
+
 marked = require 'marked'
 
 marked.setOptions sanitize: false

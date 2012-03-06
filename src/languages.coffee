@@ -1,5 +1,5 @@
 # Methods for the supported stylesheet languages
-# ----------------------------------------------
+# ==============================================
 
 {exec} = require 'child_process'
 fs     = require 'fs'
@@ -10,7 +10,7 @@ class Language
   constructor: (@symbols, @preprocessor) ->
     @regexs = {}
     @regexs.single = new RegExp('^\\s*' + @symbols.single) if @symbols.single
-    # FIXME: Hard coded /* */ for now
+    # FIXME Hard coded /* */ for now
     @regexs.multi_start = new RegExp(/^[\s]*\/\*/)
     @regexs.multi_end = new RegExp(/\*\//)
 
@@ -57,8 +57,11 @@ languages =
                         { cmd: 'stylus', args: [ '-c', '<' ] })
 
 
+# Exported functions
+# ------------------
+
 # Determine whether a file is of a supported file type.
 exports.isSupported = (filename) -> path.extname(filename) of languages
 
-# Get the language object from a file name.
-exports.getLanguage = (filename) -> languages[path.extname filename ]
+# Get the correspoding language object from a file name.
+exports.getLanguage = (filename) -> languages[path.extname filename]
