@@ -12,6 +12,7 @@ optimist = require 'optimist'
 
 langs  = require './languages'
 parser = require './parser'
+_ = require './utils'
 
 # Configuration
 # =============
@@ -179,6 +180,12 @@ files.forEach (file) ->
   code = fs.readFileSync file, "utf-8"
   # Parse into code/docs sections.
   sections = parser langs.getLanguage(file), code
+  sections.map (section) ->
+    {
+      docs: marked section.docs.trim()
+      code: _.trimNewLines section.code
+    }
+
   # Make HTML.
   generateSourceHtml file, menu, sections
 

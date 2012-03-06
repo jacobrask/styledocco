@@ -8,6 +8,6 @@ body { color: red; }
 
 exports["Parse CSS"] = (test) ->
   sections = parser getLanguage('test.css'), css
-  test.equal sections[0].docs, '<p>foo</p>\n'
-  test.equal sections[0].code, 'body { color: red; }'
+  test.equal sections[0].docs.trim(), 'foo'
+  test.equal sections[0].code, "body { color: red; }\n"
   test.done()

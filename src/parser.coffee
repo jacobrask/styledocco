@@ -1,15 +1,6 @@
 # The code/comment parser
 # =======================
 
-marked = require 'marked'
-
-marked.setOptions
-  sanitize: no
-  gfm: on
-
-
-_ = require './utils'
-
 # Given a string of source code, find each comment and the code that
 # follows it, and create an individual **section** for the code/doc pair.
 
@@ -40,10 +31,7 @@ module.exports = (lang, data) ->
         docs = formatDocs(line) + docs
         break if lang.checkType(line) is 'multistart'
 
-    # Format and save code/doc pair.
-    sections.push {
-      docs: marked docs.trim()
-      code: _.trimNewLines code
-    }
+    # Save code/doc pair.
+    sections.push { docs, code }
 
   sections.reverse()
