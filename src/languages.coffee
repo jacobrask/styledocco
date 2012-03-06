@@ -9,10 +9,11 @@ class Language
 
   constructor: (@symbols, @preprocessor) ->
     @regexs = {}
+    # We match only comments without any code on the same line.
     @regexs.single = new RegExp('^\\s*' + @symbols.single) if @symbols.single
-    # FIXME Hard coded /* */ for now
-    @regexs.multi_start = new RegExp(/^[\s]*\/\*/)
-    @regexs.multi_end = new RegExp(/\*\//)
+    # Build regex's by splitting string and then joining with escape chars.
+    @regexs.multi_start = new RegExp '^\\s*\\' + @symbols.multi[0].split('').join('\\')
+    @regexs.multi_end = new RegExp '\\' + @symbols.multi[1].split('').join('\\')
 
   # Check type of string.
   checkType: (str) ->
