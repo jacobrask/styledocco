@@ -69,13 +69,14 @@ renderTemplate = (templateName, content) ->
 
 
 # Generate the HTML document and write to file.
-generateSourceHtml = (source, menu, sections) ->
+generateSourceHtml = (source, menu, sections, title, description) ->
   dest = makeDestination source
 
   preProcess source, (err, css) ->
     throw err if err?
     data = {
-      title: "#{options.name} – #{source}"
+      title
+      description
       project: {
           name: options.name
           menu
@@ -149,7 +150,7 @@ sources = findit.sync input
 files = sources.
   filter((source) ->
     return false if source.match /(\/|^)\./ # No hidden files.
-    return false unless langs.isSupported(source) # Only supported file types.
+    return false unless langs.isSupported source # Only supported file types.
     return false unless fs.statSync(source).isFile() # Files only.
     return true
   ).sort()
@@ -180,6 +181,28 @@ files.forEach (file) ->
   code = fs.readFileSync file, "utf-8"
   tokens = marked.lexer parser.getDocs langs.getLanguage(file), code
 
+  # If first token is a h1, assume it's the document title.
+  if tokens[0].type is 'heading' and tokens[0].depth is 1
+    title = tokens[0].text
+    tokens.shift()
+    if tokens[0].type is 'paragraph'
+      description = tokens[0].text
+      tokens.shift()
+  else
+    title = path.basename(file, path.extname file)
+
+  origTokens = tokens.slice(0)
+
+  # For each code block we encounter, add an example box.
+  for token, i in origTokens when token.type is 'code'
+    diff = tokens.length - origTokens.length
+    newToken = {
+      type: 'html'
+      pre: false
+      text: "<div class=\"styledocco-example\">#{token.text}</div>"
+    }
+    tokens.splice(i + diff, 0, newToken)
+
   # Split docs into sections after headings.
   sections = []
   while tokens.length
@@ -195,10 +218,10 @@ files.forEach (file) ->
         sections.push marked.parser section
 
   # Make HTML.
-  generateSourceHtml file, menu, sections
+  generateSourceHtml file, menu, sections, title, description
 
 # Add default docs.css unless it already exists.
 cssPath = path.join outputDir, 'docs.css'
-if overwriteResources or not path.existsSync(cssPath)
+if overwriteResources or not path.existsSync cssPath
   fs.writeFileSync cssPath, fs.readFileSync __dirname + '/../resources/docs.css', 'utf-8'
   console.log "styledocco: writing #{path.join outputDir, 'docs.css'}"

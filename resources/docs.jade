@@ -1,7 +1,7 @@
 !!! 5
 html
   head
-    title=title
+    title #{title} | #{project.name}
     meta(charset='utf-8')
     link(rel='stylesheet', href="#{project.root}docs.css")
     style !{css}
@@ -10,6 +10,9 @@ html
       .styledocco-sidebar
         include menu
       .styledocco-content
+        h1 #{title}
+        if description
+          p #{description}
         each section, i in sections
-          section !{section}
+          .styledocco-docs !{section}
 include footer

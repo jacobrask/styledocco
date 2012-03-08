@@ -1,79 +1,125 @@
-/*
-StyleDocco default styles
+/* StyleDocco default styles
 ===============================================================================
+This is the default stylesheet for StyleDocco, and also serves as an example
+for the documentation syntax. */
 
-Global styles
--------------------------------------------------------------------------------
-`body`, `a`, `code` and `pre` are the only global styles we define, keep others
-under prefixed class names to reduce risk of conflicts. */
+/* ## Global styles ##
+We only define a few global styles, and keep the rest under prefixed class
+names to reduce the risk of conflicts. */
 
 body {
-    margin: 0;
-    font: 13px/1.618 sans-serif;
-    background-color: #fff;
+    margin: 20px 0;
+    font: 13px/1.6 sans-serif;
+    background-color: #fdfdfd;
+    color: #333;
 }
-/* <a href="#">Link example</a>
-```
+/* ```
 <a href="#">Link example</a>
 ``` */
 a {
-    color: #15a;
     text-decoration: none;
+    color: #15a;
 }
-/* <code>Inline code</code>
-```
+a:hover {
+    color: #038;
+}
+/* ```
 <code>Inline code</code>
 ``` */
-code, pre {
+code {
     font-size: .9em;
     font-family: monospace;
+    background: rgba(0, 0, 0, .05);
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, .1);
+    padding: .1em 3px;
 }
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;
-    padding: 10px 15px;
 }
 pre code {
-    font-size: inherit;
+    background: transparent;
+    border: 0;
+    padding: 0;
 }
 
-section {
-    border: 1px solid #eee;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .05);
-    max-width: 1000px;
-    margin-top: 10px;
-    border-radius: 3px;
-    background: #fafafa url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
-}
-section p, section h2, section h3 {
-    padding: 0 15px;
-}
+/* ## Site Layout ##
+A centered container with a menu sidebar.
 
-section pre {
-    background: #f8f8f8;
-    border: 1px solid #eee;
-    border-left: 0; border-right: 0;
+```
+<div class="styledocco-container">
+  <div class="styledocco-sidebar"><p>Sidebar</p></div>
+  <div class="styledocco-content">
+    <div class="styledocco-docs"><p>Documentation</p></div>
+  </div>
+</div>
+```
+*/
+ /* Makes sure the actual content is centered by putting a right-padding with
+the same width as the sidebar. Also using container element instead of body to
+avoid conflicts with embedded stylesheets. This is a hidden comment btw. */
+.styledocco-container {
+  width: 70%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding-right: 15%;
 }
-
-/* ## Sidebar
-Stays fixed to the left, with its own scrollbar. */
 .styledocco-sidebar {
-    position: fixed;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .05);
-    left: 1%;
-    top: 1%;
-    background: #fafafa;
+    width: 21%;
+    float: left;
+    word-wrap: break-word;
+    background: #f9f9f9;
     border: 1px solid #eee;
     border-radius: 3px;
-    height: 98%;
-    width: 11%;
-    word-wrap: break-word;
-    overflow-y: hidden;
-    overflow-x: auto;
-    font: 13px/1.6 sans-serif;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .05);
+    font-size: 13px;
+}
+/* ## Documentation styles ##
+Blocks showing rendered styles and example code.
+ 
+Demonstrating this would be a bit recursive. */
+
+.styledocco-content {
+    width: 76%;
+    float: right;
+}
+.styledocco-docs {
+    margin: 20px 0 40px;
+    border: 1px solid #eee;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .05);
+    border-radius: 3px;
+    background: #fff;
 }
 
-/* <span class="styledocco-brand">Project name</span> */
+.styledocco-docs p,
+.styledocco-docs h1,
+.styledocco-docs h2,
+.styledocco-docs h3 {
+    margin: 15px;
+}
+.styledocco-example {
+    border-top: 1px solid #eee;
+    padding: 15px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
+}
+.styledocco-example:before, .styledocco-example:after {
+    display: table;
+    content: "";
+}
+.styledocco-example:after {
+    clear: both;
+}
+.styledocco-docs pre {
+    margin: 0;
+    padding: 10px 15px;
+    background: #f8f8f8;
+    border-top: 1px solid #eee;
+}
+
+
+/* ## Menu ##
+Sidebar menu. */
 .styledocco-brand {
     display: block;
     padding: 0 10%;
@@ -115,82 +161,4 @@ Stays fixed to the left, with its own scrollbar. */
     color: #000;
     background: #eee;
     text-shadow: none;
-}
-.styledocco-nav a.styledocco-is-active {
-    font-weight: bold;
-}
-/* ## Main content */
-.styledocco-content {
-    margin-left: 13%;
-}
-
-/* `!important` everywhere as we don't want any imported stylesheets to interfere. */
-.styledocco-code pre {
-    padding: 0 !important;
-    white-space: pre-wrap !important;
-    word-wrap: break-word !important;
-    border: 0 !important;
-    background: transparent !important;
-}
-.styledocco-row:before, .styledocco-row:after {
-    display: table;
-    content: "";
-}
-.styledocco-row:after {
-    clear: both;
-}
-
-/* ## Responsive styles */
-
-@media (max-width: 979px) {
-
-/* Slightly wider sidebar. */
-.styledocco-sidebar {
-    width: 16%;
-}
-.styledocco-content {
-    margin-left: 14%;
-}
-
-}
-
-
-@media (max-width: 640px) {
-
-/* Move menu to the top. */
-.styledocco-sidebar {
-    position: static;
-    height: auto;
-    width: 100%;
-    overflow: visible;
-}
-.styledocco-brand {
-    margin: 0;
-}
-/* Two menu alternatives per row, except headings. */
-.styledocco-nav-heading {
-    clear: both;
-    text-align: center;
-}
-.styledocco-nav li {
-    float: left;
-    width: 50%;
-}
-.styledocco-nav li:nth-child(odd) {
-    clear: left;
-}
-.styledocco-nav a {
-    padding: .5em 1em;
-}
-.styledocco-nav:before, .styledocco-nav:after {
-    display: table;
-    content: "";
-}
-.styledocco-nav:after {
-    clear: both;
-}
-
-.styledocco-content {
-    margin: 0;
-}
 }

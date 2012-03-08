@@ -12,8 +12,11 @@ exports.getDocs = (lang, data) ->
 
   while lines.length
 
-    # Add newlines (to separate different doc blocks) and continue.
-    while lines.length and lang.checkType(lines[0]) is 'code'
+    # Add newlines (to separate different doc blocks) and continue. `multiend`
+    # is ignored because we probably encountered the end of an ignored multi-
+    # line comment.
+    while lines.length and \
+    (lang.checkType(lines[0]) is 'code' or lang.checkType(lines[0]) is 'multiend')
       docs += '\n'
       lines.shift()
 
