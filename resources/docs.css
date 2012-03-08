@@ -1,14 +1,14 @@
 /* StyleDocco default styles
 ===============================================================================
-This is the default stylesheet for StyleDocco, and also serves as an example
-for the documentation syntax. */
+This is the default stylesheet for StyleDocco. It also serves as an example
+of the documentation syntax. */
 
 /* ## Global styles ##
 We only define a few global styles, and keep the rest under prefixed class
 names to reduce the risk of conflicts. */
 
 body {
-    margin: 20px 0;
+    margin: 0;
     font: 13px/1.6 sans-serif;
     background-color: #fdfdfd;
     color: #333;
@@ -45,11 +45,10 @@ pre code {
 }
 
 /* ## Site Layout ##
-A centered container with a menu sidebar.
+A centered container with a menu sidebar (not displayed here).
 
 ```
 <div class="styledocco-container">
-  <div class="styledocco-sidebar"><p>Sidebar</p></div>
   <div class="styledocco-content">
     <div class="styledocco-docs"><p>Documentation</p></div>
   </div>
@@ -66,12 +65,12 @@ avoid conflicts with embedded stylesheets. This is a hidden comment btw. */
   padding-right: 15%;
 }
 .styledocco-sidebar {
-    width: 21%;
-    float: left;
+    position: fixed;
+    width: 12%;
     word-wrap: break-word;
     background: #f9f9f9;
     border: 1px solid #eee;
-    border-radius: 3px;
+    border-radius: 0 0 3px 3px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, .05);
     font-size: 13px;
 }
@@ -122,9 +121,8 @@ Demonstrating this would be a bit recursive. */
 Sidebar menu. */
 .styledocco-brand {
     display: block;
-    padding: 0 10%;
+    padding: 0 10% 12px;
     text-align: center;
-    margin: 0 0 1em;
     color: #000;
     font-size: 16px;
     line-height: 2;
@@ -132,8 +130,9 @@ Sidebar menu. */
 }
 /* ### Menu */
 .styledocco-nav {
+    background: #f9f9f9;
     margin: 0;
-    padding: 0;
+    padding: 10px 0 0;
 }
 .styledocco-nav li {
     margin: 0;
@@ -142,18 +141,16 @@ Sidebar menu. */
 }
 .styledocco-nav-heading {
     display: block;
-    background: #888;
+    background: #eee;
     font-size: 13px;
     padding: .3em 5%;
-    margin: 1.5em 0 .5em;
-    text-shadow: 0 0 1px rgba(255, 255, 255, .5);
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+    margin: 1.5em 0 .1em;
 }
 .styledocco-nav a {
     display: block;
     padding: .2em 10%;
     color: #333;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .15);
 }
 .styledocco-nav a:active,
 .styledocco-nav a:focus,

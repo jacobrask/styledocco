@@ -33,3 +33,34 @@ exports.getDocs = (lang, data) ->
         break if lang.checkType(line) is 'multiend'
 
   docs
+
+
+# Split docs into section, delimited by where there are headings or hr's.
+exports.makeSections = (tokens) ->
+  sections = []
+  while tokens.length
+    if (tokens[0].type is 'heading' and tokens[0].depth <= 2) or tokens[0].type is 'hr'
+      # Ignore hr's, used only as section delimiters.
+      if tokens[0].type is 'hr'
+        tokens.shift()
+      # Save current section.
+      if section?.length or not tokens.length
+        sections.push section
+      if tokens.length
+        # Start again on new section.
+        section = [ tokens.shift() ]
+    else
+      (section?=[]).push tokens.shift()
+      unless tokens.length
+        sections.push section
+
+  sections
+
+
+# If first token is an h1, assume it's the document title.
+exports.getTitle = (tokens) ->
+  tokens[0]?.text if tokens[0]?.type is 'heading' and tokens[0]?.depth is 1
+  
+# If first token is an h1, assume it's the document title.
+exports.getDescription = (tokens) ->
+  tokens[0]?.text if tokens[0]?.type is 'paragraph'

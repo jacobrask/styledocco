@@ -1,10 +1,14 @@
 !!! 5
 html
   head
-    title #{title} | #{project.name}
+    if title == project.name
+      title #{project.name}
+    else
+      title #{title} | #{project.name}
     meta(charset='utf-8')
     link(rel='stylesheet', href="#{project.root}docs.css")
-    style !{css}
+    if css
+      style !{css}
   body
     .styledocco-container
       .styledocco-sidebar

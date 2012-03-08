@@ -31,6 +31,8 @@ options = optimist
   .argv
 
 input = options._[0] or './'
+
+currentDir = "#{process.cwd()}/"
 outputDir = options.out
 templateDir = options.tmpl or "#{__dirname}/../resources/"
 overwriteResources = options.overwrite
@@ -70,64 +72,32 @@ renderTemplate = (templateName, content) ->
 
 # Generate the HTML document and write to file.
 generateSourceHtml = (source, menu, sections, title, description) ->
+
   dest = makeDestination source
 
-  preProcess source, (err, css) ->
-    throw err if err?
-    data = {
-      title
-      description
-      project: {
-          name: options.name
-          menu
-          root: buildRootPath(source) }
-      sections
-      css
-    }
-
+  render = ->
     html = renderTemplate 'docs', data
     console.log "styledocco: #{source} -> #{path.join outputDir, dest}"
     writeFile(dest, html)
 
-
-# Look for a README file and generate an index.html.
-generateIndex = (menu) ->
-  currentDir = "#{process.cwd()}/"
-  dest = "index.html"
-
-  # Look for readme in input dir
-  if fs.statSync(input).isDirectory()
-    files = fs.readdirSync(input)
-      .filter (file) -> file.toLowerCase().match /^readme/
-    if files[0]?
-      readme = path.join input, files[0]
-
-  unless readme?
-    # Look for readme in current dir
-    files = fs.readdirSync(currentDir)
-      .filter (file) -> file.toLowerCase().match /^readme/
-    if files[0]?
-      readme = path.join currentDir, files[0]
-
-  content =
-    if readme?
-      # Parse Readme with markdown.
-      marked fs.readFileSync readme, 'utf-8'
-    else
-      "<h1>Readme</h1><p>Please add a README file to this project.</p>"
-
   data = {
-    title: options.name
+    title
+    description
     project: {
-        name: options.name
-        menu
-        root: './' }
-    content
+      name: options.name
+      menu
+      root: buildRootPath(source) }
+    sections
+    css: ''
   }
 
-  html = renderTemplate 'index', data
-  console.log "styledocco: #{files[0] or './'} -> #{path.join outputDir, dest}"
-  writeFile dest, html
+  if langs.isSupported source
+    preProcess source, (err, css) ->
+      throw err if err?
+      data.css = css
+      render()
+  else
+    render()
 
 
 # Write a file to the filesystem.
@@ -172,8 +142,33 @@ for file in files
   else
     menu[key] = [ link ]
 
-# Create `index.html` file.
-generateIndex menu
+# Look for a README file and generate an index.html.
+findFile = (dir, re) ->
+  return null unless fs.statSync(dir).isDirectory()
+  fs.readdirSync(dir).filter((file) -> file.match re)?[0]
+
+# Look for readme, fall back to default.
+readme = findFile(input, /^readme/i) or findFile(currentDir, /^readme/i) or findFile(templateDir, /^readme/i)
+tokens = marked.lexer fs.readFileSync readme, 'utf-8'
+# Check if first token looks like a page title. If it does, check if next token
+# looks like a description.
+title = parser.getTitle tokens
+if title?
+  tokens.shift()
+  description = parser.getDescription tokens
+  tokens.shift() if description?
+else
+  title = options.name
+
+generateSourceHtml(
+  readme
+  menu
+  parser.makeSections(
+    tokens
+  ).map (section) -> marked.parser(section)
+  title
+  description
+)
 
 # Generate documentation files.
 files.forEach (file) ->
@@ -181,13 +176,13 @@ files.forEach (file) ->
   code = fs.readFileSync file, "utf-8"
   tokens = marked.lexer parser.getDocs langs.getLanguage(file), code
 
-  # If first token is a h1, assume it's the document title.
-  if tokens[0].type is 'heading' and tokens[0].depth is 1
-    title = tokens[0].text
+  # Check if first token looks like a page title. If it does, check if
+  # next token looks like a description.
+  title = parser.getTitle tokens
+  if title?
     tokens.shift()
-    if tokens[0].type is 'paragraph'
-      description = tokens[0].text
-      tokens.shift()
+    description = parser.getDescription tokens
+    tokens.shift() if description?
   else
     title = path.basename(file, path.extname file)
 
@@ -203,19 +198,8 @@ files.forEach (file) ->
     }
     tokens.splice(i + diff, 0, newToken)
 
-  # Split docs into sections after headings.
-  sections = []
-  while tokens.length
-    if tokens[0].type is 'heading' and tokens[0].depth <= 2
-      # Save section.
-      if section?.length
-        sections.push marked.parser section
-      # Start again on new section.
-      section = [ tokens.shift() ]
-    else
-      (section?=[]).push tokens.shift()
-      if tokens.length is 1
-        sections.push marked.parser section
+  sections = parser.makeSections(tokens).map (section) ->
+    marked.parser section
 
   # Make HTML.
   generateSourceHtml file, menu, sections, title, description
