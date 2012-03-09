@@ -4,6 +4,7 @@
 fs   = require 'fs'
 path = require 'path'
 
+highlight = require 'highlight.js'
 marked   = require 'marked'
 mkdirp   = require 'mkdirp'
 findit   = require 'findit'
@@ -149,7 +150,9 @@ findFile = (dir, re) ->
 
 # Look for readme, fall back to default.
 readme = findFile(input, /^readme/i) or findFile(currentDir, /^readme/i) or findFile(templateDir, /^readme/i)
-tokens = marked.lexer fs.readFileSync readme, 'utf-8'
+
+tokens = parser.getDocTokens readme
+
 # Check if first token looks like a page title. If it does, check if next token
 # looks like a description.
 title = parser.getTitle tokens
@@ -172,9 +175,9 @@ generateSourceHtml(
 
 # Generate documentation files.
 files.forEach (file) ->
-  # Read in stylesheet.
-  code = fs.readFileSync file, "utf-8"
-  tokens = marked.lexer parser.getDocs langs.getLanguage(file), code
+
+  # Gets marked markdown tokens from `file`.
+  tokens = parser.getDocTokens file
 
   # Check if first token looks like a page title. If it does, check if
   # next token looks like a description.
@@ -197,6 +200,10 @@ files.forEach (file) ->
       text: "<div class=\"styledocco-example\">#{token.text}</div>"
     }
     tokens.splice(i + diff, 0, newToken)
+  
+  for token, i in tokens when token.type is 'code'
+    token.text = highlight.highlightAuto(token.text).value
+    token.escaped = true
 
   sections = parser.makeSections(tokens).map (section) ->
     marked.parser section

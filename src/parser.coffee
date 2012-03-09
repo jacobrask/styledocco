@@ -1,10 +1,15 @@
 # The code/comment parser
 # =======================
 
-# Given a string of source code, find each comment and the code that
-# follows it, and create an individual **section** for the code/doc pair.
+fs = require 'fs'
+marked = require 'marked'
+langs  = require './languages'
+marked.setOptions
+  sanitize: no
+  gfm: on
 
-exports.getDocs = (lang, data) ->
+# Extract the documentation from a string.
+getDocs = (lang, data) ->
   lines = data.split '\n'
   docs = ''
 
@@ -33,6 +38,14 @@ exports.getDocs = (lang, data) ->
         break if lang.checkType(line) is 'multiend'
 
   docs
+
+
+# Get Markdown tokens for the documentation.
+exports.getDocTokens = (filename) ->
+  code = fs.readFileSync filename, "utf-8"
+  lang = langs.getLanguage filename
+  docs = getDocs lang, code
+  marked.lexer docs
 
 
 # Split docs into section, delimited by where there are headings or hr's.
