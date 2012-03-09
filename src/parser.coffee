@@ -44,7 +44,13 @@ getDocs = (lang, data) ->
 exports.getDocTokens = (filename) ->
   code = fs.readFileSync filename, "utf-8"
   lang = langs.getLanguage filename
-  docs = getDocs lang, code
+  # If it's a stylesheet we support, parse it for comments, otherwise treat
+  # it as raw Markdown (ie a readme).
+  docs =
+    if lang?
+      getDocs lang, code
+    else
+      code
   marked.lexer docs
 
 

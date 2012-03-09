@@ -72,33 +72,30 @@ renderTemplate = (templateName, content) ->
 
 
 # Generate the HTML document and write to file.
-generateSourceHtml = (source, menu, sections, title, description) ->
+generateSourceHtml = (source, data) ->
 
   dest = makeDestination source
 
-  render = ->
+  data.project = {
+    name: options.name
+    menu
+    root: buildRootPath source
+  }
+
+  render = (data) ->
     html = renderTemplate 'docs', data
     console.log "styledocco: #{source} -> #{path.join outputDir, dest}"
     writeFile(dest, html)
 
-  data = {
-    title
-    description
-    project: {
-      name: options.name
-      menu
-      root: buildRootPath(source) }
-    sections
-    css: ''
-  }
 
   if langs.isSupported source
     preProcess source, (err, css) ->
       throw err if err?
       data.css = css
-      render()
+      render data
   else
-    render()
+    data.css = ''
+    render data
 
 
 # Write a file to the filesystem.
@@ -163,15 +160,8 @@ if title?
 else
   title = options.name
 
-generateSourceHtml(
-  readme
-  menu
-  parser.makeSections(
-    tokens
-  ).map (section) -> marked.parser(section)
-  title
-  description
-)
+sections = parser.makeSections(tokens).map (section) -> marked.parser(section)
+generateSourceHtml readme, { menu, sections, title, description }
 
 # Generate documentation files.
 files.forEach (file) ->
@@ -205,11 +195,10 @@ files.forEach (file) ->
     token.text = highlight.highlightAuto(token.text).value
     token.escaped = true
 
-  sections = parser.makeSections(tokens).map (section) ->
-    marked.parser section
+  sections = parser.makeSections(tokens).map (section) -> marked.parser section
 
   # Make HTML.
-  generateSourceHtml file, menu, sections, title, description
+  generateSourceHtml file, { menu, sections, title, description }
 
 # Add default docs.css unless it already exists.
 cssPath = path.join outputDir, 'docs.css'
