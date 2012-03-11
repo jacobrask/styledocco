@@ -111,23 +111,21 @@ A centered container with documentation and code side by side, and a menu (not d
  /* Makes sure the actual content is centered by putting a right-padding with
 the same width as the sidebar. This is a hidden comment btw. */
 .styledocco-container {
-    width: 80%;
-    max-width: 1600px;
+    width: 75%;
+    max-width: 1500px;
     margin: 0 auto;
-    padding-right: 12%;
 }
 .styledocco-sidebar {
-    position: fixed;
-    width: 12%;
+    position: absolute;
+    width: 10%;
     word-wrap: break-word;
-    background: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 0 0 3px 3px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, .05);
     font-size: 13px;
 }
+.styledocco-sidebar a {
+    text-decoration: none;
+}
 .styledocco-main {
-    width: 80%;
+    width: 85%;
     float: right;
 }
 .styledocco-section {
@@ -189,17 +187,14 @@ of their color. */
 Sidebar menu. */
 .styledocco-brand {
     display: block;
-    padding: 0 10% 12px;
-    text-align: center;
     color: #000;
     font-size: 16px;
     line-height: 2;
     font-weight: bold;
 }
 .styledocco-nav {
-    background: #f9f9f9;
     margin: 0;
-    padding: 10px 0 0;
+    padding: 10px 0;
 }
 .styledocco-nav li {
     margin: 0;
@@ -208,10 +203,9 @@ Sidebar menu. */
 }
 .styledocco-nav-heading {
     display: block;
-    background: #eee;
     font-size: 13px;
     padding: .3em 5%;
-    margin: 1.5em 0 .1em;
+    margin: 1em 0 .1em;
 }
 .styledocco-nav a {
     display: block;
