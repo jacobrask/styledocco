@@ -119,12 +119,12 @@ the same width as the sidebar. This is a hidden comment btw. */
 .styledocco-sidebar {
     position: fixed;
     width: 12%;
+    overflow-x: auto;
     word-wrap: break-word;
-    background: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 0 0 3px 3px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, .05);
     font-size: 13px;
+}
+.styledocco-sidebar a {
+    text-decoration: none;
 }
 .styledocco-main {
     width: 80%;
@@ -189,7 +189,6 @@ of their color. */
 Sidebar menu. */
 .styledocco-brand {
     display: block;
-    padding: 0 10% 12px;
     text-align: center;
     color: #000;
     font-size: 16px;
@@ -197,9 +196,8 @@ Sidebar menu. */
     font-weight: bold;
 }
 .styledocco-nav {
-    background: #f9f9f9;
     margin: 0;
-    padding: 10px 0 0;
+    padding: 10px 0;
 }
 .styledocco-nav li {
     margin: 0;
@@ -208,7 +206,6 @@ Sidebar menu. */
 }
 .styledocco-nav-heading {
     display: block;
-    background: #eee;
     font-size: 13px;
     padding: .3em 5%;
     margin: 1.5em 0 .1em;
@@ -407,12 +404,12 @@ the same width as the sidebar. This is a hidden comment btw. */</span>
 <span class="class">.styledocco-sidebar</span> <span class="rules">{
     <span class="rule"><span class="attribute">position</span>:<span class="value"> fixed</span>;</span>
     <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">12</span>%</span>;</span>
+    <span class="rule"><span class="attribute">overflow-x</span>:<span class="value"> auto</span>;</span>
     <span class="rule"><span class="attribute">word-wrap</span>:<span class="value"> break-word</span>;</span>
-    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#f9f9f9</span></span>;</span>
-    <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1</span>px solid <span class="hexcolor">#eee</span></span>;</span>
-    <span class="rule"><span class="attribute">border-radius</span>:<span class="value"> <span class="number">0</span> <span class="number">0</span> <span class="number">3</span>px <span class="number">3</span>px</span>;</span>
-    <span class="rule"><span class="attribute">box-shadow</span>:<span class="value"> inset <span class="number">0</span> <span class="number">0</span> <span class="number">5</span>px <span class="function">rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, .<span class="number">05</span>)</span></span>;</span>
     <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">13</span>px</span>;</span>
+<span class="rule">}</span></span>
+<span class="class">.styledocco-sidebar</span> <span class="tag">a</span> <span class="rules">{
+    <span class="rule"><span class="attribute">text-decoration</span>:<span class="value"> none</span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-main</span> <span class="rules">{
     <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">80</span>%</span>;</span>
@@ -471,7 +468,6 @@ the same width as the sidebar. This is a hidden comment btw. */</span>
 <p>Sidebar menu. 
 </p></div><div class="styledocco-code"><pre><code><span class="class">.styledocco-brand</span> <span class="rules">{
     <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span>;</span>
-    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">0</span> <span class="number">10</span>% <span class="number">12</span>px</span>;</span>
     <span class="rule"><span class="attribute">text-align</span>:<span class="value"> center</span>;</span>
     <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="number">#000</span></span>;</span>
     <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">16</span>px</span>;</span>
@@ -479,9 +475,8 @@ the same width as the sidebar. This is a hidden comment btw. */</span>
     <span class="rule"><span class="attribute">font-weight</span>:<span class="value"> bold</span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-nav</span> <span class="rules">{
-    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#f9f9f9</span></span>;</span>
     <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span></span>;</span>
-    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">10</span>px <span class="number">0</span> <span class="number">0</span></span>;</span>
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">10</span>px <span class="number">0</span></span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-nav</span> <span class="tag">li</span> <span class="rules">{
     <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span></span>;</span>
@@ -490,7 +485,6 @@ the same width as the sidebar. This is a hidden comment btw. */</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-nav-heading</span> <span class="rules">{
     <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span>;</span>
-    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#eee</span></span>;</span>
     <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">13</span>px</span>;</span>
     <span class="rule"><span class="attribute">padding</span>:<span class="value"> .<span class="number">3</span>em <span class="number">5</span>%</span>;</span>
     <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">1.5</span>em <span class="number">0</span> .<span class="number">1</span>em</span>;</span>
@@ -556,4 +550,4 @@ the same width as the sidebar. This is a hidden comment btw. */</span>
 <span class="class">.styledocco-code</span> <span class="class">.symbol</span>,
 <span class="class">.styledocco-docs</span> > <span class="tag">pre</span> <span class="class">.symbol</span> <span class="rules">{
     <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="number">#990073</span></span>;</span>
-<span class="rule">}</span></span></code></pre></div></div></div></div></body></html><!-- Generated with StyleDocco (https://github.com/jacobrask/styledocco) at Mon Mar 12 2012 00:06:48 GMT+0100 (CET). -->
+<span class="rule">}</span></span></code></pre></div></div></div></div></body></html><!-- Generated with StyleDocco (https://github.com/jacobrask/styledocco) at Mon Mar 12 2012 00:42:18 GMT+0100 (CET). -->
