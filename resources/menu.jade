@@ -1,9 +1,0 @@
-a.styledocco-brand(href="#{project.root}index.html") #{project.name}
-each links, folder in project.menu
-  unless folder == './'
-    strong.styledocco-nav-heading #{folder}
-  ul.styledocco-nav
-    each link in links
-      li
-        a(href="#{project.root}#{link.href}")
-          #{link.name}

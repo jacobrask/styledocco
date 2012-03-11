@@ -6,21 +6,20 @@ body {
     color: black;
 }
 
-/* ## Second level header
+/*
+Some more text
+
+## Second level header
 Some random text. */
 
 p {
     margin: 0;
 }
 
-/*
- * * * 
- */
-
 b {
     font-weight: italic;
 }
-/* This is in a new section
+/* This is in the same section.
 
 ```
 And here is some code

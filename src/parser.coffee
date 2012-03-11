@@ -1,30 +1,30 @@
-# The code/comment parser
-# =======================
+# # Dependencies and configuration.
 
-fs = require 'fs'
+fs     = require 'fs'
+highlight = require 'highlight.js'
 marked = require 'marked'
-langs  = require './languages'
-marked.setOptions
-  sanitize: no
-  gfm: on
+_      = require './utils'
 
-# Extract the documentation from a string.
-getDocs = (lang, data) ->
+marked.setOptions sanitize: no, gfm: on
+
+
+# # Public functions.
+
+# # Internal functions.
+
+# Extract comments and code in matching blocks. Each continous block of
+# comments is matched with the code that follows it, until the next comment
+# block starts.
+extractBlocks = exports.extractBlocks = (lang, data) ->
   lines = data.split '\n'
-  docs = ''
+  sections = []
 
+  formatCode = (line) -> "#{line}\n"
   formatDocs = (line) -> "#{lang.filter(line)}\n"
 
   while lines.length
-
-    # Add newlines (to separate different doc blocks) and continue. `multiend`
-    # is ignored because we probably encountered the end of an ignored multi-
-    # line comment.
-    while lines.length and \
-    (lang.checkType(lines[0]) is 'code' or lang.checkType(lines[0]) is 'multiend')
-      docs += '\n'
-      lines.shift()
-
+    docs = code = ''
+    
     # First check for any single line comments.
     while lines.length and lang.checkType(lines[0]) is 'single'
       docs += formatDocs lines.shift()
@@ -37,49 +37,69 @@ getDocs = (lang, data) ->
         docs += formatDocs line
         break if lang.checkType(line) is 'multiend'
 
-  docs
-
-
-# Get Markdown tokens for the documentation.
-exports.getDocTokens = (filename) ->
-  code = fs.readFileSync filename, "utf-8"
-  lang = langs.getLanguage filename
-  # If it's a stylesheet we support, parse it for comments, otherwise treat
-  # it as raw Markdown (ie a readme).
-  docs =
-    if lang?
-      getDocs lang, code
-    else
-      code
-  marked.lexer docs
-
-
-# Split docs into section, delimited by where there are headings or hr's.
-exports.makeSections = (tokens) ->
-  sections = []
-  while tokens.length
-    if (tokens[0].type is 'heading' and tokens[0].depth <= 2) or tokens[0].type is 'hr'
-      # Ignore hr's, used only as section delimiters.
-      if tokens[0].type is 'hr'
-        tokens.shift()
-      # Save current section.
-      if section?.length or not tokens.length
-        sections.push section
-      if tokens.length
-        # Start again on new section.
-        section = [ tokens.shift() ]
-    else
-      (section?=[]).push tokens.shift()
-      unless tokens.length
-        sections.push section
-
+    while lines.length and \
+    (lang.checkType(lines[0]) is 'code' or lang.checkType(lines[0]) is 'multiend')
+      code += formatCode lines.shift()
+  
+    sections.push { docs, code }
   sections
 
 
-# If first token is an h1, assume it's the document title.
-exports.getTitle = (tokens) ->
-  tokens[0]?.text if tokens[0]?.type is 'heading' and tokens[0]?.depth is 1
+makeSections = exports.makeSections = (blocks) ->
+  blocks
+    # Run comments through marked.lexer to get Markdown tokens.
+    .map((block) ->
+      docs: marked.lexer block.docs
+      code: highlight.highlight('css', block.code).value
+    )
+    .map(addDocExamples, [])
+    .reduce(splitter, [])
+    .map(parser)
+
+# If we encounter code blocks in documentation, add example HTML output and
+# highlight the code snippet.
+addDocExamples = (block) ->
+  block.docs = block.docs.reduce(
+    (tokens, token) ->
+      if token.type is 'code'
+        tokens.push
+          type: 'html'
+          text: "<div class=\"styledocco-example\">#{token.text}</div>"
+          pre: off
+        token.text = highlight.highlightAuto(token.text).value
+        token.escaped = yes
+      tokens.push token
+      tokens
+    [])
+  block
+
+# Split into sections with headers as delimiters.
+# FIXME: Make this recursive. Currently there can be max 1 section
+# per code block...
+splitter = (tot, cur, i) ->
+  newSection = { docs: [], code: '' }
+  if tot.length is 0
+    tot.push cur
+    return tot
+  while cur.docs.length
+    # Add current and following blocks to a new section if we find a heading.
+    if cur.docs[0].type is 'heading' and cur.docs[0].depth <= 2
+      while cur.docs.length
+        newSection.docs.push cur.docs.shift()
+    # Otherwise add to the previous section.
+    else
+      tot[tot.length-1].docs.push cur.docs.shift()
   
-# If first token is an h1, assume it's the document title.
-exports.getDescription = (tokens) ->
-  tokens[0]?.text if tokens[0]?.type is 'paragraph'
+  # We have some docs in our new section.
+  if newSection.docs.length
+    newSection.code = cur.code
+    tot.push newSection
+  # There were no new sections in this block, add to previous section.
+  else
+    tot[tot.length-1].code += cur.code
+  tot
+
+# Run through marked parser to generate HTML.
+parser = (block) ->
+  docs: _.trimNewLines marked.parser block.docs
+  code: _.trimNewLines block.code

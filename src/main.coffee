@@ -4,8 +4,6 @@
 fs   = require 'fs'
 path = require 'path'
 
-highlight = require 'highlight.js'
-marked   = require 'marked'
 mkdirp   = require 'mkdirp'
 findit   = require 'findit'
 jade     = require 'jade'
@@ -38,10 +36,17 @@ outputDir = options.out
 templateDir = options.tmpl or "#{__dirname}/../resources/"
 overwriteResources = options.overwrite
 
-# Don't strip HTML
-marked.setOptions
-  sanitize: no
-  gfm: on
+
+# Get sections of Markdown tokens (from comments), and matching code blocks.
+getSections = (filename) ->
+  data = fs.readFileSync filename, "utf-8"
+  lang = langs.getLanguage filename
+  if lang?
+    blocks = parser.extractBlocks lang, data
+    sections = parser.makeSections blocks
+  else
+    sections = parser.makeSections [ { docs: data, code: '' } ]
+  sections
 
 # Compute the destination HTML path for an input source file path,
 # relative to the output directory.
@@ -74,12 +79,12 @@ renderTemplate = (templateName, content) ->
 # Generate the HTML document and write to file.
 generateSourceHtml = (source, data) ->
 
-  dest = makeDestination source
+  dest = makeDestination source.replace /readme/i, 'index'
 
   data.project = {
     name: options.name
     menu
-    root: buildRootPath source
+    root: buildRootPath source.replace /readme/i, 'index'
   }
 
   render = (data) ->
@@ -146,59 +151,18 @@ findFile = (dir, re) ->
   fs.readdirSync(dir).filter((file) -> file.match re)?[0]
 
 # Look for readme, fall back to default.
-readme = findFile(input, /^readme/i) or findFile(currentDir, /^readme/i) or findFile(templateDir, /^readme/i)
+readme = findFile(input, /^readme/i) \
+      or findFile(currentDir, /^readme/i) \
+      or findFile(templateDir, /^readme/i)
 
-tokens = parser.getDocTokens readme
+sections = getSections readme
 
-# Check if first token looks like a page title. If it does, check if next token
-# looks like a description.
-title = parser.getTitle tokens
-if title?
-  tokens.shift()
-  description = parser.getDescription tokens
-  tokens.shift() if description?
-else
-  title = options.name
-
-sections = parser.makeSections(tokens).map (section) -> marked.parser(section)
-generateSourceHtml readme, { menu, sections, title, description }
+generateSourceHtml readme, { menu, sections, title: '', description: '' }
 
 # Generate documentation files.
 files.forEach (file) ->
-
-  # Gets marked markdown tokens from `file`.
-  tokens = parser.getDocTokens file
-
-  # Check if first token looks like a page title. If it does, check if
-  # next token looks like a description.
-  title = parser.getTitle tokens
-  if title?
-    tokens.shift()
-    description = parser.getDescription tokens
-    tokens.shift() if description?
-  else
-    title = path.basename(file, path.extname file)
-
-  origTokens = tokens.slice(0)
-
-  # For each code block we encounter, add an example box.
-  for token, i in origTokens when token.type is 'code'
-    diff = tokens.length - origTokens.length
-    newToken = {
-      type: 'html'
-      pre: false
-      text: "<div class=\"styledocco-example\">#{token.text}</div>"
-    }
-    tokens.splice(i + diff, 0, newToken)
-  
-  for token, i in tokens when token.type is 'code'
-    token.text = highlight.highlightAuto(token.text).value
-    token.escaped = true
-
-  sections = parser.makeSections(tokens).map (section) -> marked.parser section
-
-  # Make HTML.
-  generateSourceHtml file, { menu, sections, title, description }
+  sections = getSections file
+  generateSourceHtml file, { menu, sections, title: '', description: '' }
 
 # Add default docs.css unless it already exists.
 cssPath = path.join outputDir, 'docs.css'

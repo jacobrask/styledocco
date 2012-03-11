@@ -12,11 +12,25 @@ html
   body
     .styledocco-container
       .styledocco-sidebar
-        include menu
-      .styledocco-content
+        a.styledocco-brand(href="#{project.root}index.html") #{project.name}
+        each links, folder in project.menu
+          unless folder == './'
+            strong.styledocco-nav-heading #{folder}
+          ul.styledocco-nav
+            each link in links
+              li
+                a(href="#{project.root}#{link.href}")
+                  #{link.name}
+      .styledocco-main
         h1 #{title}
         if description
           p #{description}
         each section, i in sections
-          .styledocco-docs !{section}
-include footer
+          .styledocco-section
+            .styledocco-docs !{section.docs}
+            if section.code
+              .styledocco-code
+                pre
+                  code !{section.code}
+
+<!-- Generated with StyleDocco (https://github.com/jacobrask/styledocco) at #{new Date().toLocaleString()}. -->

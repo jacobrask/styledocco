@@ -1,27 +1,19 @@
-# StyleDocco
 
-A style guide generator in Node.js.
-
-* * * 
-
-     _______ __         __        _____
-    |     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
-    |__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
-    |_______|____|___  |__|_____||_____/_____|____|____|_____|
-                 |_____|
-
+<pre> _______ __         __        _____
+|     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
+|__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
+|_______|____|___  |__|_____||_____/_____|____|____|_____|
+             |_____|</pre>
 
 StyleDocco generates documentation and style guide documents from your stylesheets.
 
-Comments will be parsed through [Markdown](http://daringfireball.net/projects/markdown/syntax) and displayed in a generated HTML document. You can write code examples inside [GitHub Markdown](http://github.github.com/github-flavored-markdown/) code fences (<code>```</code>) or prefixed with 4 spaces, and StyleDocco both renders the HTML and shows the code example.
+Stylesheet comments will be parsed through [Markdown](http://daringfireball.net/projects/markdown/syntax) and displayed in a generated HTML document. You can write code examples inside [GitHub Markdown](http://github.github.com/github-flavored-markdown/) code fences (<code>```</code>) or prefixed with 4 spacesin your comments, and StyleDocco both renders the HTML and shows the code example.
 
-The style guide is automatically split into a new section when it encounters a level 1 or 2 heading, or a horizontal rule. Read more about the syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). If the first comment is a level 1 heading, it is treated as the document title and the following paragraph as a document description.
+The document automatically starts a new section when it encounters a level 1 or 2 heading. Read more about the syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
 
 If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
 
 StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page.
-
-Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
 
 
 ## Installation
@@ -49,8 +41,7 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
 
 ## Examples
 
-    /*
-    Provides extra visual weight and identifies the primary action in a set of buttons
+    /* Provides extra visual weight and identifies the primary action in a set of buttons
     ```   
     <button class="btn primary">Primary</button>  
     ``` */

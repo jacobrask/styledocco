@@ -1,34 +1,40 @@
+difflet = require 'difflet'
 fs = require 'fs'
+path = require 'path'
 
+langs  = require '../src/languages'
 parser = require '../src/parser'
 
-files =
-  structured: "#{__dirname}/fixtures/css/structured.css"
-  normal:     "#{__dirname}/fixtures/css/normal.css"
-  invalid:    "#{__dirname}/fixtures/css/invalid.css"
+cssDir = "#{__dirname}/fixtures/css"
 
-exports["Get documentation tokens"] = (test) ->
-  tokens = parser.getDocTokens files.structured
-  test.equal tokens.length, 8, "Wrong number of tokens in #{files.structured}"
-  test.equal tokens[0].type, 'heading', "The first token in #{files.structured} should be a heading"
-
-  tokens = parser.getDocTokens files.normal
-  test.equal tokens.length, 2, "Wrong number of tokens in #{files.normal}"
-
-  tokens = parser.getDocTokens files.invalid
-  test.equal tokens.length, 4, "Wrong number of tokens in #{files.invalid}"
-  test.equal tokens[0].type, 'heading', "The first token in #{files.invalid} should be a heading"
+exports["Extract docs+code blocks"] = (test) ->
+  # Compares CSS files in fixtures directory with their corresponding `.blocks.json` file.
+  cssFiles = fs.readdirSync(cssDir).filter (filename) ->
+    path.extname(filename) is '.css'
+  for file in cssFiles
+    extracted = parser.extractBlocks(
+      langs.getLanguage file
+      fs.readFileSync path.join(cssDir, file), "utf-8"
+    )
+    saved = JSON.parse fs.readFileSync(
+      "#{cssDir}/#{path.basename file, path.extname(file)}.blocks.json", "utf-8"
+    )
+    test.deepEqual extracted, saved, "Match failed for #{cssDir}/#{file}"
   test.done()
 
-
-exports["Make sections"] = (test) ->
-  sections = parser.makeSections parser.getDocTokens files.structured
-  test.equal sections.length, 3, "Wrong number of sections in #{files.structured}"
-  test.equal sections[0][0].type, 'heading', "The first token in the first section of #{files.structured} should be a heading"
-
-  sections = parser.makeSections parser.getDocTokens files.normal
-  test.equal sections.length, 1, "Wrong number of sections in #{files.normal}"
-  
-  sections = parser.makeSections parser.getDocTokens files.invalid
-  test.equal sections.length, 2, "Wrong number of sections in #{files.invalid}"
+exports["Get documentation tokens"] = (test) ->
+  cssFiles = fs.readdirSync(cssDir).filter (filename) ->
+    path.extname(filename) is '.css'
+  for file in cssFiles
+    # Stringify and parse back to remove empty elements.
+    extracted = JSON.parse JSON.stringify parser.makeSections(
+      parser.extractBlocks(
+        langs.getLanguage file
+        fs.readFileSync path.join(cssDir, file), "utf-8"
+      )
+    )
+    saved = JSON.parse fs.readFileSync(
+      "#{cssDir}/#{path.basename file, path.extname(file)}.sections.json", "utf-8"
+    )
+    test.deepEqual extracted, saved, "Match failed for #{cssDir}/#{file}"
   test.done()
