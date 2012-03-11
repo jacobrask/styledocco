@@ -1,34 +1,37 @@
-<!DOCTYPE html><html><head><title>StyleDocco</title><meta charset="utf-8"><link rel="stylesheet" href="./docs.css"></head><body id="styledocco"><div class="styledocco-container"><div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="./resources/docs.html">docs
-</a></li></ul></div><div class="styledocco-content"><div class="styledocco-docs"><pre><code> _______ __         __        _____
+<!DOCTYPE html><html><head><title> | StyleDocco</title><meta charset="utf-8"><link rel="stylesheet" href="./docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="./resources/docs.html">docs
+</a></li></ul></div><div class="styledocco-main"><h1></h1><div class="styledocco-section"><div class="styledocco-docs"><pre> _______ __         __        _____
 |     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
 |__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
 |_______|____|___  |__|_____||_____/_____|____|____|_____|
-             |_____|</code></pre>
-<h2>About</h2>
-<p>StyleDocco takes your stylesheets and generates style guide documents with the processed stylesheets applied to the documents.
+             |_____|</pre>
+
+<p>StyleDocco generates documentation and style guide documents from your stylesheets.
 
 </p>
-<p><code>styledocco --name &#39;My Site&#39; main.css</code> will generate <code>docs/main.html</code> with all the comments from the file (passed through GitHub flavored Markdown) in one column, and all the code in another column.
+<p>Stylesheet comments will be parsed through <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> and displayed in a generated HTML document. You can write code examples inside <a href="http://github.github.com/github-flavored-markdown/">GitHub Markdown</a> code fences (<code>```</code>) or prefixed with 4 spacesin your comments, and StyleDocco both renders the HTML and shows the code example.
 
 </p>
-<p>The CSS in <code>main.css</code> will be applied to the page. This means you can add sample HTML content in the comments of your CSS file, and have it rendered in the browser using that same CSS.
+<p>The document automatically starts a new section when it encounters a level 1 or 2 heading. Read more about the syntax in the <a href="http://daringfireball.net/projects/markdown/syntax">Markdown guide</a>. Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
 
 </p>
-<p>To add extra default styles to your documentation, add a file named <code>docs.css</code> in your <code>docs</code> folder.
+<p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
 
 </p>
-<p>If you point StyleDocco to a directory, it will add a menu to navigate between the different files. If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>.
-
-</p>
-<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. Hidden files and SASS partials will be ignored.
+<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page.
 
 
 </p>
-<h2>Install</h2>
+<h2>Installation</h2>
 <p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>.
 
 </p>
 <p><code>npm install -g styledocco</code>
+
+</p>
+<p>or check out this repository.
+
+</p>
+<p>StyleDocco is free software, released under the <a href="https://raw.github.com/jacobrask/styledocco/master/LICENSE">MIT license</a>.
 
 
 </p>
@@ -36,9 +39,7 @@
 <p><code>styledocco [options] [INPUT]</code>
 
 </p>
-<p><strong>Options</strong>
-
-</p>
+<h3>Options</h3>
 <ul>
 <li><code>--name</code>, <code>-n</code> Name of the project <em>(required)</em></li>
 <li><code>--out</code>, <code>-o</code>  Output directory <em>(default: &quot;docs&quot;)</em></li>
@@ -46,13 +47,22 @@
 <li><code>--overwrite</code>  Overwrite existing files (<code>docs.css</code>) in target directory.</li>
 </ul>
 <h2>Examples</h2>
-<pre><code>/* &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt;  
-    Provides extra visual weight and identifies the primary action in a set of buttons */
+<div class="styledocco-example">/<em> Provides extra visual weight and identifies the primary action in a set of buttons
+<code>   
+&lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt;  
+</code> </em>/
+.btn.primary {
+    background: blue;
+    color: white;
+}</div><pre><code>/* Provides extra visual weight and identifies the primary action in a set of buttons
+```   
+<span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn primary"</span>></span>Primary<span class="tag">&lt;/<span class="title">button</span>></span>  
+``` */
 .btn.primary {
     background: blue;
     color: white;
 }</code></pre>
-<p>Would output an HTML document with one column displaying the rendered button followed by the description, and another column with the code. The code will also be included in a <code>style</code> element of the document.
+<p>Would display the description, a button as well as the example HTML code. The CSS will be included in the <code>style</code> element of the document.
 
 </p>
 <p>See the <code>examples</code> folder for more in-depth examples.
@@ -60,11 +70,5 @@
 
 </p>
 <h2>Acknowledgements</h2>
-<p>Thanks to:
-
-</p>
-<ul>
-<li><a href="https://github.com/jashkenas/docco">jashkenas</a></li>
-<li><a href="https://github.com/mbrevoort/docco-husky">mbrevoort</a></li>
-</ul>
-</div></div></div></body></html><!-- Generated with StyleDocco (https://github.com/jacobrask/styledocco) at Sat Mar 03 2012 17:22:20 GMT+0100 (CET). -->
+<p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/mbrevoort/docco-husky">Docco Husky</a> by Mike Brevoort were also of great help to this project.
+</p></div></div></div></div></body></html><!-- Generated with StyleDocco (https://github.com/jacobrask/styledocco) at Mon Mar 12 2012 00:06:48 GMT+0100 (CET). -->

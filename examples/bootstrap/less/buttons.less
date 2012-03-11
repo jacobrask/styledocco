@@ -10,8 +10,9 @@
 // Base styles
 // -----------
 
-// <button class="btn">Default</button>  
 // Standard gray button with gradient
+//
+//    <button class="btn">Default</button>
 .btn {
   display: inline-block;
   padding: 4px 10px 4px;
@@ -35,7 +36,7 @@
   .ie7-restore-left-whitespace();
 }
 
-// **Hover state**
+ // **Hover state**
 .btn:hover {
   color: @grayDark;
   text-decoration: none;
@@ -47,12 +48,12 @@
   .transition(background-position .1s linear);
 }
 
-// Focus state for keyboard and accessibility
+ // Focus state for keyboard and accessibility
 .btn:focus {
   .tab-focus();
 }
 
-// <button class="btn active">Active</button>
+//    <button class="btn active">Active</button>
 .btn.active,
 .btn:active {
   background-image: none;
@@ -63,7 +64,7 @@
   outline: 0;
 }
 
-// <button class="btn" disabled>Disabled</button>  
+//    <button class="btn" disabled>Disabled</button>  
 // Add the `disabled` class to links and the `disabled` attribute for `button` elements.
 .btn.disabled,
 .btn[disabled] {
@@ -77,10 +78,9 @@
 
 // Multiple sizes
 // --------------
-
 // Fancy larger or smaller buttons?
 
-// <button class="btn btn-large">Large</button>
+//    <button class="btn btn-large">Large</button>
 .btn-large {
   padding: 9px 14px;
   font-size: @baseFontSize + 2px;
@@ -91,7 +91,7 @@
   margin-top: 1px;
 }
 
-// <button class="btn btn-small">Small</button>
+//    <button class="btn btn-small">Small</button>
 .btn-small {
   padding: 5px 9px;
   font-size: @baseFontSize - 2px;
@@ -101,7 +101,7 @@
   margin-top: -1px;
 }
 
-// <button class="btn btn-mini">Mini</button>
+//    <button class="btn btn-mini">Mini</button>
 .btn-mini {
   padding: 2px 6px;
   font-size: @baseFontSize - 2px;
@@ -112,7 +112,7 @@
 // Alternate button styles
 // -----------------------
 
-// Set text color
+ // Set text color
 .btn-primary,
 .btn-primary:hover,
 .btn-warning,
@@ -128,7 +128,7 @@
   text-shadow: 0 -1px 0 rgba(0,0,0,.25);
   color: @white;
 }
-// Provide *some* extra contrast for those who can get it
+ // Provide *some* extra contrast for those who can get it
 .btn-primary.active,
 .btn-warning.active,
 .btn-danger.active,
@@ -138,42 +138,40 @@
   color: rgba(255,255,255,.75);
 }
 
-// Set the backgrounds
-// -------------------
-// <button class="btn btn-primary">Primary</button>  
+ // Set the backgrounds
+//    <button class="btn btn-primary">Primary</button>  
 // Provides extra visual weight and identifies the primary action in a set of buttons.
 .btn-primary {
   .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
 }
-// <button class="btn btn-warning">Warning</button>  
+//    <button class="btn btn-warning">Warning</button>  
 // Indicates caution should be taken with this action
 .btn-warning {
   .buttonBackground(lighten(@orange, 15%), @orange);
 }
-// <button class="btn btn-danger">Danger</button>  
+//    <button class="btn btn-danger">Danger</button>  
 // Indicates a dangerous or potentially negative action
 .btn-danger {
   .buttonBackground(#ee5f5b, #bd362f);
 }
-// <button class="btn btn-success">Success</button>  
+//    <button class="btn btn-success">Success</button>  
 // Indicates a successful or positive action
 .btn-success {
   .buttonBackground(#62c462, #51a351);
 }
-// <button class="btn btn-info">Info</button>  
+//    <button class="btn btn-info">Info</button>  
 // Used as an alternate to the default styles
 .btn-info {
   .buttonBackground(#5bc0de, #2f96b4);
 }
-// <button class="btn btn-inverse">Inverse</button>  
+//    <button class="btn btn-inverse">Inverse</button>  
 // Alternate dark gray button, not tied to a semantic action or use
 .btn-inverse {
   .buttonBackground(#454545, #262626);
 }
 
 
-// Cross-browser Jank
-// --------------------------------------------------
+ // Cross-browser Jank
 
 button.btn,
 input[type="submit"].btn {
