@@ -10,7 +10,12 @@ body {
 Some more text
 
 ## Second level header
-Some random text. */
+Some random text.
+
+## Another section in the same comment block.
+
+Some <b>HTML</b> that should not be escaped.
+*/
 
 p {
     margin: 0;

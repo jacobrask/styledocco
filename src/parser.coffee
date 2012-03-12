@@ -10,8 +10,6 @@ marked.setOptions sanitize: no, gfm: on
 
 # # Public functions.
 
-# # Internal functions.
-
 # Extract comments and code in matching blocks. Each continous block of
 # comments is matched with the code that follows it, until the next comment
 # block starts.
@@ -57,6 +55,9 @@ makeSections = exports.makeSections = (blocks) ->
     .reduce(splitter, [])
     .map(parser)
 
+
+# # Internal functions.
+
 # If we encounter code blocks in documentation, add example HTML output and
 # highlight the code snippet.
 addDocExamples = (block) ->
@@ -74,31 +75,24 @@ addDocExamples = (block) ->
     [])
   block
 
+
 # Split into sections with headers as delimiters.
-# FIXME: Make this recursive. Currently there can be max 1 section
-# per code block...
-splitter = (tot, cur, i) ->
-  newSection = { docs: [], code: '' }
-  if tot.length is 0
-    tot.push cur
-    return tot
-  while cur.docs.length
-    # Add current and following blocks to a new section if we find a heading.
-    if cur.docs[0].type is 'heading' and cur.docs[0].depth <= 2
-      while cur.docs.length
-        newSection.docs.push cur.docs.shift()
-    # Otherwise add to the previous section.
+splitter = (sections, cur, i) ->
+  if sections.length is 0
+    sections.push cur
+    return sections
+
+  # If we find a heading, push a new section, otherwise append to the last one.
+  for doc in cur.docs
+    if doc.type is 'heading' and doc.depth <= 2
+      sections.push { docs: [ doc ], code: '' }
     else
-      tot[tot.length-1].docs.push cur.docs.shift()
-  
-  # We have some docs in our new section.
-  if newSection.docs.length
-    newSection.code = cur.code
-    tot.push newSection
-  # There were no new sections in this block, add to previous section.
-  else
-    tot[tot.length-1].code += cur.code
-  tot
+      sections[sections.length-1].docs.push doc
+
+  # Add code to last section.
+  sections[sections.length-1].code += cur.code
+  sections
+
 
 # Run through marked parser to generate HTML.
 parser = (block) ->

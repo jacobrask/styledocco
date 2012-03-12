@@ -1,4 +1,3 @@
-difflet = require 'difflet'
 fs = require 'fs'
 path = require 'path'
 
