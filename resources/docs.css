@@ -20,19 +20,14 @@ displaying code blocks. It was converted to WOFF with
     font-style: normal;
 }
 
-/* Because we don't want to interfere with the example content, our selectors
-need to be a bit verbose. The code examples here also need to be wrapped in
-`.styledocco-docs` containers. */
+/* Use `:not()` to avoid interfering with the code examples. */
+
 .styledocco-sidebar,
-.styledocco-main > h1, .styledocco-main > p,
-.styledocco-docs > h1, .styledocco-docs > h2, .styledocco-docs > h3,
-.styledocco-docs > h4, .styledocco-docs > h5, .styledocco-docs > h6,
-.styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol {
+.styledocco-docs > :not(.styledocco-example) {
     color: #333;
     font-family: sans-serif;
     margin: 15px 20px;
 }
-.styledocco-main > p,
 .styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol {
     font-size: 12px;
     line-height: 1.6;
@@ -40,23 +35,24 @@ need to be a bit verbose. The code examples here also need to be wrapped in
 
 /*    <a href="#">Unstyled link example</a>
 Links inside example boxes don't get any of StyleDocco's style. */
-.styledocco-docs > p a {
+.styledocco-docs > :not(.styledocco-example) a {
     color: #15a;
     font: 13px/1.6 sans-serif;
     text-decoration: none;
 }
-.styledocco-docs > p a:hover {
+.styledocco-docs > :not(.styledocco-example) a:hover {
+    color: #15a;
     color: #038;
 }
-/* ```
-<div class="styledocco-docs">
-  <p>A <a href="#">styled link</a> and some <code>inline code</code>.</p>
-</div>
-```
+/*
+   <div class="styledocco-docs">
+     <p>A <a href="#">styled link</a> and some <code>inline code</code>.</p>
+   </div>
+
 Manually adding our documentation container changes that. You won't need that
 in your stylesheets, of course. */
-.styledocco-docs > p > var,
-.styledocco-docs > p > code {
+.styledocco-docs > :not(.styledocco-example):not(pre) var,
+.styledocco-docs > :not(.styledocco-example):not(pre) code {
     padding: .1em 3px;
     background: rgba(0, 0, 0, .05);
     border: 1px solid rgba(0, 0, 0, .1);
@@ -66,16 +62,16 @@ in your stylesheets, of course. */
     font-family: monospace;
 }
 /* ```
-<div class="styledocco-docs"><pre><code>The font in &lt;pre&gt; code blocks
-is small but legible.
-</code></pre></div>
+<div class="styledocco-docs">
+<pre><code>The font in &lt;pre&gt; code blocks is small but legible.</code></pre>
+</div>
 ```
-ProggyTiny is a realy nice font, but our inline code snippets get the default
+ProggyTiny is a really nice font, but our inline code snippets get the default
 monospace font as ProggyTiny doesn't look good at bigger sizes. */
 .styledocco-docs > pre {
     white-space: pre-wrap;
     word-wrap: break-word;
-    margin: 0;
+    margin: 0 !important;
     padding: 10px 20px;
     background: #f8f8f8;
     color: #444;
@@ -104,25 +100,23 @@ code snippets. */
 /* ## Site Layout ##
 A centered container with documentation and code side by side, and a menu (not displayed here).
 
-```
-<div class="styledocco-container">
-  <div class="styledocco-section">
-    <div class="styledocco-docs"><p>Documentation</p></div>
-    <div class="styledocco-code"><pre>Code</pre></div>
-  </div>
-</div>
-```
+    <div class="styledocco-container">
+      <div class="styledocco-section">
+        <div class="styledocco-docs"><p>Documentation</p></div>
+        <div class="styledocco-code"><pre>Code</pre></div>
+      </div>
+    </div>
 */
  /* Makes sure the actual content is centered by putting a right-padding with
 the same width as the sidebar. This is a hidden comment btw. */
 .styledocco-container {
-    width: 75%;
-    max-width: 1500px;
+    width: 95%;
+    max-width: 1400px;
     margin: 0 auto;
 }
 .styledocco-sidebar {
     position: absolute;
-    width: 10%;
+    width: 11%;
     word-wrap: break-word;
     font-size: 13px;
 }
@@ -130,7 +124,7 @@ the same width as the sidebar. This is a hidden comment btw. */
     text-decoration: none;
 }
 .styledocco-main {
-    width: 85%;
+    width: 83%;
     float: right;
 }
 .styledocco-section {
@@ -140,7 +134,7 @@ the same width as the sidebar. This is a hidden comment btw. */
 .styledocco-docs {
     position: relative;
     z-index: 2;
-    width: 55%;
+    width: 60%;
     min-height: 100%;
     margin: 20px 0 40px;
     background: #fff;
@@ -153,7 +147,7 @@ the same width as the sidebar. This is a hidden comment btw. */
     z-index: 1;
     top: 5px; bottom: 5px;
     right: 0;
-    width: 45%;
+    width: 40%;
     overflow: auto;
     padding: 10px;
     box-sizing: border-box;
@@ -198,31 +192,39 @@ pre + .styledocco-example {
 Sidebar menu. */
 .styledocco-brand {
     display: block;
-    color: #000;
+    color: #333;
     font-size: 16px;
     line-height: 2;
+    text-align: center;
     font-weight: bold;
+    border-radius: 3px 3px 0 0;
+}
+.styledocco-brand:hover {
+    color: #000;
+    text-decoration: none;
 }
 .styledocco-nav {
     margin: 0;
-    padding: 10px 0;
+    padding: 0;
+    border-top: 1px solid #ddd;
 }
 .styledocco-nav li {
     margin: 0;
     padding: 0;
     list-style: none;
+    border-bottom: 1px solid #ddd;
 }
 .styledocco-nav-heading {
     display: block;
     font-size: 13px;
     padding: .3em 5%;
-    margin: 1em 0 .1em;
+    margin: 1em 0 0;
 }
 .styledocco-nav a {
     display: block;
     padding: .2em 10%;
-    color: #333;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, .15);
+    color: #555;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
 }
 .styledocco-nav a:active,
 .styledocco-nav a:focus,
@@ -230,6 +232,7 @@ Sidebar menu. */
     color: #000;
     background: #eee;
     text-shadow: none;
+    text-decoration: none;
 }
 
 /* ## Code highlighting
