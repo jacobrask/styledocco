@@ -45,9 +45,9 @@ Links inside example boxes don't get any of StyleDocco's style. */
     color: #038;
 }
 /*
-   <div class="styledocco-docs">
-     <p>A <a href="#">styled link</a> and some <code>inline code</code>.</p>
-   </div>
+    <div class="styledocco-docs">
+      <p>A <a href="#">styled link</a> and some <code>inline code</code>.</p>
+    </div>
 
 Manually adding our documentation container changes that. You won't need that
 in your stylesheets, of course. */
@@ -113,15 +113,6 @@ the same width as the sidebar. This is a hidden comment btw. */
     width: 95%;
     max-width: 1400px;
     margin: 0 auto;
-}
-.styledocco-sidebar {
-    position: absolute;
-    width: 11%;
-    word-wrap: break-word;
-    font-size: 13px;
-}
-.styledocco-sidebar a {
-    text-decoration: none;
 }
 .styledocco-main {
     width: 83%;
@@ -189,7 +180,25 @@ pre + .styledocco-example {
 
 
 /* ## Menu ##
-Sidebar menu. */
+Sidebar menu.
+
+    <div class="styledocco-sidebar" style="position:static">
+      <a href="#" class="styledocco-brand">Name</a>
+      <ul class="styledocco-nav">
+        <li><a href="#">Item</a>
+        <li><a href="#">Item</a>
+      </ul>
+    </div>
+ */
+.styledocco-sidebar {
+    position: absolute;
+    width: 11%;
+    word-wrap: break-word;
+    font-size: 13px;
+}
+.styledocco-sidebar a {
+    text-decoration: none;
+}
 .styledocco-brand {
     display: block;
     color: #333;
