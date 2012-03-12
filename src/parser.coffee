@@ -47,7 +47,8 @@ extractBlocks = exports.extractBlocks = (lang, data) ->
 
 makeSections = exports.makeSections = (blocks) ->
   blocks
-    # Run comments through marked.lexer to get Markdown tokens.
+    # Run comments through marked.lexer to get Markdown tokens, and run
+    # code through highlight.js.
     .map((block) ->
       docs: marked.lexer block.docs
       code: highlight.highlight('css', block.code).value

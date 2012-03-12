@@ -126,7 +126,7 @@ generateFile readme, { menu, sections, title: '', description: '' }
 # Generate documentation files.
 files.forEach (file) ->
   sections = getSections file
-  generateFile file, { menu, sections, title: '', description: '' }
+  generateFile file, { menu, sections, title: file, description: '' }
 
 # Add default docs.css unless it already exists.
 cssPath = path.join options.out, 'docs.css'

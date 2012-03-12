@@ -58,7 +58,7 @@ languages =
                         { cmd: 'stylus', args: [ '-c', '<' ] })
 
 
-# Exported functions
+# Public functions
 # ------------------
 
 # Determine whether a file is of a supported file type.

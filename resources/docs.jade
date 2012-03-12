@@ -1,7 +1,7 @@
 !!! 5
 html
   head
-    if title == project.name
+    if title == '' || title == project.name
       title #{project.name}
     else
       title #{title} | #{project.name}
@@ -22,9 +22,6 @@ html
                 a(href="#{project.root}#{link.href}")
                   #{link.name}
       .styledocco-main
-        h1 #{title}
-        if description
-          p #{description}
         each section, i in sections
           .styledocco-section
             .styledocco-docs !{section.docs}
