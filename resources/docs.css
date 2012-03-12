@@ -20,8 +20,7 @@ displaying code blocks. It was converted to WOFF with
     font-style: normal;
 }
 
-/* Use `:not()` to avoid interfering with the code examples. */
-
+/* We use `:not()` to avoid interfering with the code examples. */
 .styledocco-sidebar,
 .styledocco-docs > :not(.styledocco-example) {
     color: #333;
@@ -80,6 +79,7 @@ monospace font as ProggyTiny doesn't look good at bigger sizes. */
     line-height: 14px;
 }
 .styledocco-code pre code,
+.styledocco-docs > pre samp,
 .styledocco-docs > pre code {
     background: transparent;
     border: 0;
