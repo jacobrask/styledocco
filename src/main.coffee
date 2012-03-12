@@ -18,26 +18,15 @@ _ = require './utils'
 
 options = optimist
   .usage('Usage: $0 [options] [INPUT]')
-  .describe('name', 'Name of the project')
-  .alias('n', 'name')
-  .demand('name')
-  .describe('out', 'Output directory')
-  .alias('o', 'out')
-  .default('out', 'docs')
-  .describe('tmpl', 'Template directory')
-  .boolean('overwrite')
-  .describe('overwrite', 'Overwrite existing files in target dir')
+  .describe('name', 'Name of the project').alias('n', 'name').demand('name')
+  .describe('out', 'Output directory').alias('o', 'out').default('out', 'docs')
+  .describe('tmpl', 'Template directory').default('tmpl', "#{__dirname}/../resources/")
+  .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite')
   .argv
 
-input = options._[0] or './'
+options.in = options._[0] or './'
 
-currentDir = "#{process.cwd()}/"
-outputDir = options.out
-templateDir = options.tmpl or "#{__dirname}/../resources/"
-overwriteResources = options.overwrite
-
-
-# Get sections of Markdown tokens (from comments), and matching code blocks.
+# Get sections of matching doc/code blocks.
 getSections = (filename) ->
   data = fs.readFileSync filename, "utf-8"
   lang = langs.getLanguage filename
@@ -48,53 +37,32 @@ getSections = (filename) ->
     sections = parser.makeSections [ { docs: data, code: '' } ]
   sections
 
-# Compute the destination HTML path for an input source file path,
-# relative to the output directory.
-makeDestination = (file) ->
-  path.join path.dirname(file), path.basename(file, path.extname(file)) + '.html'
-
-# Build a path to the documentation root.
-buildRootPath = (str) ->
-  if path.dirname(str) is '.'
-    root = path.dirname(str)
-  else
-    root = path.dirname(str).replace(/[^\/]+/g, '..')
-  root += '/' unless root.slice(-1) is '/'
-  root
-
-# Run `filename` through suitable CSS preprocessor.
-preProcess = (filename, cb) ->
-  lang = langs.getLanguage filename
-  lang.compile filename, cb
-
-
-# Render `template` with `content`.
-renderTemplate = (templateName, content) ->
-  templateFile = "#{templateDir}#{templateName}.jade"
-
-  template = fs.readFileSync templateFile, 'utf-8'
-  jade.compile(template, filename: templateFile)(content)
+findFile = (dir, re) ->
+  return null unless fs.statSync(dir).isDirectory()
+  fs.readdirSync(dir).filter((file) -> file.match re)?[0]
 
 
 # Generate the HTML document and write to file.
-generateSourceHtml = (source, data) ->
+generateFile = (source, data) ->
 
-  dest = makeDestination source.replace /readme/i, 'index'
-
+  dest = _.makeDestination source.replace /readme/i, 'index'
   data.project = {
     name: options.name
     menu
-    root: buildRootPath source.replace /readme/i, 'index'
+    root: _.buildRootPath source.replace /readme/i, 'index'
   }
 
   render = (data) ->
-    html = renderTemplate 'docs', data
-    console.log "styledocco: #{source} -> #{path.join outputDir, dest}"
-    writeFile(dest, html)
-
+    templateFile = path.join options.tmpl, 'docs.jade'
+    template = fs.readFileSync templateFile, 'utf-8'
+    html = jade.compile(template, filename: templateFile)(data)
+    console.log "styledocco: #{source} -> #{path.join options.out, dest}"
+    writeFile dest, html
 
   if langs.isSupported source
-    preProcess source, (err, css) ->
+    # Run source through suitable CSS preprocessor.
+    lang = langs.getLanguage source
+    lang.compile source, (err, css) ->
       throw err if err?
       data.css = css
       render data
@@ -105,7 +73,7 @@ generateSourceHtml = (source, data) ->
 
 # Write a file to the filesystem.
 writeFile = (dest, contents) ->
-  dest = path.join outputDir, dest
+  dest = path.join options.out, dest
   mkdirp.sync path.dirname dest
   fs.writeFileSync dest, contents
 
@@ -114,12 +82,12 @@ writeFile = (dest, contents) ->
 # =========================
 
 # Make sure that specified output directory exists.
-mkdirp.sync outputDir
+mkdirp.sync options.out
 
 # Get all files from input (directory).
-sources = findit.sync input
+sources = findit.sync options.in
 
-# Filter out only our supported file types.
+# Filter out unsupported file types.
 files = sources.
   filter((source) ->
     return false if source.match /(\/|^)\./ # No hidden files.
@@ -134,7 +102,7 @@ menu = {}
 for file in files
   link =
     name: path.basename(file, path.extname file)
-    href: makeDestination file
+    href: _.makeDestination file
   parts = file.split('/').splice(1)
   key =
     if parts.length > 1
@@ -147,26 +115,21 @@ for file in files
     menu[key] = [ link ]
 
 # Look for a README file and generate an index.html.
-findFile = (dir, re) ->
-  return null unless fs.statSync(dir).isDirectory()
-  fs.readdirSync(dir).filter((file) -> file.match re)?[0]
-
-# Look for readme, fall back to default.
-readme = findFile(input, /^readme/i) \
-      or findFile(currentDir, /^readme/i) \
-      or findFile(templateDir, /^readme/i)
+readme = findFile(options.in, /^readme/i) \
+      or findFile(process.cwd(), /^readme/i) \
+      or findFile(options.tmpl, /^readme/i)
 
 sections = getSections readme
 
-generateSourceHtml readme, { menu, sections, title: '', description: '' }
+generateFile readme, { menu, sections, title: '', description: '' }
 
 # Generate documentation files.
 files.forEach (file) ->
   sections = getSections file
-  generateSourceHtml file, { menu, sections, title: '', description: '' }
+  generateFile file, { menu, sections, title: '', description: '' }
 
 # Add default docs.css unless it already exists.
-cssPath = path.join outputDir, 'docs.css'
-if overwriteResources or not path.existsSync cssPath
+cssPath = path.join options.out, 'docs.css'
+if options.overwrite or not path.existsSync cssPath
   fs.writeFileSync cssPath, fs.readFileSync __dirname + '/../resources/docs.css', 'utf-8'
-  console.log "styledocco: writing #{path.join outputDir, 'docs.css'}"
+  console.log "styledocco: writing #{path.join options.out, 'docs.css'}"

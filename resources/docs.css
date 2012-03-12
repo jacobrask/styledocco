@@ -35,6 +35,7 @@ need to be a bit verbose. The code examples here also need to be wrapped in
 .styledocco-main > p,
 .styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol {
     font-size: 12px;
+    line-height: 1.6;
 }
 
 /*    <a href="#">Unstyled link example</a>
@@ -54,12 +55,14 @@ Links inside example boxes don't get any of StyleDocco's style. */
 ```
 Manually adding our documentation container changes that. You won't need that
 in your stylesheets, of course. */
+.styledocco-docs > p > var,
 .styledocco-docs > p > code {
     padding: .1em 3px;
     background: rgba(0, 0, 0, .05);
     border: 1px solid rgba(0, 0, 0, .1);
     border-radius: 3px;
     font-size: .9em;
+    font-style: normal;
     font-family: monospace;
 }
 /* ```
@@ -182,6 +185,10 @@ of their color. */
     padding: 15px;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
     border-top: 1px solid #eee;
+    overflow: auto;
+}
+pre + .styledocco-example {
+    border-top: 0;
 }
 .styledocco-example:before, .styledocco-example:after { display: table; content: ""; }
 .styledocco-example:after { clear: both; }
@@ -264,6 +271,7 @@ A slightly modified (muted, no bold) variant of the GitHub code color scheme. */
 .styledocco-code .attribute,
 .styledocco-docs > pre .attribute,
 .styledocco-code .variable,
+.styledocco-docs > p > var,
 .styledocco-docs > pre .variable {
     color: #188;
 }
