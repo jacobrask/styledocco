@@ -87,6 +87,8 @@ monospace font as ProggyTiny doesn't look good at bigger sizes. */
     padding: 0;
     font-family: ProggyTinyTTRegular, monospace;
     font-size: 16px;
+    -webkit-font-smoothing: none;
+    font-smooth: never;
 }
 /* We add some selection colors to better highlight when you're copy/pasting
 code snippets. */
@@ -130,11 +132,13 @@ the same width as the sidebar. This is a hidden comment btw. */
 }
 .styledocco-section {
     position: relative;
+    min-height: 200px;
 }
 .styledocco-docs {
     position: relative;
     z-index: 2;
     width: 55%;
+    min-height: 100%;
     margin: 20px 0 40px;
     background: #fff;
     border: 1px solid #eee;
