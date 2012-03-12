@@ -4,48 +4,32 @@
   "keywords": [
     "styleguide",
     "css",
-    "documentation"
-  ],
+    "documentation" ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
-  "version": "0.2.0",
+  "version": "0.2.1",
+  "homepage": "http://jacobrask.github.com/styledocco/",
   "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE"
-    }
-  ],
+    { "type": "MIT",
+      "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
   "contributors": [
     "Jacob Rask <jacob@jacobrask.net>",
     "Mike Brevoort <mike@brevoort.com>",
-    "Jeremy Ashkenas"
-  ],
-  "engines": {
-    "node": ">=0.4.0"
-  },
-  "bugs": {
-    "url": "https://github.com/jacobrask/styledocco/issues"
-  },
+    "Jeremy Ashkenas" ],
+  "engines": { "node": ">=0.4.0" },
+  "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jacobrask/styledocco.git"
-  },
+    "url": "git://github.com/jacobrask/styledocco.git" },
   "dependencies": {
     "findit": "0.x.x",
     "highlight.js": "1.1.x",
     "jade": "0.17.x",
     "marked": "0.2.x",
     "mkdirp": "0.x.x",
-    "optimist": "0.x.x"
-  },
+    "optimist": "0.x.x" },
   "devDependencies": {
     "coffee-script": "1.2.x",
-    "nodeunit": "0.7.4"
-  },
-  "directories": {
-    "lib": "./lib"
-  },
+    "nodeunit": "0.7.x" },
   "main": "./lib/main",
-  "bin": {
-    "styledocco": "./bin/styledocco"
-  }
+  "bin": "./bin/styledocco"
 }

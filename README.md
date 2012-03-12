@@ -8,9 +8,9 @@
 
 StyleDocco generates documentation and style guide documents from your stylesheets.
 
-Stylesheet comments will be parsed through [Markdown](http://daringfireball.net/projects/markdown/syntax) and displayed in a generated HTML document. You can write code examples inside [GitHub Markdown](http://github.github.com/github-flavored-markdown/) code fences (<code>```</code>) or prefixed with 4 spacesin your comments, and StyleDocco both renders the HTML and shows the code example.
+Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples inside [GitHub Markdown](http://github.github.com/github-flavored-markdown/) code fences (<code>```</code>) or prefixed with 4 spaces in your comments, and StyleDocco both renders the HTML and shows the code example.
 
-The document automatically starts a new section when it encounters a level 1 or 2 heading. Read more about the syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
+The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
 
 If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
 
