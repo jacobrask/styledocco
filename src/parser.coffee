@@ -19,7 +19,7 @@ extractBlocks = exports.extractBlocks = (lang, data) ->
   lines = data.split '\n'
   sections = []
 
-  formatCode = (line) -> "#{line}\n"
+  formatCode = (line) -> "#{line.replace(/(;base64,)[^\)]*/, '$1...')}\n"
   formatDocs = (line) -> "#{lang.filter(line)}\n"
 
   while lines.length
