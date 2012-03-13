@@ -66,10 +66,10 @@ addDocExamples = (block) ->
       if token.type is 'code'
         tokens.push
           type: 'html'
+          pre: true
           text: "<div class=\"styledocco-example\">#{token.text}</div>"
-          pre: off
         token.text = highlight.highlightAuto(token.text).value
-        token.escaped = yes
+        token.escaped = true
       tokens.push token
       tokens
     [])
