@@ -22,6 +22,7 @@ options = optimist
   .describe('out', 'Output directory').alias('o', 'out').default('out', 'docs')
   .describe('tmpl', 'Template directory').default('tmpl', "#{__dirname}/../resources/")
   .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite')
+  .describe('pass', 'Pass argument through to CSS precompiler')
   .argv
 
 options.in = options._[0] or './'
@@ -68,7 +69,7 @@ generateFile = (source, data) ->
   if langs.isSupported source
     # Run source through suitable CSS preprocessor.
     lang = langs.getLanguage source
-    lang.compile source, (err, css) ->
+    lang.compile source, options['pass'], (err, css) ->
       throw err if err?
       data.css = css
       render data
