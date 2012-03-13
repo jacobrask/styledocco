@@ -39,17 +39,23 @@ getSections = (filename) ->
 
 findFile = (dir, re) ->
   return null unless fs.statSync(dir).isDirectory()
-  fs.readdirSync(dir).filter((file) -> file.match re)?[0]
+  file = fs.readdirSync(dir).filter((file) -> file.match re)?[0]
+  if file?
+    path.join dir, file
+  else
+    null
 
 
 # Generate the HTML document and write to file.
 generateFile = (source, data) ->
 
-  dest = _.makeDestination source.replace /readme/i, 'index'
+  if source.match /readme/i
+    source = 'index.html'
+  dest = _.makeDestination source
   data.project = {
     name: options.name
     menu
-    root: _.buildRootPath source.replace /readme/i, 'index'
+    root: _.buildRootPath source
   }
 
   render = (data) ->
