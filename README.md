@@ -42,10 +42,10 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
 
 ## Examples
 
-    /* Provides extra visual weight and identifies the primary action in a set of buttons
-    ```   
-    <button class="btn primary">Primary</button>  
-    ``` */
+    /*
+        <button class="btn primary">Primary</button>
+
+    Provides extra visual weight and identifies the primary action in a set of buttons. */
     .btn.primary {
         background: blue;
         color: white;
