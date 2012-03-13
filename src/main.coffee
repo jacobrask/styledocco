@@ -23,6 +23,7 @@ options = optimist
   .describe('tmpl', 'Template directory').default('tmpl', path.resolve(__dirname, '../resources/'))
   .describe('nocss', 'Hide CSS code pane').boolean('nocss').default('nocss', false)
   .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite').default('overwrite', false)
+  .describe('pass', 'Pass argument through to CSS precompiler')
   .argv
 
 options.in = options._[0] or './'
@@ -70,7 +71,7 @@ generateFile = (source, data) ->
   if langs.isSupported source
     # Run source through suitable CSS preprocessor.
     lang = langs.getLanguage source
-    lang.compile source, (err, css) ->
+    lang.compile source, options['pass'], (err, css) ->
       throw err if err?
       data.css = css
       render data
