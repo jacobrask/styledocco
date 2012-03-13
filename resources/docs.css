@@ -141,6 +141,7 @@ the same width as the sidebar. This is a hidden comment btw. */
     width: 40%;
     overflow: auto;
     padding: 10px;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     border-radius: 0 3px 3px 0;
     border: 1px solid #eee;
