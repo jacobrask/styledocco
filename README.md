@@ -36,7 +36,7 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
 
  * `--name`, `-n` Name of the project *(required)*
  * `--out`, `-o`  Output directory *(default: "docs")*
- * `--tmpl`       Directory for custom `index.jade` and `docs.jade` templates *(optional)*
+ * `--tmpl`       Directory for custom `docs.jade` template *(optional)*
  * `--overwrite`  Overwrite existing files (`docs.css`) in target directory.
 
 
