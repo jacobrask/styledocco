@@ -4,10 +4,12 @@ This is the default stylesheet for StyleDocco. It also serves as an example
 of the documentation syntax. */
 
 /* ## General styles ##
-We don't define any global styles apart from the page background. */
+We don't define any global styles apart from the page background and
+resetting `margin`/`padding`. */
 body {
     margin: 0;
     background-color: #fdfdfd;
+    padding: 0;
 }
 
 /* We use the [Proggy Tiny](http://proggyfonts.com) font (MIT License) when
@@ -126,7 +128,7 @@ the same width as the sidebar. This is a hidden comment btw. */
     position: relative;
     z-index: 2;
     width: 60%;
-    min-height: 100%;
+    min-height: 200px;
     margin: 20px 0 40px;
     background: #fff;
     border: 1px solid #eee;
@@ -196,9 +198,11 @@ Sidebar menu.
     width: 11%;
     word-wrap: break-word;
     font-size: 13px;
+    line-height: 1.6;
 }
 .styledocco-sidebar a {
     text-decoration: none;
+    line-height: 1.6;
 }
 .styledocco-brand {
     display: block;
@@ -234,7 +238,7 @@ Sidebar menu.
     display: block;
     padding: .2em 10%;
     color: #555;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .05);
 }
 .styledocco-nav a:active,
 .styledocco-nav a:focus,
