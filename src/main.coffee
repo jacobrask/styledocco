@@ -137,5 +137,5 @@ files.forEach (file) ->
 # Add default docs.css unless it already exists.
 cssPath = path.join options.out, 'docs.css'
 if options.overwrite or not path.existsSync cssPath
-  fs.writeFileSync cssPath, fs.readFileSync __dirname + '/../resources/docs.css', 'utf-8'
+  fs.writeFileSync cssPath, fs.readFileSync path.join(options.tmpl, 'docs.css'), 'utf-8'
   console.log "styledocco: writing #{path.join options.out, 'docs.css'}"
