@@ -10,6 +10,7 @@ body {
     margin: 0;
     background-color: #fdfdfd;
     padding: 0;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 /* We use the [Proggy Tiny](http://proggyfonts.com) font (MIT License) when
