@@ -20,8 +20,9 @@ options = optimist
   .usage('Usage: $0 [options] [INPUT]')
   .describe('name', 'Name of the project').alias('n', 'name').demand('name')
   .describe('out', 'Output directory').alias('o', 'out').default('out', 'docs')
-  .describe('tmpl', 'Template directory').default('tmpl', "#{__dirname}/../resources/")
-  .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite')
+  .describe('tmpl', 'Template directory').default('tmpl', path.resolve(__dirname, '../resources/'))
+  .describe('nocss', 'Hide CSS code pane').boolean('nocss').default('nocss', false)
+  .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite').default('overwrite', false)
   .argv
 
 options.in = options._[0] or './'
@@ -56,6 +57,7 @@ generateFile = (source, data) ->
     name: options.name
     menu
     root: _.buildRootPath source
+    nocss: options.nocss
   }
 
   render = (data) ->

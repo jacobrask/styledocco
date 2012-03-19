@@ -9,7 +9,7 @@ html
     if css
       style !{css}
     link(rel='stylesheet', href="#{project.root}docs.css")
-  body
+  body(class=(project.nocss) && 'nocss')
     .styledocco-container
       .styledocco-sidebar
         a.styledocco-brand(href="#{project.root}index.html") #{project.name}
@@ -25,7 +25,7 @@ html
         each section, i in sections
           .styledocco-section
             .styledocco-docs !{section.docs}
-            if section.code
+            if section.code && !project.nocss
               .styledocco-code
                 pre
                   code !{section.code}
