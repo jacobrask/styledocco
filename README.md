@@ -37,9 +37,9 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
  * `--name`, `-n` Name of the project *(required)*
  * `--out`, `-o`  Output directory *(default: "docs")*
  * `--tmpl`       Directory for custom `docs.jade` and `docs.css` *(optional)*
- * `--nocss`      Hide CSS code pane. *(default: false)*
  * `--overwrite`  Overwrite existing files (`docs.css`) in target directory. *(default: false)*
  * `--pass`       Pass arguments through to CSS preprocessor *(optional)* (ex: `--pass="--include-path=../less/include"`)
+ * `--nocss`      Hide CSS code pane. *(default: false)*
 
 
 ## Examples
