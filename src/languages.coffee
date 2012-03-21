@@ -34,11 +34,13 @@ class Language
     str
 
   # Compile to CSS.
-  compile: (filename, passthrough_args, cb) ->
+  compile: (filename, passthroughArgs, cb) ->
     if @preprocessor?
-      passthrough_args = [passthrough_args] if passthrough_args? && typeof passthrough_args is "string"
-      args = [].concat(@preprocessor.args)
-      args = args.concat(passthrough_args) if passthrough_args
+      args =
+        if passthroughArgs? and typeof passthroughArgs is 'string'
+          @preprocessor.args.concat([passthroughArgs])
+        else
+          @preprocessor.args
       exec "#{@preprocessor.cmd} #{args.join(' ')} #{filename}",
         (err, stdout, stderr) ->
           cb err, stdout
