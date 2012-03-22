@@ -6,7 +6,7 @@
     "css",
     "documentation" ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "homepage": "http://jacobrask.github.com/styledocco/",
   "licenses": [
     { "type": "MIT",
