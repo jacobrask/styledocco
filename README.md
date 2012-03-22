@@ -34,15 +34,26 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
 
 ### Options
 
- * `--name`, `-n` Name of the project *(required)*
- * `--out`, `-o`  Output directory *(default: "docs")*
- * `--tmpl`       Directory for custom `docs.jade` and `docs.css` *(optional)*
- * `--overwrite`  Overwrite existing files (`docs.css`) in target directory. *(default: false)*
- * `--pass`       Pass arguments through to CSS preprocessor *(optional)* (ex: `--pass="--include-path=../less/include"`)
- * `--nocss`      Hide CSS code pane. *(default: false)*
+ * `--name`, `-n`   Name of the project *(required)*
+ * `--out`, `-o`    Output directory *(default: "docs")*
+ * `--tmpl`         Directory for custom `docs.jade` and `docs.css` *(optional)*
+ * `--overwrite`    Overwrite existing files (`docs.css`) in target directory. *(default: false)*
+ * `--nocss`        Hide CSS code pane. *(default: false)*
+ * `--preprocessor` Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
+
+### Usage examples
+
+Generate documentation for *My Project* in the `docs` folder, from the files in the `css` directory.
+
+`styledocco -n "My Project" css
+
+Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the Less binary in `~/bin/lessc`.
+
+`styledocco -n "My Project" -o mydocs --preprocessor "~/bin/lessc --include-path=../includes" styles`
 
 
-## Examples
+
+## Syntax examples
 
     /*
         <button class="btn primary">Primary</button>

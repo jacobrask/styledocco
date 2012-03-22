@@ -34,16 +34,14 @@ class Language
     str
 
   # Compile to CSS.
-  compile: (filename, passthroughArgs, cb) ->
-    if @preprocessor?
-      args =
-        if passthroughArgs? and typeof passthroughArgs is 'string'
-          @preprocessor.args.concat([passthroughArgs])
-        else
-          @preprocessor.args
-      exec "#{@preprocessor.cmd} #{args.join(' ')} #{filename}",
-        (err, stdout, stderr) ->
-          cb err, stdout
+  compile: (filename, customPreprocessor, cb) ->
+    if @preprocessor? or customPreprocessor
+      if customPreprocessor?
+        preCmd = "#{customPreprocessor} #{filename}"
+      else
+        preCmd = "#{@preprocessor.cmd} #{args.join ' '} #{filename}"
+      exec preCmd, (err, stdout, stderr) ->
+        cb err, stdout
     else
       fs.readFile filename, 'utf-8', (err, data) ->
         cb err, data
