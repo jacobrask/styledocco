@@ -12,9 +12,11 @@ Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wi
 
 The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
 
+An important philosophy of StyleDocco is to introduce as little custom syntax as possible, and to maintain the documentation readable and usable even without StyleDocco.
+
 If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
 
-StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page.
+StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. You can also enter a custom preprocessor command if you want to supply extra options to the preprocessor.
 
 
 ## Installation
@@ -45,12 +47,11 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
 
 Generate documentation for *My Project* in the `docs` folder, from the files in the `css` directory.
 
-`styledocco -n "My Project" css
+`styledocco -n "My Project" css`
 
 Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the Less binary in `~/bin/lessc`.
 
 `styledocco -n "My Project" -o mydocs --preprocessor "~/bin/lessc --include-path=../includes" styles`
-
 
 
 ## Syntax examples
@@ -71,4 +72,4 @@ See the `examples` folder for more in-depth examples.
 
 ## Acknowledgements
 
-A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Docco Husky](https://github.com/mbrevoort/docco-husky) by Mike Brevoort were also of great help to this project. StyleDocco was also inspired by [Knyle Style Sheets](https://github.com/kneath/kss), a similar project written in Ruby.
+A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Docco Husky](https://github.com/mbrevoort/docco-husky) by Mike Brevoort were also of great help to this project. [Knyle Style Sheets](https://github.com/kneath/kss) is a similar project written in Ruby, and has also been an inspiration to StyleDocco.
