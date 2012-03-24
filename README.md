@@ -10,13 +10,11 @@ StyleDocco generates documentation and style guide documents from your styleshee
 
 Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples inside [GitHub Markdown](http://github.github.com/github-flavored-markdown/) code fences (<code>```</code>) or prefixed with 4 spaces in your comments, and StyleDocco both renders the HTML and shows the code example.
 
-The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
+An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
-An important philosophy of StyleDocco is to introduce as little custom syntax as possible, and to maintain the documentation readable and usable even without StyleDocco.
+The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, put some whitespace before a comment to exlude it from the style guide.
 
-If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
-
-StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. You can also enter a custom preprocessor command if you want to supply extra options to the preprocessor.
+Suggestions, feature requests and bug reports are very welcome, either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
 
 ## Installation
@@ -34,6 +32,10 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
 
 `styledocco [options] [INPUT]`
 
+StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
+
+If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
+
 ### Options
 
  * `--name`, `-n`   Name of the project *(required)*
@@ -50,7 +52,7 @@ Generate documentation for *My Project* in the `docs` folder, from the files in 
 
 Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the Less binary in `~/bin/lessc`.
 
-`styledocco -n "My Project" -o mydocs --preprocessor "~/bin/lessc --include-path=../includes" styles`
+`styledocco -n "My Project" -o mydocs --preprocessor "~/bin/lessc" styles`
 
 
 ## Syntax examples
