@@ -20,12 +20,24 @@ options = optimist
   .usage('Usage: $0 [options] [INPUT]')
   .describe('name', 'Name of the project').alias('n', 'name').demand('name')
   .describe('out', 'Output directory').alias('o', 'out').default('out', 'docs')
-  .describe('tmpl', 'Template directory').default('tmpl', "#{__dirname}/../resources/")
+  .describe('tmpl', 'Custom template directory').default('tmpl', path.resolve(__dirname, '../resources/'))
   .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite')
   .describe('preprocessor', 'Custom preprocessor command')
   .argv
 
 options.in = options._[0] or './'
+
+templateFile =
+  if path.existsSync path.join options.tmpl, 'docs.jade'
+    path.join options.tmpl, 'docs.jade'
+  else
+    path.resolve __dirname, '../resources/docs.jade'
+
+cssFile =
+  if path.existsSync path.join options.tmpl, 'docs.css'
+    path.join options.tmpl, 'docs.css'
+  else
+    path.resolve __dirname, '../resources/docs.css'
 
 # Get sections of matching doc/code blocks.
 getSections = (filename) ->
@@ -60,7 +72,6 @@ generateFile = (source, data) ->
   }
 
   render = (data) ->
-    templateFile = path.join options.tmpl, 'docs.jade'
     template = fs.readFileSync templateFile, 'utf-8'
     html = jade.compile(template, filename: templateFile)(data)
     console.log "styledocco: #{source} -> #{path.join options.out, dest}"
@@ -136,7 +147,7 @@ files.forEach (file) ->
   generateFile file, { menu, sections, title: file, description: '' }
 
 # Add default docs.css unless it already exists.
-cssPath = path.join options.out, 'docs.css'
-if options.overwrite or not path.existsSync cssPath
-  fs.writeFileSync cssPath, fs.readFileSync path.join(options.tmpl, 'docs.css'), 'utf-8'
-  console.log "styledocco: writing #{path.join options.out, 'docs.css'}"
+cssFileOut = path.join options.out, 'docs.css'
+if options.overwrite or not path.existsSync cssFileOut
+  fs.writeFileSync cssFileOut, fs.readFileSync cssFile, 'utf-8'
+  console.log "styledocco: writing #{cssFileOut}"

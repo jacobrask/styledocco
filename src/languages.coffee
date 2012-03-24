@@ -39,7 +39,7 @@ class Language
       if customPreprocessor?
         preCmd = "#{customPreprocessor} #{filename}"
       else
-        preCmd = "#{@preprocessor.cmd} #{args.join ' '} #{filename}"
+        preCmd = "#{@preprocessor.cmd} #{@preprocessor.args.join ' '} #{filename}"
       exec preCmd, (err, stdout, stderr) ->
         cb err, stdout
     else
