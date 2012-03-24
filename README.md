@@ -40,7 +40,6 @@ StyleDocco is free software, released under the [MIT license](https://raw.github
  * `--out`, `-o`    Output directory *(default: "docs")*
  * `--tmpl`         Directory for custom `docs.jade` and `docs.css` *(optional)*
  * `--overwrite`    Overwrite existing files (`docs.css`) in target directory. *(default: false)*
- * `--nocss`        Hide CSS code pane. *(default: false)*
  * `--preprocessor` Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
 
 ### Usage examples

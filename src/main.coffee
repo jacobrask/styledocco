@@ -22,7 +22,6 @@ options = optimist
   .describe('out', 'Output directory').alias('o', 'out').default('out', 'docs')
   .describe('tmpl', 'Template directory').default('tmpl', "#{__dirname}/../resources/")
   .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite')
-  .describe('nocss', 'Hide CSS code pane').boolean('nocss').default('nocss', false)
   .describe('preprocessor', 'Custom preprocessor command')
   .argv
 
@@ -58,7 +57,6 @@ generateFile = (source, data) ->
     name: options.name
     menu
     root: _.buildRootPath source
-    nocss: options.nocss
   }
 
   render = (data) ->
