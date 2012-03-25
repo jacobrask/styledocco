@@ -90,7 +90,7 @@ for file in files
     name: path.basename(file, path.extname file)
     href: _.makeDestination file
   parts = file.split('/').splice(1)
-  key = parts[0]? or './'
+  key = if parts.length > 1 then parts[0] else './'
   if menu[key]?
     menu[key].push link
   else
