@@ -8,7 +8,7 @@
 
 StyleDocco generates documentation and style guide documents from your stylesheets.
 
-Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples inside [GitHub Markdown](http://github.github.com/github-flavored-markdown/) code fences (<code>```</code>) or prefixed with 4 spaces in your comments, and StyleDocco both renders the HTML and shows the code example.
+Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples prefixed with 4 spaces (or between <code>```</code>, [GitHub code fences](http://github.github.com/github-flavored-markdown/)) in your comments, and StyleDocco both renders the HTML and shows the code example.
 
 An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
@@ -40,7 +40,7 @@ If your project includes a `README` file, it will be used as the base for an `in
 
  * `--name`, `-n`   Name of the project *(required)*
  * `--out`, `-o`    Output directory *(default: "docs")*
- * `--tmpl`         Directory for custom `docs.jade` and `docs.css` *(optional)*
+ * `--tmpl`         Directory for custom `docs.jade` template and `docs.css` *(optional)*
  * `--overwrite`    Overwrite existing files (`docs.css`) in target directory. *(default: false)*
  * `--preprocessor` Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
 
