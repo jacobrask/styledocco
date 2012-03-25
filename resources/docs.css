@@ -226,7 +226,7 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     padding: 10px;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 5px 5px 0;
     border: 1px solid rgba(0, 0, 0, .1);
     background: rgba(255, 255, 255, .75);
     opacity: .6;
@@ -242,35 +242,36 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     padding: 15px;
     overflow: auto;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
-    border-top: 1px solid #eee;
+    border-top: 1px solid rgba(220, 220, 225, .8);
 }
 pre + .styledocco-example {
     border-top: 0;
 }
 .styledocco-example:before, .styledocco-example:after { display: table; content: ""; }
 .styledocco-example:after { clear: both; }
+
+.styledocco-docs > pre,
+.styledocco-code pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #445;
+    margin: 0 !important;
+}
 .styledocco-docs > pre {
     max-height: 200px;
     overflow-y: auto;
-    margin: 0 !important;
     padding: 10px 20px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
     background: rgb(248, 249, 251);
-    color: #445;
     border-top: 1px dotted rgb(220, 220, 225);
     border-bottom: 1px solid rgba(220, 220, 225, .8);
     line-height: 14px !important;
 }
-
-
+.styledocco-docs > pre:last-child {
+    border-bottom: 0;
+}
 .styledocco-code pre {
     padding: 0;
-    margin: 0;
-    white-space: pre-wrap;
-    word-wrap: break-word;
     background: transparent;
-    color: #445;
     border: 0;
     line-height: 11px;
 }
