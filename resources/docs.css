@@ -262,9 +262,15 @@ pre + .styledocco-example {
     overflow-y: auto;
     padding: 10px 20px;
     background: rgb(248, 249, 251);
-    border-top: 1px dotted rgb(220, 220, 225);
-    border-bottom: 1px solid rgba(220, 220, 225, .8);
+    border: 1px solid rgba(220, 220, 225, .8);
+    border-left: 0; border-right: 0;
     line-height: 14px !important;
+}
+.styledocco-example + pre {
+    border-top: 1px dotted rgb(220, 220, 225);
+}
+.styledocco-docs > pre:first-child {
+    border-top: 0;
 }
 .styledocco-docs > pre:last-child {
     border-bottom: 0;
