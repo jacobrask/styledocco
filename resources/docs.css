@@ -56,7 +56,6 @@ body {
     background: rgba(0, 0, 0, .025);
     border: 1px solid rgba(0, 0, 0, .05);
     border-radius: 3px;
-    font-size: .9em;
     font-style: normal;
     font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
 }
@@ -76,7 +75,7 @@ Code blocks also get a nice selection color to better highlight what you should 
     background: transparent;
     border: 0;
     font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
-    font-size: 11px;
+    font-size: 12px;
 }
 .styledocco-code code::selection,
 .styledocco-docs > pre code::selection {
