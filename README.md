@@ -21,7 +21,7 @@ Suggestions, feature requests and bug reports are very welcome, either at [GitHu
 
 StyleDocco requires [Node.js](http://nodejs.org). When you have Node.js installed, run
 
-<pre><kbd>npm install -g styledocco</kbd></pre>
+    npm install -g styledocco
 
 or check out this repository.
 
