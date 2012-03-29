@@ -6,7 +6,7 @@ This is the default stylesheet for StyleDocco. It also serves as an example of t
 /*
 General styles
 --------------
-We don't define any global styles except background color and resetting `margin` and `padding`. */
+We don't define any global styles except background color and resetting margins and paddings. */
 body {
     margin: 0;
     padding: 0;
@@ -49,6 +49,14 @@ body {
 
     <div class="styledocco-docs">
       <p>A <a href="#">regular link</a> (now styled), a <a href="./docs.html">visited link</a> and some <code>inline code</code>.</p>
+    </div>
+
+To show pseudo selectors styles in examples, just add the pseudo selector (including the `:`) as a class name.
+
+    <div class="styledocco-docs"><p>
+      <a href="#">Link</a>
+      <a href="#" class=":hover">Link</a>
+      <a href="#" class=":visited">Link</a>
     </div> */
 .styledocco-docs > :not(.styledocco-example):not(pre) var,
 .styledocco-docs > :not(.styledocco-example):not(pre) code {
@@ -65,7 +73,9 @@ Code blocks also get a nice selection color to better highlight what you should 
 
 ```
 <div class="styledocco-docs">
-<pre><code>The font in &lt;pre&gt; code blocks is small but legible.</code></pre>
+<pre>
+<code>The font in &lt;pre&gt; code blocks is small but legible.</code>
+</pre>
 </div>
 ``` */
 .styledocco-code pre code,
@@ -114,11 +124,17 @@ A centered container with sections of documentation and code side by side, and a
 /* ## Menu ##
 Sidebar menu, fixed top/left. Slightly faded out when not hovered.
 
-    <div class="styledocco-sidebar" style="position:static;width:50%">
-      <a href="#" class="styledocco-brand">Name</a>
+    <div class="styledocco-sidebar :hover" style="position:static;width:40%">
+      <a href="#" class="styledocco-brand">Hovered sidebar</a>
       <strong class="styledocco-nav-heading">Folder</strong>
       <ul class="styledocco-nav">
         <li><a href="#">Item</a>
+        <li class=":hover"><a href="#">Hovered item</a>
+      </ul>
+    </div>
+    <div class="styledocco-sidebar" style="position:static;width:40%">
+      <a href="#" class="styledocco-brand">Inactive menu</a>
+      <ul class="styledocco-nav">
         <li><a href="#">Item</a>
       </ul>
     </div>
