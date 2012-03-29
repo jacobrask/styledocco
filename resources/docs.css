@@ -19,7 +19,7 @@ body {
 .styledocco-docs > :not(.styledocco-example) {
     margin: 15px 20px;
     color: #334;
-    line-height: 1.6;
+    line-height: 1.618;
     font-family: sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -29,7 +29,10 @@ body {
 }
 .styledocco-docs > h1, .styledocco-docs > h2, .styledocco-docs > h3,
 .styledocco-docs > h4, .styledocco-docs > h5, .styledocco-docs > h6 {
-    color: #555f6a !important; /* Needed due to `*:not()` above. */
+     /* `!important` needed due to `*:not()` above. */
+    margin: 25px 20px 0 !important;
+    line-height: 1.2 !important;
+    color: #555f6a !important;
 }
 .styledocco-docs > :not(.styledocco-example) a {
     color: #27a;
@@ -228,12 +231,14 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
 }
 /* Showing examples of documentation examples would be a bit recursive, but it's a checkerboard background to be able to see edges of elements regardless of their color. */
 .styledocco-example {
+    margin-top: 10px;
     padding: 15px;
     overflow: auto;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
-    border-top: 1px solid rgba(220, 220, 225, .8);
+    border-top: 1px dotted rgb(220, 220, 225);
 }
 pre + .styledocco-example {
+    margin-top: 0;
     border-top: 0;
 }
 .styledocco-example:before, .styledocco-example:after { display: table; content: ""; }
