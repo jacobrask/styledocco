@@ -30,6 +30,13 @@ cssFile =
   else
     path.resolve __dirname, '../resources/docs.css'
 
+jsFile =
+  if path.existsSync path.join options.tmpl, 'docs.js'
+    path.join options.tmpl, 'docs.js'
+  else
+    path.resolve __dirname, '../resources/docs.js'
+
+
 # Get sections of matching doc/code blocks.
 getSections = (filename) ->
   lang = langs.getLanguage filename
@@ -119,3 +126,8 @@ cssFileOut = path.join options.out, 'docs.css'
 if options.overwrite or not path.existsSync cssFileOut
   fs.writeFileSync cssFileOut, fs.readFileSync cssFile, 'utf-8'
   console.log "styledocco: writing #{cssFileOut}"
+  
+jsFileOut = path.join options.out, 'docs.js'
+if options.overwrite or not path.existsSync jsFileOut
+  fs.writeFileSync jsFileOut, fs.readFileSync jsFile, 'utf-8'
+  console.log "styledocco: writing #{jsFileOut}"
