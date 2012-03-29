@@ -18,24 +18,13 @@ options = optimist
   .argv
 options.in = options._[0] or './'
 
-templateFile =
-  if path.existsSync path.join options.tmpl, 'docs.jade'
-    path.join options.tmpl, 'docs.jade'
+getResourcePath = (fileName) ->
+  if path.existsSync path.join options.tmpl, fileName
+    path.join options.tmpl, fileName
   else
-    path.resolve __dirname, '../resources/docs.jade'
+    path.resolve __dirname, path.join '../resources', fileName
 
-cssFile =
-  if path.existsSync path.join options.tmpl, 'docs.css'
-    path.join options.tmpl, 'docs.css'
-  else
-    path.resolve __dirname, '../resources/docs.css'
-
-jsFile =
-  if path.existsSync path.join options.tmpl, 'docs.js'
-    path.join options.tmpl, 'docs.js'
-  else
-    path.resolve __dirname, '../resources/docs.js'
-
+templateFile = getResourcePath 'docs.jade'
 
 # Get sections of matching doc/code blocks.
 getSections = (filename) ->
@@ -121,13 +110,12 @@ files.forEach (file) ->
   sections = getSections file
   generateFile file, { menu, sections, title: file, description: '' }
 
-# Add default docs.css unless it already exists.
-cssFileOut = path.join options.out, 'docs.css'
-if options.overwrite or not path.existsSync cssFileOut
-  fs.writeFileSync cssFileOut, fs.readFileSync cssFile, 'utf-8'
-  console.log "styledocco: writing #{cssFileOut}"
-  
-jsFileOut = path.join options.out, 'docs.js'
-if options.overwrite or not path.existsSync jsFileOut
-  fs.writeFileSync jsFileOut, fs.readFileSync jsFile, 'utf-8'
-  console.log "styledocco: writing #{jsFileOut}"
+# Write static files to output directory.
+writeStaticFile = (fileName) ->
+  outPath = path.join options.out, fileName
+  if options.overwrite or not path.existsSync outPath
+    fs.writeFileSync outPath, fs.readFileSync getResourcePath(fileName), 'utf-8'
+    console.log "styledocco: writing #{outPath}"
+
+writeStaticFile 'docs.css'
+writeStaticFile 'docs.js'
