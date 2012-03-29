@@ -336,10 +336,3 @@ The code highlighting color scheme is based on GitHub's code colors, but slightl
 .styledocco-code .class, .styledocco-docs > pre .class {
     color: #328;
 }
-
- /* Workarounds for StyleDocco documentation */
-.styledocco-example .styledocco-section,
-.styledocco-example .styledocco-docs {
-    min-height: 0;
-    margin: 0;
-}
