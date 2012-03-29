@@ -105,7 +105,7 @@ A centered container with sections of documentation and code side by side, and a
 .styledocco-sidebar {
     position: fixed;
     width: 9%;
-    padding: 10px 1%;
+    padding: 1%;
 }
 .styledocco-section {
     position: relative;
