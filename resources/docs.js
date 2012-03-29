@@ -3,31 +3,35 @@
 
 (function() {
 
-var pseudoRe = /(\:hover|\:focus|\:disabled|\:active|\:visited)/g;
+'use strict';
 
-var toArray = function(obj) {
-  return Array.prototype.slice.call(obj);
-};
+// Helper function needed to deal with array-like stylesheet objects.
+var toArray = function(obj) { return Array.prototype.slice.call(obj); };
 
-// Only get inline style elements, and the first one.
+// Compile regular expression
+var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
+                'enabled', 'disabled', 'checked' ];
+var pseudoRe = new RegExp(':((' + pseudos.join(')|(') + '))', 'gi');
+
+// Only get inline style elements, and only the first one
 var styleSheet = toArray(document.styleSheets)
   .filter(function(ss) {
     return ss.href == null
   })[0];
-
 var processedStyles = toArray(styleSheet.cssRules)
-  // Filter out rules with pseudo classes
   .filter(function(rule) {
-    return pseudoRe.test(rule.selectorText);
+    // Keep only rules with pseudo classes
+    return rule.selectorText.match(pseudoRe);
   })
   .map(function(rule) {
-    return rule.cssText.replace(pseudoRe, function(matched) {
-      // Replace `:` with `.` + escaped colon.
-      return matched.replace(':', '.\\3A ');
-    })
+    // Replace : with . and encoded :
+    return rule.cssText.replace(pseudoRe, '.\\3A $1');
   })
-  .toString();
+  .reduce(function(prev, cur) {
+    return prev + cur;
+  });
 
+// Add the styles to the document
 var styleEl = document.createElement('style');
 styleEl.appendChild(document.createTextNode(processedStyles));
 document.getElementsByTagName('head')[0].appendChild(styleEl);
