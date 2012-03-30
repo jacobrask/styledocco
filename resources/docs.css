@@ -236,10 +236,10 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     border-radius: 0 5px 5px 0;
     border: 1px solid rgba(0, 0, 0, .1);
     background: rgba(255, 255, 255, .75);
-    opacity: .6;
-    -webkit-transition: opacity .4s;
-    -moz-transition:    opacity .4s;
-    -o-transition:      opacity .4s;
+    opacity: .75;
+    -webkit-transition: opacity .25s;
+    -moz-transition:    opacity .25s;
+    -o-transition:      opacity .25s;
 }
 .styledocco-code:hover {
     opacity: 1;
