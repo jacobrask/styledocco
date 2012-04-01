@@ -2,11 +2,14 @@ fs   = require 'fs'
 path = require 'path'
 findit   = require 'findit'
 jade     = require 'jade'
+marked   = require 'marked'
 mkdirp   = require 'mkdirp'
 optimist = require 'optimist'
 langs  = require './languages'
 parser = require './parser'
 _      = require './utils'
+
+marked.setOptions gfm: on
 
 options = optimist
   .usage('Usage: $0 [options] [INPUT]')
@@ -97,10 +100,7 @@ readme = _.findFile(options.in, /^readme/i) \
       or _.findFile(options.tmpl, /^readme/i) \
       or path.resolve(__dirname, '../resources/README.md')
 
-sections = getSections readme
-
-# Make sure that specified output directory exists.
-mkdirp.sync options.out
+sections = [ docs: marked fs.readFileSync(readme, 'utf-8') ]
 
 generateFile readme, { menu, sections, title: '', description: '' }
 
