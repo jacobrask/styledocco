@@ -15,15 +15,15 @@ options = optimist
   .usage('Usage: $0 [options] [INPUT]')
   .describe('name', 'Name of the project').alias('n', 'name').demand('name')
   .describe('out', 'Output directory').alias('o', 'out').default('out', 'docs')
-  .describe('tmpl', 'Custom template directory').default('tmpl', path.resolve(__dirname, '../resources/'))
-  .describe('overwrite', 'Overwrite existing files in target dir').boolean('overwrite')
+  .describe('resources', 'Directory for static resources').alias('s', 'resources')
+    .default('resources', path.resolve(__dirname, '../resources'))
   .describe('preprocessor', 'Custom preprocessor command')
   .argv
 options.in = options._[0] or './'
 
 getResourcePath = (fileName) ->
-  if path.existsSync path.join options.tmpl, fileName
-    path.join options.tmpl, fileName
+  if path.existsSync path.join options.resources, fileName
+    path.join options.resources, fileName
   else
     path.resolve __dirname, path.join '../resources', fileName
 
@@ -97,11 +97,10 @@ for file in files
 # Look for a README file and generate an index.html.
 readme = _.findFile(options.in, /^readme/i) \
       or _.findFile(process.cwd(), /^readme/i) \
-      or _.findFile(options.tmpl, /^readme/i) \
+      or _.findFile(options.resources, /^readme/i) \
       or path.resolve(__dirname, '../resources/README.md')
 
 sections = [ docs: marked fs.readFileSync(readme, 'utf-8') ]
-
 generateFile readme, { menu, sections, title: '', description: '' }
 
 # Generate documentation files.
@@ -112,9 +111,8 @@ files.forEach (file) ->
 # Write static files to output directory.
 writeStaticFile = (fileName) ->
   outPath = path.join options.out, fileName
-  if options.overwrite or not path.existsSync outPath
-    fs.writeFileSync outPath, fs.readFileSync getResourcePath(fileName), 'utf-8'
-    console.log "styledocco: writing #{outPath}"
+  fs.writeFileSync outPath, fs.readFileSync getResourcePath(fileName), 'utf-8'
+  console.log "styledocco: writing #{outPath}"
 
 writeStaticFile 'docs.css'
 writeStaticFile 'docs.js'

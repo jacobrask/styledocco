@@ -19,7 +19,7 @@ Suggestions, feature requests and bug reports are very welcome, either at [GitHu
 
 ## Installation
 
-StyleDocco requires [Node.js](http://nodejs.org). When you have Node.js installed, run
+StyleDocco requires [Node.js](http://nodejs.org). After installing Node.js, run
 
     npm install -g styledocco
 
@@ -38,11 +38,10 @@ If your project includes a `README` file, it will be used as the base for an `in
 
 ### Options
 
- * `--name`, `-n`   Name of the project *(required)*
- * `--out`, `-o`    Output directory *(default: "docs")*
- * `--tmpl`         Directory for custom `docs.jade` template and `docs.css` *(optional)*
- * `--overwrite`    Overwrite existing files (`docs.css`) in target directory. *(default: false)*
- * `--preprocessor` Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
+ * `--name`, `-n`      Name of the project *(required)*
+ * `--out`, `-o`       Output directory *(default: "docs")*
+ * `--resources`, `-s` Directory for custom template, CSS and JavaScript. Can be the same as the output directory if you don't want to overwrite your changes. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
+ * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
 
 ### Usage examples
 
@@ -52,25 +51,24 @@ Generate documentation for *My Project* in the `docs` folder, from the files in 
 
 Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the Less binary in `~/bin/lessc`.
 
-`styledocco -n "My Project" -o mydocs --preprocessor "~/bin/lessc" styles`
+`styledocco -n "My Project" -o mydocs -s mydocs --preprocessor "~/bin/lessc" styles`
 
 
 ## Syntax examples
 
-    /*
-        <button class="btn primary">Primary</button>
+    /* Provides extra visual weight and identifies the primary action in a set of buttons.
 
-    Provides extra visual weight and identifies the primary action in a set of buttons. */
+        <button class="btn primary">Primary</button> */
     .btn.primary {
         background: blue;
         color: white;
     }
 
-Would display the description, a button as well as the example HTML code. The CSS will be included in the `style` element of the document.
+Would display the description, a rendered button as well as the example HTML code. The CSS will be included in the `style` element of the document.
 
 See the `examples` folder for more in-depth examples.
 
 
 ## Acknowledgements
 
-A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Docco Husky](https://github.com/mbrevoort/docco-husky) by Mike Brevoort were also of great help to this project. [Knyle Style Sheets](https://github.com/kneath/kss) is a similar project written in Ruby, and has also been an inspiration to StyleDocco.
+A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Docco Husky](https://github.com/mbrevoort/docco-husky) by Mike Brevoort were also of great help to this project. [Knyle Style Sheets](https://github.com/kneath/kss), a similar project written in Ruby, has also been an inspiration to StyleDocco.

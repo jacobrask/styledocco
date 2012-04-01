@@ -7,10 +7,10 @@ test:
 	nodeunit test
 
 pages:
-	./bin/styledocco -n StyleDocco -o ./ --overwrite resources/docs.css
+	./bin/styledocco -n StyleDocco -o ./ resources/docs.css
 
 examples:
-	./bin/styledocco -n StyleDocco -o ./examples/styledocco --overwrite resources/docs.css
-	cd examples/bootstrap && ../../bin/styledocco -n "Twitter Bootstrap" --overwrite less/buttons.less
+	./bin/styledocco -n StyleDocco -o ./examples/styledocco resources/docs.css
+	cd examples/bootstrap && ../../bin/styledocco -n "Twitter Bootstrap" less/buttons.less
 
 .PHONY: build test pages examples
