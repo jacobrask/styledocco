@@ -78,19 +78,18 @@ addDocExamples = (block) ->
 
 # Split into sections with headers as delimiters.
 splitter = (sections, cur, i) ->
-  if sections.length is 0
-    sections.push cur
-    return sections
-
   # If we find a heading, push a new section, otherwise append to the last one.
   for doc in cur.docs
-    if doc.type is 'heading' and doc.depth <= 2
+    if sections.length is 0 or (doc.type is 'heading' and doc.depth <= 2)
       sections.push { docs: [ doc ], code: '' }
     else
       sections[sections.length-1].docs.push doc
 
   # Add code to last section.
-  sections[sections.length-1].code += cur.code
+  if sections.length is 0
+    sections.push cur
+  else
+    sections[sections.length-1].code += cur.code
   sections
 
 

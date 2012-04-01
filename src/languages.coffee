@@ -69,7 +69,7 @@ languages =
 
 
 # Public functions
-# ------------------
+# ----------------
 
 # Determine whether a file is of a supported file type.
 exports.isSupported = (filename) -> path.extname(filename) of languages
