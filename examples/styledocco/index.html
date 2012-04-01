@@ -1,39 +1,30 @@
-<!DOCTYPE html><html><head><title>StyleDocco</title><meta charset="utf-8"><link rel="stylesheet" href="./docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><strong class="styledocco-nav-heading">true</strong><ul class="styledocco-nav"><li><a href="./resources/docs.html">docs
-</a></li></ul></div><div class="styledocco-main"><div class="styledocco-section"><div class="styledocco-docs"><div class="styledocco-example"> _______ __         __        _____
+<!DOCTYPE html><html><head><title>StyleDocco</title><meta charset="utf-8"><link rel="stylesheet" href="./docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="./resources/docs.html">docs
+</a></li></ul></div><div class="styledocco-main"><div class="styledocco-section"><div class="styledocco-docs"><pre><code> _______ __         __        _____
 |     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
 |__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
 |_______|____|___  |__|_____||_____/_____|____|____|_____|
-             |_____|</div><pre><code> <span class="strong">_____</span><span class="strong">__ __</span>         <span class="strong">__        __</span><span class="emphasis">___</span>
-|     <span class="emphasis">__|  |_</span>.--.--|  |-----.|     \-----.----.----.-----.
-|<span class="strong">__     |   _|  |  |  |  -__</span>||  --  | <span class="emphasis">_  |  _</span><span class="emphasis">_|  _</span><span class="emphasis">_|  _</span>  |
-|<span class="strong">_____</span><span class="strong">__|__</span><span class="strong">__|__</span><span class="emphasis">_  |_</span><span class="emphasis">_|_</span><span class="strong">____||__</span><span class="strong">___/__</span><span class="strong">___|__</span><span class="strong">__|__</span><span class="strong">__|__</span><span class="emphasis">___</span>|
-<span class="code">             |_____|</span></code></pre>
+             |_____|</code></pre>
 <p>StyleDocco generates documentation and style guide documents from your stylesheets.
 
 </p>
-<p>Stylesheet comments will be parsed through <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and displayed in a generated HTML document. You can write code examples inside <a href="http://github.github.com/github-flavored-markdown/">GitHub Markdown</a> code fences (<code>```</code>) or prefixed with 4 spaces in your comments, and StyleDocco both renders the HTML and shows the code example.
+<p>Stylesheet comments will be parsed through <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and displayed in a generated HTML document. You can write code examples prefixed with 4 spaces (or between <code>```</code>, <a href="http://github.github.com/github-flavored-markdown/">GitHub code fences</a>) in your comments, and StyleDocco both renders the HTML and shows the code example.
 
 </p>
-<p>The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the <a href="http://daringfireball.net/projects/markdown/syntax">Markdown guide</a>. Only comments at the beginning of new lines are included, so to exclude something from the style guide, put some whitespace before the comment.
+<p>An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
 </p>
-<p>An important philosophy of StyleDocco is to introduce as little custom syntax as possible, and to maintain the documentation readable and usable even without StyleDocco.
+<p>The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the <a href="http://daringfireball.net/projects/markdown/syntax">Markdown guide</a>. Only comments at the beginning of new lines are included, put some whitespace before a comment to exlude it from the style guide.
 
 </p>
-<p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
-
-</p>
-<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus code before it is applied to the page. You can also enter a custom preprocessor command if you want to supply extra options to the preprocessor.
+<p>Suggestions, feature requests and bug reports are very welcome, either at <a href="https://github.com/jacobrask/styledocco/issues">GitHub</a> or on Twitter (<a href="https://twitter.com/jacobrask">@jacobrask</a>).
 
 
 </p>
 <h2>Installation</h2>
-<p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>.
+<p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>. After installing Node.js, run
 
 </p>
-<p><code>npm install -g styledocco</code>
-
-</p>
+<pre><code>npm install -g styledocco</code></pre>
 <p>or check out this repository.
 
 </p>
@@ -45,13 +36,18 @@
 <p><code>styledocco [options] [INPUT]</code>
 
 </p>
+<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
+
+</p>
+<p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
+
+</p>
 <h3>Options</h3>
 <ul>
-<li><code>--name</code>, <code>-n</code>   Name of the project <em>(required)</em></li>
-<li><code>--out</code>, <code>-o</code>    Output directory <em>(default: &quot;docs&quot;)</em></li>
-<li><code>--tmpl</code>         Directory for custom <code>docs.jade</code> and <code>docs.css</code> <em>(optional)</em></li>
-<li><code>--overwrite</code>    Overwrite existing files (<code>docs.css</code>) in target directory. <em>(default: false)</em></li>
-<li><code>--preprocessor</code> Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
+<li><code>--name</code>, <code>-n</code>      Name of the project <em>(required)</em></li>
+<li><code>--out</code>, <code>-o</code>       Output directory <em>(default: &quot;docs&quot;)</em></li>
+<li><code>--resources</code>, <code>-s</code> Directory for custom template, CSS and JavaScript. Can be the same as the output directory if you don&#39;t want to overwrite your changes. StyleDocco defaults will be used for any required file not found in this directory. <em>(optional)</em></li>
+<li><code>--preprocessor</code>    Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
 </ul>
 <h3>Usage examples</h3>
 <p>Generate documentation for <em>My Project</em> in the <code>docs</code> folder, from the files in the <code>css</code> directory.
@@ -63,27 +59,19 @@
 <p>Generate documentation for <em>My Project</em> in the <code>mydocs</code> folder, from source files in the <code>styles</code> folder. Use the Less binary in <code>~/bin/lessc</code>.
 
 </p>
-<p><code>styledocco -n &quot;My Project&quot; -o mydocs --preprocessor &quot;~/bin/lessc --include-path=../includes&quot; styles</code>
+<p><code>styledocco -n &quot;My Project&quot; -o mydocs -s mydocs --preprocessor &quot;~/bin/lessc&quot; styles</code>
 
 
 </p>
 <h2>Syntax examples</h2>
-<div class="styledocco-example">/*
-    <button class="btn primary">Primary</button>
+<pre><code>/* Provides extra visual weight and identifies the primary action in a set of buttons.
 
-Provides extra visual weight and identifies the primary action in a set of buttons. */
-.btn.primary {
-    background: blue;
-    color: white;
-}</div><pre><code>/*
-    <span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn primary"</span>></span>Primary<span class="tag">&lt;/<span class="title">button</span>></span>
-
-Provides extra visual weight and identifies the primary action in a set of buttons. */
+    &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt; */
 .btn.primary {
     background: blue;
     color: white;
 }</code></pre>
-<p>Would display the description, a button as well as the example HTML code. The CSS will be included in the <code>style</code> element of the document.
+<p>Would display the description, a rendered button as well as the example HTML code. The CSS will be included in the <code>style</code> element of the document.
 
 </p>
 <p>See the <code>examples</code> folder for more in-depth examples.
@@ -91,5 +79,6 @@ Provides extra visual weight and identifies the primary action in a set of butto
 
 </p>
 <h2>Acknowledgements</h2>
-<p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/mbrevoort/docco-husky">Docco Husky</a> by Mike Brevoort were also of great help to this project. <a href="https://github.com/kneath/kss">Knyle Style Sheets</a> is a similar project written in Ruby, and has also been an inspiration to StyleDocco.
-</p></div></div></div></div></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco) at Sat Mar 24 2012 19:39:17 GMT+0100 (CET). -->
+<p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/mbrevoort/docco-husky">Docco Husky</a> by Mike Brevoort were also of great help to this project. <a href="https://github.com/kneath/kss">Knyle Style Sheets</a>, a similar project written in Ruby, has also been an inspiration to StyleDocco.
+</p>
+</div></div></div></div><script src="./docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
