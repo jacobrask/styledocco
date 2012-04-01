@@ -12,18 +12,21 @@ class Language
     # We match only comments without any code on the same line.
     @regexs.single = new RegExp('^' + @symbols.single) if @symbols.single
     # Build regex's by splitting string and then joining with escape chars.
-    @regexs.multi_start = new RegExp '^\\' + @symbols.multi[0].split('').join('\\')
-    @regexs.multi_end = new RegExp '\\' + @symbols.multi[1].split('').join('\\')
+    @regexs.multiStart = new RegExp '^\\' + @symbols.multi[0].split('').join('\\')
+    @regexs.multiEnd = new RegExp '\\' + @symbols.multi[1].split('').join('\\')
 
   # Check type of string.
   checkType: (str) ->
-    if str.match(@regexs.multi_start) and str.match(@regexs.multi_end) \
-    or @regexs.single? and str.match @regexs.single
+    # Check for multi-line comment symbols first to avoid matching single-line
+    # comment symbols in multi-line blocks.
+    if str.match(@regexs.multiStart) and str.match(@regexs.multiEnd)
       'single'
-    else if str.match @regexs.multi_start
+    else if str.match @regexs.multiStart
       'multistart'
-    else if str.match @regexs.multi_end
+    else if str.match @regexs.multiEnd
       'multiend'
+    else if @regexs.single? and str.match @regexs.single
+      'single'
     else
       'code'
 
