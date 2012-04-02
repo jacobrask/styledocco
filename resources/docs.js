@@ -19,6 +19,10 @@ var styleSheet = toArray(document.styleSheets)
   .filter(function(ss) {
     return ss.href == null
   })[0];
+
+// Abort if no suiteable stylesheet was found.
+if (!styleSheet) return;
+
 var processedStyles = toArray(styleSheet.cssRules)
   .filter(function(rule) {
     // Keep only rules with pseudo classes.
