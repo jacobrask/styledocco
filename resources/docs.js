@@ -1,5 +1,6 @@
 // Scans your stylesheet for pseudo classes and adds a class with the same name.
 // Thanks to Knyle Style Sheets for the idea.
+// TODO: Add support for styles inside media queries.
 
 (function() {
 
@@ -20,8 +21,8 @@ var styleSheet = toArray(document.styleSheets)
   })[0];
 var processedStyles = toArray(styleSheet.cssRules)
   .filter(function(rule) {
-    // Keep only rules with pseudo classes
-    return rule.selectorText.match(pseudoRe);
+    // Keep only rules with pseudo classes.
+    return rule.selectorText && rule.selectorText.match(pseudoRe);
   })
   .map(function(rule) {
     // Replace : with . and encoded :
