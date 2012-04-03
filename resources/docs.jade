@@ -23,8 +23,10 @@ html
                   #{link.name}
       .styledocco-main
         each section, i in sections
-          .styledocco-section
-            .styledocco-docs !{section.docs}
+          .styledocco-section(id="section-#{i + 1}")
+            .styledocco-docs
+              a(class='pilcrow', href="#section-#{i + 1}") &#182;
+              !{section.docs}
             if section.code
               .styledocco-code
                 pre

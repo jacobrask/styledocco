@@ -267,6 +267,14 @@ pre + .styledocco-example {
     margin: 0 !important;
     line-height: 1.1 !important;
 }
+.styledocco-docs > .pilcrow {
+    position: absolute;
+    right: 0; top: 0;
+    opacity: .5;
+}
+.styledocco-docs > .pilcrow:hover {
+  opacity: 1;
+}
 .styledocco-docs > pre {
     max-height: 200px;
     overflow-y: auto;
