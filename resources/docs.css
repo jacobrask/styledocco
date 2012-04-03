@@ -24,7 +24,7 @@ body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 .styledocco-sidebar,
-.styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol {
+.styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol, .styledocco-docs > a {
     font-size: 12px;
 }
 .styledocco-docs > h1, .styledocco-docs > h2, .styledocco-docs > h3,
@@ -270,10 +270,8 @@ pre + .styledocco-example {
 .styledocco-docs > .pilcrow {
     position: absolute;
     right: 0; top: 0;
-    opacity: .5;
-}
-.styledocco-docs > .pilcrow:hover {
-  opacity: 1;
+    text-decoration: none;
+    font-weight: bold;
 }
 .styledocco-docs > pre {
     max-height: 200px;
