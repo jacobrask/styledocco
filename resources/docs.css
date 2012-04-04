@@ -272,6 +272,10 @@ pre + .styledocco-example {
     right: 0; top: 0;
     text-decoration: none;
     font-weight: bold;
+    opacity: .5;
+}
+.styledocco-docs > .pilcrow:hover {
+    opacity: 1;
 }
 .styledocco-docs > pre {
     max-height: 200px;

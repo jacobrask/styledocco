@@ -24,7 +24,7 @@ body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 .styledocco-sidebar,
-.styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol {
+.styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol, .styledocco-docs > a {
     font-size: 12px;
 }
 .styledocco-docs > h1, .styledocco-docs > h2, .styledocco-docs > h3,
@@ -270,10 +270,12 @@ pre + .styledocco-example {
 .styledocco-docs > .pilcrow {
     position: absolute;
     right: 0; top: 0;
+    text-decoration: none;
+    font-weight: bold;
     opacity: .5;
 }
 .styledocco-docs > .pilcrow:hover {
-  opacity: 1;
+    opacity: 1;
 }
 .styledocco-docs > pre {
     max-height: 200px;
@@ -344,7 +346,7 @@ The code highlighting color scheme is based on GitHub's code colors, but slightl
 .styledocco-code .class, .styledocco-docs > pre .class {
     color: #328;
 }
-</style><link rel="stylesheet" href="../docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="../index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="../resources/docs.html">docs
+</style><link rel="stylesheet" href="../docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="../index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="../html/resources-docs.html">docs
 </a></li></ul></div><div class="styledocco-main"><div id="section-1" class="styledocco-section"><div class="styledocco-docs"><a href="#section-1" class="pilcrow">&#182;</a><h1>StyleDocco default styles</h1>
 <p>This is the default stylesheet for StyleDocco. It also serves as an example of the documentation syntax. 
 </p>
@@ -404,7 +406,7 @@ The code highlighting color scheme is based on GitHub's code colors, but slightl
     <span class="rule"><span class="attribute">-webkit-font-smoothing</span>:<span class="value"> subpixel-antialiased</span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-sidebar</span>,
-<span class="class">.styledocco-docs</span> > <span class="tag">p</span>, <span class="class">.styledocco-docs</span> > <span class="tag">ul</span>, <span class="class">.styledocco-docs</span> > <span class="tag">ol</span> <span class="rules">{
+<span class="class">.styledocco-docs</span> > <span class="tag">p</span>, <span class="class">.styledocco-docs</span> > <span class="tag">ul</span>, <span class="class">.styledocco-docs</span> > <span class="tag">ol</span>, <span class="class">.styledocco-docs</span> > <span class="tag">a</span> <span class="rules">{
     <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">12</span>px</span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-docs</span> > <span class="tag">h1</span>, <span class="class">.styledocco-docs</span> > <span class="tag">h2</span>, <span class="class">.styledocco-docs</span> > <span class="tag">h3</span>,
@@ -657,10 +659,12 @@ The code highlighting color scheme is based on GitHub's code colors, but slightl
 <span class="class">.styledocco-docs</span> > <span class="class">.pilcrow</span> <span class="rules">{
     <span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span>;</span>
     <span class="rule"><span class="attribute">right</span>:<span class="value"> <span class="number">0</span></span>;</span> <span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">0</span></span>;</span>
+    <span class="rule"><span class="attribute">text-decoration</span>:<span class="value"> none</span>;</span>
+    <span class="rule"><span class="attribute">font-weight</span>:<span class="value"> bold</span>;</span>
     <span class="rule"><span class="attribute">opacity</span>:<span class="value"> .<span class="number">5</span></span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-docs</span> > <span class="class">.pilcrow</span><span class="pseudo">:hover</span> <span class="rules">{
-  <span class="rule"><span class="attribute">opacity</span>:<span class="value"> <span class="number">1</span></span>;</span>
+    <span class="rule"><span class="attribute">opacity</span>:<span class="value"> <span class="number">1</span></span>;</span>
 <span class="rule">}</span></span>
 <span class="class">.styledocco-docs</span> > <span class="tag">pre</span> <span class="rules">{
     <span class="rule"><span class="attribute">max-height</span>:<span class="value"> <span class="number">200</span>px</span>;</span>
