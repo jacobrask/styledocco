@@ -40,12 +40,17 @@ getSections = (filename) ->
 
 # Generate the HTML document and write to file.
 generateFile = (source, data) ->
-  source = 'index.html' if source.match /readme/i
-  dest = _.makeDestination source
+  if source.match /readme/i
+    source = 'index.html'
+    dest = _.makeDestination source
+    root = './'
+  else
+    dest = 'html/' + _.makeDestination source
+    root = '../'
   data.project = {
     name: options.name
     menu
-    root: _.buildRootPath source
+    root
   }
   render = (data) ->
     template = fs.readFileSync templateFile, 'utf-8'
@@ -86,7 +91,7 @@ menu = {}
 for file in files
   link =
     name: path.basename(file, path.extname file)
-    href: _.makeDestination file
+    href: 'html/' + _.makeDestination file
   parts = file.split('/').splice(1)
   key = if parts.length > 1 then parts[0] else './'
   if menu[key]?
