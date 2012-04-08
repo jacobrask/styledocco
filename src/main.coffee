@@ -57,7 +57,7 @@ generateFile = (source, data) ->
     html = jade.compile(template, filename: templateFile)(data)
     console.log "styledocco: #{source} -> #{path.join options.out, dest}"
     writeFile dest, html
-  if langs.isSupported source
+  if langs.isSupported(source) and options.preprocessor isnt 'none'
     # Run source through suitable CSS preprocessor.
     lang = langs.getLanguage source
     lang.compile source, options.preprocessor, (err, css) ->

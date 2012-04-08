@@ -48,6 +48,8 @@ class Language
       else
         preCmd = "#{@preprocessor.cmd} #{@preprocessor.args.join ' '} #{filename}"
       exec preCmd, (err, stdout, stderr) ->
+        if err? or stderr isnt ''
+          return cb new Error("There was an error processing #{filename}.\n#{err.message or stderr}")
         cb err, stdout
     else
       fs.readFile filename, 'utf-8', (err, data) ->
