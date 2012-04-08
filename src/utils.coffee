@@ -21,6 +21,6 @@ exports.makeDestination = (file) ->
 # Find first file matching `re` in `dir`.
 exports.findFile = (dir, re) ->
   return null unless fs.statSync(dir).isDirectory()
-  file = fs.readdirSync(dir).filter((file) -> file.match re)?[0]
+  file = fs.readdirSync(dir).sort().filter((file) -> file.match re)?[0]
   return null unless file?
   path.join dir, file

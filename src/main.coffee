@@ -105,7 +105,12 @@ readme = _.findFile(options.in, /^readme/i) \
       or _.findFile(options.resources, /^readme/i) \
       or path.resolve(__dirname, '../resources/README.md')
 
-sections = [ docs: marked fs.readFileSync(readme, 'utf-8') ]
+readmeText =
+  if path.extname(readme) is '.md'
+    marked fs.readFileSync(readme, 'utf-8')
+  else
+    fs.readFileSync(readme, 'utf-8')
+sections = [ docs: readmeText ]
 generateFile readme, { menu, sections, title: '', description: '' }
 
 # Generate documentation files.
