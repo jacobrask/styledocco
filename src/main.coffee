@@ -54,7 +54,7 @@ generateFile = (source, data) ->
   }
   render = (data) ->
     template = fs.readFileSync templateFile, 'utf-8'
-    html = jade.compile(template, filename: templateFile)(data)
+    html = jade.compile(template, filename: templateFile, pretty: on)(data)
     console.log "styledocco: #{source} -> #{path.join options.out, dest}"
     writeFile dest, html
   if langs.isSupported(source) and options.preprocessor isnt 'none'
