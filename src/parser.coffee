@@ -49,7 +49,7 @@ makeSections = exports.makeSections = (blocks) ->
     # code through highlight.js.
     .map((block) ->
       docs: marked.lexer block.docs
-      code: highlight.highlight('css', block.code).value
+      code: styleHighlighter block.code
     )
     .map(addDocExamples, [])
     .reduce(splitter, [])
@@ -97,3 +97,8 @@ splitter = (sections, cur, i) ->
 parser = (block) ->
   docs: _.trimNewLines marked.parser block.docs
   code: _.trimNewLines block.code
+
+
+# Highlight CSS code.
+styleHighlighter = (code) ->
+  highlight.highlight('css', code).value
