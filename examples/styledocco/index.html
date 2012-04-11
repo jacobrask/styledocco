@@ -1,5 +1,22 @@
-<!DOCTYPE html><html><head><title>StyleDocco</title><meta charset="utf-8"><link rel="stylesheet" href="./docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><ul class="styledocco-nav"><li><a href="./html/resources-docs.html">docs
-</a></li></ul></div><div class="styledocco-main"><div id="section-1" class="styledocco-section"><div class="styledocco-docs"><a href="#section-1" class="pilcrow">&#182;</a><pre><code> _______ __         __        _____
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StyleDocco</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./docs.css">
+  </head>
+  <body>
+    <div class="styledocco-container">
+      <div class="styledocco-sidebar"><a href="./index.html" class="styledocco-brand">StyleDocco</a><strong class="styledocco-nav-heading">0</strong>
+        <ul class="styledocco-nav">
+          <li><a href="./html/resources-docs.html">docs
+</a>
+          </li>
+        </ul>
+      </div>
+      <div class="styledocco-main">
+        <div id="section-1" class="styledocco-section">
+          <div class="styledocco-docs"><a href="#section-1" class="pilcrow">&#182;</a><pre><code> _______ __         __        _____
 |     __|  |_.--.--|  |-----.|     \-----.----.----.-----.
 |__     |   _|  |  |  |  -__||  --  | _  |  __|  __|  _  |
 |_______|____|___  |__|_____||_____/_____|____|____|_____|
@@ -47,7 +64,8 @@
 <li><code>--name</code>, <code>-n</code>      Name of the project <em>(required)</em></li>
 <li><code>--out</code>, <code>-o</code>       Output directory <em>(default: &quot;docs&quot;)</em></li>
 <li><code>--resources</code>, <code>-s</code> Directory for custom template, CSS and JavaScript. Can be the same as the output directory if you don&#39;t want to overwrite your changes. StyleDocco defaults will be used for any required file not found in this directory. <em>(optional)</em></li>
-<li><code>--preprocessor</code>    Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
+<li><code>--preprocessor</code>    Custom preprocessor command. To disable preprocessing, use <code>none</code>. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
+<li><code>--include</code>         Prepend specified CSS file to the documentation stylesheet. <em>(optional)</em> (ex: <code>--include mysite.css</code>)</li>
 </ul>
 <h3>Usage examples</h3>
 <p>Generate documentation for <em>My Project</em> in the <code>docs</code> folder, from the files in the <code>css</code> directory.
@@ -82,4 +100,11 @@
 <p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/mbrevoort/docco-husky">Docco Husky</a> by Mike Brevoort were also of great help to this project. <a href="https://github.com/kneath/kss">Knyle Style Sheets</a>, a similar project written in Ruby, has also been an inspiration to StyleDocco.
 </p>
 
-</div></div></div></div><script src="./docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./docs.js"></script>
+  </body>
+</html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->

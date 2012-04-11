@@ -1,4 +1,9 @@
-<!DOCTYPE html><html><head><title>less/buttons.less | Twitter Bootstrap</title><meta charset="utf-8"><style>.clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>less/buttons.less | Twitter Bootstrap</title>
+    <meta charset="utf-8">
+    <style>.clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";}
 .clearfix:after{clear:both;}
 .btn{display:inline-block;padding:4px 10px 4px;margin-bottom:0;font-size:13px;line-height:18px;color:#333333;text-align:center;text-shadow:0 1px 1px rgba(255, 255, 255, 0.75);vertical-align:middle;background-color:#f5f5f5;background-image:-moz-linear-gradient(top, #ffffff, #e6e6e6);background-image:-ms-linear-gradient(top, #ffffff, #e6e6e6);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));background-image:-webkit-linear-gradient(top, #ffffff, #e6e6e6);background-image:-o-linear-gradient(top, #ffffff, #e6e6e6);background-image:linear-gradient(top, #ffffff, #e6e6e6);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);border-color:#e6e6e6 #e6e6e6 #bfbfbf;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);border:1px solid #ccc;border-bottom-color:#bbb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);-moz-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);cursor:pointer;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);*margin-left:.3em;}.btn:hover,.btn:active,.btn.active,.btn.disabled,.btn[disabled]{background-color:#e6e6e6;}
 .btn:active,.btn.active{background-color:#cccccc \9;}
@@ -29,13 +34,34 @@
 button.btn,input[type="submit"].btn{*padding-top:2px;*padding-bottom:2px;}button.btn::-moz-focus-inner,input[type="submit"].btn::-moz-focus-inner{padding:0;border:0;}
 button.btn.large,input[type="submit"].btn.large{*padding-top:7px;*padding-bottom:7px;}
 button.btn.small,input[type="submit"].btn.small{*padding-top:3px;*padding-bottom:3px;}
-</style><link rel="stylesheet" href="../docs.css"></head><body><div class="styledocco-container"><div class="styledocco-sidebar"><a href="../index.html" class="styledocco-brand">Twitter Bootstrap</a><ul class="styledocco-nav"><li><a href="../html/less-buttons.html">buttons
-</a></li></ul></div><div class="styledocco-main"><div id="section-1" class="styledocco-section"><div class="styledocco-docs"><a href="#section-1" class="pilcrow">&#182;</a><h1> Button Styles</h1>
+</style>
+    <link rel="stylesheet" href="../docs.css">
+  </head>
+  <body>
+    <div class="styledocco-container">
+      <div class="styledocco-sidebar"><a href="../index.html" class="styledocco-brand">Twitter Bootstrap</a><strong class="styledocco-nav-heading">0</strong>
+        <ul class="styledocco-nav">
+          <li><a href="../html/less-buttons.html">buttons
+</a>
+          </li>
+        </ul>
+      </div>
+      <div class="styledocco-main">
+        <div id="section-1" class="styledocco-section">
+          <div class="styledocco-docs"><a href="#section-1" class="pilcrow">&#182;</a><h1> Button Styles</h1>
 <p> As a convention, buttons should only be used for actions while hyperlinks are to be used for objects. For instance, &quot;Download&quot; should be a button while &quot;recent activity&quot; should be a link.
  Button styles can be applied to anything with the <code>btn</code> class applied. However, typically you&#39;ll want to apply these to only <code>a</code> and <code>button</code> elements.
 </p>
-</div><div class="styledocco-code"><pre><code><span class="at_rule">@<span class="keyword">import</span> <span class="string">"variables.less"</span></span>;
-<span class="at_rule">@<span class="keyword">import</span> <span class="string">"mixins.less"</span></span>;</code></pre></div></div><div id="section-2" class="styledocco-section"><div class="styledocco-docs"><a href="#section-2" class="pilcrow">&#182;</a><h2> Base styles</h2>
+
+          </div>
+          <div class="styledocco-code">
+            <pre><code><span class="at_rule">@<span class="keyword">import</span> <span class="string">"variables.less"</span></span>;
+<span class="at_rule">@<span class="keyword">import</span> <span class="string">"mixins.less"</span></span>;</code>
+            </pre>
+          </div>
+        </div>
+        <div id="section-2" class="styledocco-section">
+          <div class="styledocco-docs"><a href="#section-2" class="pilcrow">&#182;</a><h2> Base styles</h2>
 <p> Standard gray button with gradient
 
 </p>
@@ -44,7 +70,10 @@ button.btn.small,input[type="submit"].btn.small{*padding-top:3px;*padding-bottom
 <div class="styledocco-example"><button class="btn" disabled>Disabled</button>  </div><pre><code><span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn"</span> <span class="attribute">disabled</span>></span>Disabled<span class="tag">&lt;/<span class="title">button</span>></span>  </code></pre>
 <p> Add the <code>disabled</code> class to links and the <code>disabled</code> attribute for <code>button</code> elements.
 </p>
-</div><div class="styledocco-code"><pre><code>.btn {
+
+          </div>
+          <div class="styledocco-code">
+            <pre><code>.btn {
   display: inline-block;
   padding: 4px 10px 4px;
   margin-bottom: 0; // For input.btn
@@ -101,13 +130,21 @@ button.btn.small,input[type="submit"].btn.small{*padding-top:3px;*padding-bottom
   background-color: darken(@white, 10%);
   .opacity(65);
   .box-shadow(none);
-}</code></pre></div></div><div id="section-3" class="styledocco-section"><div class="styledocco-docs"><a href="#section-3" class="pilcrow">&#182;</a><h2> Multiple sizes</h2>
+}</code>
+            </pre>
+          </div>
+        </div>
+        <div id="section-3" class="styledocco-section">
+          <div class="styledocco-docs"><a href="#section-3" class="pilcrow">&#182;</a><h2> Multiple sizes</h2>
 <p> Fancy larger or smaller buttons?
 </p>
 <div class="styledocco-example"><button class="btn btn-large">Large</button></div><pre><code><span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn btn-large"</span>></span>Large<span class="tag">&lt;/<span class="title">button</span>></span></code></pre>
 <div class="styledocco-example"><button class="btn btn-small">Small</button></div><pre><code><span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn btn-small"</span>></span>Small<span class="tag">&lt;/<span class="title">button</span>></span></code></pre>
 <div class="styledocco-example"><button class="btn btn-mini">Mini</button></div><pre><code><span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn btn-mini"</span>></span>Mini<span class="tag">&lt;/<span class="title">button</span>></span></code></pre>
-</div><div class="styledocco-code"><pre><code>.btn-large {
+
+          </div>
+          <div class="styledocco-code">
+            <pre><code>.btn-large {
   padding: 9px 14px;
   font-size: @baseFontSize + 2px;
   line-height: normal;
@@ -130,7 +167,12 @@ button.btn.small,input[type="submit"].btn.small{*padding-top:3px;*padding-bottom
   <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">2</span>px <span class="number">6</span>px</span>;</span>
   <span class="rule"><span class="attribute">font-size</span>:<span class="value"> @baseFontSize - <span class="number">2</span>px</span>;</span>
   <span class="rule"><span class="attribute">line-height</span>:<span class="value"> @baseLineHeight - <span class="number">4</span>px</span>;</span>
-<span class="rule">}</span></span></code></pre></div></div><div id="section-4" class="styledocco-section"><div class="styledocco-docs"><a href="#section-4" class="pilcrow">&#182;</a><h2> Alternate button styles</h2>
+<span class="rule">}</span></span></code>
+            </pre>
+          </div>
+        </div>
+        <div id="section-4" class="styledocco-section">
+          <div class="styledocco-docs"><a href="#section-4" class="pilcrow">&#182;</a><h2> Alternate button styles</h2>
 <div class="styledocco-example"><button class="btn btn-primary">Primary</button>  </div><pre><code><span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn btn-primary"</span>></span>Primary<span class="tag">&lt;/<span class="title">button</span>></span>  </code></pre>
 <p> Provides extra visual weight and identifies the primary action in a set of buttons.
 </p>
@@ -149,7 +191,10 @@ button.btn.small,input[type="submit"].btn.small{*padding-top:3px;*padding-bottom
 <div class="styledocco-example"><button class="btn btn-inverse">Inverse</button>  </div><pre><code><span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">"btn btn-inverse"</span>></span>Inverse<span class="tag">&lt;/<span class="title">button</span>></span>  </code></pre>
 <p> Alternate dark gray button, not tied to a semantic action or use
 </p>
-</div><div class="styledocco-code"><pre><code> // Set text color
+
+          </div>
+          <div class="styledocco-code">
+            <pre><code> // Set text color
 .btn-primary,
 .btn-primary:hover,
 .btn-warning,
@@ -218,4 +263,12 @@ input[type="submit"].btn {
     *padding-top: 3px;
     *padding-bottom: 3px;
   }
-}</code></pre></div></div></div></div><script src="../docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+}</code>
+            </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../docs.js"></script>
+  </body>
+</html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
