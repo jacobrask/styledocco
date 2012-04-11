@@ -87,18 +87,7 @@ files = sources.
     return true
   ).sort()
 
-# Make `link` objects for the menu.
-menu = {}
-for file in files
-  link =
-    name: path.basename(file, path.extname file)
-    href: 'html/' + _.makeDestination file
-  parts = file.split('/').splice(1)
-  key = if parts.length > 1 then parts[0] else './'
-  if menu[key]?
-    menu[key].push link
-  else
-    menu[key] = [ link ]
+menu = _.makeMenu files
 
 # Look for a README file and generate an index.html.
 readme = _.findFile(options.in, /^readme/i) \
