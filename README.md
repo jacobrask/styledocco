@@ -42,6 +42,7 @@ If your project includes a `README` file, it will be used as the base for an `in
  * `--out`, `-o`       Output directory *(default: "docs")*
  * `--resources`, `-s` Directory for custom template, CSS and JavaScript. Can be the same as the output directory if you don't want to overwrite your changes. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
  * `--preprocessor`    Custom preprocessor command. To disable precompiling, use `none`. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
+ * `--include`         Prepend specified CSS file to the documentation stylesheet. *(optional)* (ex: `--include mysite.css`)
 
 ### Usage examples
 

@@ -18,6 +18,7 @@ options = optimist
   .describe('resources', 'Directory for static resources').alias('s', 'resources')
     .default('resources', path.resolve(__dirname, '../resources'))
   .describe('preprocessor', 'Custom preprocessor command')
+  .describe('include', 'CSS to include on all pages')
   .argv
 options.in = options._[0] or './'
 
@@ -126,3 +127,10 @@ writeStaticFile = (fileName) ->
 
 writeStaticFile 'docs.css'
 writeStaticFile 'docs.js'
+
+# Prepend custom CSS specified with `--include` to docs.css
+if options.include?
+  customCss = fs.readFileSync path.join(options.include), 'utf8'
+  fd = fs.openSync path.join(options.out, 'docs.css'), 'w', 666
+  fs.writeSync fd, customCss, 0
+  fs.close fd
