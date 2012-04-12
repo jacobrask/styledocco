@@ -39,10 +39,6 @@ class Language
   # Compile to CSS.
   compile: (filename, customPreprocessor, cb) ->
     if @preprocessor? or customPreprocessor
-      # Do not attempt to compile partial files
-      if 'nocompile' of @preprocessor and !!filename.match @preprocessor.nocompile
-          cb null, ''
-          return
       if customPreprocessor?
         preCmd = "#{customPreprocessor} #{filename}"
       else
@@ -61,9 +57,9 @@ class Language
 languages =
   '.css':  new Language({ multi: [ "/*", "*/" ] })
   '.scss': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'scss', args: [ '-t', 'compressed' ], nocompile: /(?:\/|^)_/ })
+                        { cmd: 'scss', args: [ '-t', 'compressed' ]})
   '.sass': new Language({ single: '//', multi: [ "/*", "*/" ] },
-                        { cmd: 'sass', args: [ '-t', 'compressed' ], nocompile: /(?:\/|^)_/ })
+                        { cmd: 'sass', args: [ '-t', 'compressed' ]})
   '.less': new Language({ single: '//', multi: [ "/*", "*/" ] },
                         { cmd: 'lessc', args: [ '-x' ] })
   '.styl': new Language({ single: '//', multi: [ "/*", "*/" ] },
