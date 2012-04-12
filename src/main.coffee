@@ -30,6 +30,12 @@ getResourcePath = (fileName) ->
 
 templateFile = getResourcePath 'docs.jade'
 
+customCss =
+  if options.include?
+    fs.readFileSync options.include, 'utf8'
+  else
+    ''
+
 # Get sections of matching doc/code blocks.
 getSections = (filename) ->
   lang = langs.getLanguage filename
@@ -63,10 +69,10 @@ generateFile = (source, data) ->
     lang = langs.getLanguage source
     lang.compile source, options.preprocessor, (err, css) ->
       throw err if err?
-      data.css = css
+      data.css = css + customCss
       render data
   else
-    data.css = ''
+    data.css = customCss
     render data
 
 # Write a file to the output dir.
@@ -116,10 +122,3 @@ writeStaticFile = (fileName) ->
 
 writeStaticFile 'docs.css'
 writeStaticFile 'docs.js'
-
-# Prepend custom CSS specified with `--include` to docs.css
-if options.include?
-  customCss = fs.readFileSync path.join(options.include), 'utf8'
-  fd = fs.openSync path.join(options.out, 'docs.css'), 'w', 666
-  fs.writeSync fd, customCss, 0
-  fs.close fd
