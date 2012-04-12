@@ -39,3 +39,4 @@ exports.makeMenu = (files) ->
       menu[key].push link
     else
       menu[key] = [ link ]
+  menu
