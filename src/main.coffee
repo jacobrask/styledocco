@@ -11,6 +11,8 @@ _      = require './utils'
 
 marked.setOptions gfm: on
 
+if optimist.argv.version? then return console.log "StyleDocco 0.3.5"
+
 options = optimist
   .usage('Usage: $0 [options] [INPUT]')
   .describe('name', 'Name of the project').alias('n', 'name').demand('name')
@@ -19,6 +21,7 @@ options = optimist
     .default('resources', path.resolve(__dirname, '../resources'))
   .describe('preprocessor', 'Custom preprocessor command')
   .describe('include', 'CSS to include on all pages')
+  .describe('version', 'Display StyleDocco version')
   .argv
 options.in = options._[0] or './'
 
