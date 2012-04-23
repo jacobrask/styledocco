@@ -44,7 +44,7 @@ class Language
       else
         preCmd = "#{@preprocessor.cmd} #{@preprocessor.args.join ' '} #{filename}"
       exec preCmd, (err, stdout, stderr) ->
-        if err? or stderr isnt ''
+        if err?
           return cb new Error("There was an error processing #{filename}.\n#{err.message or stderr}")
         cb err, stdout
     else
