@@ -9,6 +9,7 @@ html
     if css
       style !{css}
     link(rel='stylesheet', href="#{project.root}docs.css")
+    script(src='#{project.root}docs.js')
   body
     .styledocco-container
       .styledocco-sidebar
@@ -31,5 +32,4 @@ html
               .styledocco-code
                 pre
                   code !{section.code}
-    script(src='#{project.root}docs.js')
 <!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
