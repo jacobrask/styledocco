@@ -15,11 +15,12 @@
     "Jacob Rask <jacob@jacobrask.net>",
     "Mike Brevoort <mike@brevoort.com>",
     "Jeremy Ashkenas" ],
-  "engines": { "node": ">=0.4.0" },
   "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
   "repository": {
     "type": "git",
     "url": "git://github.com/jacobrask/styledocco.git" },
+
+  "engines": { "node": ">=0.4.0" },
   "dependencies": {
     "findit": "0.x.x",
     "highlight.js": "1.1.x",
@@ -29,7 +30,10 @@
     "optimist": "0.x.x" },
   "devDependencies": {
     "coffee-script": "1.3.x",
-    "nodeunit": "0.7.x" },
+    "nodeunit": "0.7.x",
+    "uglify-js": "1.2.x" },
+
+  "prepublish": "make build",
   "main": "./lib/main",
   "bin": "./bin/styledocco",
   "scripts": {
