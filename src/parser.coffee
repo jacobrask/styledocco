@@ -58,7 +58,7 @@ makeSections = exports.makeSections = (blocks) ->
 
 # # Internal functions.
 
-# If we encounter code blocks in documentation, add example HTML output and
+# If we encounter code blocks in documentation, add example HTML and
 # highlight the code snippet.
 addDocExamples = (block) ->
   block.docs = block.docs.reduce(
@@ -95,6 +95,9 @@ splitter = (sections, cur, i) ->
 
 # Run through marked parser to generate HTML.
 parser = (block) ->
+  # Work around a bug where the links object is discarded in addDocExamples,
+  # causing problems with marked
+  block.docs.links = {} unless block.docs.links?
   docs: _.trimNewLines marked.parser block.docs
   code: _.trimNewLines block.code
 
