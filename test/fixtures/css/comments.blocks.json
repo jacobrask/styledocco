@@ -1,0 +1,9 @@
+[
+  {
+    "docs": "",
+    "code": "body {\n    background: white;\n}\n\n"
+  }, {
+    "docs": "\ninput[type=\"text\"] {\n    background: white;\n}\n\n",
+    "code": "\n"
+  }
+]

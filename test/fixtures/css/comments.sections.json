@@ -1,0 +1,6 @@
+[
+  {
+    "docs": "<p>input[type=&quot;text&quot;] {\n    background: white;\n}\n\n</p>",
+    "code": "<span class=\"tag\">body</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">background</span>:<span class=\"value\"> white</span>;</span>\n<span class=\"rule\">}</span></span>"
+  }
+]
