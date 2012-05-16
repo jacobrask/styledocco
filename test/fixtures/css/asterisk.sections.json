@@ -1,1 +1,6 @@
-[{ "docs": "<div class=\"styledocco-example\"><div>*</div>\n<div>*</div></div><pre><code><span class=\"tag\">&lt;<span class=\"title\">div</span>></span>*<span class=\"tag\">&lt;/<span class=\"title\">div</span>></span>\n<span class=\"tag\">&lt;<span class=\"title\">div</span>></span>*<span class=\"tag\">&lt;/<span class=\"title\">div</span>></span></code></pre>","code":""}]
+[
+  {
+    "docs": "<div class=\"styledocco-example\"><div>*</div>\n<div>*</div></div><pre><code><span class=\"tag\">&lt;<span class=\"title\">div</span>></span>*<span class=\"tag\">&lt;/<span class=\"title\">div</span>></span>\n<span class=\"tag\">&lt;<span class=\"title\">div</span>></span>*<span class=\"tag\">&lt;/<span class=\"title\">div</span>></span></code></pre>",
+    "code": "" 
+  }
+]

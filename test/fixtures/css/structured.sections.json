@@ -1,2 +1,15 @@
-[{"docs":"<h1>Structured</h1>\n<p>An example of a CSS file using most of StyleDocco&#39;s features.\n\n</p>","code":""},
-{"docs": "<h2>Another heading</h2>\n<p>Lorem ipsum\n</p>\n<p>Some more text\n\n</p>","code":"<span class=\"tag\">body</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">background</span>:<span class=\"value\"> white</span>;</span>\n    <span class=\"rule\"><span class=\"attribute\">color</span>:<span class=\"value\"> black</span>;</span>\n<span class=\"rule\">}</span></span>"},{"docs":"<h2>Second level header</h2>\n<p>Some random text.\n\n</p>","code":""},{"docs":"<h2>Another section in the same comment block.</h2>\n<p>Some <b>HTML</b> that should not be escaped.\n\n</p>\n<p> This is in the same section.\n\n</p>\n<div class=\"styledocco-example\">And here is some code</div><pre><code><span class=\"keyword\">And</span> here <span class=\"keyword\">is</span> some code</code></pre>\n<div class=\"styledocco-example\">This is also code</div><pre><code>This <span class=\"keyword\">is</span> also code</code></pre>","code":"<span class=\"tag\">p</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">margin</span>:<span class=\"value\"> <span class=\"number\">0</span></span>;</span>\n<span class=\"rule\">}</span></span>\n\n<span class=\"tag\">b</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">font-weight</span>:<span class=\"value\"> italic</span>;</span>\n<span class=\"rule\">}</span></span>"}]
+[
+  {
+    "docs": "<h1>Structured</h1>\n<p>An example of a CSS file using most of StyleDocco&#39;s features.\n\n</p>",
+    "code": ""
+  }, {
+    "docs": "<h2>Another heading</h2>\n<p>Lorem ipsum\n</p>\n<p>Some more text\n\n</p>",
+    "code": "<span class=\"tag\">body</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">background</span>:<span class=\"value\"> white</span>;</span>\n    <span class=\"rule\"><span class=\"attribute\">color</span>:<span class=\"value\"> black</span>;</span>\n<span class=\"rule\">}</span></span>"
+  }, {
+    "docs": "<h2>Second level header</h2>\n<p>Some random text.\n\n</p>",
+    "code": ""
+  }, {
+    "docs":"<h2>Another section in the same comment block.</h2>\n<p>Some <b>HTML</b> that should not be escaped.\n\n</p>\n<p> This is in the same section.\n\n</p>\n<div class=\"styledocco-example\">And here is some code</div><pre><code><span class=\"keyword\">And</span> here <span class=\"keyword\">is</span> some code</code></pre>\n<div class=\"styledocco-example\">This is also code</div><pre><code>This <span class=\"keyword\">is</span> also code</code></pre>",
+    "code": "<span class=\"tag\">p</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">margin</span>:<span class=\"value\"> <span class=\"number\">0</span></span>;</span>\n<span class=\"rule\">}</span></span>\n\n<span class=\"tag\">b</span> <span class=\"rules\">{\n    <span class=\"rule\"><span class=\"attribute\">font-weight</span>:<span class=\"value\"> italic</span>;</span>\n<span class=\"rule\">}</span></span>"
+  }
+]

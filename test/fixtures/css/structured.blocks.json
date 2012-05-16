@@ -1,1 +1,12 @@
-[{"docs":" # Structured\nAn example of a CSS file using most of StyleDocco's features.\n \n## Another heading\nLorem ipsum\n","code":"\nbody {\n    background: white;\n    color: black;\n}\n\n"},{"docs":"\nSome more text\n\n## Second level header\nSome random text.\n\n## Another section in the same comment block.\n\nSome <b>HTML</b> that should not be escaped.\n\n","code":"\np {\n    margin: 0;\n}\n\nb {\n    font-weight: italic;\n}\n"},{"docs":" This is in the same section.\n\n```\nAnd here is some code\n```\n\n    This is also code\n\n","code":"\n"}]
+[
+  {
+    "docs": " # Structured\nAn example of a CSS file using most of StyleDocco's features.\n \n## Another heading\nLorem ipsum\n",
+    "code": "\nbody {\n    background: white;\n    color: black;\n}\n\n"
+  }, {
+    "docs": "\nSome more text\n\n## Second level header\nSome random text.\n\n## Another section in the same comment block.\n\nSome <b>HTML</b> that should not be escaped.\n\n",
+    "code": "\np {\n    margin: 0;\n}\n\nb {\n    font-weight: italic;\n}\n"
+  }, {
+    "docs": " This is in the same section.\n\n```\nAnd here is some code\n```\n\n    This is also code\n\n",
+    "code":"\n"
+  }
+]
