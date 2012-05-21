@@ -11,7 +11,8 @@ _      = require './utils'
 
 marked.setOptions gfm: on
 
-if optimist.argv.version? then return console.log "StyleDocco 0.3.5"
+if optimist.argv.version?
+  return console.log "StyleDocco #{require('../package').version}"
 
 options = optimist
   .usage('Usage: $0 [options] [INPUT]')
