@@ -91,7 +91,7 @@ sources = findit.sync options.in
 # Filter out unsupported file types.
 files = sources.
   filter((source) ->
-    return false if source.match /(\/|^)\.[^\.]/ # No hidden files.
+    return false if source.match /(\/|^)\.[^\.\/]/ # No hidden files.
     return false unless langs.isSupported source # Only supported file types.
     return false unless fs.statSync(source).isFile() # Files only.
     return true
