@@ -1,7 +1,11 @@
 all: build
 
-build:
+build: lib resources/docs.js
+
+lib: src
 	./node_modules/.bin/coffee -c -o ./lib ./src
+
+resources/docs.js: src
 	cp -r ./src/vendor/client/*.js ./lib/client/
 	cat ./lib/client/zepto.min.js > /tmp/sdjsmin
 	cat ./lib/client/underscore-min.js >> /tmp/sdjsmin
