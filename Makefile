@@ -6,11 +6,11 @@ build:
 	cat ./lib/client/zepto.min.js > /tmp/sdjsmin
 	cat ./lib/client/underscore-min.js >> /tmp/sdjsmin
 	cat ./lib/client/docs.js >> /tmp/sdjsmin
-	uglifyjs --overwrite /tmp/sdjsmin
+	./node_modules/.bin/uglifyjs --overwrite /tmp/sdjsmin
 	mv /tmp/sdjsmin ./resources/docs.js
 
 test:
-	nodeunit test
+	./node_modules/.bin/nodeunit test
 
 pages:
 	./bin/styledocco -n StyleDocco -o ./ ./resources/docs.css

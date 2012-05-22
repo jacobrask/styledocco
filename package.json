@@ -33,10 +33,10 @@
     "nodeunit": "0.7.x",
     "uglify-js": "1.2.x" },
 
-  "prepublish": "make build",
   "main": "./lib/main",
   "bin": "./bin/styledocco",
   "scripts": {
+    "prepublish": "make build",
     "test": "nodeunit test"
   }
 }
