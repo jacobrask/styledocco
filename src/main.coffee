@@ -22,6 +22,7 @@ options = optimist
     .default('resources', path.resolve(__dirname, '../resources'))
   .describe('preprocessor', 'Custom preprocessor command')
   .describe('include', 'CSS to include on all pages')
+  .describe('verbose', 'Display status messages to stdout')
   .describe('version', 'Display StyleDocco version')
   .argv
 options.in = options._[0] or './'
@@ -40,6 +41,13 @@ customCss =
   else
     ''
 
+log =
+  if options.verbose
+    (str) -> console.log str
+  else
+    () ->
+
+  
 # Get sections of matching doc/code blocks.
 getSections = (filename) ->
   lang = langs.getLanguage filename
@@ -66,7 +74,7 @@ generateFile = (source, data) ->
   render = (data) ->
     template = fs.readFileSync templateFile, 'utf-8'
     html = jade.compile(template, filename: templateFile, pretty: on)(data)
-    console.log "styledocco: #{source} -> #{path.join options.out, dest}"
+    log "styledocco: #{source} -> #{path.join options.out, dest}"
     writeFile dest, html
   if langs.isSupported(source) and options.preprocessor isnt 'none'
     # Run source through suitable CSS preprocessor.
@@ -122,7 +130,7 @@ files.forEach (file) ->
 writeStaticFile = (fileName) ->
   outPath = path.join options.out, fileName
   fs.writeFileSync outPath, fs.readFileSync getResourcePath(fileName), 'utf-8'
-  console.log "styledocco: writing #{outPath}"
+  log "styledocco: writing #{outPath}"
 
 writeStaticFile 'docs.css'
 writeStaticFile 'docs.js'
