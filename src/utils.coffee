@@ -31,12 +31,12 @@ exports.findFile = (dir, re) ->
 
 
 # Make `link` objects for the menu.
-exports.makeMenu = (files) ->
+exports.makeMenu = (files, inPath) ->
   menu = {}
   for file in files
     link =
       name: path.basename(file, path.extname file)
-      href: 'html/' + makeDestination file
+      href: 'html/' + makeDestination file, inPath
     parts = file.split('/').splice(1)
     key = if parts.length > 1 then parts[0] else './'
     if menu[key]?
