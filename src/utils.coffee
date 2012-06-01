@@ -11,10 +11,14 @@ exports.trimNewLines = (str) ->
 
 
 # Build an HTML file name, depending on the source path.
-exports.makeDestination = makeDestination = (file) ->
+exports.makeDestination = makeDestination = (file, inPath) ->
+  relPath = path.relative(
+    path.resolve(inPath)
+    path.resolve(file)
+  )
   path.join(
-    path.dirname(file)
-    path.basename(file, path.extname(file)) + '.html'
+    path.dirname(relPath)
+    path.basename(relPath, path.extname(relPath)) + '.html'
   ).replace(/[\\/]/g, '-')
 
 

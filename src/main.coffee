@@ -52,11 +52,11 @@ getSections = (filename) ->
 # Generate the HTML document and write to file.
 generateFile = (source, data) ->
   if source.match /readme/i
-    source = 'index.html'
-    dest = _.makeDestination source
+    source = path.join options.in, 'index.html'
+    dest = _.makeDestination source, options.in
     root = './'
   else
-    dest = 'html/' + _.makeDestination source
+    dest = 'html/' + _.makeDestination source, options.in
     root = '../'
   data.project = {
     name: options.name
@@ -97,7 +97,7 @@ files = sources.
     return true
   ).sort()
 
-menu = _.makeMenu files
+menu = _.makeMenu files, options.in
 
 # Look for a README file and generate an index.html.
 readme = _.findFile(options.in, /^readme/i) \
