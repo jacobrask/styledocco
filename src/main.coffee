@@ -124,7 +124,8 @@ generateFile readme, { menu, sections, title: '', description: '' }
 # Generate documentation files.
 files.forEach (file) ->
   sections = getSections file
-  generateFile file, { menu, sections, title: file, description: '' }
+  relFile = path.relative(path.resolve(options.in), path.resolve(file))
+  generateFile file, { menu, sections, title: relFile, description: '' }
 
 # Write static files to output directory.
 writeStaticFile = (fileName) ->
