@@ -15,7 +15,7 @@ exports.makeDestination = makeDestination = (file, inPath) ->
   relPath = path.relative(
     path.resolve(inPath)
     path.resolve(file)
-  )
+  ) or inPath
   path.join(
     path.dirname(relPath)
     path.basename(relPath, path.extname(relPath)) + '.html'

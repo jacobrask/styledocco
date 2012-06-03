@@ -114,7 +114,7 @@ readme = _.findFile(options.in, /^readme/i) \
       or path.resolve(__dirname, '../resources/README.md')
 
 readmeText =
-  if path.extname(readme) is '.md'
+  if path.extname(readme) in [ '.md', '.markdown' ]
     marked fs.readFileSync(readme, 'utf-8')
   else
     fs.readFileSync(readme, 'utf-8')
