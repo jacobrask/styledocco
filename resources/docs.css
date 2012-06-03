@@ -19,6 +19,7 @@ body {
     <a href="#">Unstyled link example</a> */
 .styledocco-sidebar,
 .styledocco-docs > :not(.styledocco-example) {
+    box-sizing: content-box;
     margin: 15px 20px;
     color: #334;
     line-height: 1.618;
@@ -31,6 +32,7 @@ body {
 }
 .styledocco-docs > h1, .styledocco-docs > h2, .styledocco-docs > h3,
 .styledocco-docs > h4, .styledocco-docs > h5, .styledocco-docs > h6 {
+    font-weight: bold;
      /* `!important` needed due to `*:not()` above. */
     margin: 25px 20px 0 !important;
     line-height: 1.2 !important;
