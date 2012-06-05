@@ -1,9 +1,6 @@
 all: build
 
-build: lib resources/docs.js
-
-lib: src
-	@./node_modules/.bin/coffee -c -o ./lib ./src
+build: resources/docs.js
 
 resources/docs.js: src
 	@cp -r ./src/vendor/client/*.js ./lib/client/
