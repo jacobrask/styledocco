@@ -29,7 +29,6 @@
     "mkdirp": "0.x.x",
     "optimist": "0.x.x" },
   "devDependencies": {
-    "coffee-script": "1.3.x",
     "nodeunit": "0.7.x",
     "uglify-js": "1.2.x" },
 
