@@ -1,40 +1,56 @@
-fs = require 'fs'
-path = require 'path'
+var fs = require('fs');
+var path = require('path');
+var langs = require('../lib/languages');
+var parser = require('../lib/parser');
 
-langs  = require '../src/languages'
-parser = require '../src/parser'
+var cssDir = "" + __dirname + "/fixtures/css";
 
-cssDir = "#{__dirname}/fixtures/css"
-
-exports["Extract docs+code blocks"] = (test) ->
-  # Compares CSS files in fixtures directory with their corresponding
-  # `.blocks.json` file.
-  cssFiles = fs.readdirSync(cssDir).filter (filename) ->
-    path.extname(filename) is '.css'
-  for file in cssFiles
+exports["Extract docs+code blocks"] = function(test) {
+  var cssFiles = fs.readdirSync(cssDir).filter(function(filename) {
+    return path.extname(filename) === '.css';
+  });
+  var extracted, file, saved;
+  for (var i = 0, len = cssFiles.length; i < len; i++) {
+    file = cssFiles[i];
     extracted = parser.extractBlocks(
-      langs.getLanguage file
-      fs.readFileSync path.join(cssDir, file), 'utf-8'
-    )
-    saved = JSON.parse fs.readFileSync(
-      "#{cssDir}/#{path.basename file, path.extname(file)}.blocks.json", 'utf-8'
-    )
-    test.deepEqual extracted, saved, "Match failed for #{cssDir}/#{file}"
-  test.done()
-
-exports["Get documentation tokens"] = (test) ->
-  cssFiles = fs.readdirSync(cssDir).filter (filename) ->
-    path.extname(filename) is '.css'
-  for file in cssFiles
-    # Stringify and parse back to remove empty elements.
-    extracted = JSON.parse JSON.stringify parser.makeSections(
-      parser.extractBlocks(
-        langs.getLanguage file
-        fs.readFileSync path.join(cssDir, file), 'utf-8'
+      langs.getLanguage(file),
+      fs.readFileSync(path.join(cssDir, file), 'utf-8')
+    );
+    saved = JSON.parse(
+      fs.readFileSync(
+        cssDir + "/" + (path.basename(file, path.extname(file))) + ".blocks.json",
+        'utf-8'
       )
-    )
-    saved = JSON.parse fs.readFileSync(
-      "#{cssDir}/#{path.basename file, path.extname(file)}.sections.json", 'utf-8'
-    )
-    test.deepEqual extracted, saved, "Match failed for #{cssDir}/#{file}"
-  test.done()
+    );
+    test.deepEqual(extracted, saved, "Match failed for " + cssDir + "/" + file);
+  }
+  test.done();
+};
+
+exports["Get documentation tokens"] = function(test) {
+  var cssFiles = fs.readdirSync(cssDir).filter(function(filename) {
+    return path.extname(filename) === '.css';
+  });
+  var extracted, file, saved;
+  for (var i = 0, len = cssFiles.length; i < len; i++) {
+    file = cssFiles[i];
+    extracted = JSON.parse(JSON.stringify(
+      parser.makeSections(
+        parser.extractBlocks(
+          langs.getLanguage(file),
+          fs.readFileSync(
+            path.join(cssDir, file), 'utf-8'
+          )
+        )
+      )
+    ));
+    saved = JSON.parse(
+      fs.readFileSync(
+        cssDir + "/" + (path.basename(file, path.extname(file))) + ".sections.json",
+        'utf-8'
+      )
+    );
+    test.deepEqual(extracted, saved, "Match failed for " + cssDir + "/" + file);
+  }
+  test.done();
+};
