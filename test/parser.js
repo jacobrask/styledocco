@@ -9,7 +9,7 @@ if (typeof window === 'undefined') {
 } else {
   fixturePath = 'fixtures';
 }
-var fixtures = [ 'normal', 'structured' ];
+var fixtures = [ 'asterisk', 'comments', 'invalid', 'normal', 'structured' ];
 
 exports["Separate docs and code blocks"] = function(test) {
   async.forEach(fixtures, function(fixName, cb) {
