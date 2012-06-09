@@ -1,28 +1,32 @@
 var async = require('async');
-var fs = require('fs');
+var io = require('../lib/io');
 var path = require('path');
 var parser = require('../lib/parser');
 
-var cssDir = path.join(__dirname, '/fixtures/css/');
+var fixturePath;
+if (typeof window === 'undefined') {
+  fixturePath = path.join(__dirname, '/fixtures/');
+} else {
+  fixturePath = 'fixtures';
+}
+var fixtures = [ 'normal', 'structured' ];
 
 exports["Extract docs and code blocks"] = function(test) {
-  fs.readdir(cssDir, function(err, files) {
-    if (err != null) throw err;
-    files = files.filter(function(filename) {
-      return path.extname(file === '.css');
+  async.forEach(fixtures, function(fixName, cb) {
+    async.parallel({
+      css: function(cb2) {
+        io.readFile(fixturePath + fixName + '.css', cb2);
+      },
+      blocks: function(cb2) {
+        io.readFile(fixturePath + fixName + '.blocks.json', cb2);
+      }
+    },
+    function(err, res) {
+      if (err != null) throw err;
+      var extracted = parser.separate(res.css);
+      var saved = JSON.parse(res.blocks);
+      test.deepEqual(extracted, saved, "Match failed for " + fixName);
+      cb();
     });
-    async.forEach(files, function(file, cb) {
-      var baseFile = path.join(cssDir, path.basename(file, path.extname(file)));
-      fs.readFile(baseFile + '.css', 'utf-8', function(err, css) {
-        if (err != null) throw err;
-        var extracted = parser(css);
-        fs.readFile(baseFile + '.blocks.json', 'utf-8', function(err, json) {
-          if (err != null) throw err;
-          var saved = JSON.parse(json);
-          test.deepEqual(extracted, saved, "Match failed for " + baseFile);
-          cb();
-        });
-      });
-    }, test.done);
-  });
+  }, test.done);
 };
