@@ -7,7 +7,7 @@ var fixturePath;
 if (typeof window === 'undefined') {
   fixturePath = path.join(__dirname, '/fixtures/');
 } else {
-  fixturePath = 'fixtures';
+  fixturePath = 'fixtures/';
 }
 var fixtures = [ 'asterisk', 'comments', 'invalid', 'normal', 'structured' ];
 
