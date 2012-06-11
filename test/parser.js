@@ -9,13 +9,16 @@ if (typeof window === 'undefined') {
 } else {
   fixturePath = 'fixtures/';
 }
-var fixtures = [ 'asterisk', 'comments', 'invalid', 'normal', 'structured' ];
+var cssFixtures = [ 'asterisk.css', 'comments.css', 'invalid.css',
+                    'normal.css', 'structured.css' ];
+
+var docFixtures = [ 'docs.md' ];
 
 exports["Separate docs and code blocks"] = function(test) {
-  async.forEach(fixtures, function(fixName, cb) {
+  async.forEach(cssFixtures, function(fixName, cb) {
     async.parallel({
       css: function(cb2) {
-        io.readFile(fixturePath + fixName + '.css', cb2);
+        io.readFile(fixturePath + fixName, cb2);
       },
       blocks: function(cb2) {
         io.readFile(fixturePath + fixName + '.blocks.json', cb2);
@@ -32,10 +35,10 @@ exports["Separate docs and code blocks"] = function(test) {
 };
 
 exports["Make sections"] = function(test) {
-  async.forEach(fixtures, function(fixName, cb) {
+  async.forEach(cssFixtures, function(fixName, cb) {
     async.parallel({
       css: function(cb2) {
-        io.readFile(fixturePath + fixName + '.css', cb2);
+        io.readFile(fixturePath + fixName, cb2);
       },
       sections: function(cb2) {
         io.readFile(fixturePath + fixName + '.sections.json', cb2);
@@ -45,6 +48,30 @@ exports["Make sections"] = function(test) {
       if (err != null) throw err;
       var extracted = JSON.parse(JSON.stringify(parser.makeSections(
         parser.separate(res.css)
+      )));
+      var saved = JSON.parse(res.sections);
+      test.deepEqual(extracted, saved, "Match failed for " + fixName);
+      cb();
+    });
+  }, test.done);
+};
+
+
+exports["Parse standalone documentation"] = function(test) {
+  async.forEach(docFixtures, function(fixName, cb) {
+    async.parallel({
+      docs: function(cb2) {
+        io.readFile(fixturePath + fixName, cb2);
+      },
+      sections: function(cb2) {
+        io.readFile(fixturePath + fixName + '.sections.json', cb2);
+      }
+    },
+    function(err, res) {
+      if (err != null) throw err;
+      var extracted = JSON.parse(JSON.stringify(parser.makeSections(
+        [ { docs: res.docs,
+            code: '' } ]
       )));
       var saved = JSON.parse(res.sections);
       test.deepEqual(extracted, saved, "Match failed for " + fixName);
