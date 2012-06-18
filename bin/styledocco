@@ -1,7 +1,32 @@
 #!/usr/bin/env node
 
-var path = require('path');
-var fs = require('fs');
-var lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
+var optimist = require('optimist');
 
-require(lib + '/main.js');
+if (optimist.argv.version != null) {
+  return console.log("StyleDocco " + (require('../package').version));
+}
+
+// Parse command line arguments
+var options = optimist
+  .usage('Usage: $0 [options] [INPUT]')
+  .describe('name', 'Name of the project').alias('n', 'name')
+  .describe('out', 'Output directory').alias('o', 'out')['default']('out', 'docs')
+  .describe('resources', 'Directory for static resources')
+    .alias('s', 'resources')['default']('resources', __dirname + '/../resources')
+  .describe('preprocessor', 'Custom preprocessor command')
+  .describe('include', 'Extra CSS to include in documentation')
+  .describe('verbose', 'Print status messages to stdout')
+  .describe('version', 'Display StyleDocco version')
+  .argv;
+
+options.basePath = options._[0] || './';
+if (options.name == null) {
+  try {
+    // Try to read name from package.json
+    options.name = require(process.cwd() + '/package').name;
+  } catch (ex) {
+    options.name = '';
+  }
+}
+
+require('../cli.js')(options);

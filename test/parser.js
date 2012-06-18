@@ -14,7 +14,7 @@ var cssFixtures = [ 'asterisk.css', 'comments.css', 'invalid.css',
 
 var docFixtures = [ 'docs.md' ];
 
-exports["Separate docs and code blocks"] = function(test) {
+exports["Documentation and code blocks"] = function(test) {
   async.forEach(cssFixtures, function(fixName, cb) {
     async.parallel({
       css: function(cb2) {
@@ -34,7 +34,7 @@ exports["Separate docs and code blocks"] = function(test) {
   }, test.done);
 };
 
-exports["Make sections"] = function(test) {
+exports["Sections"] = function(test) {
   async.forEach(cssFixtures, function(fixName, cb) {
     async.parallel({
       css: function(cb2) {
@@ -57,7 +57,7 @@ exports["Make sections"] = function(test) {
 };
 
 
-exports["Parse standalone documentation"] = function(test) {
+exports["Standalone documentation"] = function(test) {
   async.forEach(docFixtures, function(fixName, cb) {
     async.parallel({
       docs: function(cb2) {

@@ -1,26 +1,29 @@
 !!! 5
 html
   head
-    if title == '' || title == project.name
-      title #{project.name}
-    else
-      title #{title} | #{project.name}
+    title
+      if title && project.name
+        #{title} | #{project.name}
+      else if project.name
+        #{project.name}
+      else if title 
+        #{title}
     meta(charset='utf-8')
     if css
       style !{css}
-    link(rel='stylesheet', href="#{project.root}docs.css")
-    script(src='#{project.root}docs.js')
+    if js
+      script !{js}
   body
     .styledocco-container
       .styledocco-sidebar
-        a.styledocco-brand(href="#{project.root}index.html") #{project.name}
+        a.styledocco-brand(href="index.html") #{project.name}
         each links, folder in project.menu
           unless folder == './'
             strong.styledocco-nav-heading #{folder}
           ul.styledocco-nav
             each link in links
               li
-                a(href="#{project.root}#{link.href}")
+                a(href="#{link.href}")
                   #{link.name}
       .styledocco-main
         each section, i in sections
