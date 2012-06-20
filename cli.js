@@ -1,5 +1,6 @@
 'use strict';
 
+var csso = require('csso');
 var findit = require('findit');
 var fs = require('fs');
 var jade = require('jade');
@@ -112,7 +113,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: css + customCss,
+      css: csso.justDoIt(css + customCss),
       js: js 
     });
   };
