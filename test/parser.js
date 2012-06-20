@@ -1,7 +1,19 @@
-var async = require('async');
-var io = require('../lib/io');
+'use strict';
+
+var fs = require('fs');
 var path = require('path');
 var styledocco = require('../styledocco');
+
+var readFileSync = function(path) {
+  if (typeof window === 'undefined') {
+    return fs.readFileSync(path, 'utf8');
+  } else {
+    var req = new XMLHttpRequest();
+    req.open('GET', path, false);
+    req.send();
+    return req.responseText;
+  }
+};
 
 var fixturePath;
 if (typeof window === 'undefined') {
@@ -9,73 +21,27 @@ if (typeof window === 'undefined') {
 } else {
   fixturePath = 'fixtures/';
 }
-var cssFixtures = [ 'asterisk.css', 'comments.css', 'invalid.css',
+var fixtures = [ 'asterisk.css', 'comments.css', 'invalid.css',
                     'normal.css', 'structured.css' ];
 
-var docFixtures = [ 'docs.md' ];
-
 exports["Documentation and code blocks"] = function(test) {
-  async.forEach(cssFixtures, function(fixName, cb) {
-    async.parallel({
-      css: function(cb2) {
-        io.readFile(fixturePath + fixName, cb2);
-      },
-      blocks: function(cb2) {
-        io.readFile(fixturePath + fixName + '.blocks.json', cb2);
-      }
-    },
-    function(err, res) {
-      if (err != null) throw err;
-      var extracted = styledocco.separate(res.css);
-      var saved = JSON.parse(res.blocks);
-      test.deepEqual(extracted, saved, "Match failed for " + fixName);
-      cb();
-    });
-  }, test.done);
+  fixtures.forEach(function(fix) {
+    var css = readFileSync(fixturePath + fix);
+    var blocks = readFileSync(fixturePath + fix + '.blocks.json');
+    var extracted = styledocco.separate(css);
+    var saved = JSON.parse(blocks);
+    test.deepEqual(extracted, saved, "Match failed for " + fix);
+  });
+  test.done();
 };
 
 exports["Sections"] = function(test) {
-  async.forEach(cssFixtures, function(fixName, cb) {
-    async.parallel({
-      css: function(cb2) {
-        io.readFile(fixturePath + fixName, cb2);
-      },
-      sections: function(cb2) {
-        io.readFile(fixturePath + fixName + '.sections.json', cb2);
-      }
-    },
-    function(err, res) {
-      if (err != null) throw err;
-      var extracted = JSON.parse(JSON.stringify(styledocco.makeSections(
-        styledocco.separate(res.css)
-      )));
-      var saved = JSON.parse(res.sections);
-      test.deepEqual(extracted, saved, "Match failed for " + fixName);
-      cb();
-    });
-  }, test.done);
-};
-
-
-exports["Standalone documentation"] = function(test) {
-  async.forEach(docFixtures, function(fixName, cb) {
-    async.parallel({
-      docs: function(cb2) {
-        io.readFile(fixturePath + fixName, cb2);
-      },
-      sections: function(cb2) {
-        io.readFile(fixturePath + fixName + '.sections.json', cb2);
-      }
-    },
-    function(err, res) {
-      if (err != null) throw err;
-      var extracted = JSON.parse(JSON.stringify(styledocco.makeSections(
-        [ { docs: res.docs,
-            code: '' } ]
-      )));
-      var saved = JSON.parse(res.sections);
-      test.deepEqual(extracted, saved, "Match failed for " + fixName);
-      cb();
-    });
-  }, test.done);
+  fixtures.forEach(function(fix) {
+    var css = readFileSync(fixturePath + fix);
+    var blocks = readFileSync(fixturePath + fix + '.sections.json');
+    var extracted = JSON.parse(JSON.stringify(styledocco(css)));
+    var saved = JSON.parse(blocks);
+    test.deepEqual(extracted, saved, "Match failed for " + fix);
+  });
+  test.done();
 };
