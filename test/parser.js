@@ -1,7 +1,7 @@
 var async = require('async');
 var io = require('../lib/io');
 var path = require('path');
-var parser = require('../lib/parser');
+var styledocco = require('../styledocco');
 
 var fixturePath;
 if (typeof window === 'undefined') {
@@ -26,7 +26,7 @@ exports["Documentation and code blocks"] = function(test) {
     },
     function(err, res) {
       if (err != null) throw err;
-      var extracted = parser.separate(res.css);
+      var extracted = styledocco.separate(res.css);
       var saved = JSON.parse(res.blocks);
       test.deepEqual(extracted, saved, "Match failed for " + fixName);
       cb();
@@ -46,8 +46,8 @@ exports["Sections"] = function(test) {
     },
     function(err, res) {
       if (err != null) throw err;
-      var extracted = JSON.parse(JSON.stringify(parser.makeSections(
-        parser.separate(res.css)
+      var extracted = JSON.parse(JSON.stringify(styledocco.makeSections(
+        styledocco.separate(res.css)
       )));
       var saved = JSON.parse(res.sections);
       test.deepEqual(extracted, saved, "Match failed for " + fixName);
@@ -69,7 +69,7 @@ exports["Standalone documentation"] = function(test) {
     },
     function(err, res) {
       if (err != null) throw err;
-      var extracted = JSON.parse(JSON.stringify(parser.makeSections(
+      var extracted = JSON.parse(JSON.stringify(styledocco.makeSections(
         [ { docs: res.docs,
             code: '' } ]
       )));
