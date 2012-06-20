@@ -132,10 +132,8 @@ var makeSections = exports.makeSections = function(blocks) {
     });
 };
 
-var parser = function(css) {
+module.exports = function(css) {
   return makeSections(separate(css));
 };
-
-module.exports = parser;
 module.exports.makeSections = makeSections;
 module.exports.separate = separate;

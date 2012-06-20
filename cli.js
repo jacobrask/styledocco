@@ -135,9 +135,10 @@ var cli = function(options) {
 
   // Run files through StyleDocco parser
   var htmlFiles = files.map(function(file) {
+    var css = fs.readFileSync(file, 'utf-8');
     return {
       path: file,
-      html: render(file, styledocco.sync(file))
+      html: render(file, styledocco(css))
     };
   });
 
