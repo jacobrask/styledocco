@@ -1,6 +1,8 @@
 'use strict';
 
+var async = require('async');
 var csso = require('csso');
+var exec = require('child_process').exec;
 var findit = require('findit');
 var fs = require('fs');
 var jade = require('jade');
@@ -27,28 +29,7 @@ var htmlFilename = function(file, basePath) {
   return path.join(
     path.dirname(relative2(basePath, file) || path.basename(basePath)),
     baseFilename(file) + '.html'
-  // Windows `path` outputs \ but we need / for URLs
   ).replace(/[\\/]/g, '-');
-};
-
-// Make `link` objects for the menu.
-var menuLinks = function(files, basePath) {
-  return files.map(function(file) {
-    var parts = file.split('/').splice(1);
-    return {
-      name: baseFilename(file),
-      href: htmlFilename(file, basePath),
-      directory: parts.length > 1 ? parts[0] : './'
-    };
-  })
-  .reduce(function(links, link) {
-    if (links[link.directory] != null) {
-      links[link.directory].push(link);
-    } else {
-      links[link.directory] = [ link ];
-    }
-    return links;
-  }, {});
 };
 
 // Find first file matching `re` in `dir`.
@@ -71,17 +52,45 @@ var readFirstFile = function() {
   return '';
 };
 
+// Make `link` objects for the menu.
+var menuLinks = function(files, basePath) {
+  return files.map(function(file) {
+    var parts = file.split('/').splice(1);
+    return {
+      name: baseFilename(file),
+      href: htmlFilename(file, basePath),
+      directory: parts.length > 1 ? parts[0] : './'
+    };
+  })
+  .reduce(function(links, link) {
+    if (links[link.directory] != null) {
+      links[link.directory].push(link);
+    } else {
+      links[link.directory] = [ link ];
+    }
+    return links;
+  }, {});
+};
+
 
 var cli = function(options) {
 
   // Config
   var defaultResourceDir = path.resolve(__dirname, 'resources');
-  var fileTypes = ['.css','.sass','.scss','.less','.styl'];
 
-  mkdirp(options.out);
+  // Filetypes and matching preprocessor binaries
+  var fileTypes = {
+    '.css': null,
+    '.sass': 'sass',
+    '.scss': 'scss',
+    '.less': 'lessc',
+    '.styl': 'stylus',
+  };
 
   var log = options.verbose ? function(str) { console.log(str); }
                             : function() {};
+
+  mkdirp(options.out);
 
   // Get custom or default template file
   var templateFile = readFirstFile(
@@ -94,12 +103,12 @@ var cli = function(options) {
   });
 
   // Get custom or default CSS file
-  var css = readFirstFile(
+  var styledoccoCss = readFirstFile(
     options.resources + '/docs.css',
     defaultResourceDir + '/docs.css'
   );
   // Get custom include CSS
-  var customCss = readFirstFile(options.include);
+  styledoccoCss += readFirstFile(options.include);
 
   // Get custom or default JS file
   var js = readFirstFile(
@@ -108,12 +117,13 @@ var cli = function(options) {
   );
 
   // Render template
-  var render = function(source, sections) {
+  var render = function(source, sections, css) {
+    if (css == null) css = '';
     return template({
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: csso.justDoIt(css + customCss),
+      css: csso.justDoIt(styledoccoCss + css),
       js: js 
     });
   };
@@ -124,42 +134,57 @@ var cli = function(options) {
       // No hidden files
       if (file.match(/(\/|^)\.[^\.\/]/)) return false;
       // Only supported file types
-      if (fileTypes.indexOf(path.extname(file)) === -1) return false;
+      if (!path.extname(file) in fileTypes) return false;
       // Files only
       if (!fs.statSync(file).isFile()) return false;
       return true;
     }).sort();
   if (!files.length) return console.error('No files found');
 
+  var preprocess = function(file, cb) {
+    if (options.preprocessor || fileTypes[path.extname(file)]) {
+      exec((options.preprocessor || fileTypes[path.extname(file)]) + ' ' + file, function(err, stdout, stderr) {
+        // Fail gracefully on preprocessor errors
+        if (err != null) console.error(err.message);
+        if (stderr.length) console.error(stderr);
+        cb(null, stdout || '');
+      });
+    } else {
+      fs.readFile(file, 'utf8', cb);
+    }
+  };
+
   // Build menu
   var menu = menuLinks(files, options.basePath);
 
-  // Run files through StyleDocco parser
-  var htmlFiles = files.map(function(file) {
-    var css = fs.readFileSync(file, 'utf-8');
-    return {
-      path: file,
-      html: render(file, styledocco(css))
-    };
-  });
+  // Run files through StyleDocco parser. Async needed due to preprocessing.
+  async.map(files, function(file, cb) {
+    var content = fs.readFileSync(file, 'utf-8');
+    preprocess(file, function(err, css) {
+      cb(null, {
+        path: file,
+        html: render(file, styledocco(content), css)
+      });
+    });
+  }, function(err, htmlFiles) {
+    // Look for a README file.
+    var readmeFile = findFile(options.basePath, /^readme/i)
+                  || findFile(process.cwd(), /^readme/i)
+                  || findFile(options.resources, /^readme/i)
+                  || defaultResourceDir + '/README.md';
+    var readme = fs.readFileSync(readmeFile, 'utf-8');
 
-  // Look for a README file.
-  var readmeFile = findFile(options.basePath, /^readme/i)
-                || findFile(process.cwd(), /^readme/i)
-                || findFile(options.resources, /^readme/i)
-                || defaultResourceDir + '/README.md';
-  var readme = fs.readFileSync(readmeFile, 'utf-8');
+    // Add readme with "fake" index path
+    htmlFiles.push({
+      path: path.join(options.basePath, 'index'),
+      html: render('', [ { docs: marked(readme), code: '' } ])
+    });
 
-  // Add readme with "fake" index path
-  htmlFiles.push({
-    path: path.join(options.basePath, 'index'),
-    html: render('', [ { docs: marked(readme), code: '' } ])
-  });
-
-  // Write files to the output dir.
-  htmlFiles.map(function(file) {
-    var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
-    return fs.writeFileSync(dest, file.html);
+    // Write files to the output dir.
+    htmlFiles.map(function(file) {
+      var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
+      return fs.writeFileSync(dest, file.html);
+    });
   });
 };
 
