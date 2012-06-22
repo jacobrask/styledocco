@@ -9,6 +9,7 @@ var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
 var path = require('path');
+var uglify = require('uglify-js');
 
 var styledocco = require('./styledocco');
 
@@ -72,7 +73,6 @@ var menuLinks = function(files, basePath) {
   }, {});
 };
 
-
 var cli = function(options) {
 
   // Config
@@ -124,7 +124,7 @@ var cli = function(options) {
       sections: sections,
       project: { name: options.name, menu: menu },
       css: csso.justDoIt(styledoccoCss + css),
-      js: js 
+      js: uglify(js)
     });
   };
 

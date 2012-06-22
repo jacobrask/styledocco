@@ -1,4 +1,4 @@
-src/
 node_modules/
 test/
+test-browser/
 examples/

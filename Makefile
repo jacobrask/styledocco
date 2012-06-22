@@ -4,13 +4,12 @@ all: build
 
 build: resources/docs.js
 
-resources/docs.js: src
-	@cp -r ./src/vendor/client/*.js ./lib/client/
-	@cat ./lib/client/zepto.min.js > docs.js.tmp
-	@cat ./lib/client/underscore-min.js >> docs.js.tmp
-	@cat ./lib/client/docs.js >> docs.js.tmp
-	@./node_modules/.bin/uglifyjs --overwrite docs.js.tmp
-	@mv docs.js.tmp ./resources/docs.js
+shared/ender.js:
+	@ender build -o shared/ender.js domready bonzo qwery underscore
+
+resources/docs.js: shared/docs.js shared/ender.js
+	@cat shared/ender.js > resources/docs.js
+	@cat shared/docs.js >> resources/docs.js
 
 test:
 	@./node_modules/.bin/nodeunit test
