@@ -84,7 +84,7 @@ var cli = function(options) {
     '.sass': 'sass',
     '.scss': 'scss',
     '.less': 'lessc',
-    '.styl': 'stylus',
+    '.styl': 'stylus'
   };
 
   var log = options.verbose ? function(str) { console.log(str); }
@@ -134,7 +134,7 @@ var cli = function(options) {
       // No hidden files
       if (file.match(/(\/|^)\.[^\.\/]/)) return false;
       // Only supported file types
-      if (!path.extname(file) in fileTypes) return false;
+      if (!(path.extname(file) in fileTypes)) return false;
       // Files only
       if (!fs.statSync(file).isFile()) return false;
       return true;
@@ -168,10 +168,10 @@ var cli = function(options) {
     });
   }, function(err, htmlFiles) {
     // Look for a README file.
-    var readmeFile = findFile(options.basePath, /^readme/i)
-                  || findFile(process.cwd(), /^readme/i)
-                  || findFile(options.resources, /^readme/i)
-                  || defaultResourceDir + '/README.md';
+    var readmeFile = findFile(options.basePath, /^readme/i) ||
+                     findFile(process.cwd(), /^readme/i) ||
+                     findFile(options.resources, /^readme/i) ||
+                     defaultResourceDir + '/README.md';
     var readme = fs.readFileSync(readmeFile, 'utf-8');
 
     // Add readme with "fake" index path

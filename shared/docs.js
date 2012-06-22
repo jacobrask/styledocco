@@ -1,3 +1,7 @@
+(function () {
+
+'use strict';
+
 // Scans your stylesheet for pseudo classes and adds a class with the same name.
 // Thanks to Knyle Style Sheets for the idea.
 $.domReady(function() {
@@ -28,3 +32,5 @@ var addPseudoClasses = function() {
     return $('head').append($('<style />').text(processedPseudoClasses));
   }
 };
+
+}());
