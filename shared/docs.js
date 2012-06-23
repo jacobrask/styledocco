@@ -4,14 +4,12 @@
 
 'use strict';
 
-var toArray = function(arr) {
-  return Array.prototype.slice.call(arr, 0);
-};
-
+var toArray = function(arr) { return Array.prototype.slice.call(arr, 0); };
 var add = function(a, b) { return a + b; };
 
 // Compile regular expression.
-var pseudos = ['link', 'visited', 'hover', 'active', 'focus', 'target', 'enabled', 'disabled', 'checked'];
+var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
+                'enabled', 'disabled', 'checked' ];
 var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
 var processedPseudoClasses = toArray(document.styleSheets).filter(function(ss) {
   return !(ss.href != null);
@@ -26,7 +24,9 @@ var processedPseudoClasses = toArray(document.styleSheets).filter(function(ss) {
 }).reduce(add, '');
 if (processedPseudoClasses.length) {
   // Add a new style element with the processed pseudo class styles.
-  return $('head').append($('<style />').text(processedPseudoClasses));
+  var styleEl = document.createElement('style');
+  styleEl.innerText = processedPseudoClasses;
+  return document.querySelectorAll('head')[0].appendChild(styleEl);
 }
 
 }());
