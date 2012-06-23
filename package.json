@@ -36,7 +36,6 @@
   "main": "./lib/main",
   "bin": "./bin/styledocco",
   "scripts": {
-    "prepublish": "make build",
     "test": "nodeunit test"
   }
 }

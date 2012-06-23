@@ -1,15 +1,6 @@
 BROWSER = opera
 
-all: build
-
-build: resources/docs.js
-
-shared/ender.js:
-	@ender build -o shared/ender.js bonzo qwery
-
-resources/docs.js: shared/docs.js shared/ender.js
-	@cat shared/ender.js > resources/docs.js
-	@cat shared/docs.js >> resources/docs.js
+all:
 
 test:
 	@./node_modules/.bin/nodeunit test
@@ -20,11 +11,11 @@ test-browser: test-browser/tests.js
 test-browser/tests.js:
 	@./node_modules/.bin/browserify test-browser/browserify-entry.js -o test-browser/tests.js
 
-pages: build
+pages:
 	@./bin/styledocco -n StyleDocco -o ./ ./resources/docs.css
 
-examples: build
+examples:
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco resources/docs.css
 	@cd ./examples/bootstrap && ../../bin/styledocco -n "Twitter Bootstrap" less/buttons.less
 
-.PHONY: all build test test-browser pages examples
+.PHONY: all test test-browser pages examples

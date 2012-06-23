@@ -1,7 +1,0 @@
-{
-  "strict": true,
-  "browser": true,
-  "jquery": true,
-  "eqnull": true,
-  "predef": [ "require" ]
-}
