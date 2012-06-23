@@ -5,7 +5,7 @@ all: build
 build: resources/docs.js
 
 shared/ender.js:
-	@ender build -o shared/ender.js domready bonzo qwery underscore
+	@ender build -o shared/ender.js bonzo qwery underscore
 
 resources/docs.js: shared/docs.js shared/ender.js
 	@cat shared/ender.js > resources/docs.js
