@@ -4,17 +4,19 @@
 
 'use strict';
 
-var _ = require('underscore');
+var toArray = function(arr) {
+  return Array.prototype.slice.call(arr, 0);
+};
 
 var add = function(a, b) { return a + b; };
 
 // Compile regular expression.
 var pseudos = ['link', 'visited', 'hover', 'active', 'focus', 'target', 'enabled', 'disabled', 'checked'];
 var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
-var processedPseudoClasses = _.toArray(document.styleSheets).filter(function(ss) {
+var processedPseudoClasses = toArray(document.styleSheets).filter(function(ss) {
   return !(ss.href != null);
 }).map(function(ss) {
-  return _.toArray(ss.cssRules).filter(function(rule) {
+  return toArray(ss.cssRules).filter(function(rule) {
     // Keep only rules with pseudo classes.
     return rule.selectorText && rule.selectorText.match(pseudoRe);
   }).map(function(rule) {
