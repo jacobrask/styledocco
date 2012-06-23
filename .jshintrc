@@ -1,5 +1,6 @@
 {
   "strict": true,
   "node": true,
+  "browser": true,
   "eqnull": true
 }

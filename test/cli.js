@@ -1,3 +1,5 @@
+'use strict';
+
 var htmlFilename = require('../cli.js').htmlFilename;
 
 exports["HTML filename"] = function(test) {

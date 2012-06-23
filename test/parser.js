@@ -22,7 +22,7 @@ if (typeof window === 'undefined') {
   fixturePath = 'fixtures/';
 }
 var fixtures = [ 'asterisk.css', 'comments.css', 'invalid.css',
-                    'normal.css', 'structured.css' ];
+                 'normal.css', 'structured.css' ];
 
 exports["Documentation and code blocks"] = function(test) {
   fixtures.forEach(function(fix) {

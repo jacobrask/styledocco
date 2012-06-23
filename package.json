@@ -20,6 +20,7 @@
     "optimist": "0.x.x",
     "uglify-js": "1.2.x" },
   "devDependencies": {
+    "jshint": "0.7.x",
     "nodeunit": "0.7.x"
   },
   "main": "./styledocco",
