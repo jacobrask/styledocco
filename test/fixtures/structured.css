@@ -1,8 +1,15 @@
 /* # Structured
 An example of a CSS file using most of StyleDocco's features.
  
-## Another heading
-Lorem ipsum*/
+## Second level heading
+Lorem ipsum
+
+---
+
+A new section
+
+    <p>With a code example</p>
+*/
 
 body {
     background: white;
@@ -10,10 +17,12 @@ body {
 }
 
 /*
-Some more text
+Some more text in the same section.
 
-## Second level header
+# First level heading
 Some random text.
+
+---
 
 ## Another section in the same comment block.
 

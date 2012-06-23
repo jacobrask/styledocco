@@ -105,12 +105,14 @@ var makeSections = exports.makeSections = function(blocks) {
       // Split into sections with headers as delimiters.
       var doc;
       var docs = cur.docs;
-      for (var i = 0, len = docs.length; i < len; i++) {
-        doc = docs[i];
-        if (sections.length === 0 || (doc.type === 'heading' && doc.depth <= 2)) {
-          sections.push({ docs: [ doc ], code: '' });
+      while (docs.length) {
+        if (sections.length === 0 || docs[0].type === 'hr') {
+          if (docs[0].type === 'hr') {
+            docs.shift();
+          }
+          sections.push({ docs: [ docs.shift() ], code: '' });
         } else {
-          sections[sections.length-1].docs.push(doc);
+          sections[sections.length-1].docs.push(docs.shift());
         }
         // Keep marked's custom links property on the docs arrays.
         sections[sections.length-1].docs.links = docs.links;
