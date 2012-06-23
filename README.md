@@ -12,7 +12,7 @@ Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wi
 
 An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
-The document is automatically split into new sections when it encounters a level 1 or 2 heading. Read more about the heading syntax in the [Markdown guide](http://daringfireball.net/projects/markdown/syntax). Only comments at the beginning of new lines are included, put some whitespace before a comment to exlude it from the style guide.
+The document is automatically split into a new sections when it encounters a horizontal rule. Only comments at the beginning of new lines are included so put some whitespace before a comment to exlude it from the style guide.
 
 Suggestions, feature requests and bug reports are very welcome, either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
@@ -40,8 +40,8 @@ If your project includes a `README` file, it will be used as the base for an `in
 
  * `--name`, `-n`      Name of the project *(required)*
  * `--out`, `-o`       Output directory *(default: "docs")*
- * `--resources`, `-s` Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
- * `--preprocessor`    Custom preprocessor command. To disable preprocessing, use `none`. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
+ * `--resources`, `-s` Directory with files to customize the documentation output (docs.jade, docs.css and docs.js). StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
+ * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
  * `--include`         Prepend specified CSS file to the documentation stylesheet. *(optional)* (ex: `--include mysite.css`)
  * `--verbose`         Show log messages when generating the documentation. *(default: false)*
  *                     Directory containing the stylesheets to document.
