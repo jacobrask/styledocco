@@ -1,25 +1,14 @@
 {
   "name": "styledocco",
   "description": "Generate style guides and documentation from your stylesheets.",
-  "keywords": [
-    "styleguide",
-    "css",
-    "documentation" ],
+  "keywords": [ "styleguide", "css", "documentation" ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
   "version": "0.3.7",
   "homepage": "http://jacobrask.github.com/styledocco/",
-  "licenses": [
-    { "type": "MIT",
-      "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
-  "contributors": [
-    "Jacob Rask <jacob@jacobrask.net>",
-    "Mike Brevoort <mike@brevoort.com>",
-    "Jeremy Ashkenas" ],
+  "licenses": [ { "type": "MIT", "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
+  "contributors": [ "Jacob Rask <jacob@jacobrask.net>" ],
   "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jacobrask/styledocco.git" },
-
+  "repository": { "type": "git", "url": "git://github.com/jacobrask/styledocco.git" },
   "engines": { "node": ">=0.4.0" },
   "dependencies": {
     "async": "0.1.x",
@@ -28,12 +17,12 @@
     "jade": "0.23.x",
     "marked": "0.2.x",
     "mkdirp": "0.x.x",
-    "optimist": "0.x.x" },
-  "devDependencies": {
-    "nodeunit": "0.7.x",
+    "optimist": "0.x.x",
     "uglify-js": "1.2.x" },
-
-  "main": "./lib/main",
+  "devDependencies": {
+    "nodeunit": "0.7.x"
+  },
+  "main": "./styledocco",
   "bin": "./bin/styledocco",
   "scripts": {
     "test": "nodeunit test"
