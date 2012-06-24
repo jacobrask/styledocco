@@ -56,11 +56,12 @@ var readFirstFile = function() {
 // Make `link` objects for the menu.
 var menuLinks = function(files, basePath) {
   return files.map(function(file) {
-    var parts = file.split('/').splice(1);
+    var parts = relative2(basePath, file).split('/');
+    parts.pop(); // Remove filename
     return {
       name: baseFilename(file),
       href: htmlFilename(file, basePath),
-      directory: parts.length > 1 ? parts[0] : './'
+      directory: parts[parts.length-1] || './'
     };
   })
   .reduce(function(links, link) {
@@ -123,7 +124,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: csso.justDoIt(styledoccoCss + css),
+      css: csso.justDoIt(css + styledoccoCss),
       js: uglify(js)
     });
   };
@@ -183,6 +184,7 @@ var cli = function(options) {
     // Write files to the output dir.
     htmlFiles.map(function(file) {
       var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
+      log('StyleDocco:' + file.path + '->' + dest);
       return fs.writeFileSync(dest, file.html);
     });
   });
