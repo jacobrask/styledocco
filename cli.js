@@ -162,8 +162,8 @@ var cli = function(options) {
   // Build menu
   var menu = menuLinks(files, options.basePath);
 
-  // Run files through StyleDocco parser. Async needed due to preprocessing.
-  async.map(files, function(file, cb) {
+  // Run files through preprocessor and StyleDocco parser.
+  async.mapSeries(files, function(file, cb) {
     var content = fs.readFileSync(file, 'utf-8');
     preprocess(file, function(err, css) {
       cb(null, {
