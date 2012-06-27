@@ -1,7 +1,6 @@
 'use strict';
 
 var async = require('async');
-var csso = require('csso');
 var exec = require('child_process').exec;
 var findit = require('findit');
 var fs = require('fs');
@@ -119,7 +118,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: csso.justDoIt(css + styledoccoCss),
+      css: css + styledoccoCss,
       js: uglify(js)
     });
   };
