@@ -1,11 +1,8 @@
 /*
 StyleDocco default styles
 =========================
-This is the default stylesheet for StyleDocco. It also serves as an example of the documentation syntax. */
+This is the default stylesheet for StyleDocco. It also serves as an example of the documentation syntax.
 
-/*
-General styles
---------------
 We don't define any global styles except background color and resetting margins and paddings. */
 body {
     width: 100%;
@@ -97,7 +94,10 @@ Code blocks also get a nice selection color to better highlight what you should 
     color: #fff;
 }
 
-/* ## Site Layout ##
+/* * * * */
+
+/*
+## Site Layout ##
 A centered container with sections of documentation and code side by side, and a menu (not displayed here). The code pane is slightly faded out until hovered.
 
     <div class="styledocco-container">
@@ -125,7 +125,8 @@ A centered container with sections of documentation and code side by side, and a
     min-height: 200px;
 }
 
-/* ## Menu ##
+/* ----------
+## Menu ##
 Sidebar menu, fixed top/left. Slightly faded out when not hovered.
 
     <div class="styledocco-sidebar :hover" style="position:static;width:40%">
@@ -216,7 +217,8 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     color: #f7f7f7;
 }
 
-/* ## Documentation & code ## */
+/* * * * * * * * * * * * * *
+## Documentation & code ## */
 .styledocco-docs {
     position: relative;
     width: 58%;
@@ -302,51 +304,4 @@ pre + .styledocco-example {
     padding: 0;
     background: transparent;
     border: 0;
-}
-
-/* ### Code highlighting
-The code highlighting color scheme is based on GitHub's code colors, but slightly muted and modified to support more CSS features. */
-/* ```
-<div class="styledocco-docs"><pre><code><span class="comment">// A comment</span>
-<span class="tag">body</span>, <span class="id">#foo</span>, <span class="class">.bar</span> <span class="rules">{
-  <span class="rule"><span class="attribute">property</span>:<span class="value"> <span class="function">foo(<span class="number">99</span>px</span>)</span> <span class="important">!important</span>;</span>
-  <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">'hi'</span></span>;</span>
-}</span>
-<span class="tag">&lt;tag <span class="attribute">attribute</span>=<span class="value">"value"</span>></span>string<span class="tag">&lt;/tag></span>
-</code></pre></div>
-``` */
-.styledocco-code .comment, .styledocco-docs > pre .comment {
-    color: #887;
-}
-.styledocco-code .number, .styledocco-docs > pre .number,
-.styledocco-code .hexcolor, .styledocco-docs > pre .hexcolor {
-    color: #497;
-}
-.styledocco-code .important, .styledocco-docs > pre .important,
-.styledocco-code .string, .styledocco-docs > pre .string,
-.styledocco-code .tag .value, .styledocco-docs > pre .tag .value {
-    color: #b35;
-}
-.styledocco-code .tag, .styledocco-docs > pre .tag,
-.styledocco-code .tag .title, .styledocco-docs > pre .tag .title {
-    color: #348;
-}
-.styledocco-code .attribute, .styledocco-docs > pre .attribute,
-.styledocco-code .variable, .styledocco-docs > pre .variable,
-.styledocco-docs > :not(.styledocco-example):not(pre) var {
-     color: #188;
-}
-.styledocco-code .pseudo, .styledocco-docs > pre .pseudo,
-.styledocco-code .keyword, .styledocco-docs > pre .keyword,
-.styledocco-code .rule .attribute, .styledocco-docs > pre .rule .attribute {
-    color: #001;
-}
-.styledocco-code .at_rule, .styledocco-docs > pre .at_rule,
-.styledocco-code .at_rule .keyword, .styledocco-docs > pre .at_rule .keyword,
-.styledocco-code .id, .styledocco-docs > pre .id {
-    color: #724;
-}
-.styledocco-code .function, .styledocco-docs > pre .function,
-.styledocco-code .class, .styledocco-docs > pre .class {
-    color: #328;
 }
