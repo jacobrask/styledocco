@@ -99,12 +99,12 @@ var cli = function(options) {
   });
 
   // Get custom or default CSS file
-  var styledoccoCss = readFirstFile(
-    options.resources + '/docs.css',
-    defaultResourceDir + '/docs.css'
-  );
-  // Get custom include CSS
-  styledoccoCss += readFirstFile(options.include);
+  var styledoccoCss =
+    readFirstFile(options.include) +
+    readFirstFile(
+      options.resources + '/docs.css',
+      defaultResourceDir + '/docs.css'
+    );
 
   // Get custom or default JS file
   var js = readFirstFile(
