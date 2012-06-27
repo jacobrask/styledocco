@@ -7,6 +7,7 @@ var fs = require('fs');
 var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
+var ncss = require('ncss');
 var path = require('path');
 var uglify = require('uglify-js');
 
@@ -118,7 +119,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: css + styledoccoCss,
+      css: ncss(css + styledoccoCss),
       js: uglify(js)
     });
   };
