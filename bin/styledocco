@@ -2,6 +2,18 @@
 
 var optimist = require('optimist');
 
+// Get the common prefix of strings (paths).
+var commonprefix = function(arr) {
+  if (!arr.length) return '';
+  if (arr.length === 1) return arr[0];
+  return arr.reduce(function(res, cur) {
+    while (res !== cur.slice(0, res.length)) {
+      res = res.slice(0, -1);
+    }
+    return res;
+  });
+};
+
 if (optimist.argv.version != null) {
   return console.log("StyleDocco " + (require('../package').version));
 }
@@ -19,7 +31,10 @@ var options = optimist
   .describe('version', 'Display StyleDocco version')
   .argv;
 
-options.basePath = options._[0] || './';
+options['in'] = options._.length ? options._
+                                 : './';
+options.basePath = commonprefix(options['in']);
+
 if (options.name == null) {
   try {
     // Try to read name from package.json

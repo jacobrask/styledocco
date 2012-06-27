@@ -20,15 +20,10 @@ var baseFilename = function(str) {
   return path.basename(str, path.extname(str));
 };
 
-// Solve the relative path between two relative paths
-var relative2 = function(from, to) {
-  return path.relative(path.resolve(from), path.resolve(to));
-};
-
 // Build an HTML file name, named by it's path relative to basePath
 var htmlFilename = function(file, basePath) {
   return path.join(
-    path.dirname(relative2(basePath, file) || path.basename(basePath)),
+    path.dirname(path.relative(basePath, file) || path.basename(basePath)),
     baseFilename(file) + '.html'
   ).replace(/[\\/]/g, '-');
 };
@@ -56,7 +51,7 @@ var readFirstFile = function() {
 // Make `link` objects for the menu.
 var menuLinks = function(files, basePath) {
   return files.map(function(file) {
-    var parts = relative2(basePath, file).split('/');
+    var parts = path.relative(basePath, file).split('/');
     parts.pop(); // Remove filename
     return {
       name: baseFilename(file),
@@ -130,7 +125,14 @@ var cli = function(options) {
   };
 
   // Find files
-  var files = findit.sync(options.basePath)
+  var files = options['in'].reduce(function(files, file) {
+      if (fs.statSync(file).isDirectory()) {
+        files = files.concat(findit.sync(file));
+      } else {
+        files.push(file);
+      }
+      return files;
+    }, [])
     .filter(function(file) {
       // No hidden files
       if (file.match(/(\/|^)\.[^\.\/]/)) return false;
