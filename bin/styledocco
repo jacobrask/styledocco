@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var optimist = require('optimist');
+var path = require('path');
 
 // Get the common prefix of strings (paths).
 var commonprefix = function(arr) {
@@ -33,7 +34,13 @@ var options = optimist
 
 options['in'] = options._.length ? options._
                                  : './';
-options.basePath = commonprefix(options['in']);
+
+// Get common (absolute) path prefix of input files
+options.basePath = commonprefix(
+  options['in'].map(function(file) {
+    return path.resolve(file);
+  })
+);
 
 if (options.name == null) {
   try {
