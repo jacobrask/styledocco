@@ -8,5 +8,8 @@
   }, {
     "docs": "<h2>Another section in the same comment block.</h2>\n<p>Some <b>HTML</b> that should not be escaped.\n\n</p>\n<p> This is in the same section.\n\n</p>\n<div class=\"styledocco-example\">And here is some code</div><pre><code>And here is some code</code></pre>\n<div class=\"styledocco-example\">This is also code</div><pre><code>This is also code</code></pre>",
     "code": "p {\n    margin: 0;\n}\n\nb {\n    font-weight: italic;\n}"
+  }, {
+    "docs": "<p> Dolor sit amet \n</p>",
+    "code": ""
   }
 ]

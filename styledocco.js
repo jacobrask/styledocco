@@ -102,16 +102,25 @@ var makeSections = exports.makeSections = function(blocks) {
       return newBlock;
     }, [])
     .reduce(function(sections, cur) {
-      // Split into sections with headers as delimiters.
+      // Split into sections with hr's as delimiters.
       var doc;
       var docs = cur.docs;
+      // TODO: Make more elegant and easy to follow.
       while (docs.length) {
-        if (sections.length === 0 || docs[0].type === 'hr') {
-          if (docs[0].type === 'hr') {
-            docs.shift();
-          }
+        if (sections.length === 0) {
+          // First section
           sections.push({ docs: [ docs.shift() ], code: '' });
+        } else if (docs[0].type === 'hr') {
+            // New section, ignore the hr.
+            docs.shift();
+            if (docs.length) {
+              sections.push({ docs: [ docs.shift() ], code: '' });
+            } else {
+              // Nothing more after the hr in the doc block, start new section.
+              sections.push({ docs: [], code: '' });
+            }
         } else {
+          // Add the documentation to the last section.
           sections[sections.length-1].docs.push(docs.shift());
         }
         // Keep marked's custom links property on the docs arrays.

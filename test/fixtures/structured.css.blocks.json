@@ -8,5 +8,11 @@
   }, {
     "docs": " This is in the same section.\n\n```\nAnd here is some code\n```\n\n    This is also code\n\n",
     "code":"\n"
+  }, {
+    "docs": " * * * \n",
+    "code": "\n"
+  }, {
+    "docs": " Dolor sit amet \n",
+    "code": "\n"
   }
 ]
