@@ -145,8 +145,10 @@ var cli = function(options) {
   if (!files.length) return console.error('No files found');
 
   var preprocess = function(file, cb) {
-    if (options.preprocessor || fileTypes[path.extname(file)]) {
-      exec((options.preprocessor || fileTypes[path.extname(file)]) + ' ' + file, function(err, stdout, stderr) {
+    var pp = options.preprocessor || fileTypes[path.extname(file)];
+    if (pp != null) {
+      exec(pp + ' ' + file, function(err, stdout, stderr) {
+        log('styledocco: preprocessing ' + file + ' with ' + pp);
         // Fail gracefully on preprocessor errors
         if (err != null) console.error(err.message);
         if (stderr.length) console.error(stderr);
@@ -186,7 +188,7 @@ var cli = function(options) {
     // Write files to the output dir.
     htmlFiles.map(function(file) {
       var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
-      log('StyleDocco:' + file.path + '->' + dest);
+      log('styledocco: writing ' + file.path + ' -> ' + dest);
       return fs.writeFileSync(dest, file.html);
     });
   });
