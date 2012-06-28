@@ -88,15 +88,11 @@ var cli = function(options) {
 
   mkdirp(options.out);
 
-  // Get custom or default template file
-  var templateFile = readFirstFile(
+  // Compile custom or default template
+  var template = jade.compile(readFirstFile(
     options.resources + '/docs.jade',
     defaultResourceDir + '/docs.jade'
-  );
-  // Compile the template
-  var template = jade.compile(templateFile, {
-    filename: templateFile
-  });
+  ));
 
   // Get custom or default CSS file
   var styledoccoCss =
