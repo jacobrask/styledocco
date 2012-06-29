@@ -95,12 +95,12 @@ var cli = function(options) {
   ));
 
   // Get custom or default CSS file
-  var styledoccoCss = ncss(
-    readFirstFile(options.include) +
-    readFirstFile(
-      options.resources + '/docs.css',
-      defaultResourceDir + '/docs.css'
-    ));
+  var styledoccoCss = readFirstFile(
+    options.resources + '/docs.css',
+    defaultResourceDir + '/docs.css'
+  );
+
+  var exampleCss = readFirstFile(options.include);
 
   // Get custom or default JS file
   var js = uglify(
@@ -115,8 +115,9 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: ncss(css) + styledoccoCss,
-      js: js
+      css: ncss(css + exampleCss),
+      sdCss: styledoccoCss,
+      js: uglify(js)
     });
   };
 

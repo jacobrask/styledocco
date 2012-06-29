@@ -1,11 +1,13 @@
-// Scans your stylesheet for pseudo classes and adds a class with the same name.
-// Thanks to Knyle Style Sheets for the idea.
 (function () {
 
 'use strict';
 
-var toArray = function(arr) { return Array.prototype.slice.call(arr, 0); };
+var toArray = function(arr) { return Array.prototype.slice.call(arr); };
 var add = function(a, b) { return a + b; };
+
+
+// Scans your stylesheet for pseudo classes and adds a class with the same name.
+// Thanks to Knyle Style Sheets for the idea.
 
 // Compile regular expression.
 var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
@@ -26,7 +28,25 @@ if (processedPseudoClasses.length) {
   // Add a new style element with the processed pseudo class styles.
   var styleEl = document.createElement('style');
   styleEl.innerText = processedPseudoClasses;
-  return document.querySelectorAll('head')[0].appendChild(styleEl);
+  document.getElementsByTagName('head')[0].appendChild(styleEl);
 }
+
+
+var iframes = toArray(document.getElementsByClassName('example'));
+var styles = toArray(document.getElementsByTagName('style')).filter(function(el) {
+  if (el.getAttribute('type') === 'text/example') return true;
+  return false;
+}).reduce(function(styles, el) {
+  return styles += el.innerText;
+}, '');
+
+iframes.forEach(function(iframe) {
+  var newIframe = document.createElement('iframe');
+  newIframe.className = 'example';
+  newIframe.setAttribute('seamless', true);
+  newIframe.src = iframe.src + encodeURI('<style>' + styles + '</style>');
+  iframe.parentNode.replaceChild(newIframe, iframe);
+});
+
 
 }());

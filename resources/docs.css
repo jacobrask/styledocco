@@ -1,66 +1,63 @@
 /*
 StyleDocco default styles
 =========================
-This is the default stylesheet for StyleDocco. It also serves as an example of the documentation syntax.
+This is the default stylesheet for StyleDocco. It also serves as an example of the documentation syntax. */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
-We don't define any global styles except background color and resetting margins and paddings. */
 body {
     width: 100%;
     max-width: 100%;
-    margin: 0;
-    padding: 0;
     background-color: #f6f7f9;
 }
-/* We use the generic `sans-serif` font family to get Arial on Windows and Helvetica on Mac, but elements in the example boxes will not get any of StyleDocco styles.
+/* We use the generic `sans-serif` font family to get Arial on Windows and Helvetica on Mac */
 
-    <a href="#">Unstyled link example</a> */
-.styledocco-sidebar,
-.styledocco-docs > :not(.styledocco-example) {
+.sidebar,
+.docs {
     box-sizing: content-box;
-    margin: 15px 20px;
     color: #334;
     line-height: 1.618;
     font-family: sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;
 }
-.styledocco-sidebar,
-.styledocco-docs > p, .styledocco-docs > ul, .styledocco-docs > ol, .styledocco-docs > a {
+.sidebar,
+p, ul, ol {
+    margin: 15px 20px;
     font-size: 12px;
 }
-.styledocco-docs > h1, .styledocco-docs > h2, .styledocco-docs > h3,
-.styledocco-docs > h4, .styledocco-docs > h5, .styledocco-docs > h6 {
+h1, h2, h3,
+h4, h5, h6 {
     font-weight: bold;
-     /* `!important` needed due to `*:not()` above. */
-    margin: 25px 20px 0 !important;
-    line-height: 1.2 !important;
-    color: #555f6a !important;
+    margin: 25px 20px 0;
+    line-height: 1.2;
+    color: #555f6a;
 }
-.styledocco-docs > :not(.styledocco-example) a {
+a {
     color: #27a;
     text-decoration: none;
 }
-.styledocco-docs > :not(.styledocco-example) a:hover {
+a:hover {
     color: #157;
     text-decoration: underline;
 }
-.styledocco-docs > :not(.styledocco-example) a:visited {
+a:visited {
     color: #146;
 }
-/* Manually adding the documentation container makes examples possible in the StyleDocco documentation. You won't need that in your stylesheet documentation, of course.
-
-    <div class="styledocco-docs">
-      <p>A <a href="#">regular link</a> (now styled), a <a href="./docs.html">visited link</a> and some <code>inline code</code>.</p>
-    </div>
+/*
+    <p>A <a href="#">regular link</a>, a <a href="./docs.html">visited link</a> and some <code>inline code</code>.</p>
 
 To show pseudo selectors styles in examples, just add the pseudo selector (including the `:`) as a class name.
 
-    <div class="styledocco-docs"><p>
-      <a href="#">Link</a>
-      <a href="#" class=":hover">Link</a>
-      <a href="#" class=":visited">Link</a>
-    </div> */
-.styledocco-docs > :not(.styledocco-example):not(pre) var,
-.styledocco-docs > :not(.styledocco-example):not(pre) code {
+    <a href="#">Link</a>
+    <a href="#" class=":hover">Link</a>
+    <a href="#" class=":visited">Link</a>
+*/
+.docs :not(pre) var,
+.docs :not(pre) code {
     padding: .1em 3px;
     background: rgba(0, 0, 0, .025);
     border: 1px solid rgba(0, 0, 0, .05);
@@ -73,23 +70,21 @@ To show pseudo selectors styles in examples, just add the pseudo selector (inclu
 Code blocks also get a nice selection color to better highlight what you should select when copy/pasting.
 
 ```
-<div class="styledocco-docs">
 <pre>
 <code>The font in &lt;pre&gt; code blocks is small but legible.</code>
 </pre>
-</div>
 ``` */
-.styledocco-code pre code,
-.styledocco-docs > pre samp,
-.styledocco-docs > pre code {
+.code pre code,
+.docs > pre samp,
+.docs > pre code {
     padding: 0;
     background: transparent;
     border: 0;
     font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
     font-size: 12px;
 }
-.styledocco-code code::selection,
-.styledocco-docs > pre code::selection {
+.code code::selection,
+.docs > pre code::selection {
     background: #248;
     color: #fff;
 }
@@ -100,27 +95,27 @@ Code blocks also get a nice selection color to better highlight what you should 
 ## Site Layout ##
 A centered container with sections of documentation and code side by side, and a menu (not displayed here). The code pane is slightly faded out until hovered.
 
-    <div class="styledocco-container">
-      <div class="styledocco-section">
-        <div class="styledocco-docs"><p>Documentation</p></div>
-        <div class="styledocco-code"><pre>Code</pre></div>
+    <div class="container">
+      <div class="section">
+        <div class="docs"><p>Documentation</p></div>
+        <div class="code"><pre>Code</pre></div>
       </div>
     </div> */
-.styledocco-container {
+.container {
     width: 95%;
     max-width: 1500px;
     margin: 0 auto;
 }
-.styledocco-main {
+.main {
     float: right;
     width: 83%;
 }
-.styledocco-sidebar {
+.sidebar {
     position: fixed;
     width: 9%;
     padding: 1%;
 }
-.styledocco-section {
+.section {
     position: relative;
     min-height: 200px;
 }
@@ -129,23 +124,23 @@ A centered container with sections of documentation and code side by side, and a
 ## Menu ##
 Sidebar menu, fixed top/left. Slightly faded out when not hovered.
 
-    <div class="styledocco-sidebar :hover" style="position:static;width:40%">
-      <a href="#" class="styledocco-brand">Hovered sidebar</a>
-      <strong class="styledocco-nav-heading">Folder</strong>
-      <ul class="styledocco-nav">
+    <div class="sidebar :hover" style="position:static;width:40%">
+      <a href="#" class="brand">Hovered sidebar</a>
+      <strong class="nav-heading">Folder</strong>
+      <ul class="nav">
         <li><a href="#">Item</a>
         <li class=":hover"><a href="#">Hovered item</a>
       </ul>
     </div>
-    <div class="styledocco-sidebar" style="position:static;width:40%">
-      <a href="#" class="styledocco-brand">Inactive menu</a>
-      <ul class="styledocco-nav">
+    <div class="sidebar" style="position:static;width:40%">
+      <a href="#" class="brand">Inactive menu</a>
+      <ul class="nav">
         <li><a href="#">Item</a>
       </ul>
     </div>
 
 Sometimes you need to specify some inline styles in the HTML examples to override properties such as `position: fixed`. */
-.styledocco-sidebar {
+.sidebar {
     max-height: 90%;
     overflow-y: auto;
     margin-top: 20px;
@@ -158,16 +153,16 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     -moz-transition:    opacity 2.5s;
     -o-transition:      opacity 2.5s;
 }
-.styledocco-sidebar:hover {
+.sidebar:hover {
     opacity: 1;
     -webkit-transition: opacity .5s;
     -moz-transition:    opacity .5s;
     -o-transition:      opacity .5s;
 }
-.styledocco-sidebar a {
+.sidebar a {
     text-decoration: none;
 }
-.styledocco-brand {
+.brand {
     display: block;
     margin: 0 0 10px;
     text-align: center;
@@ -176,15 +171,15 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     font-weight: bold;
     text-shadow: rgba(0, 0, 0, .5) 0 0 1px;
 }
-.styledocco-brand:hover {
+.brand:hover {
     color: #fff;
     text-decoration: none;
 }
-.styledocco-nav {
+.nav {
     margin: 0;
     padding: 0;
 }
-.styledocco-nav-heading {
+.nav-heading {
     display: block;
     padding: .3em 0;
     margin: .5em 0 0;
@@ -192,26 +187,26 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     font-size: 13px;
     text-shadow: rgba(0, 0, 0, .25) 0 0 1px;
 }
-.styledocco-nav li {
+.nav li {
     margin: 0;
     padding: 0;
     list-style: none;
     border-top: 1px solid rgba(255, 255, 255, .1);
 }
-.styledocco-nav li:active,
-.styledocco-nav li:focus,
-.styledocco-nav li:hover {
+.nav li:active,
+.nav li:focus,
+.nav li:hover {
     background: rgba(255, 255, 255, .2);
     border-color: transparent;
     border-radius: 3px;
     text-decoration: none;
 }
-.styledocco-nav li:active + li,
-.styledocco-nav li:focus + li,
-.styledocco-nav li:hover + li {
+.nav li:active + li,
+.nav li:focus + li,
+.nav li:hover + li {
     border-color: transparent;
 }
-.styledocco-nav a {
+.nav a {
     display: block;
     padding: .2em 5%;
     color: #f7f7f7;
@@ -219,18 +214,17 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
 
 /* * * * * * * * * * * * * *
 ## Documentation & code ## */
-.styledocco-docs {
+.docs {
     position: relative;
     width: 58%;
     min-height: 200px;
     margin: 20px 0 40px;
     background: #fff;
     background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, .1);
     border-radius: 5px;
     box-shadow: 0 0 3px rgba(0, 0, 0, .1);
 }
-.styledocco-code {
+.code {
     position: absolute;
     top: 5px; bottom: 5px;
     right: 0;
@@ -247,43 +241,42 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
     -moz-transition:    opacity .25s;
     -o-transition:      opacity .25s;
 }
-.styledocco-code:hover {
+.code:hover {
     opacity: 1;
 }
 /* Showing examples of documentation examples would be a bit recursive, but it's a checkerboard background to be able to see edges of elements regardless of their color. */
-.styledocco-example {
+.example {
     margin-top: 10px;
-    padding: 15px;
-    overflow: auto;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
-    border-top: 1px dotted rgb(220, 220, 225);
+    width: 100%;
+    border: 10px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
 }
-pre + .styledocco-example {
+pre + .example {
     margin-top: 0;
     border-top: 0;
 }
-.styledocco-example:before, .styledocco-example:after { display: table; content: ""; }
-.styledocco-example:after { clear: both; }
+.example:before, .example:after { display: table; content: ""; }
+.example:after { clear: both; }
 
-.styledocco-docs > pre,
-.styledocco-code pre {
+.docs > pre,
+.code pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     color: #445;
     margin: 0 !important;
     line-height: 1.1 !important;
 }
-.styledocco-docs > .pilcrow {
+.docs > .pilcrow {
     position: absolute;
     right: 0; top: 0;
     text-decoration: none;
     font-weight: bold;
     opacity: .5;
 }
-.styledocco-docs > .pilcrow:hover {
+.docs > .pilcrow:hover {
     opacity: 1;
 }
-.styledocco-docs > pre {
+.docs > pre {
     max-height: 200px;
     overflow-y: auto;
     padding: 10px 20px;
@@ -291,18 +284,18 @@ pre + .styledocco-example {
     border: 1px solid rgba(220, 220, 225, .8);
     border-left: 0; border-right: 0;
 }
-.styledocco-example + pre {
+.example + pre {
     border-top: 1px dotted rgb(220, 220, 225);
 }
-.styledocco-docs > pre:first-child {
+.docs > pre:first-child {
     border-top: 0;
     border-radius: 5px 5px 0 0;
 }
-.styledocco-docs > pre:last-child {
+.docs > pre:last-child {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
 }
-.styledocco-code pre {
+.code pre {
     padding: 0;
     background: transparent;
     border: 0;

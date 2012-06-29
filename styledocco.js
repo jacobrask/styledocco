@@ -91,7 +91,7 @@ var makeSections = exports.makeSections = function(blocks) {
             tokens.push({
               type: 'html',
               pre: true,
-              text: "<div class=\"styledocco-example\">" + token.text + "</div>"
+              text: "<iframe seamless class=\"example\" src=\"data:text/html;charset=utf-8," + encodeURI(token.text) + "\"></iframe>"
             });
           }
           tokens.push(token);
