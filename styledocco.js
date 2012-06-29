@@ -74,6 +74,7 @@ var separate = function(css) {
 };
 
 var makeSections = exports.makeSections = function(blocks) {
+  var htmlDoc = '<!doctype html><title></title><body>';
   return blocks
     .map(function(block) {
       // Run comments through marked.lexer to get Markdown tokens
@@ -91,7 +92,7 @@ var makeSections = exports.makeSections = function(blocks) {
             tokens.push({
               type: 'html',
               pre: true,
-              text: "<iframe seamless class=\"example\" src=\"data:text/html;charset=utf-8," + encodeURI(token.text) + "\"></iframe>"
+              text: "<iframe seamless class=\"example\" src=\"data:text/html;charset=utf-8," + encodeURIComponent(htmlDoc + token.text) + "\"></iframe>"
             });
           }
           tokens.push(token);

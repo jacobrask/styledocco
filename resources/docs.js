@@ -22,7 +22,7 @@ var processedPseudoClasses = toArray(document.styleSheets).filter(function(ss) {
   }).map(function(rule) {
     // Replace : with . and encoded :
     return rule.cssText.replace(pseudoRe, ".\\3A $1");
-  }).reduce(add);
+  }).reduce(add, '');
 }).reduce(add, '');
 if (processedPseudoClasses.length) {
   // Add a new style element with the processed pseudo class styles.
@@ -32,20 +32,16 @@ if (processedPseudoClasses.length) {
 }
 
 
-var iframes = toArray(document.getElementsByClassName('example'));
+// Adds documentation styles from parent document to example iframes
 var styles = toArray(document.getElementsByTagName('style')).filter(function(el) {
   if (el.getAttribute('type') === 'text/example') return true;
   return false;
 }).reduce(function(styles, el) {
-  return styles += el.innerText;
+  return styles += el.innerHTML;
 }, '');
 
-iframes.forEach(function(iframe) {
-  var newIframe = document.createElement('iframe');
-  newIframe.className = 'example';
-  newIframe.setAttribute('seamless', true);
-  newIframe.src = iframe.src + encodeURI('<style>' + styles + '</style>');
-  iframe.parentNode.replaceChild(newIframe, iframe);
+toArray(document.getElementsByClassName('example')).forEach(function(example) {
+  example.src += encodeURIComponent('<style>' + styles + '</style>');
 });
 
 
