@@ -38,7 +38,8 @@ var formatDocs = function(str) {
 };
 
 var formatCode = function(str) {
-  return str + '\n';
+  // Truncate base64 encoded strings
+  return str.replace(/(;base64,)[^\)]*/, '$1...') + '\n';
 };
 
 // Trim newlines from beginning and end of multi line string.
