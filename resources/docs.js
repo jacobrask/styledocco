@@ -33,15 +33,23 @@ if (processedPseudoClasses.length) {
 
 
 // Adds documentation styles from parent document to example iframes
-var styles = toArray(document.getElementsByTagName('style')).filter(function(el) {
+var iframeStyles = toArray(document.getElementsByTagName('style')).filter(function(el) {
   if (el.getAttribute('type') === 'text/example') return true;
   return false;
-}).reduce(function(styles, el) {
-  return styles += el.innerHTML;
+}).reduce(function(iframeStyles, el) {
+  return iframeStyles += el.innerHTML;
 }, '');
+iframeStyles = encodeURIComponent('<style>' + iframeStyles + '</style>');
 
 toArray(document.getElementsByClassName('example')).forEach(function(example) {
-  example.src += encodeURIComponent('<style>' + styles + '</style>');
+  example.src += iframeStyles;
+  example.addEventListener('load', function() {
+    try {
+      example.height = example.contentDocument.documentElement.offsetHeight;
+    } catch(ex) {
+      console.warn('Your browser does not support accessing data URI iframes.');
+    }
+  });
 });
 
 
