@@ -95,18 +95,18 @@ var cli = function(options) {
   ));
 
   // Get custom or default CSS file
-  var styledoccoCss =
+  var styledoccoCss = ncss(
     readFirstFile(options.include) +
     readFirstFile(
       options.resources + '/docs.css',
       defaultResourceDir + '/docs.css'
-    );
+    ));
 
   // Get custom or default JS file
-  var js = readFirstFile(
-    options.resources + '/docs.js',
-    defaultResourceDir + '/docs.js'
-  );
+  var js = uglify(
+    readFirstFile(
+      options.resources + '/docs.js', defaultResourceDir + '/docs.js'
+    ));
 
   // Render template
   var render = function(source, sections, css) {
@@ -115,8 +115,8 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: ncss(css + styledoccoCss),
-      js: uglify(js)
+      css: ncss(css) + styledoccoCss,
+      js: js
     });
   };
 
