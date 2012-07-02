@@ -33,7 +33,7 @@ var options = optimist
   .argv;
 
 options['in'] = options._.length ? options._
-                                 : './';
+                                 : ['./'];
 
 // Get common (absolute) path prefix of input files
 options.basePath = commonprefix(
