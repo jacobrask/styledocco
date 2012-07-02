@@ -3,7 +3,7 @@
   "description": "Generate style guides and documentation from your stylesheets.",
   "keywords": [ "styleguide", "css", "documentation" ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "http://jacobrask.github.com/styledocco/",
   "licenses": [ { "type": "MIT", "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
   "contributors": [ "Jacob Rask <jacob@jacobrask.net>" ],
