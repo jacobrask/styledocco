@@ -296,9 +296,11 @@ pre + .styledocco-example {
 }
 .styledocco-docs > pre:first-child {
     border-top: 0;
+    border-radius: 5px 5px 0 0;
 }
 .styledocco-docs > pre:last-child {
     border-bottom: 0;
+    border-radius: 0 0 5px 5px;
 }
 .styledocco-code pre {
     padding: 0;
