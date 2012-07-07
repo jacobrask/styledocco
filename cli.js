@@ -41,7 +41,7 @@ var findFile = function(dir, re) {
 var readFirstFile = function() {
   var files = [].slice.call(arguments);
   for (var i = 0, len = files.length; i < len; i++) {
-    if (path.existsSync(files[i])) {
+    if (fs.existsSync(files[i])) {
       return fs.readFileSync(files[i], 'utf-8');
     }
   }
