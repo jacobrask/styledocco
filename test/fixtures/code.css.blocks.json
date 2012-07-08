@@ -1,0 +1,9 @@
+[
+  {
+    "docs": " Various types of code blocks in documentation \n",
+    "code": "\nbody {\n  background: red;\n  color: white;\n}\n\n"
+  }, {
+    "docs": "\n```php\n<?php\necho 'PHP Code without rendered example';\n?>\n```\n\n    <p>HTML to be rendered</p> \n",
+    "code": "\n"
+  }
+]

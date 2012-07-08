@@ -87,7 +87,7 @@ var makeSections = exports.makeSections = function(blocks) {
       var newBlock = {
         code: block.code,
         docs: block.docs.reduce(function(tokens, token) {
-          if (token.type === 'code') {
+          if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
             tokens.push({
               type: 'html',
               pre: true,

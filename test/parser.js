@@ -21,7 +21,7 @@ if (typeof window === 'undefined') {
 } else {
   fixturePath = 'fixtures/';
 }
-var fixtures = [ 'asterisk.css', 'comments.css', 'invalid.css',
+var fixtures = [ 'asterisk.css', 'code.css', 'comments.css', 'invalid.css',
                  'normal.css', 'structured.css' ];
 
 exports["Documentation and code blocks"] = function(test) {

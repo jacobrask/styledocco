@@ -1,0 +1,15 @@
+/* Various types of code blocks in documentation */
+
+body {
+  background: red;
+  color: white;
+}
+
+/*
+```php
+<?php
+echo 'PHP Code without rendered example';
+?>
+```
+
+    <p>HTML to be rendered</p> */
