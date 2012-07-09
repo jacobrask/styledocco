@@ -9,8 +9,12 @@ html
       else if title 
         #{title}
     meta(charset='utf-8')
-    style !{sdCss}
-    style(type='text/example') !{css}
+    if docCSS
+      style !{docCSS}
+    if exampleCSS
+      style(type='text/example') !{exampleCSS}
+    if exampleJS
+      script(type='text/example') !{exampleJS}
   body
     .container
       .sidebar
@@ -33,6 +37,6 @@ html
               .code
                 pre
                   code !{section.code}
-    if js
-      script !{js}
+    if docJS
+      script !{docJS}
 <!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->

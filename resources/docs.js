@@ -2,55 +2,68 @@
 
 'use strict';
 
+// Helper functions
+// ----------------
 var toArray = function(arr) { return Array.prototype.slice.call(arr); };
-var add = function(a, b) { return a + b; };
+
+var getStyle = function(el, prop) {
+  return window.getComputedStyle(el).getPropertyValue(prop);
+};
+
+// Get code intended for example iframes.
+var getExampleCode = function(type) {
+  return toArray(document.getElementsByTagName(type))
+    .filter(function(el) {
+      if (el.getAttribute('type') === 'text/example') return true;
+      else return false;
+    }).reduce(function(styles, el) { return styles += el.innerHTML; }, '');
+};
 
 
-// Scans your stylesheet for pseudo classes and adds a class with the same name.
-// Thanks to Knyle Style Sheets for the idea.
+// Main program
+// ------------
 
-// Compile regular expression.
-var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
-                'enabled', 'disabled', 'checked' ];
-var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
-var processedPseudoClasses = toArray(document.styleSheets).filter(function(ss) {
-  return !(ss.href != null);
-}).map(function(ss) {
-  return toArray(ss.cssRules).filter(function(rule) {
-    // Keep only rules with pseudo classes.
-    return rule.selectorText && rule.selectorText.match(pseudoRe);
-  }).map(function(rule) {
-    // Replace : with . and encoded :
-    return rule.cssText.replace(pseudoRe, ".\\3A $1");
-  }).reduce(add, '');
-}).reduce(add, '');
-if (processedPseudoClasses.length) {
-  // Add a new style element with the processed pseudo class styles.
-  var styleEl = document.createElement('style');
-  styleEl.innerText = processedPseudoClasses;
-  document.getElementsByTagName('head')[0].appendChild(styleEl);
-}
+// Get example styles and scripts.
+var styles = getExampleCode('style');
+var scripts = getExampleCode('script');
 
+// Loop through code examples and replace with iframes.
+toArray(document.getElementsByClassName('example'))
+  .forEach(function(exampleEl) {
+    // Insert a new iframe with the current document as src, to be able to
+    // interact with it even on localhost.
+    var iframeEl = document.createElement('iframe');
+    iframeEl.setAttribute('src', location.href);
+    iframeEl.setAttribute('seamless', true);
+    iframeEl.setAttribute('class', 'example');
+    exampleEl.parentNode.insertBefore(iframeEl, exampleEl);
 
-// Adds documentation styles from parent document to example iframes
-var iframeStyles = toArray(document.getElementsByTagName('style')).filter(function(el) {
-  if (el.getAttribute('type') === 'text/example') return true;
-  return false;
-}).reduce(function(iframeStyles, el) {
-  return iframeStyles += el.innerHTML;
-}, '');
-iframeStyles = encodeURIComponent('<style>' + iframeStyles + '</style>');
+    iframeEl.addEventListener('load', function(event) {
+      var doc = this.contentDocument;
+      var bodyEl    = doc.getElementsByTagName('body')[0];
+      var oldHeadEl = doc.getElementsByTagName('head')[0];
+      var headEl    = doc.createElement('head');
+      var scriptEl  = doc.createElement('script');
+      var styleEl   = doc.createElement('style');
 
-toArray(document.getElementsByClassName('example')).forEach(function(example) {
-  example.src += iframeStyles;
-  example.addEventListener('load', function() {
-    try {
-      example.height = example.contentDocument.documentElement.offsetHeight;
-    } catch(ex) {
-      console.warn('Your browser does not support accessing data URI iframes.');
-    }
+      // Add example code, style and scripts to example iframe.
+      bodyEl.innerHTML = exampleEl.innerHTML;
+      scriptEl.innerHTML = scripts;
+      styleEl.innerHTML = styles;
+      headEl.appendChild(styleEl);
+      headEl.appendChild(scriptEl);
+      oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
+
+      // Set the height of the iframe element to match the content.
+      var height = doc.documentElement.offsetHeight;
+      height = height + parseInt(getStyle(this, 'border-top-width'))
+                      + parseInt(getStyle(this, 'border-bottom-width'));
+      this.style.height = height + 'px';
+      this.style.display = 'block';
+
+      exampleEl.parentNode.removeChild(exampleEl);
+    });
   });
-});
 
 
 }());
