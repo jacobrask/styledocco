@@ -27,6 +27,8 @@ var getExampleCode = function(type) {
 var styles = getExampleCode('style');
 var scripts = getExampleCode('script');
 
+var body = document.getElementsByTagName('body')[0];
+
 // Loop through code examples and replace with iframes.
 toArray(document.getElementsByClassName('example'))
   .forEach(function(exampleEl) {
@@ -39,19 +41,21 @@ toArray(document.getElementsByClassName('example'))
     exampleEl.parentNode.insertBefore(iframeEl, exampleEl);
 
     iframeEl.addEventListener('load', function(event) {
+      // Use iframe's document object.
       var doc = this.contentDocument;
-      var bodyEl    = doc.getElementsByTagName('body')[0];
-      var oldHeadEl = doc.getElementsByTagName('head')[0];
-      var headEl    = doc.createElement('head');
-      var scriptEl  = doc.createElement('script');
-      var styleEl   = doc.createElement('style');
 
-      // Add example code, style and scripts to example iframe.
-      bodyEl.innerHTML = exampleEl.innerHTML;
+      // Replace iframe content with only the example HTML.
+      doc.getElementsByTagName('body')[0].innerHTML = exampleEl.innerHTML;
+
+      // Add example specific scripts and styles.
+      var scriptEl = doc.createElement('script');
       scriptEl.innerHTML = scripts;
+      var styleEl = doc.createElement('style');
       styleEl.innerHTML = styles;
+      var headEl = doc.createElement('head');
       headEl.appendChild(styleEl);
       headEl.appendChild(scriptEl);
+      var oldHeadEl = doc.getElementsByTagName('head')[0];
       oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
 
       // Set the height of the iframe element to match the content.
@@ -63,7 +67,25 @@ toArray(document.getElementsByClassName('example'))
 
       exampleEl.parentNode.removeChild(exampleEl);
     });
+    var backdropEl = document.createElement('div');
+    backdropEl.className = 'backdrop';
+
+    var buttonEl = document.createElement('button');
+    buttonEl.className = 'btn zoom';
+    buttonEl.innerHTML = 'zoom';
+    buttonEl.addEventListener('click', function(event) {
+      event.preventDefault();
+      body.appendChild(backdropEl);
+      body.classList.add('has-modal');
+      iframeEl.classList.add('modal');
+      iframeEl.style['top'] = Math.round(document.body.scrollTop + (window.innerHeight / 2)) + 'px';
+      backdropEl.addEventListener('click', function() {
+        body.removeChild(this);
+        body.classList.remove('has-modal');
+        iframeEl.classList.remove('modal');
+      });
+    });
+
+    iframeEl.parentNode.insertBefore(buttonEl, iframeEl);
   });
-
-
 }());
