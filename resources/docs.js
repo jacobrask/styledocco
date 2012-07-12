@@ -23,27 +23,29 @@ var getExampleCode = function(type) {
 // Main program
 // ------------
 
+var body = document.getElementsByTagName('body')[0];
+
 // Get example styles and scripts.
 var styles = getExampleCode('style');
 var scripts = getExampleCode('script');
-
-var body = document.getElementsByTagName('body')[0];
 
 // Loop through code examples and replace with iframes.
 toArray(document.getElementsByClassName('example'))
   .forEach(function(exampleEl) {
     // Insert a new iframe with the current document as src, to be able to
-    // interact with it even on localhost.
+    // interact with it even on localhost (in Chrome).
+    var iframeWrapEl = document.createElement('div');
+    iframeWrapEl.className = 'example';
+    iframeWrapEl.style.display = 'none';
     var iframeEl = document.createElement('iframe');
-    iframeEl.setAttribute('src', location.href);
     iframeEl.setAttribute('seamless', true);
-    iframeEl.setAttribute('class', 'example');
-    exampleEl.parentNode.insertBefore(iframeEl, exampleEl);
-
+    iframeWrapEl.appendChild(iframeEl);
+    exampleEl.parentNode.insertBefore(iframeWrapEl, exampleEl);
+    
     iframeEl.addEventListener('load', function(event) {
       // Use iframe's document object.
       var doc = this.contentDocument;
-
+      
       // Replace iframe content with only the example HTML.
       doc.getElementsByTagName('body')[0].innerHTML = exampleEl.innerHTML;
 
@@ -59,33 +61,29 @@ toArray(document.getElementsByClassName('example'))
       oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
 
       // Set the height of the iframe element to match the content.
-      var height = doc.documentElement.offsetHeight;
-      height = height + parseInt(getStyle(this, 'border-top-width'))
-                      + parseInt(getStyle(this, 'border-bottom-width'));
-      this.style.height = height + 'px';
-      this.style.display = 'block';
+      iframeWrapEl.style.display = 'block';
+      this.style.height = doc.documentElement.offsetHeight + 'px';
 
+      // Remove the old example element.
       exampleEl.parentNode.removeChild(exampleEl);
     });
-    var backdropEl = document.createElement('div');
-    backdropEl.className = 'backdrop';
+    iframeEl.setAttribute('src', location.href);
 
-    var buttonEl = document.createElement('button');
-    buttonEl.className = 'btn zoom';
-    buttonEl.innerHTML = 'zoom';
-    buttonEl.addEventListener('click', function(event) {
-      event.preventDefault();
-      body.appendChild(backdropEl);
-      body.classList.add('has-modal');
-      iframeEl.classList.add('modal');
-      iframeEl.style['top'] = Math.round(document.body.scrollTop + (window.innerHeight / 2)) + 'px';
-      backdropEl.addEventListener('click', function() {
-        body.removeChild(this);
-        body.classList.remove('has-modal');
-        iframeEl.classList.remove('modal');
-      });
+    // Allow `resize` to shrink in WebKit by setting width/height to 0.
+    iframeWrapEl.addEventListener('mousemove', function(event) {
+      if (!this.wasResized) {
+        if ((this.oldWidth || this.oldHeight) &&
+            (this.oldWidth !== this.offsetWidth ||
+             this.oldHeight !== this.offsetHeight)) {
+          this.style.width = 0;
+          this.style.height = 0;
+          this.wasResized = true;
+          this.oldWidth = null; this.oldHeight = null;
+          iframeEl.style.height = '100%';
+        }
+        this.oldWidth = this.offsetWidth; 
+        this.oldHeight = this.offsetHeight;
+      }
     });
-
-    iframeEl.parentNode.insertBefore(buttonEl, iframeEl);
   });
 }());

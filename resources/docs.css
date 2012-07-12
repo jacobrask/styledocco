@@ -24,9 +24,6 @@ body {
   background-color: #fbfdff;
   color: #334;
 }
-  body.has-modal {
-    overflow: hidden;
-  }
 /* Paragraphs, lists, tables and block quotes get a full baseline bottom margin.
 
     <p>Paragraph #1
@@ -58,6 +55,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
   color: #555f6a;
 }
+/* * * * */
 a {
   color: #27a;
   text-decoration: none;
@@ -89,7 +87,6 @@ code, var, samp, kbd {
   font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
 }
 pre {
-  max-height: 200px;
   padding: 1.5%;
   overflow-y: auto;
   white-space: pre-wrap;
@@ -100,6 +97,9 @@ pre {
   border: 1px solid rgba(220, 220, 225, .8);
   border-radius: 5px;
 }
+.docs pre {
+  max-height: 200px;
+}
 pre code,
 pre samp {
   padding: 0;
@@ -108,48 +108,52 @@ pre samp {
   font-size: .7rem;
 }
 
-.pilcrow,
-.code {
+.pilcrow {
   display: none;
 }
 .main {
-  width: 80%;
-  margin-right: 5%;
+  width: 86%;
   float: right;
 }
+.section {
+  min-height: 150px;
+  position: relative;
+  margin-bottom: 2rem;
+}
 .docs {
-  width: 80%;
+  width: 70%;
+}
+.code {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 20%;
+}
+.code pre {
+  height: 100%;
 }
 .example {
-  max-height: 300px;
   margin: 0 -1%;
   width: 102%;
-  border: 9px solid #fff;
-  border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+  max-height: 300px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  resize: both;
+  overflow: auto;
+}
+.example iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .example + pre {
   border-top-left-radius: 0; border-top-right-radius: 0;
   margin-bottom: 2rem;
 }
-.example.modal {
-  position: absolute;
-  width: 90%;
-  left: 50%;
-  margin: 0;
-  z-index: 1;
-  border: 0;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  -moz-transform:    translateX(-50%) translateY(-50%);
-  -o-transform:      translateX(-50%) translateY(-50%);
-}
-.backdrop {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 0;
-  background: rgba(0, 0, 0, .95);
-  -webkit-transition: background 5s;
-}
+
 
 /* ------------------------------------------------------------------------- */
 
@@ -338,7 +342,6 @@ A centered container with sections of documentation and code side by side, and a
     box-shadow: 0 0 3px rgba(0, 0, 0, .1);
 }
 .code {
-    display: none;
     position: absolute;
     top: 5px; bottom: 5px;
     right: 0;
