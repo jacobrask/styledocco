@@ -1,0 +1,15 @@
+[
+  { 
+    "docs": " This is the first section \n",
+    "code": "body {\n  content: 'It has some code';\n}\n"
+  }, {
+    "docs": " --- \n",
+    "code": "\n"
+  }, {
+    "docs": " This is another section, without any code.\n\n* * * \n",
+    "code": "\nhtml {\n  content: 'This is a section with only code';\n}\n\n"
+  }, {
+    "docs": " --- \n",
+    "code": "\n"
+  }
+]
