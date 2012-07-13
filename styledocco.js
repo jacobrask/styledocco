@@ -74,7 +74,6 @@ var separate = function(css) {
 };
 
 var makeSections = exports.makeSections = function(blocks) {
-  var htmlDoc = '<!doctype html><title></title><body>';
   return blocks
     .map(function(block) {
       // Run comments through marked.lexer to get Markdown tokens
@@ -104,23 +103,22 @@ var makeSections = exports.makeSections = function(blocks) {
       return newBlock;
     }, [])
     .reduce(function(sections, cur) {
-      // Split into sections with hr's as delimiters.
-      var doc;
+      // Split into sections with headings as delimiters.
       var docs = cur.docs;
-      // TODO: Make more elegant and easy to follow.
       while (docs.length) {
-        if (sections.length === 0) {
-          // First section
-          sections.push({ docs: [ docs.shift() ], code: '' });
-        } else if (docs[0].type === 'hr') {
-            // New section, ignore the hr.
-            docs.shift();
-            if (docs.length) {
-              sections.push({ docs: [ docs.shift() ], code: '' });
-            } else {
-              // Nothing more after the hr in the doc block, start new section.
-              sections.push({ docs: [], code: '' });
-            }
+        if (docs[0].type === 'heading' && docs[0].depth === 1) {
+          // New section, add title property and strip heading.
+          var title = docs[0].text;
+          docs.shift();
+          if (docs.length === 0) {
+            // Nothing more after the heading in the doc block, start new section.
+            sections.push({ docs: [], code: '', title: title });
+          } else {
+            sections.push({ docs: [ docs.shift() ], code: '', title: title });
+          }
+        // First section
+        } else if (sections.length === 0) {
+          sections.push({ docs: [ docs.shift() ], code: '', title: null });
         } else {
           // Add the documentation to the last section.
           sections[sections.length-1].docs.push(docs.shift());
@@ -128,9 +126,10 @@ var makeSections = exports.makeSections = function(blocks) {
         // Keep marked's custom links property on the docs arrays.
         sections[sections.length-1].docs.links = docs.links;
       }
-      // Add code to last section.
+      // No docs in file, just add the CSS.
       if (sections.length === 0) {
         sections.push(cur);
+      // Add remaining code to the last section.
       } else {
         sections[sections.length-1].code += cur.code;
       }
@@ -139,6 +138,7 @@ var makeSections = exports.makeSections = function(blocks) {
     .map(function(section) {
       // Run through marked parser to generate HTML.
       return {
+        title: section.title,
         docs: trimNewLines(marked.parser(section.docs)),
         code: trimNewLines(section.code)
       };
