@@ -10,375 +10,376 @@ the documentation syntax. */
   padding: 0;
   border: 0;
 }
-/* We use the generic `sans-serif` font family to get Arial on Windows and
+body {
+  /* Top padding for fixed navbar */
+  padding: 60px 0 0;
+  background-color: hsl(200, 5%, 88%);
+  color: #445;
+}
+/* The page content has a maximum width of 1500 pixels. */
+.container {
+  padding: 0 20px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.section {
+  position: relative;
+  margin-bottom: 20px;
+}
+/* When StyleDocco encounters a first level heading, the documentation is
+split into a new section containing a pair of documentation and CSS code.
+
+```
+<article class="section">
+  <div class="docs">
+    <h1>Documentation</h1>
+  </div>
+  <div class="code"><pre><code>CSS code</code></pre></div>
+</article>
+``` */
+.docs {
+  position: relative;
+  width: 65%;
+  z-index: 2;
+  min-height: 200px;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 5px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, .1);
+}
+.code {
+  position: absolute;
+  top: 5px; bottom: 5px;
+  right: 0;
+  z-index: 1;
+  width: 36%;
+  padding: 10px;
+  padding-left: 20px;
+  border-radius: 0 5px 5px 0;
+  border: 1px solid rgba(0, 0, 0, .1);
+  background-color: rgba(255, 255, 255, .75);
+  background-clip: padding-box;
+  opacity: .75;
+  -webkit-transition: opacity .25s;
+  -moz-transition:    opacity .25s;
+  -o-transition:      opacity .25s;
+  transition:         opacity .25s;
+}
+  .code:hover {
+    opacity: 1;
+  }
+
+/* # Previews and code
+Previews are rendered in sandboxed iframes and are resizable.
+
+```
+<div class="docs">
+  <div class="preview"><div class="resize">Rendered preview. Resize me!</div></div>
+  <pre><code>HTML code</code></pre>
+</div>
+```
+
+<small>Resizing currently only works in Firefox and WebKit browers (in which
+you must also first enlarge an element slightly to be able to shrink it.</small>
+
+There is currently no syntax highlighting of neither CSS nor HTML code, but
+it's on the todo-list.
+*/
+.preview {
+  margin-top: 10px;
+  background: #fff;
+  border-top: 1px solid rgb(220, 220, 225);
+}
+  pre + .preview {
+    margin-top: 0;
+    border-top: 0;
+  }
+.resize {
+  overflow: auto;
+  resize: both;
+  padding: 15px;
+  background: #fff;
+}
+.preview iframe {
+  display: block;
+  width: 100%;
+}
+.preview.loading iframe {
+  visibility: hidden;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #556;
+  font-size: 12px;
+  line-height: 1.1 !important;
+}
+.docs pre {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px 20px;
+  background: rgb(248, 249, 251);
+  border: 1px solid rgb(220, 220, 225);
+  border-left: 0; border-right: 0;
+}
+  .preview + pre {
+    margin-top: 0;
+    border-top: 1px dotted rgb(220, 220, 225);
+  }
+  .docs pre:last-child {
+    border-bottom: 0;
+    border-radius: 0 0 5px 5px;
+  }
+.code pre {
+  height: 100%;
+  margin-top: 0;
+  overflow-y: auto;
+}
+
+
+/*
+# Navigation
+
+Fixed to top with a small drop shadow.
+```
+<nav class="navbar"></nav>
+```
+*/
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  min-height: 40px;
+  font-size: 13px;
+  line-height: 40px;
+  background-image: -webkit-linear-gradient(hsla(197, 5%, 32%, .98),
+                                            hsla(197, 5%, 18%, .92));
+  background-image: -moz-linear-gradient(hsla(197, 5%, 32%, .98),
+                                         hsla(197, 5%, 18%, .92));
+  background-image: -o-linear-gradient(hsla(197, 5%, 32%, .98),
+                                       hsla(197, 5%, 18%, .92));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+}
+.navbar:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.navbar ul {
+  margin: 0 !important;
+}
+.navbar, .navbar a, .navbar a:visited {
+  color: rgba(255, 255, 255, .7);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, .3);
+}
+.navbar .is-active > a,
+.navbar a:hover {
+  color: rgba(255, 255, 255, .9);
+  text-decoration: none;
+}
+/* ```
+<div class="navbar"><a href="#" class="brand">Site name</a></div>
+``` */
+.brand, a.brand, a.brand:visited {
+  float: left;
+  margin-right: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  color: rgba(0, 0, 0, .9);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, .25);
+}
+.brand:hover, a.brand:hover {
+  color: #000;
+}
+/*
+Showing previews of absolutely positioned elements can be tricky, but most of
+the time you can solve it by adding inline styles in the example code, or
+by including a custom previews stylesheet with overrides.
+```
+<div class="navbar">
+  <ul class="nav">
+    <li><a href="#">css-file</a>
+    <li><a href="#" class="dropdown-toggle">folder</a>
+        <ul class="dropdown is-active">
+          <li><a href="#">css-file</a>
+          <li><a href="#">css-file</a>
+        </ul>
+  </ul>
+</div>
+``` */
+.nav li {
+  float: left;
+  position: relative;
+  list-style: none;
+}
+.nav a {
+  display: block;
+  margin-right: 15px;
+}
+.dropdown-toggle {
+  position: relative;
+  padding-right: 15px;
+}
+.dropdown-toggle:after {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 18px;
+  content: '';
+  border: 5px solid;
+  border-left-color: transparent; border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  overflow-y: auto;
+  max-height: 500px;
+  top: 40px;
+  left: -11px;
+  z-index: 9;
+  font-size: 13px;
+  padding: 0;
+  width: 175px;
+  line-height: 23px;
+  background-color: rgba(73, 78, 80, .95);
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+}
+.dropdown.is-active {
+  display: block;
+}
+.dropdown li {
+  float: none;
+}
+.dropdown a {
+  padding: 0 10px;
+}
+.dropdown li:hover {
+  background-color: rgb(73, 78, 80);
+}
+
+/*
+# Typography and text styles
+
+We use the generic `sans-serif` font family to get Arial on Windows and
 Helvetica on Mac. The body font-size is set to 14px.
 
     Lorem ipsum dolor sit amet. */
-html {
+body {
   font-family: sans-serif;
-  font-size: 87.5%; /* 14px */
+  font-size: 14px;
   line-height: 1.618;
 }
-body {
-  padding: 1%;
-  background-color: #fbfdff;
-  color: #334;
-}
-/* Paragraphs, lists, tables and block quotes get a full baseline bottom margin.
+/* Paragraphs, lists, tables and blockquotes get some bottom margins as well
+as side margins.
 
     <p>Paragraph #1
     <p>Paragraph #2
     <ul><li>List</ul> */
 p, ol, ul, dl,
-figure, pre,
-blockquote, table {
-  margin: 0 0 1em;
+figure, blockquote, table {
+  margin-left: 20px; margin-right: 20px;
+}
+pre, .preview,
+p, ol, ul, dl,
+figure, blockquote, table {
+  margin-top: 10px;
 }
   ul ul, ol ol, ul ol, ol ul,
   blockquote p:last-child {
-    margin-bottom: 0;
+    margin-top: 0;
   }
-/* Headings keep their default font-sizes but get 1.5em top and bottom
-margins.
+ul, ol {
+  padding-left: 1.5em;
+}
+p:last-child, ol:last-child, ul:last-child, dl:last-child {
+  margin-bottom: 20px;
+}
+/* Headings get font-sizes at a modular scale of 5:6.
 
     <h1>Heading 1</h1>
     <h2>Heading 2</h2>
-    <h3>Heading 3</h3> */
+    <h3>Heading 3</h2>
+    <h4>Heading 4</h2>
+    <h5>Heading 5</h2>
+    <h6>Heading 6</h3> */
 hr,
 h1, h2, h3, h4, h5, h6 {
-  margin: 1.5em 0 0.5em;
+  margin: 1em 20px .5em;
 }
-  h1:first-of-type {
-    margin-top: 0;
+  h1:first-child {
+    margin-top: 20px;
   }
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
-  color: #555f6a;
+  color: hsl(211, 11%, 37%);
 }
-/* * * * */
+h1 {
+  font-size: 2.49em;
+}
+h2 {
+  font-size: 2.07em;
+}
+h3 {
+  font-size: 1.73em;
+}
+h4 {
+  font-size: 1.44em;
+}
+h5 {
+  font-size: 1.2em;
+}
+h6 {
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+/*
+# Links
+
+To show pseudo selectors styles in previews, add the pseudo selector
+(including the `:`) as a regular class.
+
+    <a href="#">Link</a>
+    <a href="#" class=":hover">Link</a>
+    <a href="#" class=":visited">Link</a>
+*/
 a {
-  color: #27a;
+  color: rgb(34, 119, 170);
   text-decoration: none;
 }
   a:hover {
-    color: #157;
+    color: rgb(17, 85, 119);
     text-decoration: underline;
   }
   a:visited {
-    color: #146;
+    color: rgb(17, 68, 102);
   }
 
-/* * * * */
-/* For code display, we prefer [Ubuntu Mono](http://font.ubuntu.com.com),
-falling back on some fonts that should look better at smaller sizes than
+
+/* For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com.com),
+falling back on some fonts that should look better at smaller sizes than the
 default monospace fonts.
 
 ```
-<p>Inline <code>code</code> is set to stand out a bit from regular text.</p>
-
-<pre><code>The text in &lt;pre&gt; code blocks is small but legible.</code></pre>
+<pre>
+<code>The font in &lt;pre&gt; code blocks is small but legible.</code>
+</pre>
 ``` */
-code, var, samp, kbd {
-  padding: .1em .25em;
+code, var {
+  padding: .1em 3px;
   background: rgba(0, 0, 0, .025);
   border: 1px solid rgba(0, 0, 0, .05);
   border-radius: 3px;
   font-style: normal;
   font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
 }
-pre {
-  padding: 1.5%;
-  overflow-y: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  color: #445;
-  line-height: 1.1;
-  background: #fff;
-  border: 1px solid rgba(220, 220, 225, .8);
-  border-radius: 5px;
-}
-.docs pre {
-  max-height: 200px;
-}
-pre code,
-pre samp {
+
+pre code {
   padding: 0;
   background: transparent;
   border: 0;
-  font-size: .7rem;
-}
-
-.pilcrow {
-  display: none;
-}
-.main {
-  width: 86%;
-  float: right;
-}
-.section {
-  min-height: 150px;
-  position: relative;
-  margin-bottom: 2rem;
-}
-.docs {
-  width: 70%;
-}
-.code {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 20%;
-}
-.code pre {
-  height: 100%;
-}
-.example {
-  margin: 0 -1%;
-  width: 102%;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .25);
-  max-height: 300px;
-  background: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  resize: both;
-  overflow: auto;
-}
-.example iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.example + pre {
-  border-top-left-radius: 0; border-top-right-radius: 0;
-  margin-bottom: 2rem;
-}
-
-
-/* ------------------------------------------------------------------------- */
-
-/* ## Menu ##
-Sidebar menu, fixed top/left. Slightly faded out when not hovered.
-
-    <div class="sidebar :hover" style="position:static">
-      <a href="#" class="brand">Hovered sidebar</a>
-      <strong class="nav-heading">Folder</strong>
-      <ul class="nav">
-        <li><a href="#">Item</a>
-        <li class=":hover"><a href="#">Hovered item</a>
-      </ul>
-    </div> */
-
-/*
-    <div class="sidebar" style="position:static">
-      <a href="#" class="brand">Inactive menu</a>
-      <ul class="nav">
-        <li><a href="#">Item</a>
-      </ul>
-    </div>
-
-Sometimes you need to specify some inline styles in the HTML examples to override properties such as `position: fixed`. */
-.sidebar {
-  position: fixed;
-  width: 12%;
-  padding: 1%;
-  max-height: 90%;
-  overflow-y: auto;
-  word-wrap: break-word;
-  background-color: #777f88;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .25);
-  opacity: .75;
-  -webkit-transition: opacity 2.5s;
-  -moz-transition:    opacity 2.5s;
-  -o-transition:      opacity 2.5s;
-}
-  .sidebar:hover {
-    opacity: 1;
-    -webkit-transition: opacity .5s;
-    -moz-transition:    opacity .5s;
-    -o-transition:      opacity .5s;
-  }
-.sidebar a {
-  display: block;
-  text-decoration: none;
-}
-.brand,
-.brand:visited {
-  margin: 0 0 10px;
-  text-align: center;
-  color: #eee;
-  font-size: 16px;
-  font-weight: bold;
-  text-shadow: rgba(0, 0, 0, .5) 0 0 1px;
-}
-  .brand:hover {
-    color: #fff;
-    text-decoration: none;
-  }
-
-.nav-heading {
-  display: block;
-  margin: .5em 0 0;
-  padding: .3em 0;
-  color: #ddd;
-  font-size: 13px;
-  text-shadow: rgba(0, 0, 0, .25) 0 0 1px;
-}
-.nav li {
-  list-style: none;
-  border-top: 1px solid rgba(255, 255, 255, .1);
-}
-  .nav li:active,
-  .nav li:focus,
-  .nav li:hover {
-    background: rgba(255, 255, 255, .2);
-    border-color: transparent;
-    border-radius: 3px;
-    text-decoration: none;
-  }
-    .nav li:active + li,
-    .nav li:focus + li,
-    .nav li:hover + li {
-      border-color: transparent;
-    }
-.nav a {
-  padding: .2em 5%;
-  color: #f7f7f7;
-}
-
-
-.pilcrow {
-  position: absolute;
-  right: 0; top: 0;
-  text-decoration: none;
-  font-weight: bold;
-  opacity: .5;
-}
-.docs > .pilcrow:hover {
-  opacity: 1;
-}
-/*
-    <p>A <a href="#">regular link</a>, a <a href="./docs.html">visited link</a> and some <code>inline code</code>.</p>
-
-To show pseudo selectors styles in examples, just add the pseudo selector (including the `:`) as a class name.
-
-    <a href="#">Link</a>
-    <a href="#" class=":hover">Link</a>
-    <a href="#" class=":visited">Link</a>
-
-.docs :not(pre) var,
-.docs :not(pre) code {
-    padding: .1em 3px;
-    background: rgba(0, 0, 0, .025);
-    border: 1px solid rgba(0, 0, 0, .05);
-    border-radius: 3px;
-    font-style: normal;
-    font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
-
-/* For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com.com), falling back on some fonts that should look better at smaller sizes than the default monospace fonts.
-
-Code blocks also get a nice selection color to better highlight what you should select when copy/pasting.
-
-```
-<pre>
-<code>The text in &lt;pre&gt; code blocks is small but legible.</code>
-</pre>
-```
-.code pre code,
-.docs > pre samp,
-.docs > pre code {
-    padding: 0;
-    background: transparent;
-    border: 0;
-    font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
-    font-size: 12px;
-}
-.code code::selection,
-.docs > pre code::selection {
-    background: #248;
-    color: #fff;
-}
-*/
-/* * * * */
-
-/*
-## Site Layout ##
-A centered container with sections of documentation and code side by side, and a menu (not displayed here). The code pane is slightly faded out until hovered.
-
-    <div class="container">
-      <div class="section">
-        <div class="docs"><p>Documentation</p></div>
-        <div class="code"><pre>Code</pre></div>
-      </div>
-    </div>
-
-.container {
-    width: 95%;
-    max-width: 1500px;
-    margin: 0 auto;
-}
-.main {
-    float: right;
-    width: 83%;
-}
-.section {
-    position: relative;
-    min-height: 200px;
-}
-
-
-
-/* * * * * * * * * * * * * *
-## Documentation & code ##
-.docs {
-    position: relative;
-    width: 58%;
-    min-height: 200px;
-    margin: 20px 0 40px;
-    background: #fff;
-    background-clip: padding-box;
-    border-radius: 5px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, .1);
-}
-.code {
-    position: absolute;
-    top: 5px; bottom: 5px;
-    right: 0;
-    width: 42%;
-    overflow: auto;
-    padding: 10px;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border-radius: 0 5px 5px 0;
-    border: 1px solid rgba(0, 0, 0, .1);
-    background: rgba(255, 255, 255, .75);
-    opacity: .75;
-    -webkit-transition: opacity .25s;
-    -moz-transition:    opacity .25s;
-    -o-transition:      opacity .25s;
-}
-.code:hover {
-    opacity: 1;
-}
-/* Showing examples of documentation examples would be a bit recursive, but it's a checkerboard background to be able to see edges of elements regardless of their color.
-.example {
-    display: none;
-    margin-top: 10px;
-    width: 100%;
-    max-height: 300px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
-    overflow: hidden;
-}
-pre + .example {
-    margin-top: 0;
-    border-top: 0;
-}
-.example:before, .example:after { display: table; content: ""; }
-.example:after { clear: both; }
-
-.code pre {
-    padding: 0;
-    background: transparent;
-    border: 0;
 }

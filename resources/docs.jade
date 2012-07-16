@@ -11,32 +11,39 @@ html
     meta(charset='utf-8')
     if docCSS
       style !{docCSS}
-    if exampleCSS
-      style(type='text/example') !{exampleCSS}
-    if exampleJS
-      script(type='text/example') !{exampleJS}
+    if previewCSS
+      style(type='text/preview') !{previewCSS}
+    if previewJS
+      script(type='text/preview') !{previewJS}
   body
-    .container
-      .sidebar
+    nav.navbar
+      .container
         a.brand(href="index.html") #{project.name}
-        each links, folder in project.menu
-          unless folder == './'
-            strong.nav-heading #{folder}
-          ul.nav
-            each link in links
+        ul.nav
+          each links, folder in project.menu
+            if folder == './'
+              each link in links
+                li
+                  a(href="#{link.href}")
+                    #{link.name}
+            else
               li
-                a(href="#{link.href}")
-                  #{link.name}
-      .main
-        each section, i in sections
-          .section(id="section-#{i + 1}")
-            .docs
-              a(class='pilcrow', href="#section-#{i + 1}") &#182;
-              !{section.docs}
-            if section.code
-              .code
-                pre
-                  code !{section.code}
+                a.dropdown-toggle(href="#") #{folder}
+                ul.dropdown
+                  each link in links
+                    li
+                      a(href="#{link.href}")
+                        #{link.name}
+    section.container
+      each section, i in sections
+        article.section(id="section-#{i + 1}")
+          .docs
+            h1 #{section.title}
+            !{section.docs}
+          if section.code
+            .code
+              pre
+                code !{section.code}
     if docJS
       script !{docJS}
 <!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->

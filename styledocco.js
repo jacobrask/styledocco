@@ -83,7 +83,7 @@ var makeSections = exports.makeSections = function(blocks) {
       };
     })
     .map(function(block) {
-      // If we encounter code blocks in documentation, add example HTML
+      // If we encounter code blocks in documentation, add preview HTML
       var newBlock = {
         code: block.code,
         docs: block.docs.reduce(function(tokens, token) {
@@ -91,7 +91,7 @@ var makeSections = exports.makeSections = function(blocks) {
             tokens.push({
               type: 'html',
               pre: true,
-              text: '<div class="example">' + token.text + '</div>'
+              text: '<div class="preview">' + token.text + '</div>'
             });
           }
           tokens.push(token);

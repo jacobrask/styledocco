@@ -106,8 +106,7 @@ var cli = function(options) {
     defaultResourceDir + '/docs.js'
   );
 
-
-  var exampleCSS = readFirstFile(options.include);
+  var previewCSS = readFirstFile(options.include);
 
   // Get custom or default JS file
   var js = uglify(
@@ -117,9 +116,9 @@ var cli = function(options) {
     ));
 
   // Get custom or default JS file
-  var exampleJS = readFirstFile(
-    options.resources + '/examples.js',
-    defaultResourceDir + '/examples.js'
+  var previewJS = readFirstFile(
+    options.resources + '/previews.js',
+    defaultResourceDir + '/previews.js'
   );
 
 
@@ -130,8 +129,8 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      exampleCSS: ncss(css + exampleCSS),
-      exampleJS: exampleJS,
+      previewCSS: ncss(css + previewCSS),
+      previewJS: previewJS,
       docCSS: ncss(docCSS),
       docJS: docJS
     });
