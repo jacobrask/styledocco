@@ -19,7 +19,6 @@ body {
 /* The page content has a maximum width of 1500 pixels. */
 .container {
   padding: 0 20px;
-  max-width: 1500px;
   margin: 0 auto;
 }
 .section {
@@ -39,7 +38,7 @@ split into a new section containing a pair of documentation and CSS code.
 ``` */
 .docs {
   position: relative;
-  width: 65%;
+  width: 70%;
   z-index: 2;
   min-height: 200px;
   background-color: #fff;
@@ -53,7 +52,7 @@ split into a new section containing a pair of documentation and CSS code.
   top: 5px; bottom: 5px;
   right: 0;
   z-index: 1;
-  width: 36%;
+  width: 31%;
   padding: 10px;
   padding-left: 20px;
   border-radius: 0 5px 5px 0;
@@ -153,12 +152,12 @@ Fixed to top with a small drop shadow.
   min-height: 40px;
   font-size: 13px;
   line-height: 40px;
-  background-image: -webkit-linear-gradient(hsla(197, 5%, 32%, .98),
-                                            hsla(197, 5%, 18%, .92));
-  background-image: -moz-linear-gradient(hsla(197, 5%, 32%, .98),
-                                         hsla(197, 5%, 18%, .92));
-  background-image: -o-linear-gradient(hsla(197, 5%, 32%, .98),
-                                       hsla(197, 5%, 18%, .92));
+  background-image: -webkit-linear-gradient(hsla(197, 5%, 34%, .98),
+                                            hsla(197, 5%, 20%, .92));
+  background-image: -moz-linear-gradient(hsla(197, 5%, 34%, .98),
+                                         hsla(197, 5%, 20%, .92));
+  background-image: -o-linear-gradient(hsla(197, 5%, 34%, .98),
+                                       hsla(197, 5%, 20%, .92));
   box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
 }
 .navbar:after {
