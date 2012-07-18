@@ -1,118 +1,99 @@
+// Entry file for Browserify
+
 (function () {
 
 'use strict';
 
-var $ = require('jquery-browserify');
-
-// Don't run this script if we're rendering an preview page.
+// Don't run this script if we're rendering a preview page.
 if (location.href === '#preview') return;
 
-var toArray = function(arr) { return Array.prototype.slice.call(arr); };
+var $ = require('jquery-browserify');
 
-var getStyle = function(el, prop) {
-  return window.getComputedStyle(el).getPropertyValue(prop);
-};
+// Get preview styles intended for preview iframes.
+var styles = $('style[type="text/preview"]').toArray().reduce(
+  function(styles, el) { return styles + el.innerHTML; },
+'');
 
-// Get code intended for preview iframes.
-var getPreviewCode = function(type) {
-  return toArray(document.getElementsByTagName(type))
-    .filter(function(el) {
-      if (el.getAttribute('type') === 'text/preview') return true;
-      else return false;
-    }).reduce(function(styles, el) { return styles += el.innerHTML; }, '');
-};
-
-// Get preview styles and scripts.
-var styles = getPreviewCode('style');
-
-var body = document.getElementsByTagName('body')[0];
-var previews = toArray(body.getElementsByClassName('preview'));
+var $body = $('body').first();
 
 // Loop through code previews and replace with iframes.
-previews.forEach(
-  function(oldPreviewEl) {
-    // Insert a new iframe with the current document as src.
-    // In Chrome this will count as same-origin, in other browsers it will
-    // not load if it's on file systems, but still be script-modifiable.
-    var iframeEl = document.createElement('iframe');
-    iframeEl.setAttribute('seamless', 'seamless');
-    iframeEl.code = oldPreviewEl.innerHTML;
-    // Iframes cannot be resized with CSS, we need a wrapper element.
-    var previewEl = document.createElement('div');
-    previewEl.className = 'preview loading';
-    var resizeEl = document.createElement('div');
-    resizeEl.className = 'resize';
-    resizeEl.appendChild(iframeEl);
-    previewEl.appendChild(resizeEl);
-    oldPreviewEl.parentNode.replaceChild(previewEl, oldPreviewEl);
+$('.preview').each(function() {
+  var $oldPreview = $(this);
+  // Insert a new iframe with the current document as src.
+  // In Chrome this will count as same-origin, in other browsers it will
+  // not load if it's on file systems, but still be script-modifiable.
+  var $iframe = $(document.createElement('iframe'))
+                  .attr('seamless', 'seamless')
+                  .data('code', $oldPreview.html());
+  // Iframes cannot be resized with CSS, we need a wrapper element.
+  var $preview = $(document.createElement('div')).addClass('preview')
+  var $resize = $(document.createElement('div')).addClass('resize loading')
+  $resize.append($iframe);
+  $preview.append($resize);
+  $oldPreview.replaceWith($preview);
 
-    iframeEl.addEventListener('load', function(event) {
-      // Use iframe's document object.
-      var doc = this.contentDocument;
-      var oldHeadEl = doc.getElementsByTagName('head')[0];
- 
-      // Replace iframe content with the preview HTML.
-      doc.getElementsByTagName('body')[0].innerHTML = this.code;
+  $iframe.on('load', function(event) {
+    // Use iframe's document object.
+    var doc = this.contentDocument;
+    var oldHeadEl = doc.getElementsByTagName('head')[0];
+    var $body = $('body', doc).first();
 
-      // Add preview specific scripts and styles.
-      var scriptEl = doc.createElement('script');
-      scriptEl.setAttribute('src', 'previews.js');
-      var styleEl = doc.createElement('style');
-      styleEl.innerHTML = styles;
-      var headEl = doc.createElement('head');
-      headEl.appendChild(styleEl);
-      headEl.appendChild(scriptEl);
-      var oldHeadEl = doc.getElementsByTagName('head')[0];
-      oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
+    // Replace iframe content with the preview HTML.
+    $body.html($iframe.data('code'));
 
-      // Set the height of the iframe element to match the content.
-      previewEl.classList.remove('loading');
-      this.style.height = doc.documentElement.offsetHeight + 'px';
-    });
-    iframeEl.setAttribute('src', location.href + '#preview');
+    // Add preview specific scripts and styles. We can't use jQuery methods
+    // here due to the way it handles script insertion.
+    var scriptEl = doc.createElement('script');
+    scriptEl.src = 'previews.js';
+    var styleEl = doc.createElement('style');
+    styleEl.innerHTML = styles;
+    var headEl = doc.createElement('head');
+    headEl.appendChild(scriptEl);
+    headEl.appendChild(styleEl);
+    oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
+
+    // Set the height of the iframe element to match the content.
+    $preview.removeClass('loading');
+    $iframe.css('height', $body.outerHeight());
   });
+  $iframe.attr('src', location.href + '#preview');
+});
 
-body.addEventListener('mousemove',
-  function(event) {
-    var el = event.target;
-
-    // Allow `resize` to shrink in WebKit by setting width/height to 0.
-    if (!el.classList.contains('resize')) return;
-    if (!el.wasResized) {
-      if ((el.oldWidth || el.oldHeight) &&
-          (el.oldWidth !== el.offsetWidth ||
-           el.oldHeight !== el.offsetHeight)) {
-        el.style.width = 0;
-        el.style.height = 0;
-        el.wasResized = true;
-        el.oldWidth = null; el.oldHeight = null;
-        el.getElementsByTagName('iframe')[0].style.height = '100%';
-      }
-      el.oldWidth = el.offsetWidth; 
-      el.oldHeight = el.offsetHeight;
+// Allow `resize` to shrink in WebKit by setting width/height to 0 when
+// starting to resize.
+$('.resize').on('mousemove', function(event) {
+  var $el = $(this);
+  if (!$el.data('wasResized')) {
+    if (($el.data('oldWidth') || $el.data('oldHeight')) &&
+        ($el.data('oldWidth') !== $el.width() ||
+         $el.data('oldHeight') !== $el.height())) {
+      $el.css('width', 0).css('height', 0);
+      $el.data({ wasResized: true, oldWidth: null, oldHeight: null });
+      $el.find('iframe').first().css('height', '100%');
     }
+    $el.data({ oldWidth: $el.width(), oldHeight: $el.height() });
   }
-);
+});
 
-body.addEventListener('click',
-  function(event) {
-    var el = event.target;
-    // Dropdown menu. Fairly ugly implementation with `nextElementSibling`,
-    // works for now.
-    var activateDropdown = false;
-    if (el.classList.contains('dropdown-toggle')) {
-      event.preventDefault();
-      if (!el.classList.contains('is-active')) activateDropdown = true;
-    }
-    toArray(body.getElementsByClassName('dropdown-toggle')).forEach(function(el) {
-      el.classList.remove('is-active');
-      el.nextElementSibling.classList.remove('is-active');
-    });
-    if (activateDropdown) {
-      event.preventDefault();
-      el.classList.add('is-active');
-      el.nextElementSibling.classList.add('is-active');
-    }
+// Dropdown menu
+$body.on('click', function(event) {
+  var $el = $(event.target);
+  var activateDropdown = false;
+  if ($el.hasClass('dropdown-toggle')) {
+    event.preventDefault();
+    // Click fired on an inactive dropdown toggle
+    if (!$el.hasClass('is-active')) activateDropdown = true;
   }
-);
+  // Deactivate *all* dropdowns
+  $('.dropdown-toggle').each(function() {
+    $(this).removeClass('is-active')
+      .next('.dropdown').removeClass('is-active');
+  });
+  // Activate the clicked dropdown
+  if (activateDropdown) {
+    $el.addClass('is-active');
+    $el.next('.dropdown').addClass('is-active');
+  }
+});
+
 }());
