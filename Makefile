@@ -1,6 +1,6 @@
 BROWSER = opera
 
-all:
+all: resources/docs.js
 
 test:
 	@./node_modules/.bin/nodeunit test
@@ -21,4 +21,7 @@ examples:
 lint:
 	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/
 
+resources/docs.js: resources/docs-browserify.js
+	@./node_modules/.bin/browserify resources/docs-browserify.js -o resources/docs.js
+	
 .PHONY: all test test-browser pages examples lint
