@@ -9,12 +9,9 @@ html
       else if title 
         #{title}
     meta(charset='utf-8')
-    if docCSS
-      style !{docCSS}
+    link(rel="stylesheet", href="docs.css")
     if previewCSS
       style(type='text/preview') !{previewCSS}
-    if previewJS
-      script(type='text/preview') !{previewJS}
   body
     nav.navbar
       .container
@@ -44,6 +41,5 @@ html
             .code
               pre
                 code !{section.code}
-    if docJS
-      script !{docJS}
+    script(src="docs.js")
 <!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->

@@ -89,38 +89,23 @@ var cli = function(options) {
   mkdirp(options.out);
 
   // Compile custom or default template
-  var template = jade.compile(readFirstFile(
-    options.resources + '/docs.jade',
-    defaultResourceDir + '/docs.jade'
-  ));
-
-  // Get custom or default CSS file
-  var docCSS = readFirstFile(
-    options.resources + '/docs.css',
-    defaultResourceDir + '/docs.css'
+  var template = jade.compile(
+    readFirstFile(options.resources + '/docs.jade',
+                  defaultResourceDir + '/docs.jade')
   );
 
-  // Get custom or default JS file
-  var docJS = readFirstFile(
-    options.resources + '/docs.js',
-    defaultResourceDir + '/docs.js'
-  );
+  // Get custom or default JS and CSS files
+  var staticFiles = {
+    'docs.js': readFirstFile(options.resources + '/docs.js',
+                             defaultResourceDir + '/docs.js'),
+    'docs.css': readFirstFile(options.resources + '/docs.css',
+                              defaultResourceDir + '/docs.css'),
+    'previews.js': readFirstFile(options.resources + '/previews.js',
+                              defaultResourceDir + '/previews.js')
+  };
 
+  // Get optional extra CSS for preview iframes
   var previewCSS = readFirstFile(options.include);
-
-  // Get custom or default JS file
-  var js = uglify(
-    readFirstFile(
-      options.resources + '/docs.js',
-      defaultResourceDir + '/docs.js'
-    ));
-
-  // Get custom or default JS file
-  var previewJS = readFirstFile(
-    options.resources + '/previews.js',
-    defaultResourceDir + '/previews.js'
-  );
-
 
   // Render template
   var render = function(source, sections, css) {
@@ -129,10 +114,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      previewCSS: ncss(css + previewCSS),
-      previewJS: previewJS,
-      docCSS: ncss(docCSS),
-      docJS: docJS
+      previewCSS: ncss(css + previewCSS)
     });
   };
 
@@ -198,10 +180,17 @@ var cli = function(options) {
     });
 
     // Write files to the output dir.
-    htmlFiles.map(function(file) {
+    htmlFiles.forEach(function(file) {
       var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
       log('styledocco: writing ' + file.path + ' -> ' + dest);
-      return fs.writeFileSync(dest, file.html);
+      fs.writeFileSync(dest, file.html);
+    });
+
+    // Write static resources to the output dir
+    Object.keys(staticFiles).forEach(function(file) {
+      var dest = path.join(options.out, file);
+      log('styledocco: writing ' + file + ' -> ' + dest);
+      fs.writeFileSync(dest, staticFiles[file]);
     });
   });
 };
