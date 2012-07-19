@@ -54,7 +54,7 @@ $('.preview').each(function() {
 
     // Set the height of the iframe element to match the content.
     $preview.removeClass('loading');
-    $iframe.css('height', $body.outerHeight());
+    $iframe.css('height', $body[0].scrollHeight);
   });
   $iframe.attr('src', location.href + '#preview');
 });
@@ -67,15 +67,15 @@ $('.resize').on('mousemove', function(event) {
     if (($el.data('oldWidth') || $el.data('oldHeight')) &&
         ($el.data('oldWidth') !== $el.width() ||
          $el.data('oldHeight') !== $el.height())) {
-      $el.css('width', 0).css('height', 0);
-      $el.data({ wasResized: true, oldWidth: null, oldHeight: null });
-      $el.find('iframe').first().css('height', '100%');
+      $el.width(0).height(0)
+        .data({ wasResized: true })
+        .find('iframe').first().height('100%');
     }
     $el.data({ oldWidth: $el.width(), oldHeight: $el.height() });
   }
 });
 
-// Dropdown menu
+// Dropdown menus
 $body.on('click', function(event) {
   var $el = $(event.target);
   var activateDropdown = false;
