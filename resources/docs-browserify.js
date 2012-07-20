@@ -7,6 +7,11 @@
 // Don't run this script if we're rendering a preview page.
 if (location.href === '#preview') return;
 
+var getContentHeight = function(el) {
+  return el.contentDocument.getElementsByTagName('html')[0].scrollHeight;
+};
+
+
 var $ = require('jquery-browserify');
 
 var sumHtml = function(code, el) { return code + el.innerHTML; };
@@ -25,9 +30,9 @@ $('.preview').each(function() {
                   .data('code', $oldPreview.html());
   // Iframes cannot be resized with CSS, we need a wrapper element.
   var $preview = $(document.createElement('div')).addClass('preview')
-  var $resize = $(document.createElement('div')).addClass('resize loading')
-  $resize.append($iframe);
-  $preview.append($resize);
+  var $resizeable = $(document.createElement('div')).addClass('resizeable is-loading')
+  $resizeable.append($iframe);
+  $preview.append($resizeable);
   $oldPreview.replaceWith($preview);
 
   $iframe.on('load', function(event) {
@@ -56,7 +61,7 @@ $('.preview').each(function() {
     $preview.removeClass('loading');
 
     // Set the height of the iframe element to match the content.
-    $iframe.height($body[0].scrollHeight);
+    $iframe.height(getContentHeight($iframe[0]));
   });
   if ($.browser.webkit) {
     // WebKit doesn't treat data uris as same origin [https://bugs.webkit.org/show_bug.cgi?id=17352]
@@ -64,13 +69,13 @@ $('.preview').each(function() {
     $iframe.attr('src', location.href + '#preview');
   } else {
     // Set source to an empty HTML document.
-    $iframe.attr('src', 'data:text/html,%3C!doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3E%3C%2Ftitle%3E%3C%2Fhead%3E%3Cbody%3E');
+    $iframe.attr('src', 'data:text/html,%3C!doctype%20html%3E%3Chtml%3E%3Chead%3E%3C%2Fhead%3E%3Cbody%3E');
   }
 });
 
 // Allow `resize` to shrink in WebKit by setting width/height to 0 when
 // starting to resize.
-$('.resize').on('mousemove', function(event) {
+$('.resizeable').on('mousemove', function(event) {
   var $el = $(this);
   if (!$el.data('wasResized')) {
     if (($el.data('oldWidth') || $el.data('oldHeight')) &&

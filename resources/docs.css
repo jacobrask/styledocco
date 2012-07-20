@@ -11,22 +11,23 @@ the documentation syntax. */
   border: 0;
 }
 body {
-  /* Top padding for fixed navbar */
+  /* Top padding for navbar */
   padding: 60px 0 0;
   background-color: hsl(200, 5%, 88%);
-  color: #445;
+  color: hsl(240, 11%, 30%);
 }
 /* The page content has a maximum width of 1500 pixels. */
 .container {
-  padding: 0 20px;
+  max-width: 1300px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 .section {
   position: relative;
   margin-bottom: 20px;
 }
 /* When StyleDocco encounters a first level heading, the documentation is
-split into a new section containing a pair of documentation and CSS code.
+split into a new section with a pair of documentation and CSS code.
 
 ```
 <article class="section">
@@ -38,26 +39,25 @@ split into a new section containing a pair of documentation and CSS code.
 ``` */
 .docs {
   position: relative;
-  width: 70%;
   z-index: 2;
+  width: 68%;
   min-height: 200px;
-  background-color: #fff;
+  background-color: hsl(0, 0%, 100%);
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, .1);
+  border: 1px solid hsla(0, 0%, 0%, .1);
   border-radius: 5px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, .1);
+  box-shadow: 0 0 3px hsla(0, 0%, 0%, .1);
 }
 .code {
   position: absolute;
   top: 5px; bottom: 5px;
   right: 0;
   z-index: 1;
-  width: 31%;
-  padding: 10px;
-  padding-left: 20px;
+  width: 33%;
+  padding: 10px 10px 10px 20px;
   border-radius: 0 5px 5px 0;
-  border: 1px solid rgba(0, 0, 0, .1);
-  background-color: rgba(255, 255, 255, .75);
+  border: 1px solid hsla(0, 0%, 0%, .1);
+  background-color: hsla(0, 0%, 100%, .75);
   background-clip: padding-box;
   opacity: .75;
   -webkit-transition: opacity .25s;
@@ -74,57 +74,58 @@ Previews are rendered in sandboxed iframes and are resizable.
 
 ```
 <div class="docs">
-  <div class="preview"><div class="resize">Rendered preview. Resize me!</div></div>
+  <div class="preview"><div class="resizeable">Rendered preview. Resize me!</div></div>
   <pre><code>HTML code</code></pre>
 </div>
 ```
 
-<small>Resizing currently only works in Firefox and WebKit browers (in which
-you must also first enlarge an element slightly to be able to shrink it.</small>
+<small>Manual resizing currently only works in Firefox and WebKit browers
+(in which you must also first enlarge an element slightly to be able to shrink
+it.</small>
 
 There is currently no syntax highlighting of neither CSS nor HTML code, but
 it's on the todo-list.
 */
 .preview {
   margin-top: 10px;
-  background: #fff;
-  border-top: 1px solid rgb(220, 220, 225);
+  background: hsl(0, 0%, 100%);
+  border-top: 1px solid hsl(240, 8%, 87%);
 }
   pre + .preview {
     margin-top: 0;
     border-top: 0;
   }
-.resize {
+.resizeable {
+  padding: 15px;
   overflow: auto;
   resize: both;
-  padding: 15px;
-  background: #fff;
+  background: hsl(0, 0%, 100%);
 }
 .preview iframe {
   display: block;
   width: 100%;
 }
-.preview.loading iframe {
+.preview.is-loading iframe {
   visibility: hidden;
 }
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  color: #556;
+  color: hsl(240, 9%, 37%);
   font-size: 12px;
   line-height: 1.1 !important;
 }
 .docs pre {
   max-height: 200px;
-  overflow-y: auto;
   padding: 10px 20px;
-  background: rgb(248, 249, 251);
-  border: 1px solid rgb(220, 220, 225);
+  overflow-y: auto;
+  background: hsl(220, 27%, 98%);
+  border: 1px solid hsl(240, 8%, 87%);
   border-left: 0; border-right: 0;
 }
   .preview + pre {
     margin-top: 0;
-    border-top: 1px dotted rgb(220, 220, 225);
+    border-top-style: dotted;
   }
   .docs pre:last-child {
     border-bottom: 0;
@@ -158,23 +159,25 @@ Fixed to top with a small drop shadow.
                                          hsla(197, 5%, 20%, .92));
   background-image: -o-linear-gradient(hsla(197, 5%, 34%, .98),
                                        hsla(197, 5%, 20%, .92));
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  background-image: linear-gradient(hsla(197, 5%, 34%, .98),
+                                    hsla(197, 5%, 20%, .92));
+  box-shadow: 0 1px 3px hsla(0, 0%, 0%, .25);
 }
-.navbar:after {
-  content: '';
-  display: table;
-  clear: both;
-}
+  .navbar:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
 .navbar ul {
   margin: 0 !important;
 }
 .navbar, .navbar a, .navbar a:visited {
-  color: rgba(255, 255, 255, .7);
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, .3);
+  color: hsla(0, 0%, 100%, .7);
+  text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
 }
 .navbar .is-active > a,
 .navbar a:hover {
-  color: rgba(255, 255, 255, .9);
+  color: hsla(0, 0%, 100%, .9);
   text-decoration: none;
 }
 /* ```
@@ -185,12 +188,12 @@ Fixed to top with a small drop shadow.
   margin-right: 20px;
   font-weight: bold;
   font-size: 16px;
-  color: rgba(0, 0, 0, .9);
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, .25);
+  color: hsla(0, 0%, 0%, .9);
+  text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
 }
-.brand:hover, a.brand:hover {
-  color: #000;
-}
+  .brand:hover, a.brand:hover {
+    color: hsl(0, 0%, 0%);
+  }
 /*
 Showing previews of absolutely positioned elements can be tricky, but most of
 the time you can solve it by adding inline styles in the example code, or
@@ -220,6 +223,7 @@ by including a custom previews stylesheet with overrides.
   position: relative;
   padding-right: 15px;
 }
+ /* Arrow */
 .dropdown-toggle:after {
   display: block;
   position: absolute;
@@ -227,25 +231,26 @@ by including a custom previews stylesheet with overrides.
   top: 18px;
   content: '';
   border: 5px solid;
-  border-left-color: transparent; border-right-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
   border-bottom-color: transparent;
 }
 .dropdown {
   display: none;
   position: absolute;
-  overflow-y: auto;
-  max-height: 500px;
   top: 40px;
   left: -11px;
-  z-index: 9;
-  font-size: 13px;
-  padding: 0;
   width: 175px;
+  max-height: 500px;
+  padding: 0;
+  z-index: 9999;
+  overflow-y: auto;
+  font-size: 13px;
   line-height: 23px;
-  background-color: rgba(73, 78, 80, .95);
-  border: 1px solid rgba(0, 0, 0, .2);
+  background-color: hsla(197, 5%, 30%, .95);
+  border: 1px solid hsla(0, 0%, 0%, .2);
   border-radius: 0 0 3px 3px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+  box-shadow: 0 0 3px hsla(0, 0%, 0%, .3);
 }
 .dropdown.is-active {
   display: block;
@@ -257,8 +262,9 @@ by including a custom previews stylesheet with overrides.
   padding: 0 10px;
 }
 .dropdown li:hover {
-  background-color: rgb(73, 78, 80);
+  background-color: hsl(197, 5%, 30%);
 }
+
 
 /*
 # Typography and text styles
