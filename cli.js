@@ -7,9 +7,10 @@ var fs = require('fs');
 var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
-var cssmin = require('ncss');
+// var mincss = require('ncss');
+var mincss = function(str) { return str; };
 var path = require('path');
-var jsmin = require('uglify-js');
+var minjs = require('uglify-js');
 
 var styledocco = require('./styledocco');
 
@@ -109,14 +110,14 @@ var cli = function(options) {
   };
 
   // Get optional extra CSS for previews
-  var previewCSS = cssmin(options.include
+  var previewCSS = mincss(options.include
     .filter(function(file) { return path.extname(file) === '.css'; })
     .map(readFileSync)
     .reduce(add, '')
   );
 
   // Get optional extra JavaScript for previews
-  var previewJS = jsmin(options.include
+  var previewJS = minjs(options.include
     .filter(function(file) { return path.extname(file) === '.js'; })
     .map(readFileSync)
     .reduce(add, '')
@@ -130,7 +131,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      previewCSS: cssmin(css) + previewCSS,
+      previewCSS: mincss(css) + previewCSS,
       previewJS: previewJS
     });
   };
