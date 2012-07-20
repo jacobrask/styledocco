@@ -130,7 +130,7 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      previewCSS: previewCSS + cssmin(css),
+      previewCSS: cssmin(css) + previewCSS,
       previewJS: previewJS
     });
   };
