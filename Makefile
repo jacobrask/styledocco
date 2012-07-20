@@ -15,8 +15,9 @@ test-browser/tests.js: test/
 pages:
 	@./bin/styledocco -n StyleDocco -o ./ ./resources/docs.css
 
-examples:
-	@./bin/styledocco -n StyleDocco -o ./examples/styledocco resources/docs.css
+examples: resources/docs.js
+	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
+		--include resources/previews.css resources/docs.css
 	@./bin/styledocco -n "Twitter Bootstrap" -o ./examples/bootstrap/docs \
 		examples/bootstrap/less/buttons.less
 

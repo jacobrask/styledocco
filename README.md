@@ -8,7 +8,7 @@
 
 StyleDocco generates documentation and style guide documents from your stylesheets.
 
-Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples prefixed with 4 spaces or between [code fences](http://github.github.com/github-flavored-markdown/) (<code>```</code>) in your comments, and StyleDocco both renders the HTML and shows the code example.
+Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples prefixed with 4 spaces or between [code fences](http://github.github.com/github-flavored-markdown/) (<code>```</code>) in your comments, and StyleDocco renders a preview with the styles applied, and shows the example HTML code.
 
 An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
@@ -38,9 +38,9 @@ If your project includes a `README` file, it will be used as the base for an `in
 
  * `--name`, `-n`      Name of the project *(required)*
  * `--out`, `-o`       Output directory *(default: "docs")*
- * `--resources`, `-s` Directory with files to customize the documentation output (docs.jade, docs.css and docs.js). StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
+ * `--resources`, `-s` Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
  * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
- * `--include`         Prepend specified CSS file to the documentation stylesheet. *(optional)* (ex: `--include mysite.css`)
+ * `--include`         Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include mysite.css --include app.js`)
  * `--verbose`         Show log messages when generating the documentation. *(default: false)*
  *                     Directory containing the stylesheets to document.
 
@@ -72,7 +72,8 @@ See the `examples` folder for more in-depth examples.
 ### Tips and tricks
 
  * Put some whitespace before a comment block to exclude it from the documentation.
- * Horizontal rules (`-----`, `* * *`, etc) will automatically create a new section in the documentation.
+ * Level 1 headings will automatically create a new section in the documentation.
+ * Add `:hover`, `:focus`, etc as a class name in a code example and the pseudo class styles will be applied to the element.
 
 
 ## Acknowledgements

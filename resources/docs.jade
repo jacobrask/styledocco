@@ -12,6 +12,8 @@ html
     link(rel="stylesheet", href="docs.css")
     if previewCSS
       style(type='text/preview') !{previewCSS}
+    if previewJS
+      script(type='text/preview') !{previewJS}
   body
     nav.navbar
       .container

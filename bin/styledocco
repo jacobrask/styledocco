@@ -15,6 +15,15 @@ var commonprefix = function(arr) {
   });
 };
 
+// Make sure `obj` is an array.
+var toArray = function(obj) {
+  if (obj == null) return [];
+  if (Object.prototype.toString.call(obj) === '[object Array]') return obj;
+  if (typeof obj === 'string' || !isNan(obj) ||
+      Object.prototype.toString.call(obj) === '[object Object]') return [ obj ];
+  return Array.prototype.slice.call(obj);;
+};
+
 if (optimist.argv.version != null) {
   return console.log("StyleDocco " + (require('../package').version));
 }
@@ -27,13 +36,15 @@ var options = optimist
   .describe('resources', 'Directory for static resources')
     .alias('s', 'resources')['default']('resources', __dirname + '/../resources')
   .describe('preprocessor', 'Custom preprocessor command')
-  .describe('include', 'Extra CSS to include in documentation')
+  .describe('include', 'Extra CSS/JavaScript to include in previews')
   .describe('verbose', 'Print status messages to stdout')
   .describe('version', 'Display StyleDocco version')
   .argv;
 
 options['in'] = options._.length ? options._
                                  : ['./'];
+
+options.include = toArray(options.include);
 
 // Get common (absolute) path prefix of input files
 options.basePath = commonprefix(

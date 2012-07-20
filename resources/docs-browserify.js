@@ -9,10 +9,11 @@ if (location.href === '#preview') return;
 
 var $ = require('jquery-browserify');
 
+var sumHtml = function(code, el) { return code + el.innerHTML; };
 // Get preview styles intended for preview iframes.
-var styles = $('style[type="text/preview"]').toArray().reduce(
-  function(styles, el) { return styles + el.innerHTML; },
-'');
+var styles = $('style[type="text/preview"]').toArray().reduce(sumHtml, '');
+// Get preview scripts intended for preview iframes.
+var scripts = $('script[type="text/preview"]').toArray().reduce(sumHtml, '');
 
 var $body = $('body').first();
 
@@ -32,23 +33,25 @@ $('.preview').each(function() {
   $iframe.on('load', function(event) {
     // Use iframe's document object.
     var doc = this.contentDocument;
-    var oldHeadEl = doc.getElementsByTagName('head')[0];
-    var $body = $('body', doc).first();
 
     // Replace iframe content with the preview HTML.
-    $body.html($iframe.data('code'));
+    $('body', doc).first().html($iframe.data('code'));
 
     // Add preview specific scripts and styles. We can't use jQuery methods
-    // here due to the way it handles script insertion.
+    // here due to the way it handles script insertion using XHR.
     var scriptEl = doc.createElement('script');
     var src = location.href.split('/');
     src.pop(); src.push('previews.js');
     scriptEl.src = src.join('/');
+    var previewScriptEl = doc.createElement('script');
+    previewScriptEl.innerHTML = scripts;
     var styleEl = doc.createElement('style');
     styleEl.innerHTML = styles;
     var headEl = doc.createElement('head');
     headEl.appendChild(styleEl);
     headEl.appendChild(scriptEl);
+    headEl.appendChild(previewScriptEl);
+    var oldHeadEl = doc.getElementsByTagName('head')[0];
     oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
     $preview.removeClass('loading');
 

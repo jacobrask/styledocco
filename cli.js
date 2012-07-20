@@ -7,13 +7,17 @@ var fs = require('fs');
 var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
-var ncss = require('ncss');
+var cssmin = require('ncss');
 var path = require('path');
-var uglify = require('uglify-js');
+var jsmin = require('uglify-js');
 
 var styledocco = require('./styledocco');
 
 marked.setOptions({ sanitize: false, gfm: true });
+
+// Helper functions
+var add = function(a, b) { return a + b; };
+var readFileSync = function(file) { return fs.readFileSync(file, 'utf-8'); };
 
 // Get a filename without the extension
 var baseFilename = function(str) {
@@ -38,11 +42,11 @@ var findFile = function(dir, re) {
 };
 
 // Return content of first existing file in argument list.
-var readFirstFile = function() {
+var readFirstFileSync = function() {
   var files = [].slice.call(arguments);
   for (var i = 0, len = files.length; i < len; i++) {
     if (path.existsSync(files[i])) {
-      return fs.readFileSync(files[i], 'utf-8');
+      return readFileSync(files[i]);
     }
   }
   return '';
@@ -90,22 +94,34 @@ var cli = function(options) {
 
   // Compile custom or default template
   var template = jade.compile(
-    readFirstFile(options.resources + '/docs.jade',
-                  defaultResourceDir + '/docs.jade')
+    readFirstFileSync(options.resources + '/docs.jade',
+                      defaultResourceDir + '/docs.jade')
   );
 
   // Get custom or default JS and CSS files
   var staticFiles = {
-    'docs.js': readFirstFile(options.resources + '/docs.js',
-                             defaultResourceDir + '/docs.js'),
-    'docs.css': readFirstFile(options.resources + '/docs.css',
-                              defaultResourceDir + '/docs.css'),
-    'previews.js': readFirstFile(options.resources + '/previews.js',
-                              defaultResourceDir + '/previews.js')
+    'docs.js': readFirstFileSync(options.resources + '/docs.js',
+                                 defaultResourceDir + '/docs.js'),
+    'docs.css': readFirstFileSync(options.resources + '/docs.css',
+                                  defaultResourceDir + '/docs.css'),
+    'previews.js': readFirstFileSync(options.resources + '/previews.js',
+                                     defaultResourceDir + '/previews.js')
   };
 
-  // Get optional extra CSS for preview iframes
-  var previewCSS = readFirstFile(options.include);
+  // Get optional extra CSS for previews
+  var previewCSS = cssmin(options.include
+    .filter(function(file) { return path.extname(file) === '.css'; })
+    .map(readFileSync)
+    .reduce(add, '')
+  );
+
+  // Get optional extra JavaScript for previews
+  var previewJS = jsmin(options.include
+    .filter(function(file) { return path.extname(file) === '.js'; })
+    .map(readFileSync)
+    .reduce(add, '')
+  );
+
 
   // Render template
   var render = function(source, sections, css) {
@@ -114,7 +130,8 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      previewCSS: ncss(css + previewCSS)
+      previewCSS: previewCSS + cssmin(css),
+      previewJS: previewJS
     });
   };
 
@@ -158,7 +175,7 @@ var cli = function(options) {
 
   // Run files through preprocessor and StyleDocco parser.
   async.mapSeries(files, function(file, cb) {
-    var content = fs.readFileSync(file, 'utf-8');
+    var content = readFileSync(file);
     preprocess(file, function(err, css) {
       cb(null, {
         path: file,
@@ -171,7 +188,7 @@ var cli = function(options) {
                      findFile(process.cwd(), /^readme/i) ||
                      findFile(options.resources, /^readme/i) ||
                      defaultResourceDir + '/README.md';
-    var readme = fs.readFileSync(readmeFile, 'utf-8');
+    var readme = readFileSync(readmeFile);
 
     // Add readme with "fake" index path
     htmlFiles.push({
