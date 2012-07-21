@@ -79,9 +79,8 @@ Previews are rendered in sandboxed iframes and are resizable.
 </div>
 ```
 
-<small>Manual resizing currently only works in Firefox and WebKit browers
-(in which you must also first enlarge an element slightly to be able to shrink
-it.</small>
+<small>Custom resizing currently only works properly in Firefox. In WebKit
+browsers you can only enlarge the previews.</small>.
 
 There is currently no syntax highlighting of neither CSS nor HTML code, but
 it's on the todo-list.

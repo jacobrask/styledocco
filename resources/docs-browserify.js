@@ -73,22 +73,6 @@ $('.preview').each(function() {
   }
 });
 
-// Allow `resize` to shrink in WebKit by setting width/height to 0 when
-// starting to resize.
-$('.resizeable').on('mousemove', function(event) {
-  var $el = $(this);
-  if (!$el.data('wasResized')) {
-    if (($el.data('oldWidth') || $el.data('oldHeight')) &&
-        ($el.data('oldWidth') !== $el.width() ||
-         $el.data('oldHeight') !== $el.height())) {
-      $el.width(0).height(0)
-        .data({ wasResized: true })
-        .find('iframe').first().height('100%');
-    }
-    $el.data({ oldWidth: $el.width(), oldHeight: $el.height() });
-  }
-});
-
 // Dropdown menus
 $body.on('click', function(event) {
   var $el = $(event.target);
@@ -110,6 +94,7 @@ $body.on('click', function(event) {
   }
 });
 
+// Resizing buttons
 $('.settings').on('click', 'button', function(event) {
   var $el = $(event.target);
   $el.addClass('is-active');
