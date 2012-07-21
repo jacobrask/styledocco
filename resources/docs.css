@@ -11,8 +11,8 @@ the documentation syntax. */
   border: 0;
 }
 body {
-  /* Top padding for navbar */
-  padding: 60px 0 0;
+  /* Top/bottom paddings for bars */
+  padding: 60px 0;
   background-color: hsl(200, 5%, 88%);
   color: hsl(240, 11%, 30%);
 }
@@ -143,45 +143,47 @@ pre {
 
 Fixed to top with a small drop shadow.
 ```
-<nav class="navbar"></nav>
+<nav class="bar top"></nav>
 ```
 */
-.navbar {
+.bar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  left: 0; right: 0;
   z-index: 9999;
   min-height: 40px;
-  font-size: 13px;
   line-height: 40px;
-  background-image: -webkit-linear-gradient(hsla(197, 5%, 34%, .98),
-                                            hsla(197, 5%, 20%, .92));
-  background-image: -moz-linear-gradient(hsla(197, 5%, 34%, .98),
-                                         hsla(197, 5%, 20%, .92));
-  background-image: -o-linear-gradient(hsla(197, 5%, 34%, .98),
-                                       hsla(197, 5%, 20%, .92));
-  background-image: linear-gradient(hsla(197, 5%, 34%, .98),
-                                    hsla(197, 5%, 20%, .92));
+  background-image: -webkit-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:    -moz-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:      -o-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:         linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+}
+.bar.top {
+  top: 0;
   box-shadow: 0 1px 3px hsla(0, 0%, 0%, .25);
 }
-  .navbar:after {
-    content: '';
-    display: table;
-    clear: both;
-  }
-.navbar ul {
+.bar.bottom {
+  bottom: 0;
+  box-shadow: 0 -1px 3px hsla(0, 0%, 0%, .25);
+}
+
+.bar ul {
   margin: 0 !important;
 }
-.navbar, .navbar a, .navbar a:visited {
+.menu, .menu a, .menu a:visited {
   color: hsla(0, 0%, 100%, .7);
   text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
 }
-.navbar .is-active > a,
-.navbar a:hover {
+.menu .is-active > a,
+.menu a:hover {
   color: hsla(0, 0%, 100%, .9);
   text-decoration: none;
 }
 /* ```
-<div class="navbar"><a href="#" class="brand">Site name</a></div>
+<div class="bar top"><a href="#" class="brand">Site name</a></div>
 ``` */
 .brand, a.brand, a.brand:visited {
   float: left;
@@ -190,6 +192,7 @@ Fixed to top with a small drop shadow.
   font-size: 16px;
   color: hsla(0, 0%, 0%, .9);
   text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
+  text-decoration: none;
 }
   .brand:hover, a.brand:hover {
     color: hsl(0, 0%, 0%);
@@ -199,8 +202,8 @@ Showing previews of absolutely positioned elements can be tricky, but most of
 the time you can solve it by adding inline styles in the example code, or
 by including a custom previews stylesheet with overrides.
 ```
-<div class="navbar">
-  <ul class="nav">
+<div class="bar top">
+  <ul class="menu">
     <li><a href="#">css-file</a>
     <li><a href="#" class="dropdown-toggle">folder</a>
         <ul class="dropdown is-active">
@@ -210,15 +213,19 @@ by including a custom previews stylesheet with overrides.
   </ul>
 </div>
 ``` */
-.nav li {
+.menu {
+  font-size: 13px;
+}
+.menu li {
   float: left;
   position: relative;
   list-style: none;
 }
-.nav a {
+.menu a {
   display: block;
   margin-right: 15px;
 }
+
 .dropdown-toggle {
   position: relative;
   padding-right: 15px;
@@ -266,6 +273,58 @@ by including a custom previews stylesheet with overrides.
 }
 
 
+/*
+# Settings and configuration
+*/
+.settings {
+  text-align: center;
+}
+.settings button {
+  display: inline-block;
+  vertical-align: middle;
+  opacity: .4;
+  height: 30px;
+  margin: 0 7px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.settings button:first-child {
+  margin-left: 0;
+}
+.settings button:hover,
+.settings button.is-active {
+  opacity: .7;
+}
+ /* Glyphicons Free. http://glyphicons.com */
+.settings .desktop {
+  width: 28px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYBAMAAAAbsoCxAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoLLk56XJsAAAASUExURf///////////////////////7rldAIAAAAFdFJOUwA/Tc/vbrbEvQAAAAFiS0dEBfhv6ccAAAA2SURBVBhXY3ANRQIhDKEogCFUCQkMDy6aB5FAQCgDWmhAAFAZEmAMDRVA4gqHhhrCOXBjMbgASVE+V+Tuaj4AAAAASUVORK5CYII=);
+}
+.settings .laptop {
+  width: 28px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAYAAAD3T6+hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoME1lThk0AAAA8SURBVDjLY/j//z8DFPMD8fv/1AfvkexgYECzkFYAq4UMSAp8qYRHLRy1cNTCUQsHyEK6ApCF6+lo33oA6TKxvKfzn5kAAAAASUVORK5CYII=);
+}
+.settings .tablet {
+  width: 20px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAYAAAB836/YAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMNhJXUgoAAABJSURBVEjHY/j//3//f+qB8wz/qQxobqAvmXjUwFEDRw0cNXDUwFEDaW4gNtAJxMJQ3EmNatQeqo4ByiZoIKGWQz2SgfUE1PYDAKR3kM4foJivAAAAAElFTkSuQmCC);
+}
+.settings .smartphone {
+  width: 14px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYBAMAAAA46dFkAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMJg/gQm4AAAAYUExURf///////////////////////////////ykrwMgAAAAHdFJOUwAPP01vz+/RYU9PAAAAAWJLR0QHFmGI6wAAADRJREFUCFtjUCsHgSSGdDBdxlAOAQjaGAQGgC4vT4e4o1QwHEyXMLgD6XQwv4wB6O4yoLsBA2Y3dN88x/AAAAAASUVORK5CYII=);
+}
+.settings .featurephone {
+  width: 15px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAYAAADuWXTMAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMBjSOYqYAAABjSURBVDjLY/z//z8DFPgDsQMQG0BpdHABijcA8UaQACNQsz6QXgDVRCx4AMQBIM3vgQwBBtLBB5BmmLv9SNC4CebsUc2jmonWTDKgmmZGJPH/RPCpp3nU2YPe2fVAuoEMvQ0AyViFVz5H3XIAAAAASUVORK5CYII=);
+}
+.settings .auto {
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 32px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
 /*
 # Typography and text styles
 
@@ -376,8 +435,8 @@ default monospace fonts.
 ``` */
 code, var {
   padding: .1em 3px;
-  background: rgba(0, 0, 0, .025);
-  border: 1px solid rgba(0, 0, 0, .05);
+  background: hsla(0, 0%, 0%, .025);
+  border: 1px solid hsla(0, 0%, 0%, .05);
   border-radius: 3px;
   font-style: normal;
   font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
@@ -388,3 +447,12 @@ pre code {
   background: transparent;
   border: 0;
 }
+  
+.cf:before, .cf:after { content: ''; display: table; }
+.cf:after { clear: both; }
+.ir {
+  color: transparent;
+  font: 0/0 a;
+  text-shadow: none;
+}
+

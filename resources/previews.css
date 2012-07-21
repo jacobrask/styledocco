@@ -1,7 +1,13 @@
 body {
   padding: 1%;
 }
-.navbar {
+.bar {
   position: static;
-  margin: -1% -1% 1% -1%;
+  margin: -1%;
+}
+.bar.top {
+  margin-bottom: 1%;
+}
+.bar.bottom {
+  margin-top: 1%;
 }
