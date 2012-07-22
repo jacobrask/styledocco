@@ -44,18 +44,20 @@ $('.preview').each(function() {
 
     // Add preview specific scripts and styles. We can't use jQuery methods
     // here due to the way it handles script insertion using XHR.
+    var headEl = doc.createElement('head');
+    var styleEl = doc.createElement('style');
+    styleEl.innerHTML = styles;
+    headEl.appendChild(styleEl);
     var scriptEl = doc.createElement('script');
     var src = location.href.split('/');
     src.pop(); src.push('previews.js');
     scriptEl.src = src.join('/');
-    var previewScriptEl = doc.createElement('script');
-    previewScriptEl.innerHTML = scripts;
-    var styleEl = doc.createElement('style');
-    styleEl.innerHTML = styles;
-    var headEl = doc.createElement('head');
-    headEl.appendChild(styleEl);
     headEl.appendChild(scriptEl);
-    headEl.appendChild(previewScriptEl);
+    if (scripts.length) {
+      var previewScriptEl = doc.createElement('script');
+      previewScriptEl.innerHTML = scripts;
+      headEl.appendChild(previewScriptEl);
+    }
     var oldHeadEl = doc.getElementsByTagName('head')[0];
     oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
     $preview.removeClass('loading');

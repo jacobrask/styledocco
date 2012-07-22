@@ -176,25 +176,34 @@ var cli = function(options) {
 
   // Run files through preprocessor and StyleDocco parser.
   async.mapSeries(files, function(file, cb) {
-    var content = readFileSync(file);
     preprocess(file, function(err, css) {
       cb(null, {
         path: file,
-        html: render(file, styledocco(content), css)
+        css: css
       });
     });
   }, function(err, htmlFiles) {
+
+    var css = htmlFiles.reduce(function(css, file) {
+      return css + file.css;
+    }, '');
+
+    htmlFiles = htmlFiles.map(function(file) {
+      return {
+        path: file.path,
+        html: render(file.path, styledocco(readFileSync(file.path)), css)
+      };
+    });
+
     // Look for a README file.
     var readmeFile = findFile(options.basePath, /^readme/i) ||
                      findFile(process.cwd(), /^readme/i) ||
                      findFile(options.resources, /^readme/i) ||
                      defaultResourceDir + '/README.md';
-    var readme = readFileSync(readmeFile);
-
     // Add readme with "fake" index path
     htmlFiles.push({
       path: path.join(options.basePath, 'index'),
-      html: render('', [ { docs: marked(readme), code: '' } ])
+      html: render('', [ { docs: marked(readFileSync(readmeFile)), code: '' } ])
     });
 
     // Write files to the output dir.
