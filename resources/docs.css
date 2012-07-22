@@ -380,6 +380,22 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
   color: hsl(211, 11%, 37%);
 }
+h1 a, h1 a:hover, h1 a:visited {
+  color: inherit;
+  text-decoration: inherit;
+}
+.permalink {
+  width: 21px;
+  height: 23px;
+  position: absolute;
+  top: 15px; right: 15px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxgEwMAAAAEHRSTlMADx8vP09fb3+Pn6+/z9/v+t8hjgAAAKNJREFUGFdt0FsShSAIAFDITNNrsP/VxsMcdS4famcAQ4ApjlzzCVtcrFHxDzK3mQ0ryfLb8AJssuUNwZh2BIhycjwNMeo5Da2GTbO16nG1G5o1eWSNrqTqvcPXP6B1MCYsHSn7bcYJOjKF/mftmwB1xlvTKIQxl2YV3QU14TDN8kheZNifIGtp7+9V9sHOCwLcyjGuCFC4x4yDV5Qb5UmeNMELNfcMqAUDqMgAAAAASUVORK5CYII=) 50% 50% no-repeat;
+  opacity: .1;
+}
+  .permalink:hover {
+    opacity: .3;
+  }
+
 h1 {
   font-size: 2.49em;
 }

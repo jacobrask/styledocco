@@ -36,9 +36,11 @@ html
 
     section.container
       each section, i in sections
-        article.section(id="section-#{i + 1}")
+        - var slug = section.title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+        article.section(id="#{slug}")
           .docs
             h1 #{section.title}
+            a.permalink.ir(href="##{slug}") #{section.title}
             !{section.docs}
           if section.code
             .code

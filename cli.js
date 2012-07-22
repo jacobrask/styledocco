@@ -203,7 +203,7 @@ var cli = function(options) {
     // Add readme with "fake" index path
     htmlFiles.push({
       path: path.join(options.basePath, 'index'),
-      html: render('', [ { docs: marked(readFileSync(readmeFile)), code: '' } ])
+      html: render('', [ { title: options.name, docs: marked(readFileSync(readmeFile)), code: '' } ])
     });
 
     // Write files to the output dir.
