@@ -5,14 +5,17 @@
 'use strict';
 
 // Don't run this script if we're rendering a preview page.
-if (location.href === '#preview') return;
-
-var getContentHeight = function(el) {
-  return el.contentDocument.getElementsByTagName('html')[0].scrollHeight;
-};
-
+if (location.href === '#__preview__') return;
 
 var $ = require('jquery-browserify');
+
+var getContentHeight = function(iframeEl) {
+  var htmlEl = iframeEl.contentDocument.getElementsByTagName('html')[0];
+  var height = htmlEl.offsetHeight;
+  // Horizontal scroll bar
+  if (htmlEl.scrollWidth > iframeEl.scrollWidth) height = height + 20;
+  return height;
+};
 
 var sumHtml = function(code, el) { return code + el.innerHTML; };
 // Get preview styles intended for preview iframes.
@@ -63,12 +66,12 @@ $('.preview').each(function() {
     $preview.removeClass('loading');
 
     // Set the height of the iframe element to match the content.
-    $iframe.height(getContentHeight($iframe[0]));
+    $resizeable.height(getContentHeight($iframe[0]) + 30);
   });
   if ($.browser.webkit) {
     // WebKit doesn't treat data uris as same origin [https://bugs.webkit.org/show_bug.cgi?id=17352]
     // Even with try/catch, errors will be thrown, so there's no good way to feature detect.
-    $iframe.attr('src', location.href + '#preview');
+    $iframe.attr('src', location.href + '#__preview__');
   } else {
     // Set source to an empty HTML document.
     $iframe.attr('src', 'data:text/html,%3C!doctype%20html%3E%3Chtml%3E%3Chead%3E%3C%2Fhead%3E%3Cbody%3E');
@@ -102,9 +105,10 @@ $('.settings').on('click', 'button', function(event) {
   $el.addClass('is-active');
   $el.siblings().removeClass('is-active');
   $('.resizeable')
-    .animate({ width: $el.data('width') }, 250, function(el) {
-      var $iframe = $(this).find('iframe').first();
-      $iframe.animate({ height: getContentHeight($iframe[0]) }, 100);
+    .animate({ width: $el.data('width') }, 250, function() {
+      var $this = $(this);
+      var iframeEl = $this.find('iframe').first();
+      $this.animate({ height: getContentHeight(iframeEl) + 30 }, 100);
     });
 });
 

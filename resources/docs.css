@@ -103,6 +103,7 @@ it's on the todo-list.
 .preview iframe {
   display: block;
   width: 100%;
+  height: 100%;
 }
 .preview.is-loading iframe {
   visibility: hidden;
