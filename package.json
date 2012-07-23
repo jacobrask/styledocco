@@ -16,7 +16,6 @@
     "jade": "0.23.x",
     "marked": "0.2.x",
     "mkdirp": "0.x.x",
-    "ncss": "1.1.x",
     "optimist": "0.x.x",
     "uglify-js": "1.2.x" },
   "devDependencies": {
