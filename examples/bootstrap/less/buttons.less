@@ -8,7 +8,7 @@
 @import "mixins.less";
 
 // Base styles
-// -----------
+// ===========
 
 // Standard gray button with gradient
 //
@@ -36,7 +36,11 @@
   .ie7-restore-left-whitespace();
 }
 
- // **Hover state**
+// States
+// ------
+// Hover state
+
+//    <button class="btn :hover">Default</button>
 .btn:hover {
   color: @grayDark;
   text-decoration: none;
@@ -48,7 +52,9 @@
   .transition(background-position .1s linear);
 }
 
- // Focus state for keyboard and accessibility
+// Focus state for keyboard and accessibility
+
+//    <button class="btn :focus">Default</button>
 .btn:focus {
   .tab-focus();
 }
@@ -64,8 +70,9 @@
   outline: 0;
 }
 
-//    <button class="btn" disabled>Disabled</button>  
 // Add the `disabled` class to links and the `disabled` attribute for `button` elements.
+
+//    <button class="btn" disabled>Disabled</button>  
 .btn.disabled,
 .btn[disabled] {
   cursor: default;
@@ -77,7 +84,7 @@
 
 
 // Multiple sizes
-// --------------
+// ==============
 // Fancy larger or smaller buttons?
 
 //    <button class="btn btn-large">Large</button>
@@ -110,7 +117,7 @@
 
 
 // Alternate button styles
-// -----------------------
+// =======================
 
  // Set text color
 .btn-primary,
@@ -139,33 +146,52 @@
 }
 
  // Set the backgrounds
-//    <button class="btn btn-primary">Primary</button>  
+
 // Provides extra visual weight and identifies the primary action in a set of buttons.
+
+//    <button class="btn btn-primary">Primary</button>  
+//    <button class="btn btn-primary :hover">Hover</button>  
+//    <button class="btn btn-primary :active">Active</button>  
 .btn-primary {
   .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
 }
-//    <button class="btn btn-warning">Warning</button>  
 // Indicates caution should be taken with this action
+
+//    <button class="btn btn-warning">Warning</button>  
+//    <button class="btn btn-warning :hover">Hover</button>  
+//    <button class="btn btn-warning :active">Active</button>  
 .btn-warning {
   .buttonBackground(lighten(@orange, 15%), @orange);
 }
-//    <button class="btn btn-danger">Danger</button>  
 // Indicates a dangerous or potentially negative action
+
+//    <button class="btn btn-danger">Danger</button>  
+//    <button class="btn btn-danger :hover">Hover</button>  
+//    <button class="btn btn-danger :active">Active</button>  
 .btn-danger {
   .buttonBackground(#ee5f5b, #bd362f);
 }
-//    <button class="btn btn-success">Success</button>  
 // Indicates a successful or positive action
+
+//    <button class="btn btn-success">Success</button>  
+//    <button class="btn btn-success :hover">Hover</button>  
+//    <button class="btn btn-success :active">Active</button>  
 .btn-success {
   .buttonBackground(#62c462, #51a351);
 }
-//    <button class="btn btn-info">Info</button>  
 // Used as an alternate to the default styles
+
+//    <button class="btn btn-info">Info</button>  
+//    <button class="btn btn-info :hover">Hover</button>  
+//    <button class="btn btn-info :active">Active</button>  
 .btn-info {
   .buttonBackground(#5bc0de, #2f96b4);
 }
-//    <button class="btn btn-inverse">Inverse</button>  
 // Alternate dark gray button, not tied to a semantic action or use
+
+//    <button class="btn btn-inverse">Inverse</button>  
+//    <button class="btn btn-inverse :hover">Hover</button>  
+//    <button class="btn btn-inverse :active">Active</button>  
 .btn-inverse {
   .buttonBackground(#454545, #262626);
 }

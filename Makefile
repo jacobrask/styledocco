@@ -19,7 +19,7 @@ examples: resources/docs.js
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
 		--include resources/previews.css resources/docs.css
 	@./bin/styledocco -n "Twitter Bootstrap" -o ./examples/bootstrap/docs \
-		examples/bootstrap/less/buttons.less
+		examples/bootstrap/less
 
 lint:
 	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/

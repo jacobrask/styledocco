@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>buttons | Twitter Bootstrap
+<!DOCTYPE html><html><head><title>variables | Twitter Bootstrap
 </title><meta charset="utf-8"><link rel="stylesheet" href="docs.css"><style type="text/preview">.clearfix {
   *zoom: 1;
 }
@@ -326,227 +326,115 @@ input[type="submit"].btn.small {
 </style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">Twitter Bootstrap</a><ul class="menu"><li><a href="buttons.html">buttons
 </a></li><li><a href="mixins.html">mixins
 </a></li><li><a href="variables.html">variables
-</a></li></ul></div></nav><section class="container"><article id="button-styles" class="section"><div class="docs"><h1>Button Styles</h1><a href="#button-styles" class="permalink ir">Button Styles</a><p> As a convention, buttons should only be used for actions while hyperlinks are to be used for objects. For instance, &quot;Download&quot; should be a button while &quot;recent activity&quot; should be a link.
- Button styles can be applied to anything with the <code>btn</code> class applied. However, typically you&#39;ll want to apply these to only <code>a</code> and <code>button</code> elements.
+</a></li></ul></div></nav><section class="container"><article id="variables" class="section"><div class="docs"><h1>Variables</h1><a href="#variables" class="permalink ir">Variables</a><p> Variables to customize the look and feel of Bootstrap
 </p>
-</div><div class="code"><pre><code>@import "variables.less";
-@import "mixins.less";</code></pre></div></article><article id="base-styles" class="section"><div class="docs"><h1>Base styles</h1><a href="#base-styles" class="permalink ir">Base styles</a><p> Standard gray button with gradient
-
+<h2> GLOBAL VALUES</h2>
+<p> Links
 </p>
-<div class="preview"><button class="btn">Default</button></div><pre><code>&lt;button class=&quot;btn&quot;&gt;Default&lt;/button&gt;</code></pre>
-<h2> States</h2>
-<p> Hover state
+<p> Grays
 </p>
-<div class="preview"><button class="btn :hover">Default</button></div><pre><code>&lt;button class=&quot;btn :hover&quot;&gt;Default&lt;/button&gt;</code></pre>
-<p> Focus state for keyboard and accessibility
+<p> Accent colors
 </p>
-<div class="preview"><button class="btn :focus">Default</button></div><pre><code>&lt;button class=&quot;btn :focus&quot;&gt;Default&lt;/button&gt;</code></pre>
-<div class="preview"><button class="btn active">Active</button></div><pre><code>&lt;button class=&quot;btn active&quot;&gt;Active&lt;/button&gt;</code></pre>
-<p> Add the <code>disabled</code> class to links and the <code>disabled</code> attribute for <code>button</code> elements.
+<p> Typography
 </p>
-<div class="preview"><button class="btn" disabled>Disabled</button>  </div><pre><code>&lt;button class=&quot;btn&quot; disabled&gt;Disabled&lt;/button&gt;  </code></pre>
-</div><div class="code"><pre><code>.btn {
-  display: inline-block;
-  padding: 4px 10px 4px;
-  margin-bottom: 0; // For input.btn
-  font-size: @baseFontSize;
-  line-height: @baseLineHeight;
-  color: @grayDark;
-  text-align: center;
-  text-shadow: 0 1px 1px rgba(255,255,255,.75);
-  vertical-align: middle;
-  .buttonBackground(@white, darken(@white, 10%));
-  border: 1px solid #ccc;
-  border-bottom-color: #bbb;
-  .border-radius(4px);
-  @shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-  .box-shadow(@shadow);
-  cursor: pointer;
-
-  // Give IE7 some love
-  .reset-filter();
-  .ie7-restore-left-whitespace();
-}
-
-
-.btn:hover {
-  color: @grayDark;
-  text-decoration: none;
-  background-color: darken(@white, 10%);
-  background-position: 0 -15px;
-
-  // transition is only when going to hover, otherwise the background
-  // behind the gradient (there for IE<=9 fallback) gets mismatched
-  .transition(background-position .1s linear);
-}
-
-
-.btn:focus {
-  .tab-focus();
-}
-
-.btn.active,
-.btn:active {
-  background-image: none;
-  @shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-  .box-shadow(@shadow);
-  background-color: darken(@white, 10%);
-  background-color: darken(@white, 15%) e("\9");
-  outline: 0;
-}
-
-
-.btn.disabled,
-.btn[disabled] {
-  cursor: default;
-  background-image: none;
-  background-color: darken(@white, 10%);
-  .opacity(65);
-  .box-shadow(none);
-}</code></pre></div></article><article id="multiple-sizes" class="section"><div class="docs"><h1>Multiple sizes</h1><a href="#multiple-sizes" class="permalink ir">Multiple sizes</a><p> Fancy larger or smaller buttons?
+<p> Buttons
 </p>
-<div class="preview"><button class="btn btn-large">Large</button></div><pre><code>&lt;button class=&quot;btn btn-large&quot;&gt;Large&lt;/button&gt;</code></pre>
-<div class="preview"><button class="btn btn-small">Small</button></div><pre><code>&lt;button class=&quot;btn btn-small&quot;&gt;Small&lt;/button&gt;</code></pre>
-<div class="preview"><button class="btn btn-mini">Mini</button></div><pre><code>&lt;button class=&quot;btn btn-mini&quot;&gt;Mini&lt;/button&gt;</code></pre>
-</div><div class="code"><pre><code>.btn-large {
-  padding: 9px 14px;
-  font-size: @baseFontSize + 2px;
-  line-height: normal;
-  .border-radius(5px);
-}
-.btn-large [class^="icon-"] {
-  margin-top: 1px;
-}
-
-.btn-small {
-  padding: 5px 9px;
-  font-size: @baseFontSize - 2px;
-  line-height: @baseLineHeight - 2px;
-}
-.btn-small [class^="icon-"] {
-  margin-top: -1px;
-}
-
-.btn-mini {
-  padding: 2px 6px;
-  font-size: @baseFontSize - 2px;
-  line-height: @baseLineHeight - 4px;
-}</code></pre></div></article><article id="alternate-button-styles" class="section"><div class="docs"><h1>Alternate button styles</h1><a href="#alternate-button-styles" class="permalink ir">Alternate button styles</a><p> Provides extra visual weight and identifies the primary action in a set of buttons.
+<h2> COMPONENT VARIABLES</h2>
+<p> Z-index master list
+ Used for a bird&#39;s eye view of components dependent on the z-axis
+ Try to avoid customizing these :)
 </p>
-<div class="preview"><button class="btn btn-primary">Primary</button>  
-<button class="btn btn-primary :hover">Hover</button>  
-<button class="btn btn-primary :active">Active</button>  </div><pre><code>&lt;button class=&quot;btn btn-primary&quot;&gt;Primary&lt;/button&gt;  
-&lt;button class=&quot;btn btn-primary :hover&quot;&gt;Hover&lt;/button&gt;  
-&lt;button class=&quot;btn btn-primary :active&quot;&gt;Active&lt;/button&gt;  </code></pre>
-<p> Indicates caution should be taken with this action
+<p> Sprite icons path
 </p>
-<div class="preview"><button class="btn btn-warning">Warning</button>  
-<button class="btn btn-warning :hover">Hover</button>  
-<button class="btn btn-warning :active">Active</button>  </div><pre><code>&lt;button class=&quot;btn btn-warning&quot;&gt;Warning&lt;/button&gt;  
-&lt;button class=&quot;btn btn-warning :hover&quot;&gt;Hover&lt;/button&gt;  
-&lt;button class=&quot;btn btn-warning :active&quot;&gt;Active&lt;/button&gt;  </code></pre>
-<p> Indicates a dangerous or potentially negative action
+<p> Input placeholder text color
 </p>
-<div class="preview"><button class="btn btn-danger">Danger</button>  
-<button class="btn btn-danger :hover">Hover</button>  
-<button class="btn btn-danger :active">Active</button>  </div><pre><code>&lt;button class=&quot;btn btn-danger&quot;&gt;Danger&lt;/button&gt;  
-&lt;button class=&quot;btn btn-danger :hover&quot;&gt;Hover&lt;/button&gt;  
-&lt;button class=&quot;btn btn-danger :active&quot;&gt;Active&lt;/button&gt;  </code></pre>
-<p> Indicates a successful or positive action
+<p> Hr border color
 </p>
-<div class="preview"><button class="btn btn-success">Success</button>  
-<button class="btn btn-success :hover">Hover</button>  
-<button class="btn btn-success :active">Active</button>  </div><pre><code>&lt;button class=&quot;btn btn-success&quot;&gt;Success&lt;/button&gt;  
-&lt;button class=&quot;btn btn-success :hover&quot;&gt;Hover&lt;/button&gt;  
-&lt;button class=&quot;btn btn-success :active&quot;&gt;Active&lt;/button&gt;  </code></pre>
-<p> Used as an alternate to the default styles
+<p> Navbar
 </p>
-<div class="preview"><button class="btn btn-info">Info</button>  
-<button class="btn btn-info :hover">Hover</button>  
-<button class="btn btn-info :active">Active</button>  </div><pre><code>&lt;button class=&quot;btn btn-info&quot;&gt;Info&lt;/button&gt;  
-&lt;button class=&quot;btn btn-info :hover&quot;&gt;Hover&lt;/button&gt;  
-&lt;button class=&quot;btn btn-info :active&quot;&gt;Active&lt;/button&gt;  </code></pre>
-<p> Alternate dark gray button, not tied to a semantic action or use
+<p> Form states and alerts
 </p>
-<div class="preview"><button class="btn btn-inverse">Inverse</button>  
-<button class="btn btn-inverse :hover">Hover</button>  
-<button class="btn btn-inverse :active">Active</button>  </div><pre><code>&lt;button class=&quot;btn btn-inverse&quot;&gt;Inverse&lt;/button&gt;  
-&lt;button class=&quot;btn btn-inverse :hover&quot;&gt;Hover&lt;/button&gt;  
-&lt;button class=&quot;btn btn-inverse :active&quot;&gt;Active&lt;/button&gt;  </code></pre>
-</div><div class="code"><pre><code> // Set text color
-.btn-primary,
-.btn-primary:hover,
-.btn-warning,
-.btn-warning:hover,
-.btn-danger,
-.btn-danger:hover,
-.btn-success,
-.btn-success:hover,
-.btn-info,
-.btn-info:hover,
-.btn-inverse,
-.btn-inverse:hover {
-  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-  color: @white;
-}
- // Provide *some* extra contrast for those who can get it
-.btn-primary.active,
-.btn-warning.active,
-.btn-danger.active,
-.btn-success.active,
-.btn-info.active,
-.btn-dark.active {
-  color: rgba(255,255,255,.75);
-}
+<h2> GRID</h2>
+<p> Default 940px grid
+</p>
+<p> Fluid grid
+</p>
+</div><div class="code"><pre><code>@linkColor:             #08c;
+@linkColorHover:        darken(@linkColor, 15%);
 
- // Set the backgrounds
+@black:                 #000;
+@grayDarker:            #222;
+@grayDark:              #333;
+@gray:                  #555;
+@grayLight:             #999;
+@grayLighter:           #eee;
+@white:                 #fff;
 
+@blue:                  #049cdb;
+@blueDark:              #0064cd;
+@green:                 #46a546;
+@red:                   #9d261d;
+@yellow:                #ffc40d;
+@orange:                #f89406;
+@pink:                  #c3325f;
+@purple:                #7a43b6;
 
-.btn-primary {
-  .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
-}
+@baseFontSize:          13px;
+@baseFontFamily:        "Helvetica Neue", Helvetica, Arial, sans-serif;
+@baseLineHeight:        18px;
+@textColor:             @grayDark;
 
-.btn-warning {
-  .buttonBackground(lighten(@orange, 15%), @orange);
-}
-
-.btn-danger {
-  .buttonBackground(#ee5f5b, #bd362f);
-}
-
-.btn-success {
-  .buttonBackground(#62c462, #51a351);
-}
-
-.btn-info {
-  .buttonBackground(#5bc0de, #2f96b4);
-}
-
-.btn-inverse {
-  .buttonBackground(#454545, #262626);
-}
+@primaryButtonBackground:    @linkColor;
 
 
- // Cross-browser Jank
 
-button.btn,
-input[type="submit"].btn {
 
-  // Firefox 3.6 only I believe
-  &::-moz-focus-inner {
-    padding: 0;
-    border: 0;
-  }
+@zindexDropdown:          1000;
+@zindexPopover:           1010;
+@zindexTooltip:           1020;
+@zindexFixedNavbar:       1030;
+@zindexModalBackdrop:     1040;
+@zindexModal:             1050;
 
-  // IE7 has some default padding on button controls
-  *padding-top: 2px;
-  *padding-bottom: 2px;
-  &.large {
-    *padding-top: 7px;
-    *padding-bottom: 7px;
-  }
-  &.small {
-    *padding-top: 3px;
-    *padding-bottom: 3px;
-  }
-}</code></pre></div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="100%" class="auto is-active">Auto</button></div></div><script src="docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+@iconSpritePath:          "../img/glyphicons-halflings.png";
+@iconWhiteSpritePath:     "../img/glyphicons-halflings-white.png";
+
+@placeholderText:         @grayLight;
+
+@hrBorder:                @grayLighter;
+
+@navbarHeight:                    40px;
+@navbarBackground:                @grayDarker;
+@navbarBackgroundHighlight:       @grayDark;
+@navbarLinkBackgroundHover:       transparent;
+
+@navbarText:                      @grayLight;
+@navbarLinkColor:                 @grayLight;
+@navbarLinkColorHover:            @white;
+
+@warningText:             #c09853;
+@warningBackground:       #fcf8e3;
+@warningBorder:           darken(spin(@warningBackground, -10), 3%);
+
+@errorText:               #b94a48;
+@errorBackground:         #f2dede;
+@errorBorder:             darken(spin(@errorBackground, -10), 3%);
+
+@successText:             #468847;
+@successBackground:       #dff0d8;
+@successBorder:           darken(spin(@successBackground, -10), 5%);
+
+@infoText:                #3a87ad;
+@infoBackground:          #d9edf7;
+@infoBorder:              darken(spin(@infoBackground, -10), 7%);
+
+
+
+
+@gridColumns:             12;
+@gridColumnWidth:         60px;
+@gridGutterWidth:         20px;
+@gridRowWidth:            (@gridColumns * @gridColumnWidth) + (@gridGutterWidth * (@gridColumns - 1));
+
+@fluidGridColumnWidth:    6.382978723%;
+@fluidGridGutterWidth:    2.127659574%;</code></pre></div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="100%" class="auto is-active">Auto</button></div></div><script src="docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
