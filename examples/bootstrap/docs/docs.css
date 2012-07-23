@@ -1,0 +1,476 @@
+/*
+StyleDocco default styles
+=========================
+This is the default stylesheet for StyleDocco. It also serves as an example of
+the documentation syntax. */
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+body {
+  /* Top/bottom paddings for bars */
+  padding: 60px 0;
+  background-color: hsl(200, 5%, 90%);
+  color: hsl(240, 11%, 30%);
+}
+/* The page content has a maximum width of 1500 pixels. */
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.section {
+  position: relative;
+  margin-bottom: 20px;
+}
+/* When StyleDocco encounters a first level heading, the documentation is
+split into a new section with a pair of documentation and CSS code.
+
+```
+<article class="section">
+  <div class="docs">
+    <h1>Documentation</h1>
+  </div>
+  <div class="code"><pre><code>CSS code</code></pre></div>
+</article>
+``` */
+.docs {
+  position: relative;
+  z-index: 2;
+  width: 68%;
+  min-height: 200px;
+  background-color: hsl(0, 0%, 100%);
+  background-clip: padding-box;
+  border: 1px solid hsla(0, 0%, 0%, .1);
+  border-radius: 5px;
+  box-shadow: 0 0 3px hsla(0, 0%, 0%, .1);
+}
+.code {
+  position: absolute;
+  top: 5px; bottom: 5px;
+  right: 0;
+  z-index: 1;
+  width: 33%;
+  padding: 10px 10px 10px 20px;
+  border-radius: 0 5px 5px 0;
+  border: 1px solid hsla(0, 0%, 0%, .1);
+  background-color: hsla(0, 0%, 100%, .75);
+  background-clip: padding-box;
+  opacity: .75;
+  -webkit-transition: opacity .25s;
+  -moz-transition:    opacity .25s;
+  -o-transition:      opacity .25s;
+  transition:         opacity .25s;
+}
+  .code:hover {
+    opacity: 1;
+  }
+
+/* # Previews and code
+Previews are rendered in sandboxed iframes and are resizable.
+
+```
+<div class="docs">
+  <div class="preview"><div class="resizeable">Rendered preview. Resize me!</div></div>
+  <pre><code>HTML code</code></pre>
+</div>
+```
+
+<small>Custom resizing currently only works properly in Firefox. In WebKit
+browsers you can only enlarge the previews.</small>.
+
+There is currently no syntax highlighting of neither CSS nor HTML code, but
+it's on the todo-list.
+*/
+.preview {
+  margin-top: 10px;
+  background: hsl(0, 0%, 100%);
+  border-top: 1px solid hsl(240, 8%, 87%);
+}
+  pre + .preview {
+    margin-top: 0;
+    border-top: 0;
+  }
+.resizeable {
+  padding: 15px;
+  overflow: auto;
+  resize: both;
+  background: hsl(0, 0%, 100%);
+}
+.preview iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.preview.is-loading iframe {
+  visibility: hidden;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: hsl(240, 9%, 37%);
+  font-size: 12px;
+  line-height: 1.1 !important;
+}
+.docs pre {
+  max-height: 200px;
+  padding: 10px 20px;
+  overflow-y: auto;
+  background: hsl(220, 27%, 98%);
+  border: 1px solid hsl(240, 8%, 87%);
+  border-left: 0; border-right: 0;
+}
+  .preview + pre {
+    margin-top: 0;
+    border-top-style: dotted;
+  }
+  .docs pre:last-child {
+    border-bottom: 0;
+    border-radius: 0 0 5px 5px;
+  }
+.code pre {
+  height: 100%;
+  margin-top: 0;
+  overflow-y: auto;
+}
+
+
+/*
+# Navigation
+
+Fixed to top with a small drop shadow.
+```
+<nav class="bar top"></nav>
+```
+*/
+.bar {
+  position: fixed;
+  left: 0; right: 0;
+  z-index: 9999;
+  min-height: 40px;
+  line-height: 40px;
+  background-image: -webkit-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:    -moz-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:      -o-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:         linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+}
+.bar.top {
+  top: 0;
+  box-shadow: 0 1px 3px hsla(0, 0%, 0%, .25);
+}
+.bar.bottom {
+  bottom: 0;
+  box-shadow: 0 -1px 3px hsla(0, 0%, 0%, .25);
+}
+
+.bar ul {
+  margin: 0 !important;
+}
+.menu, .menu a, .menu a:visited {
+  color: hsla(0, 0%, 100%, .7);
+  text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
+}
+.menu .is-active > a,
+.menu a:hover {
+  color: hsla(0, 0%, 100%, .9);
+  text-decoration: none;
+}
+/* ```
+<div class="bar top"><a href="#" class="brand">Site name</a></div>
+``` */
+.brand, a.brand, a.brand:visited {
+  float: left;
+  margin-right: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  color: hsla(0, 0%, 0%, .9);
+  text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
+  text-decoration: none;
+}
+  .brand:hover, a.brand:hover {
+    color: hsl(0, 0%, 0%);
+  }
+/*
+Showing previews of absolutely positioned elements can be tricky, but most of
+the time you can solve it by adding inline styles in the example code, or
+by including a custom previews stylesheet with overrides.
+```
+<div class="bar top">
+  <ul class="menu">
+    <li><a href="#">css-file</a>
+    <li><a href="#" class="dropdown-toggle">folder</a>
+        <ul class="dropdown is-active">
+          <li><a href="#">css-file</a>
+          <li><a href="#">css-file</a>
+        </ul>
+  </ul>
+</div>
+``` */
+.menu {
+  font-size: 13px;
+}
+.menu li {
+  float: left;
+  position: relative;
+  list-style: none;
+}
+.menu a {
+  display: block;
+  margin-right: 15px;
+}
+
+.dropdown-toggle {
+  position: relative;
+  padding-right: 15px;
+}
+ /* Arrow */
+.dropdown-toggle:after {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 18px;
+  content: '';
+  border: 5px solid;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: -11px;
+  width: 175px;
+  max-height: 500px;
+  padding: 0;
+  z-index: 9999;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 23px;
+  background-color: hsla(197, 5%, 30%, .95);
+  border: 1px solid hsla(0, 0%, 0%, .2);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 0 3px hsla(0, 0%, 0%, .3);
+}
+.dropdown.is-active {
+  display: block;
+}
+.dropdown li {
+  float: none;
+}
+.dropdown a {
+  padding: 0 10px;
+}
+.dropdown li:hover {
+  background-color: hsl(197, 5%, 30%);
+}
+
+
+/*
+# Settings and configuration
+*/
+.settings {
+  text-align: center;
+}
+.settings button {
+  display: inline-block;
+  vertical-align: middle;
+  opacity: .4;
+  height: 30px;
+  margin: 0 7px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.settings button:first-child {
+  margin-left: 0;
+}
+.settings button:hover,
+.settings button.is-active {
+  opacity: .7;
+}
+ /* Glyphicons Free. http://glyphicons.com */
+.settings .desktop {
+  width: 28px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYBAMAAAAbsoCxAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoLLk56XJsAAAASUExURf///////////////////////7rldAIAAAAFdFJOUwA/Tc/vbrbEvQAAAAFiS0dEBfhv6ccAAAA2SURBVBhXY3ANRQIhDKEogCFUCQkMDy6aB5FAQCgDWmhAAFAZEmAMDRVA4gqHhhrCOXBjMbgASVE+V+Tuaj4AAAAASUVORK5CYII=);
+}
+.settings .laptop {
+  width: 28px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAYAAAD3T6+hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoME1lThk0AAAA8SURBVDjLY/j//z8DFPMD8fv/1AfvkexgYECzkFYAq4UMSAp8qYRHLRy1cNTCUQsHyEK6ApCF6+lo33oA6TKxvKfzn5kAAAAASUVORK5CYII=);
+}
+.settings .tablet {
+  width: 20px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAYAAAB836/YAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMNhJXUgoAAABJSURBVEjHY/j//3//f+qB8wz/qQxobqAvmXjUwFEDRw0cNXDUwFEDaW4gNtAJxMJQ3EmNatQeqo4ByiZoIKGWQz2SgfUE1PYDAKR3kM4foJivAAAAAElFTkSuQmCC);
+}
+.settings .smartphone {
+  width: 14px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYBAMAAAA46dFkAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMJg/gQm4AAAAYUExURf///////////////////////////////ykrwMgAAAAHdFJOUwAPP01vz+/RYU9PAAAAAWJLR0QHFmGI6wAAADRJREFUCFtjUCsHgSSGdDBdxlAOAQjaGAQGgC4vT4e4o1QwHEyXMLgD6XQwv4wB6O4yoLsBA2Y3dN88x/AAAAAASUVORK5CYII=);
+}
+.settings .featurephone {
+  width: 15px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAYAAADuWXTMAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMBjSOYqYAAABjSURBVDjLY/z//z8DFPgDsQMQG0BpdHABijcA8UaQACNQsz6QXgDVRCx4AMQBIM3vgQwBBtLBB5BmmLv9SNC4CebsUc2jmonWTDKgmmZGJPH/RPCpp3nU2YPe2fVAuoEMvQ0AyViFVz5H3XIAAAAASUVORK5CYII=);
+}
+.settings .auto {
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 32px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+/*
+# Typography and text styles
+
+We use the generic `sans-serif` font family to get Arial on Windows and
+Helvetica on Mac. The body font-size is set to 14px.
+
+    Lorem ipsum dolor sit amet. */
+body {
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.618;
+}
+/* Paragraphs, lists, tables and blockquotes get some bottom margins as well
+as side margins.
+
+    <p>Paragraph #1
+    <p>Paragraph #2
+    <ul><li>List</ul> */
+p, ol, ul, dl,
+figure, blockquote, table {
+  margin-left: 20px; margin-right: 20px;
+}
+pre, .preview,
+p, ol, ul, dl,
+figure, blockquote, table {
+  margin-top: 10px;
+}
+  ul ul, ol ol, ul ol, ol ul,
+  blockquote p:last-child {
+    margin-top: 0;
+  }
+ul, ol {
+  padding-left: 1.5em;
+}
+p:last-child, ol:last-child, ul:last-child, dl:last-child {
+  margin-bottom: 20px;
+}
+/* Headings get font-sizes at a modular scale of 5:6.
+
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h2>
+    <h4>Heading 4</h2>
+    <h5>Heading 5</h2>
+    <h6>Heading 6</h3> */
+hr,
+h1, h2, h3, h4, h5, h6 {
+  margin: 1em 20px .5em;
+}
+  h1:first-child {
+    margin-top: 20px;
+  }
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  color: hsl(211, 11%, 37%);
+}
+h1 a, h1 a:hover, h1 a:visited {
+  color: inherit;
+  text-decoration: inherit;
+}
+.permalink {
+  width: 21px;
+  height: 23px;
+  position: absolute;
+  top: 15px; right: 15px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxgEwMAAAAEHRSTlMADx8vP09fb3+Pn6+/z9/v+t8hjgAAAKNJREFUGFdt0FsShSAIAFDITNNrsP/VxsMcdS4famcAQ4ApjlzzCVtcrFHxDzK3mQ0ryfLb8AJssuUNwZh2BIhycjwNMeo5Da2GTbO16nG1G5o1eWSNrqTqvcPXP6B1MCYsHSn7bcYJOjKF/mftmwB1xlvTKIQxl2YV3QU14TDN8kheZNifIGtp7+9V9sHOCwLcyjGuCFC4x4yDV5Qb5UmeNMELNfcMqAUDqMgAAAAASUVORK5CYII=) 50% 50% no-repeat;
+  opacity: .1;
+}
+  .permalink:hover {
+    opacity: .3;
+  }
+
+h1 {
+  font-size: 2.49em;
+}
+h2 {
+  font-size: 2.07em;
+}
+h3 {
+  font-size: 1.73em;
+}
+h4 {
+  font-size: 1.44em;
+}
+h5 {
+  font-size: 1.2em;
+}
+h6 {
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+/*
+# Links
+
+To show pseudo selectors styles in previews, add the pseudo selector
+(including the `:`) as a regular class.
+
+    <a href="#">Link</a>
+    <a href="#" class=":hover">Link</a>
+    <a href="#" class=":visited">Link</a>
+*/
+a {
+  color: hsl(203, 80%, 67%);
+  text-decoration: none;
+}
+  a:hover {
+    color: hsl(203, 86%, 47%);
+    text-decoration: underline;
+  }
+  a:visited {
+    color: hsl(203, 83%, 40%);
+  }
+
+/*
+# Code
+For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com),
+falling back on some fonts that should look better at smaller sizes than the
+default monospace fonts.
+
+```
+<pre>
+<code>The font in &lt;pre&gt; code blocks is small but legible.</code>
+</pre>
+``` */
+code, var {
+  padding: .1em 3px;
+  background: hsla(0, 0%, 0%, .025);
+  border: 1px solid hsla(0, 0%, 0%, .05);
+  border-radius: 3px;
+  font-style: normal;
+  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+/* Helper classes */
+.cf:before, .cf:after { content: ''; display: table; }
+.cf:after { clear: both; }
+.ir {
+  color: transparent;
+  font: 0/0 a;
+  text-shadow: none;
+}
+
