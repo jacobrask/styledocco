@@ -203,7 +203,7 @@ var cli = function(options) {
     // Add readme with "fake" index path
     htmlFiles.push({
       path: path.join(options.basePath, 'index'),
-      html: render('', styledocco.makeSections([ { docs: readFileSync(readmeFile), code: '' } ]))
+      html: render('', styledocco.makeSections([ { docs: readFileSync(readmeFile), code: '' } ]), css)
     });
 
     // Write files to the output dir.
