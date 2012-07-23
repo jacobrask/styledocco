@@ -138,7 +138,7 @@ var makeSections = exports.makeSections = function(blocks) {
     .map(function(section) {
       // Run through marked parser to generate HTML.
       return {
-        title: section.title,
+        title: section.title ? section.title.trim() : '',
         docs: trimNewLines(marked.parser(section.docs)),
         code: trimNewLines(section.code)
       };
