@@ -1,0 +1,3 @@
+[submodule "styledocco"]
+	path = styledocco
+	url = git://github.com/jacobrask/styledocco.git
