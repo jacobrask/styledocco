@@ -13,7 +13,7 @@ the documentation syntax. */
 body {
   /* Top/bottom paddings for bars */
   padding: 60px 0;
-  background-color: hsl(200, 5%, 88%);
+  background-color: hsl(200, 5%, 90%);
   color: hsl(240, 11%, 30%);
 }
 /* The page content has a maximum width of 1500 pixels. */
@@ -428,19 +428,20 @@ To show pseudo selectors styles in previews, add the pseudo selector
     <a href="#" class=":visited">Link</a>
 */
 a {
-  color: rgb(34, 119, 170);
+  color: hsl(203, 80%, 67%);
   text-decoration: none;
 }
   a:hover {
-    color: rgb(17, 85, 119);
+    color: hsl(203, 86%, 47%);
     text-decoration: underline;
   }
   a:visited {
-    color: rgb(17, 68, 102);
+    color: hsl(203, 83%, 40%);
   }
 
-
-/* For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com.com),
+/*
+# Code
+For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com),
 falling back on some fonts that should look better at smaller sizes than the
 default monospace fonts.
 
@@ -463,7 +464,8 @@ pre code {
   background: transparent;
   border: 0;
 }
-  
+
+/* Helper classes */
 .cf:before, .cf:after { content: ''; display: table; }
 .cf:after { clear: both; }
 .ir {
