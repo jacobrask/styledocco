@@ -428,7 +428,7 @@ To show pseudo selectors styles in previews, add the pseudo selector
     <a href="#" class=":visited">Link</a>
 */
 a {
-  color: hsl(203, 80%, 67%);
+  color: hsl(203, 81%, 60%);
   text-decoration: none;
 }
   a:hover {
@@ -436,7 +436,7 @@ a {
     text-decoration: underline;
   }
   a:visited {
-    color: hsl(203, 83%, 40%);
+    color: hsl(203, 83%, 37%);
   }
 
 /*
