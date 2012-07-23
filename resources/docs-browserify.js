@@ -32,8 +32,8 @@ $('.preview').each(function() {
                   .attr('seamless', 'seamless')
                   .data('code', $oldPreview.html());
   // Iframes cannot be resized with CSS, we need a wrapper element.
-  var $preview = $(document.createElement('div')).addClass('preview')
-  var $resizeable = $(document.createElement('div')).addClass('resizeable is-loading')
+  var $preview = $(document.createElement('div')).addClass('preview is-loading')
+  var $resizeable = $(document.createElement('div')).addClass('resizeable')
   $resizeable.append($iframe);
   $preview.append($resizeable);
   $oldPreview.replaceWith($preview);
@@ -63,7 +63,7 @@ $('.preview').each(function() {
     }
     var oldHeadEl = doc.getElementsByTagName('head')[0];
     oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
-    $preview.removeClass('loading');
+    $preview.removeClass('is-loading');
 
     // Set the height of the iframe element to match the content.
     $resizeable.height(getContentHeight($iframe[0]) + 30);
@@ -107,7 +107,7 @@ $('.settings').on('click', 'button', function(event) {
   $('.resizeable')
     .animate({ width: $el.data('width') }, 250, function() {
       var $this = $(this);
-      var iframeEl = $this.find('iframe').first();
+      var iframeEl = $this.find('iframe').first()[0];
       $this.animate({ height: getContentHeight(iframeEl) + 30 }, 100);
     });
 });
