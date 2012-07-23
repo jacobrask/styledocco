@@ -63,7 +63,7 @@ Syntax
 }
 ```
 
-Would display the description, a rendered button as well as the example HTML code. The CSS will be included in the `style` element of the document.
+Would display the description, a rendered button as well as the example HTML code. The CSS will be applied to the preview.
 
 See the `examples` folder for more in-depth examples.
 
