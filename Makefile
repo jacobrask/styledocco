@@ -25,6 +25,7 @@ lint:
 	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/
 
 resources/docs.js: resources/docs-browserify.js
+	@npm install -d
 	@./node_modules/.bin/browserify resources/docs-browserify.js \
 		| ./node_modules/.bin/uglifyjs -o resources/docs.js
 	
