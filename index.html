@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StyleDocco</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="docs.css">
+  <style>
+.container {
+  max-width: 940px;
+}
+.docs {
+  width: 100%;
+}
+</style>
+<style type="text/preview">
+.btn.primary {
+  background: steelblue;
+  color: snow;
+  border: 2px outset steelblue;
+}
+</style>
+</head>
+<body>
+  <nav class="bar top cf">
+    <div class="container">
+      <a href="index.html" class="brand">StyleDocco</a>
+      <ul class="menu">
+        <li>
+          <a href="#" class="dropdown-toggle">examples</a>
+          <ul class="dropdown">
+            <li><a href="styledocco/examples/styledocco/docs.html">StyleDocco</a>
+            <li><a href="styledocco/examples/bootstrap/docs/buttons.html">Bootstrap</a>
+            </ul>
+        <li>
+          <a href="http://github.com/jacobrask/styledocco">source code</a>
+      </ul>
+    </div>
+  </nav>
+  <section class="container">
+    <article id="styledocco" class="section">
+      <div class="docs">
+        <h1>StyleDocco</h1> <a href="#styledocco" class="permalink ir">StyleDocco</a>
+        <p>StyleDocco generates documentation and style guide documents from your stylesheets.
+        <p>Stylesheet comments will be parsed through <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and displayed in a generated HTML document. You can write HTML code prefixed with 4 spaces or between <a href="http://github.github.com/github-flavored-markdown/">code fences</a> (<code>```</code>) in your comments, and StyleDocco renders a preview with the styles applied, and shows the example HTML code.
+        <p>The preview is rendered in a resizable iframe to make it easy to demonstrate responsive designs at different viewport sizes.
+        <p>An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
+        <p>Suggestions, feature requests and bug reports are very welcome, either at <a href="https://github.com/jacobrask/styledocco/issues">GitHub</a> or on Twitter (<a href="https://twitter.com/jacobrask">@jacobrask</a>).
+            
+        <h2>Installation</h2>
+        <p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>. After installing Node.js, run <code>npm install -g styledocco</code> or clone this repository.
+        <p>StyleDocco is free software, released under the <a href="https://raw.github.com/jacobrask/styledocco/master/LICENSE">MIT license</a>.
+      </div>
+    </article>
+    <article id="usage" class="section">
+      <div class="docs">
+        <h1>Examples</h1> <a href="#examples" class="permalink ir">Examples</a>
+        <h2>Stylesheet</h2>
+        <p>The following is the code you would write in your stylesheet, and the <strong>Output</strong> is what you would see in the documentation.
+        <pre><code>/* Provides extra visual weight and identifies the primary action in a set of buttons.
+    &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt; */
+.btn.primary {
+    background: steelblue;
+    color: snow;
+    border: 2px outset steelblue;
+}</code></pre>
+        <h2>Output</h2>
+        <p>Provides extra visual weight and identifies the primary action in a set of buttons.
+        <div class="preview"><button class="btn primary">Default</button></div><pre><code>&lt;button class=&quot;btn&quot;&gt;Default&lt;/button&gt;</code></pre>
+        <p>For more in-depth examples, the <a href="examples/styledocco/docs.html">docs</a> file is the documentation of the default StyleDocco CSS file, and an <a href="examples/bootstrap/docs/buttons.html">additional example</a> was generated from a modified file of the Twitter Bootstrap project.
+      </div>
+    </article>
+    <article id="usage" class="section">
+      <div class="docs">
+        <h1>Usage</h1> <a href="#usage" class="permalink ir">Usage</a>
+        <p><code>styledocco [options] [INPUT]</code>
+        <p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
+        <p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project styles.
+        <h2>Options</h2>
+        <ul>
+          <li><code>--name</code>, <code>-n</code>      Name of the project <em>(required)</em>
+          <li><code>--out</code>, <code>-o</code>       Output directory <em>(default: &quot;docs&quot;)</em>
+          <li><code>--resources</code>, <code>-s</code> Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. <em>(optional)</em>
+          <li><code>--preprocessor</code>    Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)
+          <li><code>--include</code>         Include specified CSS and/or JavaScript files in the previews. <em>(optional)</em> (ex: <code>--include mysite.css --include app.js</code>)
+          <li><code>--verbose</code>         Show log messages when generating the documentation. <em>(default: false)</em>
+          <li>Directory containing the stylesheets to document.
+        </ul>
+        <h2>Usage examples</h2>
+        <p>Generate documentation for <em>My Project</em> in the <code>docs</code> folder, from the files in the <code>css</code> directory.
+        <p><code>styledocco -n &quot;My Project&quot; css</code>
+        <p>Generate documentation for <em>My Project</em> in the <code>mydocs</code> folder, from source files in the <code>styles</code> folder. Use the Less binary in <code>~/bin/lessc</code>.
+        <p><code>styledocco -n &quot;My Project&quot; -o mydocs -s mydocs --preprocessor &quot;~/bin/lessc&quot; styles</code>
+        <h2>Tips and tricks</h2>
+        <ul>
+          <li>Put some whitespace before a comment block to exclude it from the documentation
+          <li>Level 1 headings will automatically create a new section in the documentation
+          <li>Add <code>:hover</code>, <code>:focus</code>, etc as class names in example code and the pseudo class styles will be applied in the preview
+        </ul>
+        <h2>Acknowledgements</h2>
+        <p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/kneath/kss">Knyle Style Sheets</a> have also been sources of inspiration for StyleDocco.
+      </div>
+    </article>
+  </section>
+<script src="docs.js"></script>
+</body>
+</html>
