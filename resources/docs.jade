@@ -36,7 +36,8 @@ html
 
     section.container
       each section, i in sections
-        - var slug = section.title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+        - var slug = '';
+        - if (title) slug = section.title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
         article.section(id="#{slug}")
           .docs
             h1 #{section.title}

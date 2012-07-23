@@ -203,7 +203,8 @@ var cli = function(options) {
     // Add readme with "fake" index path
     htmlFiles.push({
       path: path.join(options.basePath, 'index'),
-      html: render('', [ { title: options.name, docs: marked(readFileSync(readmeFile)), code: '' } ])
+      // Fake comment symbols to trigger docs mode in StyleDocco
+      html: render('', styledocco("/* \n" + readFileSync(readmeFile) + " */"))
     });
 
     // Write files to the output dir.
