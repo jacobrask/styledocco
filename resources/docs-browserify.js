@@ -7,7 +7,8 @@
 // Don't run this script if we're rendering a preview page.
 if (location.href === '#__preview__') return;
 
-var $ = require('jquery-browserify');
+var $ = window.jQuery = require('jquery-browserify');
+require('../vendor/jquery-cookie/jquery.cookie');
 
 var getContentHeight = function(iframeEl) {
   var htmlEl = iframeEl.contentDocument.getElementsByTagName('html')[0];
@@ -99,17 +100,26 @@ $body.on('click', function(event) {
   }
 });
 
-// Resizing buttons
-$('.settings').on('click', 'button', function(event) {
-  var $el = $(event.target);
+var resizePreviews = function(width) {
+  var $el = $('.settings button[data-width="' + width + '"]');
   $el.addClass('is-active');
   $el.siblings().removeClass('is-active');
   $('.resizeable')
     .animate({ width: $el.data('width') }, 250, function() {
-      var $this = $(this);
-      var iframeEl = $this.find('iframe').first()[0];
-      $this.animate({ height: getContentHeight(iframeEl) + 30 }, 100);
+      var $iframe = $(this).find('iframe').first();
+      // TODO: Find out a way to see if content is rendered before changing height.
+      // readystate is 'complete' even before the load function has completed}
+      $(this).animate({ height: getContentHeight($iframe[0]) + 30 }, 100);
     });
+  $.cookie('preview-width', width);
+};
+
+if ($.cookie('preview-width') != null) resizePreviews($.cookie('preview-width'));
+
+// Resizing buttons
+$('.settings').on('click', 'button', function(event) {
+  event.preventDefault();
+  resizePreviews($(event.target).data('width'));
 });
 
 

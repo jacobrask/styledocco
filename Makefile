@@ -24,9 +24,14 @@ examples: resources/docs.js
 lint:
 	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/
 
-resources/docs.js: resources/docs-browserify.js
+node_modules:
 	@npm install -d
+
+resources/docs.js: node_modules resources/docs-browserify.js vendor/jquery-cookie
 	@./node_modules/.bin/browserify resources/docs-browserify.js \
 		| ./node_modules/.bin/uglifyjs -o resources/docs.js
-	
+
+vendor/jquery-cookie:
+	@git submodule update --init vendor/jquery-cookie
+
 .PHONY: all test test-browser pages examples lint
