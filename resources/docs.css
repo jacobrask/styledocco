@@ -174,12 +174,12 @@ Fixed to top with a small drop shadow.
   margin: 0 !important;
 }
 .menu, .menu a, .menu a:visited {
-  color: hsla(0, 0%, 100%, .7);
+  color: hsl(0, 0%, 80%);
   text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
 }
 .menu .is-active > a,
 .menu a:hover {
-  color: hsla(0, 0%, 100%, .9);
+  color: hsl(0, 0%, 90%);
   text-decoration: none;
 }
 /* ```
@@ -190,12 +190,13 @@ Fixed to top with a small drop shadow.
   margin-right: 20px;
   font-weight: bold;
   font-size: 16px;
-  color: hsla(0, 0%, 0%, .9);
+  color: hsl(0, 0%, 10%);
   text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
   text-decoration: none;
 }
   .brand:hover, a.brand:hover {
     color: hsl(0, 0%, 0%);
+    text-decoration: none;
   }
 /*
 Showing previews of absolutely positioned elements can be tricky, but most of
