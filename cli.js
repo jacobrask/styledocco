@@ -1,16 +1,18 @@
 'use strict';
 
 var async = require('async');
+var cleancss = require('clean-css');
 var exec = require('child_process').exec;
 var findit = require('findit');
 var fs = require('fs');
 var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
-// var mincss = require('ncss');
-var mincss = function(str) { return str; };
 var path = require('path');
-var minjs = require('uglify-js');
+var uglifyjs = require('uglify-js');
+
+var mincss = function(css) { return cleancss.process(css); };
+var minjs = uglifyjs;
 
 var styledocco = require('./styledocco');
 

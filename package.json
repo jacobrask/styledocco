@@ -12,6 +12,7 @@
   "engines": { "node": ">=0.4.0" },
   "dependencies": {
     "async": "0.1.x",
+    "clean-css": "0.4.x",
     "findit": "0.x.x",
     "jade": "0.23.x",
     "marked": "0.2.x",
