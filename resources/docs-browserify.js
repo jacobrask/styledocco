@@ -12,8 +12,8 @@ require('../vendor/jquery-cookie/jquery.cookie');
 
 var getContentHeight = function(iframeEl) {
   var htmlEl = iframeEl.contentDocument.getElementsByTagName('html')[0];
-  var height = htmlEl.offsetHeight;
-  // Horizontal scroll bar
+  var height = Math.max(htmlEl.scrollHeight, htmlEl.offsetHeight);
+  // Account for horizontal scroll bar
   if (htmlEl.scrollWidth > iframeEl.scrollWidth) height = height + 20;
   return height;
 };
@@ -22,7 +22,10 @@ var sumHtml = function(code, el) { return code + el.innerHTML; };
 // Get preview styles intended for preview iframes.
 var styles = $('style[type="text/preview"]').toArray().reduce(sumHtml, '');
 // Extra styles to make sure iframe heights are calculated properly
-var extraStyles = 'body:before,body:after{content:'';display:table}body:after{clear:both}';
+var extraStyles = '';
+extraStyles += "body{position:relative}"; // For absolutely positioned elements
+extraStyles += "body:before,body:after{content:'';display:table}body:after{clear:both}"; // For floated elements
+
 // Get preview scripts intended for preview iframes.
 var scripts = $('script[type="text/preview"]').toArray().reduce(sumHtml, '');
 
