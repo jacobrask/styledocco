@@ -21,6 +21,8 @@ var getContentHeight = function(iframeEl) {
 var sumHtml = function(code, el) { return code + el.innerHTML; };
 // Get preview styles intended for preview iframes.
 var styles = $('style[type="text/preview"]').toArray().reduce(sumHtml, '');
+// Extra styles to make sure iframe heights are calculated properly
+var extraStyles = 'body:before,body:after{content:'';display:table}body:after{clear:both}';
 // Get preview scripts intended for preview iframes.
 var scripts = $('script[type="text/preview"]').toArray().reduce(sumHtml, '');
 
@@ -50,7 +52,7 @@ $('.preview').each(function() {
     // here due to the way it handles script insertion using XHR.
     var headEl = doc.createElement('head');
     var styleEl = doc.createElement('style');
-    styleEl.innerHTML = styles;
+    styleEl.innerHTML = extraStyles + styles;
     headEl.appendChild(styleEl);
     var scriptEl = doc.createElement('script');
     var src = location.href.split('/');
