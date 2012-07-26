@@ -10,12 +10,15 @@ if (location.href === '#__preview__') return;
 var $ = window.jQuery = require('jquery-browserify');
 require('../vendor/jquery-cookie/jquery.cookie');
 
-var getContentHeight = function(iframeEl) {
-  var htmlEl = iframeEl.contentDocument.getElementsByTagName('html')[0];
-  var height = Math.max(htmlEl.scrollHeight, htmlEl.offsetHeight);
-  // Account for horizontal scroll bar
-  if (htmlEl.scrollWidth > iframeEl.scrollWidth) height = height + 20;
-  return height;
+var getContentHeight = function(iframeEl, cb) {
+  // Get bottom-most position in document where we find an element.
+  // offsetHeight or scrollHeight doesn't work with absolute or fixed elements.
+  return Math.max.apply(Math,
+    $('body *', iframeEl.contentDocument).map(function(el) {
+      var $el = $(this);
+      return $el.offset().top + $el.outerHeight();
+    })
+  );
 };
 
 var sumHtml = function(code, el) { return code + el.innerHTML; };
