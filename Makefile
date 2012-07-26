@@ -24,10 +24,13 @@ examples: resources/docs.js
 lint:
 	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/
 
-node_modules:
-	@npm install -d
+node_modules/browserify:
+	@npm install browserify
 
-resources/docs.js: node_modules resources/docs-browserify.js vendor/jquery-cookie
+node_modules/jquery-browserify:
+	@npm install jquery-browserify
+
+resources/docs.js: node_modules/browserify node_modules/jquery-browserify vendor/jquery-cookie resources/docs-browserify.js
 	@./node_modules/.bin/browserify resources/docs-browserify.js \
 		| ./node_modules/.bin/uglifyjs -o resources/docs.js
 
