@@ -103,6 +103,8 @@ var cli = function(options) {
 
   // Get custom or default JS and CSS files
   var staticFiles = {
+    'jquery.min.js': readFileSync(defaultResourceDir + '/jquery.min.js'),
+    'jquery.cookie.min.js': readFileSync(defaultResourceDir + '/jquery.cookie.min.js'),
     'docs.js': readFirstFileSync(options.resources + '/docs.js',
                                  defaultResourceDir + '/docs.js'),
     'docs.css': readFirstFileSync(options.resources + '/docs.css',

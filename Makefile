@@ -1,6 +1,6 @@
 BROWSER = opera
 
-all: resources/docs.js
+all:
 
 test:
 	@./node_modules/.bin/nodeunit test
@@ -15,7 +15,7 @@ test-browser/tests.js: test/
 pages:
 	@./bin/styledocco -n StyleDocco -o ./ ./resources/docs.css
 
-examples: resources/docs.js
+examples:
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
 		--include resources/previews.css resources/docs.css
 	@./bin/styledocco -n "Twitter Bootstrap" -o ./examples/bootstrap/docs \
@@ -23,18 +23,5 @@ examples: resources/docs.js
 
 lint:
 	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/
-
-node_modules/browserify:
-	@npm install browserify
-
-node_modules/jquery-browserify:
-	@npm install jquery-browserify
-
-resources/docs.js: node_modules/browserify node_modules/jquery-browserify vendor/jquery-cookie resources/docs-browserify.js
-	@./node_modules/.bin/browserify resources/docs-browserify.js \
-		| ./node_modules/.bin/uglifyjs -o resources/docs.js
-
-vendor/jquery-cookie:
-	@git submodule update --init vendor/jquery-cookie
 
 .PHONY: all test test-browser pages examples lint

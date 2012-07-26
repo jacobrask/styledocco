@@ -14,6 +14,9 @@ html
       style(type='text/preview') !{previewCSS}
     if previewJS
       script(type='text/preview') !{previewJS}
+    script(src="jquery.min.js")
+    script(src="jquery.cookie.min.js")
+    script(src="docs.js")
   body
     nav.bar.top.cf
       .container
@@ -56,5 +59,4 @@ html
         button.smartphone.ir(title="Smart phone (320)",data-width=320) Smart phone
         button.featurephone.ir(title="Feature phone (240)",data-width=240) Feature phone
         button.auto.is-active(title="Auto (100%)",data-width="100%") Auto
-    script(src="docs.js")
 <!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->

@@ -1,20 +1,15 @@
-// Entry file for Browserify
-
-(function () {
-
-'use strict';
-
 // Don't run this script if we're rendering a preview page.
 if (location.href === '#__preview__') return;
 
-var $ = window.jQuery = require('jquery-browserify');
-require('../vendor/jquery-cookie/jquery.cookie');
+$(document).ready(function() {
+
+'use strict';
 
 var getContentHeight = function(iframeEl, cb) {
   // Get bottom-most position in document where we find an element.
   // offsetHeight or scrollHeight doesn't work with absolute or fixed elements.
   return Math.max.apply(Math,
-    $('body *', iframeEl.contentDocument).map(function(el) {
+    $('body', iframeEl.contentDocument).find('*').map(function(el) {
       var $el = $(this);
       return $el.offset().top + $el.outerHeight();
     })
@@ -24,10 +19,6 @@ var getContentHeight = function(iframeEl, cb) {
 var sumHtml = function(code, el) { return code + el.innerHTML; };
 // Get preview styles intended for preview iframes.
 var styles = $('style[type="text/preview"]').toArray().reduce(sumHtml, '');
-// Extra styles to make sure iframe heights are calculated properly
-var extraStyles = '';
-extraStyles += "body{position:relative}"; // For absolutely positioned elements
-extraStyles += "body:before,body:after{content:'';display:table}body:after{clear:both}"; // For floated elements
 
 // Get preview scripts intended for preview iframes.
 var scripts = $('script[type="text/preview"]').toArray().reduce(sumHtml, '');
@@ -58,7 +49,7 @@ $('.preview').each(function() {
     // here due to the way it handles script insertion using XHR.
     var headEl = doc.createElement('head');
     var styleEl = doc.createElement('style');
-    styleEl.innerHTML = extraStyles + styles;
+    styleEl.innerHTML = styles;
     headEl.appendChild(styleEl);
     var scriptEl = doc.createElement('script');
     var src = location.href.split('/');
@@ -130,5 +121,4 @@ $('.settings').on('click', 'button', function(event) {
   resizePreviews($(event.target).data('width'));
 });
 
-
-}());
+});
