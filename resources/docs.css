@@ -399,23 +399,27 @@ h1 a, h1 a:hover, h1 a:visited {
   }
 
 h1 {
-  font-size: 2.49em;
+  font-size: 3.052em;
+  font-weight: 600;
 }
 h2 {
-  font-size: 2.07em;
+  font-size: 2.441em;
 }
 h3 {
-  font-size: 1.73em;
+  font-size: 1.536em;
+}
+h1, h2, h3 {
+  letter-spacing: -.05em;
 }
 h4 {
-  font-size: 1.44em;
+  font-size: 1.25em;
 }
 h5 {
-  font-size: 1.2em;
+  font-size: 1em;
+  text-transform: uppercase;
 }
 h6 {
   font-size: 1em;
-  text-transform: uppercase;
 }
 
 /*
