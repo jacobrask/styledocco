@@ -1,19 +1,20 @@
-// Don't run this script if we're rendering a preview page.
-if (location.href === '#__preview__') return;
-
 $(document).ready(function() {
 
 'use strict';
 
-var getContentHeight = function(iframeEl, cb) {
+// Don't run this script if we're rendering a preview page.
+if (location.href === '#__preview__') return;
+
+var getContentHeight = function(iframeEl) {
   // Get bottom-most position in document where we find an element.
   // offsetHeight or scrollHeight doesn't work with absolute or fixed elements.
-  return Math.max.apply(Math,
-    $('body', iframeEl.contentDocument).find('*').map(function(el) {
-      var $el = $(this);
-      return $el.offset().top + $el.outerHeight();
-    })
-  );
+  // jQuery was too slow here.
+  var els = Array.prototype.slice.call(iframeEl.contentDocument.body.children);
+  var elHeights = [];
+  for (var i = 0, l = els.length; i < l; i++) {
+    elHeights.push(els[i].scrollTop + els[i].offsetHeight);
+  }
+  return Math.max.apply(Math, elHeights);
 };
 
 var sumHtml = function(code, el) { return code + el.innerHTML; };
