@@ -9,12 +9,19 @@ var getContentHeight = function(iframeEl) {
   // Get bottom-most position in document where we find an element.
   // offsetHeight or scrollHeight doesn't work with absolute or fixed elements.
   // jQuery was too slow here.
-  var els = Array.prototype.slice.call(iframeEl.contentDocument.body.children);
+  var doc = iframeEl.contentDocument;
+  var body = doc.body;
+  var children = body.getElementsByTagName('*');
+  if (!children.length) return body.offsetHeight;
+
+  var els = Array.prototype.slice.call(children);
   var elHeights = [];
   for (var i = 0, l = els.length; i < l; i++) {
     elHeights.push(els[i].scrollTop + els[i].offsetHeight);
   }
-  return Math.max.apply(Math, elHeights);
+  var height = Math.max.apply(Math, elHeights);
+  var padding = doc.defaultView.getComputedStyle(body, null).getPropertyValue('padding-bottom');
+  return height + parseInt(padding);
 };
 
 var sumHtml = function(code, el) { return code + el.innerHTML; };
@@ -30,7 +37,7 @@ var $body = $('body').first();
 $('.preview').each(function() {
   var $oldPreview = $(this);
   var $iframe = $(document.createElement('iframe'))
-                  .attr('seamless', 'seamless')
+                  .attr('scrolling', 'no')
                   .data('code', $oldPreview.html());
   // Iframes cannot be resized with CSS, we need a wrapper element.
   var $preview = $(document.createElement('div')).addClass('preview is-loading')

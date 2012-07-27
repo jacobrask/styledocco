@@ -1,13 +1,3 @@
 body {
   padding: 1%;
 }
-.bar {
-  position: static;
-  margin: -1%;
-}
-.bar.top {
-  margin-bottom: 1%;
-}
-.bar.bottom {
-  margin-top: 1%;
-}
