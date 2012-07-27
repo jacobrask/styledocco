@@ -1,15 +1,8 @@
 [
   {
-    "docs": "<p> This is the first section \n</p>",
-    "code": "body {\n  content: 'It has some code';\n}"
-  }, {
-    "docs": "<p> This is another section, without any code.\n\n</p>",
-    "code": "" 
-  }, {
-    "docs": "",
-    "code": "html {\n  content: 'This is a section with only code';\n}"
-  }, {
-    "docs": "",
-    "code": ""
+    "title": "",
+    "slug": "",
+    "docs": "<p> This is the first section \n</p>\n<hr>\n<p> This is another section, without any code.\n\n</p>\n<hr>\n<hr>",
+    "code": "body {\n  content: 'It has some code';\n}\n\n\nhtml {\n  content: 'This is a section with only code';\n}"
   }
 ]

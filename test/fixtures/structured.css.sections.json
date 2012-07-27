@@ -1,15 +1,13 @@
 [
   {
-    "docs": "<h1>Structured</h1>\n<p>An example of a CSS file using most of StyleDocco&#39;s features.\n\n</p>\n<h2>Second level heading</h2>\n<p>Lorem ipsum\n\n</p>",
-    "code": ""
-  }, {
-    "docs": "<p>A new section\n\n</p>\n<div class=\"preview\"><p>With a code preview</p></div><pre><code>&lt;p&gt;With a code preview&lt;/p&gt;</code></pre>\n<p>Some more text in the same section.\n\n</p>\n<h1>First level heading</h1>\n<p>Some random text.\n\n</p>",
+    "title": "Structured",
+    "slug": "structured",
+    "docs": "<h1 id=\"structured\">Structured</h1>\n<p>An example of a CSS file using most of StyleDocco&#39;s features.\n\n</p>\n<h2 id=\"second-level-heading\">Second level heading</h2>\n<p>Lorem ipsum\n\n</p>\n<hr>\n<p>A new section\n\n</p>\n<div class=\"preview\"><p>With a code preview</p></div><pre><code>&lt;p&gt;With a code preview&lt;/p&gt;</code></pre>\n<p>Some more text in the same section.\n\n</p>",
     "code": "body {\n    background: white;\n    color: black;\n}"
   }, {
-    "docs": "<h2>Another section in the same comment block.</h2>\n<p>Some <b>HTML</b> that should not be escaped.\n\n</p>\n<p> This is in the same section.\n\n</p>\n<div class=\"preview\">And here is some code</div><pre><code>And here is some code</code></pre>\n<div class=\"preview\">This is also code</div><pre><code>This is also code</code></pre>",
+    "title": "First level heading",
+    "slug": "first-level-heading",
+    "docs": "<h1 id=\"first-level-heading\">First level heading</h1>\n<p>Some random text.\n\n</p>\n<hr>\n<h2 id=\"another-section-in-the-same-comment-block\">Another section in the same comment block.</h2>\n<p>Some <b>HTML</b> that should not be escaped.\n\n</p>\n<p> This is in the same section.\n\n</p>\n<div class=\"preview\">And here is some code</div><pre><code>And here is some code</code></pre>\n<div class=\"preview\">This is also code</div><pre><code>This is also code</code></pre>\n<hr>\n<p> Dolor sit amet \n</p>",
     "code": "p {\n    margin: 0;\n}\n\nb {\n    font-weight: italic;\n}"
-  }, {
-    "docs": "<p> Dolor sit amet \n</p>",
-    "code": ""
   }
 ]

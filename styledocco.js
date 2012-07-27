@@ -11,6 +11,15 @@ var commentRegexs = {
   multiEnd: /\*\//
 };
 
+// Make an URL slug from `str`.
+var slugify = function(str) {
+  return encodeURIComponent(
+    str.trim().toLowerCase()
+      .replace(/[^\w ]+/g,'')
+      .replace(/ +/g,'-')
+  );
+};
+
 // Check if a string is code or a comment (and which type of comment).
 var checkType = function(str) {
   // Treat multi start and end on same row as a single line comment.
@@ -42,7 +51,7 @@ var formatCode = function(str) {
   return str.replace(/(;base64,)[^\)]*/, '$1...') + '\n';
 };
 
-// Trim newlines from beginning and end of multi line string.
+// Trim newlines from beginning and end of a multi line string.
 var trimNewLines = function(str) {
   return str.replace(/^\n*/, '').replace(/\n*$/, '');
 };
@@ -73,17 +82,16 @@ var separate = function(css) {
   return blocks;
 };
 
+
 var makeSections = exports.makeSections = function(blocks) {
   return blocks
     .map(function(block) {
-      // Run comments through marked.lexer to get Markdown tokens
-      return {
-        docs: marked.lexer(block.docs),
-        code: block.code
-      };
+      // Run comments through marked.lexer to get Markdown tokens.
+      block.docs = marked.lexer(block.docs);
+      return block;
     })
     .map(function(block) {
-      // If we encounter code blocks in documentation, add preview HTML
+      // If we encounter code blocks in documentation, add preview HTML.
       var newBlock = {
         code: block.code,
         docs: block.docs.reduce(function(tokens, token) {
@@ -93,6 +101,16 @@ var makeSections = exports.makeSections = function(blocks) {
               pre: true,
               text: '<div class="preview">' + token.text + '</div>'
             });
+          // Add permalink `id`s and some custom properties to headings.
+          } else if (token.type === 'heading') {
+            var slug = slugify(token.text);
+            token.type = 'html';
+            token._slug = slug;
+            token._origText = token.text;
+            // This token should start a new doc section
+            if (token.depth === 1) token._split = true;
+            token.text = '<h' + token.depth + ' id="' + slug + '">' +
+                         token.text + '</h' + token.depth + '>\n';
           }
           tokens.push(token);
           return tokens;
@@ -106,19 +124,12 @@ var makeSections = exports.makeSections = function(blocks) {
       // Split into sections with headings as delimiters.
       var docs = cur.docs;
       while (docs.length) {
-        if (docs[0].type === 'heading' && docs[0].depth === 1) {
-          // New section, add title property and strip heading.
-          var title = docs[0].text;
-          docs.shift();
-          if (docs.length === 0) {
-            // Nothing more after the heading in the doc block, start new section.
-            sections.push({ docs: [], code: '', title: title });
-          } else {
-            sections.push({ docs: [ docs.shift() ], code: '', title: title });
-          }
-        // First section
-        } else if (sections.length === 0) {
-          sections.push({ docs: [ docs.shift() ], code: '', title: null });
+        // New or first section, add title/slug properties.
+        if (docs[0]._split || sections.length === 0) {
+          var title = docs[0]._origText;
+          var slug = docs[0]._slug;
+          sections.push({ docs: [ docs.shift() ], code: '',
+                          title: title, slug: slug });
         } else {
           // Add the documentation to the last section.
           sections[sections.length-1].docs.push(docs.shift());
@@ -139,6 +150,7 @@ var makeSections = exports.makeSections = function(blocks) {
       // Run through marked parser to generate HTML.
       return {
         title: section.title ? section.title.trim() : '',
+        slug: section.slug || '',
         docs: trimNewLines(marked.parser(section.docs)),
         code: trimNewLines(section.code)
       };
@@ -148,5 +160,6 @@ var makeSections = exports.makeSections = function(blocks) {
 module.exports = function(css) {
   return makeSections(separate(css));
 };
+
 module.exports.makeSections = makeSections;
 module.exports.separate = separate;

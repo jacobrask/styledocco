@@ -1,5 +1,7 @@
 [
   {
+    "title": "",
+    "slug": "",
     "docs": "<p> Various types of code blocks in documentation \n</p>\n<pre><code class=\"lang-php\">&lt;?php\necho &#39;PHP Code without rendered preview&#39;;\n?&gt;</code></pre>\n<div class=\"preview\"><p>HTML to be rendered</p> </div><pre><code>&lt;p&gt;HTML to be rendered&lt;/p&gt; </code></pre>",
     "code": "body {\n  background: red;\n  color: white;\n}"
   }
