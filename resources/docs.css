@@ -401,10 +401,10 @@ h1 a, h1 a:hover, h1 a:visited {
 
 h1 {
   font-size: 3.052em;
-  font-weight: 600;
+  font-weight: normal;
 }
 h2 {
-  font-size: 2.441em;
+  font-size: 1.953em;
 }
 h3 {
   font-size: 1.536em;
