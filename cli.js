@@ -79,7 +79,6 @@ var menuLinks = function(files, basePath) {
 var cli = function(options) {
 
   // Config
-  var defaultResourceDir = path.resolve(__dirname, 'resources');
 
   // Filetypes and matching preprocessor binaries
   var fileTypes = {

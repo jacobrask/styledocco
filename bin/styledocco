@@ -1,9 +1,18 @@
 #!/usr/bin/env node
 
+// StyleDocco Command Line Interface
+// =======================================================================
+// Normalizes options to pass to StyleDocco.
+
 var optimist = require('optimist');
 var path = require('path');
 
-// Get the common prefix of strings (paths).
+// Abort and show current version number.
+if (optimist.argv.version != null) {
+  return console.log("StyleDocco " + (require('../package').version));
+}
+
+// Get the common prefix of an array of strings (paths).
 var commonprefix = function(arr) {
   if (!arr.length) return '';
   if (arr.length === 1) return arr[0];
@@ -15,20 +24,12 @@ var commonprefix = function(arr) {
   });
 };
 
-// Make sure `obj` is an array.
-var toArray = function(obj) {
-  if (obj == null) return [];
-  if (Object.prototype.toString.call(obj) === '[object Array]') return obj;
-  if (typeof obj === 'string' || !isNan(obj) ||
-      Object.prototype.toString.call(obj) === '[object Object]') return [ obj ];
-  return Array.prototype.slice.call(obj);;
+var isArray = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
 };
 
-if (optimist.argv.version != null) {
-  return console.log("StyleDocco " + (require('../package').version));
-}
-
 // Parse command line arguments
+// -----------------------------------------------------------------------
 var options = optimist
   .usage('Usage: $0 [options] [INPUT]')
   .describe('name', 'Name of the project').alias('n', 'name')
@@ -41,10 +42,10 @@ var options = optimist
   .describe('version', 'Display StyleDocco version')
   .argv;
 
-options['in'] = options._.length ? options._
-                                 : ['./'];
+options['in'] = options._.length ? options._ : ['./'];
 
-options.include = toArray(options.include);
+options.include = isArray(options.include) ? options.include
+                                           : [ options.include ];
 
 // Get common (absolute) path prefix of input files
 options.basePath = commonprefix(
@@ -53,13 +54,12 @@ options.basePath = commonprefix(
   })
 );
 
+options.defaultResources = path.resolve(__dirname, 'resources');
+
+// Try to read name from package.json
 if (options.name == null) {
-  try {
-    // Try to read name from package.json
-    options.name = require(process.cwd() + '/package').name;
-  } catch (ex) {
-    options.name = '';
-  }
+  try { options.name = require(process.cwd() + '/package').name; }
+  catch (ex) { options.name = ''; }
 }
 
 require('../cli.js')(options);
