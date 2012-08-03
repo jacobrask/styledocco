@@ -1,31 +1,33 @@
+// StyleDocco JavaScript for documentation
+// =======================================
+
 (function() {
 
 'use strict';
 
-var body = document.getElementsByTagName('body')[0];
-
+// Helper functions
+// ================
 var toArray = function(arr) { return Array.prototype.slice.call(arr); };
 
+var body = document.getElementsByTagName('body')[0];
+
+// Iframe rendering and handling
+// =============================
 (function() {
-  // Don't run this script if we're rendering a preview page.
+  // Don't run this function if we're rendering a preview page.
   if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
-  // Get bottom-most point in document where we find an element.
-  // offsetHeight or scrollHeight doesn't work with absolute or fixed elements.
-  var getContentHeight = function(iframeEl) {
-    var doc = iframeEl.contentDocument;
-    var body = doc.body;
-    if (body.childElementCount === 0) return body.offsetHeight;
-    var els = toArray(body.getElementsByTagName('*'));
-    var elHeights = [];
-    for (var i = 0, l = els.length; i < l; i++) {
-      elHeights.push(els[i].offsetTop + els[i].offsetHeight);
+  var resizeableElOffset = 30;
+
+  window.addEventListener('message', function (ev) {
+    if (ev.data == null || !ev.source) return;
+    var data = ev.data;
+    var sourceFrame = document.getElementsByName(ev.source.name)[0];
+    if (data.height != null && sourceFrame) {
+      sourceFrame.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
     }
-    var height = Math.max.apply(Math, elHeights);
-    var padding = doc.defaultView.getComputedStyle(body, null)
-      .getPropertyValue('padding-bottom');
-    return height + parseInt(padding);
-  };
+  }, false);
+
 
   var sumHtml = function(code, el) { return code + el.innerHTML; };
   // Get preview styles intended for preview iframes.
@@ -102,7 +104,6 @@ var toArray = function(arr) { return Array.prototype.slice.call(arr); };
     resizeable.forEach(function(el) {
       if (width === 'auto') width = el.parentNode.offsetWidth;
       el.style.width = width + 'px';
-      el.style.height = (getContentHeight(el.getElementsByTagName('iframe')[0]) + 30) + 'px';
     });
     // $.cookie('preview-width', width);
   };
