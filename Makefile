@@ -17,7 +17,7 @@ pages:
 
 examples:
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
-		--include resources/previews.css resources/docs.css
+		--include resources/previews.css --include resources/docs.js resources/docs.css
 	@./bin/styledocco -n "Twitter Bootstrap" -o ./examples/bootstrap/docs \
 		examples/bootstrap/less
 

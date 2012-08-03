@@ -1,6 +1,20 @@
 /*
 StyleDocco default styles
 =========================
+
+# Heading level 1
+
+## Heading level 2
+
+### Heading level 3
+
+#### Heading level 4
+
+##### Heading level 5
+
+###### Heading level 6
+
+###### *Heading* _inline_ styles
 This is the default stylesheet for StyleDocco. It also serves as an example of
 the documentation syntax. */
 * {
@@ -99,15 +113,20 @@ it's on the todo-list.
   overflow: auto;
   resize: both;
   background: hsl(0, 0%, 100%);
+  -webkit-transition: width .25s, height .25s;
+  -moz-transition:    width .25s, height .25s;
+  -o-transition:      width .25s, height .25s;
+  transition:         width .25s, height .25s;
 }
 .preview iframe {
   display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
-}
-.preview.is-loading iframe {
   visibility: hidden;
+}
+.preview.has-loaded iframe {
+  visibility: visible;
 }
 pre {
   white-space: pre-wrap;
@@ -207,7 +226,7 @@ by including a custom previews stylesheet with overrides.
 <div class="bar top">
   <ul class="menu">
     <li><a href="#">css-file</a>
-    <li><a href="#" class="dropdown-toggle">folder</a>
+    <li><a href="#" class="dropdown-toggle is-active" unselectable="on">folder</a>
         <ul class="dropdown is-active">
           <li><a href="#">css-file</a>
           <li><a href="#">css-file</a>
@@ -273,12 +292,23 @@ by including a custom previews stylesheet with overrides.
 .dropdown li:hover {
   background-color: hsl(197, 5%, 30%);
 }
+.settings .search {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAMFBMVEX///////////////////////////////////////////////////////8AAAD///++CtLxAAAAD3RSTlNPz49/D6+/X98/7x8vnwDjrzSxAAAAoElEQVR42o3RSw7DIAxF0fCLSYhh/7sN9qtjJCa9I+DYSqUeXSM+Z6n1L4Wjjl+cV+Dh3Y+DvteYUoEYHHIjvTShYFB9CtsEID1aMlYBjJMlc03hHCMukCdcBqkv/QWle88Hyb7mv7crtIEVX2CAzrC937oPyHKplOezzPgGxtYYMCVsIiBRxZ/BjSECqF0zOZgALJcI2KUANglZYCuW3F9+zR3AHggPQQAAAABJRU5ErkJggg==);
+}
+.settings .toc {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
+}
 
 
 /*
 # Settings and configuration
 */
-.settings {
+.bar.top .settings {
+  text-align: right;
+}
+.bar.bottom .settings {
   text-align: center;
 }
 .settings button {
@@ -376,7 +406,7 @@ hr,
 h1, h2, h3, h4, h5, h6 {
   margin: 1em 20px .5em;
 }
-  h1:first-child {
+  h1:first-of-type {
     margin-top: 20px;
   }
 h1, h2, h3, h4, h5, h6 {
@@ -480,3 +510,9 @@ pre code {
   text-shadow: none;
 }
 
+[unselectable="on"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

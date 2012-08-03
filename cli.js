@@ -10,22 +10,33 @@ var marked = require('marked');
 var mkdirp = require('mkdirp');
 var path = require('path');
 var uglifyjs = require('uglify-js');
-
-var mincss = function(css) { return cleancss.process(css); };
-var minjs = uglifyjs;
+var util = require('util');
 
 var styledocco = require('./styledocco');
+
+var version = require('./package').version;
 
 marked.setOptions({ sanitize: false, gfm: true });
 
 // Helper functions
+var mincss = function(css) { return cleancss.process(css); };
+var minjs = uglifyjs;
 var add = function(a, b) { return a + b; };
-var readFileSync = function(file) { return fs.readFileSync(file, 'utf-8'); };
+var pluck = function(arr, prop) {
+  return arr.map(function(item) { return item[prop]; });
+};
+var flatten = function(arr) {
+  return arr.reduce(function(tot, cur) {
+    return tot.concat(isArray(cur) ? flatten(cur) : cur);
+  }, []);
+};
+var inArray = function(arr, str) { return arr.indexOf(str) !== -1; };
+var isArray = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
+};
 
 // Get a filename without the extension
-var baseFilename = function(str) {
-  return path.basename(str, path.extname(str));
-};
+var baseFilename = function(str) { return path.basename(str, path.extname(str)); };
 
 // Build an HTML file name, named by it's path relative to basePath
 var htmlFilename = function(file, basePath) {
@@ -36,27 +47,33 @@ var htmlFilename = function(file, basePath) {
 };
 
 // Find first file matching `re` in `dir`.
-var findFile = function(dir, re) {
-  if (!fs.statSync(dir).isDirectory()) return null;
-  var files = fs.readdirSync(dir).sort().filter(function(file) {
-    return file.match(re);
+var findFile = function(dir, re, cb) {
+  fs.stat(dir, function(err, stat) {
+    var files = fs.readdir(dir, function(err, files) {
+      files = files.sort().filter(function(file) { return file.match(re); });
+      if (files.length) cb(null, path.join(dir, files[0]));
+      else cb(new Error('No file found.'));
+    });
   });
-  return files[0] != null ? path.join(dir, files[0]) : null;
 };
 
-// Return content of first existing file in argument list.
-var readFirstFileSync = function() {
-  var files = [].slice.call(arguments);
-  for (var i = 0, len = files.length; i < len; i++) {
-    if (path.existsSync(files[i])) {
-      return readFileSync(files[i]);
+var getFiles = function(inPath, cb) {
+  fs.stat(inPath, function(err, stat) {
+    if (err != null) return cb(err);
+    if (stat.isFile()) {
+      cb(null, [ inPath ]);
+    } else {
+      var finder = findit.find(inPath);
+      var files = [];
+      finder.on('file', function(file) { files.push(file); });
+      finder.on('end', function() { cb(null, files); });
     }
-  }
-  return '';
+  });
 };
 
 // Make `link` objects for the menu.
 var menuLinks = function(files, basePath) {
+  console.log(files);
   return files.map(function(file) {
     var parts = path.relative(basePath, file).split('/');
     parts.pop(); // Remove filename
@@ -76,11 +93,28 @@ var menuLinks = function(files, basePath) {
   }, {});
 };
 
+var preprocess = function(file, pp, cb) {
+  // stdin would have been nice here, but not all preprocessors (less)
+  // accepts that, so we need to read the file both here and for the parser.
+  if (pp != null) {
+    exec(pp + ' ' + file, function(err, stdout, stderr) {
+      // log('styledocco: preprocessing ' + file + ' with ' + pp);
+      // Fail gracefully on preprocessor errors
+      if (err != null) console.error(err.message);
+      if (stderr.length) console.error(stderr);
+      cb(null, stdout || '');
+    });
+  } else {
+    fs.readFile(file, 'utf8', cb);
+  }
+};
+
+
 var cli = function(options) {
 
-  // Config
+  var resourcesDir = __dirname + '/resources/';
 
-  // Filetypes and matching preprocessor binaries
+  // Filetypes and matching preprocessor binaries.
   var fileTypes = {
     '.css': null,
     '.sass': 'sass',
@@ -92,130 +126,158 @@ var cli = function(options) {
   var log = options.verbose ? function(str) { console.log(str); }
                             : function() {};
 
-  mkdirp(options.out);
-
-  // Compile custom or default template
-  var template = jade.compile(
-    readFirstFileSync(options.resources + '/docs.jade',
-                      defaultResourceDir + '/docs.jade')
-  );
-
-  // Get custom or default JS and CSS files
-  var staticFiles = {
-    'jquery.min.js': readFileSync(defaultResourceDir + '/jquery.min.js'),
-    'jquery.cookie.min.js': readFileSync(defaultResourceDir + '/jquery.cookie.min.js'),
-    'docs.js': readFirstFileSync(options.resources + '/docs.js',
-                                 defaultResourceDir + '/docs.js'),
-    'docs.css': readFirstFileSync(options.resources + '/docs.css',
-                                  defaultResourceDir + '/docs.css'),
-    'previews.js': readFirstFileSync(options.resources + '/previews.js',
-                                     defaultResourceDir + '/previews.js')
-  };
-
-  // Get optional extra CSS for previews
-  var previewCSS = mincss(options.include
-    .filter(function(file) { return path.extname(file) === '.css'; })
-    .map(readFileSync)
-    .reduce(add, '')
-  );
-
-  // Get optional extra JavaScript for previews
-  var previewJS = minjs(options.include
-    .filter(function(file) { return path.extname(file) === '.js'; })
-    .map(readFileSync)
-    .reduce(add, '')
-  );
-
-
-  // Render template
-  var render = function(source, sections, css) {
-    if (css == null) css = '';
-    return template({
-      title: baseFilename(source),
-      sections: sections,
-      project: { name: options.name, menu: menu },
-      previewCSS: mincss(css) + previewCSS,
-      previewJS: previewJS
-    });
-  };
-
-  // Find files
-  var files = options['in'].reduce(function(files, file) {
-      if (fs.statSync(file).isDirectory()) {
-        files = files.concat(findit.sync(file));
-      } else {
-        files.push(file);
-      }
-      return files;
-    }, [])
-    .filter(function(file) {
-      // No hidden files
-      if (file.match(/(\/|^)\.[^\.\/]/)) return false;
-      // Only supported file types
-      if (!(path.extname(file) in fileTypes)) return false;
-      // Files only
-      if (!fs.statSync(file).isFile()) return false;
-      return true;
-    }).sort();
-  if (!files.length) return console.error('No files found');
-
-  var preprocess = function(file, cb) {
-    var pp = options.preprocessor || fileTypes[path.extname(file)];
-    if (pp != null) {
-      exec(pp + ' ' + file, function(err, stdout, stderr) {
-        log('styledocco: preprocessing ' + file + ' with ' + pp);
-        // Fail gracefully on preprocessor errors
-        if (err != null) console.error(err.message);
-        if (stderr.length) console.error(stderr);
-        cb(null, stdout || '');
-      });
-    } else {
-      fs.readFile(file, 'utf8', cb);
+  var SDError = function(msg, err) {
+    this.message = msg + '\n' + err.message + '\n' +
+      'StyleDocco v' + version +
+      ' running on Node ' + process.version + ' ' + process.platform;
+    if (options.verbose) {
+      this.message += '\nOptions: ' + JSON.stringify(options);
     }
   };
+  util.inherits(SDError, Error);
 
-  // Build menu
-  var menu = menuLinks(files, options.basePath);
+  mkdirp(options.out);
 
-  // Run files through preprocessor and StyleDocco parser.
-  async.mapSeries(files, function(file, cb) {
-    preprocess(file, function(err, css) {
-      cb(null, {
-        path: file,
-        css: css
+  // Fetch all static resources.
+  async.parallel({
+    template: function(cb) {
+      fs.readFile(resourcesDir + 'docs.jade', 'utf8', function(err, contents) {
+        if (err != null) return cb(err);
+        cb(null, jade.compile(contents));
+      });
+    },
+    docs: function(cb) {
+      async.parallel({
+        css: async.apply(fs.readFile, resourcesDir + 'docs.css', 'utf8'),
+        js: async.apply(fs.readFile, resourcesDir + 'docs.js', 'utf8')
+      }, cb);
+    },
+    // Extra JavaScript and CSS files to include in previews.
+    previews: function(cb) {
+      fs.readFile(resourcesDir + 'previews.js', 'utf8', function(err, js) {
+        if (err != null) return cb(err);
+        var code = { js: js, css: '' };
+        var files = options.include.filter(
+          function(file) { return inArray(['.css', '.js'], path.extname(file)); }
+        );
+        async.filter(files, path.exists, function(files) {
+          async.reduce(files, code, function(tot, cur, cb) {
+            fs.readFile(cur, 'utf8', function(err, contents) {
+              if (err != null) return cb(err);
+              if (path.extname(cur) === '.css') tot.css += contents;
+              if (path.extname(cur) === '.js') tot.js += contents;
+              cb(null, tot);
+            });
+          }, cb);
+        });
+      });
+    },
+    // Find input files.
+    files: function(cb) {
+      async.reduce(options['in'], [], function(all, cur, cb) {
+        getFiles(cur, function(err, files) {
+          if (err != null) return cb(err);
+          cb(null, all.concat(files));
+        });
+      }, function(err, files) {
+        files.filter(function(file) {
+          // No hidden files
+          if (file.match(/(\/|^)\.[^\.\/]/)) return false;
+          // Only supported file types
+          if (!(path.extname(file) in fileTypes)) return false;
+          return true;
+        }).sort();
+        if (!files.length) cb(new Error('Failed to process files.'));
+        cb(null, files);
+      });
+    },
+    // Look for a README file.
+    readme: function(cb) {
+      findFile(options.basePath, /^readme\.m(ark)?d(own)?/i, function(err, file) {
+        if (file != null && err == null) return read(file);
+        findFile(process.cwd(), /^readme\.m(ark)?d(own)?/i, function(err, file) {
+          if (err != null) file = resourcesDir + 'README.md';
+          read(file);
+        });
+      });
+      var read = function(file) {
+        fs.readFile(file, 'utf8', function(err, content) {
+          if (err != null) cb(err);
+          cb(null, content);
+        });
+      };
+    }
+  }, function(err, resources) {
+    if (err != null) throw new SDError('Could not process files.', err);
+    var menu = menuLinks(resources.files, options.basePath);
+    // Run files through preprocessor and StyleDocco parser.
+    async.map(resources.files, function(file, cb) {
+      async.parallel({
+        css: async.apply(preprocess, file,
+               options.preprocessor || fileTypes[path.extname(file)]),
+        docs: function(cb) {
+          fs.readFile(file, 'utf8', function(err, code) {
+            if (err != null) return cb(err);
+            cb(null, styledocco(code));
+          });
+        }
+      }, function(err, data) {
+        if (err != null) return cb(err);
+        data.path = file;
+        cb(null, data);
+      });
+    }, function(err, files) {
+      if (err != null) return cb(err);
+      // Get the combined CSS from all files.
+      var previewStyles = pluck(files, 'css').reduce(add);
+      previewStyles += resources.previews.css;
+      // Build a JSON string of all files and their headings.
+      var toc = flatten(files.map(function(file) {
+        return file.docs.map(function(section) {
+          return { title: section.title,
+                   filename: baseFilename(file.path),
+                   url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
+        })
+      }));
+      toc = 'var toc=' + JSON.stringify(toc) + ';';
+      var docsScript = resources.docs.js + toc;
+      // Render files
+      var htmlFiles = files.map(function(file) {
+        return {
+          path: file.path,
+          html: resources.template({
+            title: baseFilename(file.path),
+            sections: file.docs,
+            project: { name: options.name, menu: menu },
+            resources: {
+              docs: { js: docsScript, css: resources.docs.css },
+              previews: { js: resources.previews.js, css: previewStyles }
+            }
+          })
+        };
+      });
+      // Add readme with "fake" index path
+      htmlFiles.push({
+        path: path.join(options.basePath, 'index'),
+        html: resources.template({
+          title: '',
+          sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
+          project: { name: options.name, menu: menu },
+          resources: {
+            docs: { js: docsScript, css: resources.docs.css }
+          }
+        })
+      });
+      // Write files to the output dir.
+      htmlFiles.forEach(function(file) {
+        var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
+        log('styledocco: writing ' + file.path + ' -> ' + dest);
+        fs.writeFileSync(dest, file.html);
       });
     });
-  }, function(err, htmlFiles) {
+  });
 
-    var css = htmlFiles.reduce(function(css, file) {
-      return css + file.css;
-    }, '');
-
-    htmlFiles = htmlFiles.map(function(file) {
-      return {
-        path: file.path,
-        html: render(file.path, styledocco(readFileSync(file.path)), css)
-      };
-    });
-
-    // Look for a README file.
-    var readmeFile = findFile(options.basePath, /^readme/i) ||
-                     findFile(process.cwd(), /^readme/i) ||
-                     findFile(options.resources, /^readme/i) ||
-                     defaultResourceDir + '/README.md';
-    // Add readme with "fake" index path
-    htmlFiles.push({
-      path: path.join(options.basePath, 'index'),
-      html: render('', styledocco.makeSections([ { docs: readFileSync(readmeFile), code: '' } ]), css)
-    });
-
-    // Write files to the output dir.
-    htmlFiles.forEach(function(file) {
-      var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
-      log('styledocco: writing ' + file.path + ' -> ' + dest);
-      fs.writeFileSync(dest, file.html);
-    });
-
+/*
     // Write static resources to the output dir
     Object.keys(staticFiles).forEach(function(file) {
       var dest = path.join(options.out, file);
@@ -223,6 +285,7 @@ var cli = function(options) {
       fs.writeFileSync(dest, staticFiles[file]);
     });
   });
+  */
 };
 
 module.exports = cli;

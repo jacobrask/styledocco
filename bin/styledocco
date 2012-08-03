@@ -14,8 +14,8 @@ if (optimist.argv.version != null) {
 
 // Get the common prefix of an array of strings (paths).
 var commonprefix = function(arr) {
-  if (!arr.length) return '';
-  if (arr.length === 1) return arr[0];
+  if (!arr.length) return null;
+  if (arr.length === 1) return path.dirname(arr[0]);
   return arr.reduce(function(res, cur) {
     while (res !== cur.slice(0, res.length)) {
       res = res.slice(0, -1);
@@ -34,8 +34,6 @@ var options = optimist
   .usage('Usage: $0 [options] [INPUT]')
   .describe('name', 'Name of the project').alias('n', 'name')
   .describe('out', 'Output directory').alias('o', 'out')['default']('out', 'docs')
-  .describe('resources', 'Directory for static resources')
-    .alias('s', 'resources')['default']('resources', __dirname + '/../resources')
   .describe('preprocessor', 'Custom preprocessor command')
   .describe('include', 'Extra CSS/JavaScript to include in previews')
   .describe('verbose', 'Print status messages to stdout')
@@ -53,8 +51,6 @@ options.basePath = commonprefix(
     return path.resolve(file);
   })
 );
-
-options.defaultResources = path.resolve(__dirname, 'resources');
 
 // Try to read name from package.json
 if (options.name == null) {
