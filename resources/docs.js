@@ -7,9 +7,24 @@
 
 // Helper functions
 // ================
-var toArray = function(arr) { return Array.prototype.slice.call(arr); };
+// Using `Array.prototype` to make them work on `NodeList`s.
+var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
+var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
+var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
+var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
+var add = function(a, b) { return a + b; };
+var keyvalParse = function(str) {
+  var obj = {};
+  var pairs = str.split(';');
+  for (var i = 0; pairs.length > i; i++) {
+    var kvs = pairs[i].trim().split('=');
+    obj[kvs[0]] = kvs[1];
+  };
+  return obj;
+};
 
-var body = document.getElementsByTagName('body')[0];
+var bodyEl = document.getElementsByTagName('body')[0];
+var headEl = document.getElementsByTagName('head')[0];
 
 // Iframe rendering and handling
 // =============================
@@ -17,64 +32,75 @@ var body = document.getElementsByTagName('body')[0];
   // Don't run this function if we're rendering a preview page.
   if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
-  var resizeableElOffset = 30;
+  var resizeableElOffset = 30; // `.resizeable` padding
+  
+  var resizePreviews = function(width) {
+    forEach(bodyEl.getElementsByClassName('resizeable'), function(el) {
+      if (width === 'auto') width = el.parentNode.offsetWidth;
+      el.style.width = width + 'px';
+      // TODO: Add CSS transitions and update height after `transitionend` event
+      el.getElementsByTagName('iframe')[0].contentDocument.defaultView.postMessage('getHeight', '*');
+    });
+    document.cookie = 'preview-width=' + width;
+  };
 
   window.addEventListener('message', function (ev) {
     if (ev.data == null || !ev.source) return;
     var data = ev.data;
-    var sourceFrame = document.getElementsByName(ev.source.name)[0];
-    if (data.height != null && sourceFrame) {
-      sourceFrame.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
+    var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
+    // Set iframe height
+    if (data.height != null && sourceFrameEl) {
+      sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
     }
   }, false);
 
-
-  var sumHtml = function(code, el) { return code + el.innerHTML; };
   // Get preview styles intended for preview iframes.
-  var styles = toArray(document.querySelectorAll('style[type="text/preview"]'))
-    .reduce(sumHtml, '');
+  var styles = reduce(
+    pluck(headEl.querySelectorAll('style[type="text/preview"]'), 'innerHTML'),
+  add, '');
   // Get preview scripts intended for preview iframes.
-  var scripts = toArray(document.querySelectorAll('script[type="text/preview"]'))
-    .reduce(sumHtml, '');
+  var scripts = reduce(
+    pluck(headEl.querySelectorAll('script[type="text/preview"]'), 'innerHTML'),
+  add, '');
 
-  // Detect support for accessing data uri iframe properties.
-  // WebKit (and IE?) don't treat data uris as same origin [https://bugs.webkit.org/show_bug.cgi?id=17352].
-  // This will always display an error in WebKit (even with try/catch).
+  // Check if browser treats data uris as same origin.
+  // This will always display an error in WebKit.
   var iframeEl = document.createElement('iframe');
   iframeEl.src = 'data:text/html,';
-  document.body.appendChild(iframeEl);
+  bodyEl.appendChild(iframeEl);
   iframeEl.addEventListener('load', function() {
     var support = {};
     if (this.contentDocument) support.dataIframes = true;
     else support.dataIframes = false;
 
-    // Loop through code previews and replace with iframes.
+    // Loop through code textareas and render the code in iframes.
     var previewUrl = location.href + '#__preview__';
-    var previewEls = toArray(body.getElementsByClassName('preview'));
-    previewEls.forEach(function(previewEl) {
-      var iframeEl = document.createElement('iframe');
-      iframeEl.setAttribute('scrolling', 'no');
-      var resizeableEl = document.createElement('div');
+    var iframeId = 0;
+    forEach(bodyEl.getElementsByTagName('textarea'), function(codeEl) {
+      var previewEl, resizeableEl, iframeEl;
+      previewEl = document.createElement('div');
+      previewEl.appendChild(resizeableEl = document.createElement('div'));
+      resizeableEl.appendChild(iframeEl = document.createElement('iframe'));
+      previewEl.className = 'preview';
       resizeableEl.className = 'resizeable';
-      resizeableEl.appendChild(iframeEl);
+      iframeEl.setAttribute('scrolling', 'no');
+      iframeEl.name = 'iframe' + iframeId++;
       iframeEl.addEventListener('load', function(event) {
+        var htmlEl, bodyEl, scriptEl, styleEl;
         var doc = this.contentDocument;
-        var htmlEl = doc.documentElement;
         // Abort if we're loading a data uri in a browser without support.
         if (!support.dataIframes && this.src !== previewUrl) {
           return;
         } else if (this.src === previewUrl) {
           // Replace iframe content with the preview HTML.
           htmlEl = doc.createElement('html');
-          var headEl = doc.createElement('head');
-          var bodyEl = doc.createElement('body');
-          bodyEl.innerHTML = this.code;
-          htmlEl.appendChild(headEl);
-          htmlEl.appendChild(bodyEl);
-          doc.documentElement.parentNode.replaceChild(htmlEl, doc.documentElement);
+          htmlEl.appendChild(doc.createElement('head'));
+          htmlEl.appendChild(bodyEl = doc.createElement('body'));
+          bodyEl.innerHTML = codeEl.textContent;
+          doc.replaceChild(htmlEl, doc.documentElement);
         }
+        var win = doc.defaultView;
         // Add scripts and styles.
-        var scriptEl, styleEl;
         var headEl = doc.createElement('head');
         headEl.appendChild(styleEl = doc.createElement('style'));
         headEl.appendChild(scriptEl = doc.createElement('script'));
@@ -82,43 +108,37 @@ var body = document.getElementsByTagName('body')[0];
         styleEl.textContent = styles;
         var oldHeadEl = doc.getElementsByTagName('head')[0];
         oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
-        previewEl.classList.add('has-loaded');
-
-        // Set the height of the iframe element to match the content.
-        resizeableEl.style.height = (getContentHeight(this) + 30) + 'px';
+        win.postMessage('getHeight', '*');
       });
       if (!support.dataIframes) {
         iframeEl.setAttribute('src', previewUrl);
-        iframeEl.code = previewEl.innerHTML;
       } else {
         iframeEl.setAttribute('src', 'data:text/html;charset=utf-8,' +
-          encodeURIComponent(previewEl.innerHTML));
+          encodeURIComponent(codeEl.textContent));
       }
-      previewEl.innerHTML = '';
-      previewEl.appendChild(resizeableEl);
+      codeEl.parentNode.insertBefore(previewEl, codeEl);
       resizeableEl.style.width = resizeableEl.offsetWidth + 'px';
+      
+      var previewWidth = keyvalParse(document.cookie)['preview-width'];
+      if (previewWidth) {
+        resizePreviews(previewWidth);
+        bodyEl.getElementsByClassName('settings')[0]
+          .querySelector('button[data-width="' + previewWidth + '"]')
+          .classList.add('is-active');      
+      }
     });
   });
-  var resizePreviews = function(width) {
-    var resizeable = toArray(body.getElementsByClassName('resizeable'));
-    resizeable.forEach(function(el) {
-      if (width === 'auto') width = el.parentNode.offsetWidth;
-      el.style.width = width + 'px';
-    });
-    // $.cookie('preview-width', width);
-  };
-
-  // if ($.cookie('preview-width') != null) resizePreviews($.cookie('preview-width'));
 
   // Resizing buttons
-  var settingsEl = body.getElementsByClassName('settings')[0];
+  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
   if (settingsEl) {
     settingsEl.addEventListener('click', function(event) {
       if (event.target.tagName.toLowerCase() !== 'button') return;
       event.preventDefault();
       var btn = event.target;
-      var siblings = toArray(btn.parentNode.getElementsByTagName('button'));
-      siblings.forEach(function(el) { el.classList.remove('is-active'); });
+      forEach(btn.parentNode.getElementsByTagName('button'), function(el) {
+        el.classList.remove('is-active');
+      });
       btn.classList.add('is-active');
       var width = btn.dataset.width;
       resizePreviews(width);
@@ -127,7 +147,7 @@ var body = document.getElementsByTagName('body')[0];
 })();
 
 // Dropdown menus
-body.addEventListener('click', function(event) {
+bodyEl.addEventListener('click', function(event) {
   var el = event.target;
   var dropdown = el.parentNode.getElementsByClassName('dropdown')[0];
   var activateDropdown = false;
@@ -137,8 +157,7 @@ body.addEventListener('click', function(event) {
     if (!el.classList.contains('is-active')) activateDropdown = true;
   }
   // Deactivate *all* dropdowns
-  var toggles = toArray(body.getElementsByClassName('dropdown-toggle'));
-  toggles.forEach(function(el) {
+  forEach(bodyEl.getElementsByClassName('dropdown-toggle'), function(el) {
     el.classList.remove('is-active');
     dropdown.classList.remove('is-active');
   });

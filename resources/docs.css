@@ -104,7 +104,7 @@ it's on the todo-list.
   background: hsl(0, 0%, 100%);
   border-top: 1px solid hsl(240, 8%, 87%);
 }
-  pre + .preview {
+  .preview-code + .preview {
     margin-top: 0;
     border-top: 0;
   }
@@ -113,41 +113,37 @@ it's on the todo-list.
   overflow: auto;
   resize: both;
   background: hsl(0, 0%, 100%);
-  -webkit-transition: width .25s, height .25s;
-  -moz-transition:    width .25s, height .25s;
-  -o-transition:      width .25s, height .25s;
-  transition:         width .25s, height .25s;
 }
 .preview iframe {
   display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  visibility: hidden;
 }
-.preview.has-loaded iframe {
-  visibility: visible;
-}
-pre {
+.preview-code {
+  width: 100%;
+  min-height: 150px;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: hsl(240, 9%, 37%);
-  font-size: 12px;
-  line-height: 1.1 !important;
 }
-.docs pre {
+.docs .preview-code {
+  display: block;
   max-height: 200px;
   padding: 10px 20px;
   overflow-y: auto;
   background: hsl(220, 27%, 98%);
   border: 1px solid hsl(240, 8%, 87%);
   border-left: 0; border-right: 0;
+  box-shadow: inset 2px 2px 2px hsla(0, 0%, 0%, .025);
 }
-  .preview + pre {
-    margin-top: 0;
-    border-top-style: dotted;
+  .docs .preview-code:focus {
+    outline: 0;
   }
-  .docs pre:last-child {
+  .preview + .preview-code {
+    margin-top: 0;
+  }
+  .docs .preview-code:last-child {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
@@ -375,11 +371,12 @@ as side margins.
     <p>Paragraph #1
     <p>Paragraph #2
     <ul><li>List</ul> */
-p, ol, ul, dl,
+.docs pre, p, ol, ul, dl,
 figure, blockquote, table {
   margin-left: 20px; margin-right: 20px;
 }
-pre, .preview,
+.preview-code, .preview,
+.docs pre,
 p, ol, ul, dl,
 figure, blockquote, table {
   margin-top: 10px;
@@ -485,16 +482,28 @@ default monospace fonts.
 <pre>
 <code>The font in &lt;pre&gt; code blocks is small but legible.</code>
 </pre>
+```
+
+```php
+<?php
+echo "Hello World;
+?>
 ``` */
-code, var {
+.preview-code,
+pre, code, var {
+  font-style: normal;
+  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+  font-size: 12px;
+}
+.docs pre, code, var {
   padding: .1em 3px;
   background: hsla(0, 0%, 0%, .025);
   border: 1px solid hsla(0, 0%, 0%, .05);
   border-radius: 3px;
-  font-style: normal;
-  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
 }
-
+.code pre {
+  line-height: 1.1 !important;
+}
 pre code {
   padding: 0;
   background: transparent;

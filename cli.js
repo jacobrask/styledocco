@@ -73,7 +73,6 @@ var getFiles = function(inPath, cb) {
 
 // Make `link` objects for the menu.
 var menuLinks = function(files, basePath) {
-  console.log(files);
   return files.map(function(file) {
     var parts = path.relative(basePath, file).split('/');
     parts.pop(); // Remove filename
@@ -229,7 +228,7 @@ var cli = function(options) {
     }, function(err, files) {
       if (err != null) return cb(err);
       // Get the combined CSS from all files.
-      var previewStyles = pluck(files, 'css').reduce(add);
+      var previewStyles = pluck(files, 'css').reduce(add, '');
       previewStyles += resources.previews.css;
       // Build a JSON string of all files and their headings.
       var toc = flatten(files.map(function(file) {
