@@ -4,6 +4,7 @@
 // =======================================================================
 // Normalizes options to pass to StyleDocco.
 
+var fs = require('fs');
 var optimist = require('optimist');
 var path = require('path');
 
@@ -15,7 +16,7 @@ if (optimist.argv.version != null) {
 // Get the common prefix of an array of strings (paths).
 var commonprefix = function(arr) {
   if (!arr.length) return null;
-  if (arr.length === 1) return path.dirname(arr[0]);
+  if (arr.length === 1) return arr[0];
   return arr.reduce(function(res, cur) {
     while (res !== cur.slice(0, res.length)) {
       res = res.slice(0, -1);
@@ -51,6 +52,9 @@ options.basePath = commonprefix(
     return path.resolve(file);
   })
 );
+if (fs.statSync(options.basePath).isFile()) {
+  options.basePath = path.dirname(options.basePath);
+}
 
 // Try to read name from package.json
 if (options.name == null) {
