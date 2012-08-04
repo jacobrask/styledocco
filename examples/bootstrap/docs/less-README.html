@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Twitter Bootstrap
+<!DOCTYPE html><html><head><title>README | Twitter Bootstrap
 </title><meta charset="utf-8"><style>/*
 StyleDocco default styles
 =========================
@@ -524,90 +524,609 @@ pre code {
   -ms-user-select: none;
   user-select: none;
 }
+</style><script type="text/preview">// StyleDocco JavaScript for preview iframes
+// =========================================
+
+(function () {
+
+'use strict';
+
+// Helper functions
+// ================
+// Using `Array.prototype` to make them work on `NodeList`s.
+var filter = function(arr, it) { return Array.prototype.filter.call(arr, it); };
+var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
+var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
+var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
+var add = function(a, b) { return a + b; };
+
+var bodyEl = document.getElementsByTagName('body')[0];
+
+// Get bottom-most point in document with an element.
+// `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
+var getContentHeight = (function() {
+  var bodyStyle = window.getComputedStyle(bodyEl, null);
+  return function() {
+    if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
+    var els = bodyEl.getElementsByTagName('*');
+    var elHeights = [];
+    for (var i = 0, l = els.length; i < l; i++) {
+      elHeights.push(els[i].offsetTop + els[i].offsetHeight);
+    }
+    var height = Math.max.apply(Math, elHeights);
+    var padding = bodyStyle.getPropertyValue('padding-bottom');
+    return height + parseInt(padding);
+  };
+})();
+
+// Scans your stylesheet for pseudo classes and adds a class with the same name.
+// Compile regular expression.
+var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
+                'enabled', 'disabled', 'checked' ];
+var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
+var processedPseudoClasses = reduce(map(
+  filter(document.styleSheets, function(ss) { return !(ss.href != null); }),
+  function(ss) {
+    return reduce(map(
+      filter(ss.cssRules, function(rule) {
+        // Keep only rules with pseudo classes.
+        return rule.selectorText && rule.selectorText.match(pseudoRe);
+      }), function(rule) {
+       // Replace : with . and encoded :
+       return rule.cssText.replace(pseudoRe, ".\\3A $1");
+      }),
+      add, ''
+    );
+  }
+), add, '');
+if (processedPseudoClasses.length) {
+  // Add a new style element with the processed pseudo class styles.
+  var styleEl = document.createElement('style');
+  styleEl.innerText = processedPseudoClasses;
+  document.getElementsByTagName('head')[0].appendChild(styleEl);
+}
+
+var callbacks = {
+  getHeight: function() {
+    window.parent.postMessage({ height: getContentHeight() }, '*');
+  }
+};
+
+window.addEventListener('message', function (ev) {
+  if (ev.data == null) return;
+  if (typeof ev.data === 'string') callbacks[ev.data]();
+}, false);
+
+}());
+</script><style type="text/preview">TWITTER BOOTSTRAP
+=================
+
+Bootstrap is Twitter's toolkit for kickstarting CSS for websites, apps, and more. It includes base CSS styles for typography, forms, buttons, tables, grids, navigation, alerts, and more.
+
+To get started -- checkout http://twitter.github.com/bootstrap!
+
+
+Versioning
+----------
+
+For transparency and insight into our release cycle, and for striving to maintain backward compatibility, Bootstrap will be maintained under the Semantic Versioning guidelines as much as possible.
+
+Releases will be numbered with the follow format:
+
+`<major>.<minor>.<patch>`
+
+And constructed with the following guidelines:
+
+* Breaking backward compatibility bumps the major
+* New additions without breaking backward compatibility bumps the minor
+* Bug fixes and misc changes bump the patch
+
+For more information on SemVer, please visit http://semver.org/.
+
+
+Bug tracker
+-----------
+
+Have a bug? Please create an issue here on GitHub!
+
+https://github.com/twitter/bootstrap/issues
+
+
+Twitter account
+---------------
+
+Keep up to date on announcements and more by following Bootstrap on Twitter, <a href="http://twitter.com/TwBootstrap">@TwBootstrap</a>.
+
+
+Mailing list
+------------
+
+Have a question? Ask on our mailing list!
+
+twitter-bootstrap@googlegroups.com
+
+http://groups.google.com/group/twitter-bootstrap
+
+
+IRC
+---
+
+Server: irc.freenode.net
+
+Channel: ##twitter-bootstrap (the double ## is not a typo)
+
+
+Developers
+----------
+
+We have included a makefile with convenience methods for working with the Bootstrap library.
+
++ **build** - `make`
+Runs the LESS compiler to rebuild the `/less` files and compiles the docs pages. Requires lessc and uglify-js. <a href="http://twitter.github.com/bootstrap/less.html#compiling">Read more in our docs &raquo;</a>
+
++ **watch** - `make watch`
+This is a convenience method for watching just Less files and automatically building them whenever you save. Requires the Watchr gem.
+
+
+Authors
+-------
+
+**Mark Otto**
+
++ http://twitter.com/mdo
++ http://github.com/markdotto
+
+**Jacob Thornton**
+
++ http://twitter.com/fat
++ http://github.com/fat
+
+
+Copyright and license
+---------------------
+
+Copyright 2012 Twitter, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this work except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file, or at:
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.btn {
+  display: inline-block;
+  padding: 4px 10px 4px;
+  margin-bottom: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: #333333;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(top, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  border: 1px solid #ccc;
+  border-bottom-color: #bbb;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  *margin-left: .3em;
+}
+.btn:hover,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+  background-color: #e6e6e6;
+}
+.btn:active,
+.btn.active {
+  background-color: #cccccc \9;
+}
+.btn:first-child {
+  *margin-left: 0;
+}
+.btn:hover {
+  color: #333333;
+  text-decoration: none;
+  background-color: #e6e6e6;
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+  -moz-transition: background-position 0.1s linear;
+  -ms-transition: background-position 0.1s linear;
+  -o-transition: background-position 0.1s linear;
+  transition: background-position 0.1s linear;
+}
+.btn:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn.active,
+.btn:active {
+  background-image: none;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #e6e6e6;
+  background-color: #d9d9d9 \9;
+  outline: 0;
+}
+.btn.disabled,
+.btn[disabled] {
+  cursor: default;
+  background-image: none;
+  background-color: #e6e6e6;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.btn-large {
+  padding: 9px 14px;
+  font-size: 15px;
+  line-height: normal;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.btn-large [class^="icon-"] {
+  margin-top: 1px;
+}
+.btn-small {
+  padding: 5px 9px;
+  font-size: 11px;
+  line-height: 16px;
+}
+.btn-small [class^="icon-"] {
+  margin-top: -1px;
+}
+.btn-mini {
+  padding: 2px 6px;
+  font-size: 11px;
+  line-height: 14px;
+}
+.btn-primary,
+.btn-primary:hover,
+.btn-warning,
+.btn-warning:hover,
+.btn-danger,
+.btn-danger:hover,
+.btn-success,
+.btn-success:hover,
+.btn-info,
+.btn-info:hover,
+.btn-inverse,
+.btn-inverse:hover {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+.btn-primary.active,
+.btn-warning.active,
+.btn-danger.active,
+.btn-success.active,
+.btn-info.active,
+.btn-dark.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+.btn-primary {
+  background-color: #006dcc;
+  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -ms-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+  background-image: linear-gradient(top, #0088cc, #0044cc);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
+  border-color: #0044cc #0044cc #002a80;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  background-color: #0044cc;
+}
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #003399 \9;
+}
+.btn-warning {
+  background-color: #faa732;
+  background-image: -moz-linear-gradient(top, #fbb450, #f89406);
+  background-image: -ms-linear-gradient(top, #fbb450, #f89406);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
+  background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
+  background-image: -o-linear-gradient(top, #fbb450, #f89406);
+  background-image: linear-gradient(top, #fbb450, #f89406);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbb450', endColorstr='#f89406', GradientType=0);
+  border-color: #f89406 #f89406 #ad6704;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-warning:hover,
+.btn-warning:active,
+.btn-warning.active,
+.btn-warning.disabled,
+.btn-warning[disabled] {
+  background-color: #f89406;
+}
+.btn-warning:active,
+.btn-warning.active {
+  background-color: #c67605 \9;
+}
+.btn-danger {
+  background-color: #da4f49;
+  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -ms-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: linear-gradient(top, #ee5f5b, #bd362f);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ee5f5b', endColorstr='#bd362f', GradientType=0);
+  border-color: #bd362f #bd362f #802420;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger.active,
+.btn-danger.disabled,
+.btn-danger[disabled] {
+  background-color: #bd362f;
+}
+.btn-danger:active,
+.btn-danger.active {
+  background-color: #942a25 \9;
+}
+.btn-success {
+  background-color: #5bb75b;
+  background-image: -moz-linear-gradient(top, #62c462, #51a351);
+  background-image: -ms-linear-gradient(top, #62c462, #51a351);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+  background-image: -o-linear-gradient(top, #62c462, #51a351);
+  background-image: linear-gradient(top, #62c462, #51a351);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#62c462', endColorstr='#51a351', GradientType=0);
+  border-color: #51a351 #51a351 #387038;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #51a351;
+}
+.btn-success:active,
+.btn-success.active {
+  background-color: #408140 \9;
+}
+.btn-info {
+  background-color: #49afcd;
+  background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: -ms-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
+  background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: -o-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: linear-gradient(top, #5bc0de, #2f96b4);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5bc0de', endColorstr='#2f96b4', GradientType=0);
+  border-color: #2f96b4 #2f96b4 #1f6377;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-info:hover,
+.btn-info:active,
+.btn-info.active,
+.btn-info.disabled,
+.btn-info[disabled] {
+  background-color: #2f96b4;
+}
+.btn-info:active,
+.btn-info.active {
+  background-color: #24748c \9;
+}
+.btn-inverse {
+  background-color: #393939;
+  background-image: -moz-linear-gradient(top, #454545, #262626);
+  background-image: -ms-linear-gradient(top, #454545, #262626);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#454545), to(#262626));
+  background-image: -webkit-linear-gradient(top, #454545, #262626);
+  background-image: -o-linear-gradient(top, #454545, #262626);
+  background-image: linear-gradient(top, #454545, #262626);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#454545', endColorstr='#262626', GradientType=0);
+  border-color: #262626 #262626 #000000;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-inverse:hover,
+.btn-inverse:active,
+.btn-inverse.active,
+.btn-inverse.disabled,
+.btn-inverse[disabled] {
+  background-color: #262626;
+}
+.btn-inverse:active,
+.btn-inverse.active {
+  background-color: #0c0c0c \9;
+}
+button.btn,
+input[type="submit"].btn {
+  *padding-top: 2px;
+  *padding-bottom: 2px;
+}
+button.btn::-moz-focus-inner,
+input[type="submit"].btn::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+button.btn.large,
+input[type="submit"].btn.large {
+  *padding-top: 7px;
+  *padding-bottom: 7px;
+}
+button.btn.small,
+input[type="submit"].btn.small {
+  *padding-top: 3px;
+  *padding-bottom: 3px;
+}
 </style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">Twitter Bootstrap</a><ul class="menu"><li><a href="#" unselectable="on" class="dropdown-toggle">less</a><ul class="dropdown"><li><a href="less-README.html">README
 </a></li><li><a href="less-mixins.html">mixins
 </a></li><li><a href="less-variables.html">variables
 </a></li><li><a href="less-buttons.html">buttons
-</a></li></ul></li></ul><div class="settings2"><button title="Table of Contents" class="toc ir">Table of Contents</button></div></div></nav><section class="container"><article id="styledocco" class="section"><div class="docs"><a href="#styledocco" class="permalink ir">StyleDocco</a><h1 id="styledocco">StyleDocco</h1>
-<p>StyleDocco generates documentation and style guide documents from your stylesheets.
+</a></li></ul></li></ul><div class="settings2"><button title="Table of Contents" class="toc ir">Table of Contents</button></div></div></nav><section class="container"><article id="" class="section"><div class="docs"><a href="#" class="permalink ir"></a>
+</div><div class="code"><pre><code>TWITTER BOOTSTRAP
+=================
 
-</p>
-<p>Stylesheet comments will be parsed through <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and displayed in a generated HTML document. You can write HTML code prefixed with 4 spaces or between <a href="http://github.github.com/github-flavored-markdown/">code fences</a> (<code>```</code>) in your comments, and StyleDocco renders a preview with the styles applied, and shows the example HTML code.
+Bootstrap is Twitter's toolkit for kickstarting CSS for websites, apps, and more. It includes base CSS styles for typography, forms, buttons, tables, grids, navigation, alerts, and more.
 
-</p>
-<p>An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
-
-</p>
-<p>Suggestions, feature requests and bug reports are very welcome, either at <a href="https://github.com/jacobrask/styledocco/issues">GitHub</a> or on Twitter (<a href="https://twitter.com/jacobrask">@jacobrask</a>).
+To get started -- checkout http://twitter.github.com/bootstrap!
 
 
-</p>
-<h2 id="installation">Installation</h2>
-<p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>. After installing Node.js, run <code>npm install -g styledocco</code> or clone this repository.
+Versioning
+----------
 
-</p>
-<p>StyleDocco is free software, released under the <a href="https://raw.github.com/jacobrask/styledocco/master/LICENSE">MIT license</a>.
+For transparency and insight into our release cycle, and for striving to maintain backward compatibility, Bootstrap will be maintained under the Semantic Versioning guidelines as much as possible.
 
+Releases will be numbered with the follow format:
 
-</p>
-</div></article><article id="usage" class="section"><div class="docs"><a href="#usage" class="permalink ir">Usage</a><h1 id="usage">Usage</h1>
-<p><code>styledocco [options] [INPUT]</code>
+`<major>.<minor>.<patch>`
 
-</p>
-<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
+And constructed with the following guidelines:
 
-</p>
-<p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
+* Breaking backward compatibility bumps the major
+* New additions without breaking backward compatibility bumps the minor
+* Bug fixes and misc changes bump the patch
 
-</p>
-<h2 id="options">Options</h2>
-<ul>
-<li><code>--name</code>, <code>-n</code>      Name of the project <em>(required)</em></li>
-<li><code>--out</code>, <code>-o</code>       Output directory <em>(default: &quot;docs&quot;)</em></li>
-<li><code>--resources</code>, <code>-s</code> Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. <em>(optional)</em></li>
-<li><code>--preprocessor</code>    Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
-<li><code>--include</code>         Include specified CSS and/or JavaScript files in the previews. <em>(optional)</em> (ex: <code>--include mysite.css --include app.js</code>)</li>
-<li><code>--verbose</code>         Show log messages when generating the documentation. <em>(default: false)</em></li>
-<li>Directory containing the stylesheets to document.</li>
-</ul>
-<h2 id="usage-examples">Usage examples</h2>
-<p>Generate documentation for <em>My Project</em> in the <code>docs</code> folder, from the files in the <code>css</code> directory.
-
-</p>
-<p><code>styledocco -n &quot;My Project&quot; css</code>
-
-</p>
-<p>Generate documentation for <em>My Project</em> in the <code>mydocs</code> folder, from source files in the <code>styles</code> folder. Use the Less binary in <code>~/bin/lessc</code>.
-
-</p>
-<p><code>styledocco -n &quot;My Project&quot; -o mydocs -s mydocs --preprocessor &quot;~/bin/lessc&quot; styles</code>
+For more information on SemVer, please visit http://semver.org/.
 
 
-</p>
-<h2 id="syntax">Syntax</h2>
-<pre><code class="lang-css">/* Provides extra visual weight and identifies the primary action in a set of buttons.
+Bug tracker
+-----------
 
-    &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt; */
-.btn.primary {
-    background: blue;
-    color: white;
-}</code></pre>
-<p>Would display the description, a rendered button as well as the example HTML code. The CSS will be applied to the preview.
+Have a bug? Please create an issue here on GitHub!
 
-</p>
-<p>See the <code>examples</code> folder for more in-depth examples.
+https://github.com/twitter/bootstrap/issues
 
-</p>
-<h2 id="tips-and-tricks">Tips and tricks</h2>
-<ul>
-<li>Put some whitespace before a comment block to exclude it from the documentation.</li>
-<li>Level 1 headings will automatically create a new section in the documentation.</li>
-<li>Add <code>:hover</code>, <code>:focus</code>, etc as class names in example code and the pseudo class styles will be applied in the preview.</li>
-</ul>
-<h2 id="acknowledgements">Acknowledgements</h2>
-<p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/kneath/kss">Knyle Style Sheets</a> have also been sources of inspiration for StyleDocco.
-</p>
-</div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="auto" class="auto is-active">Auto</button></div></div><script>// StyleDocco JavaScript for documentation
+
+Twitter account
+---------------
+
+Keep up to date on announcements and more by following Bootstrap on Twitter, <a href="http://twitter.com/TwBootstrap">@TwBootstrap</a>.
+
+
+Mailing list
+------------
+
+Have a question? Ask on our mailing list!
+
+twitter-bootstrap@googlegroups.com
+
+http://groups.google.com/group/twitter-bootstrap
+
+
+IRC
+---
+
+Server: irc.freenode.net
+
+Channel: ##twitter-bootstrap (the double ## is not a typo)
+
+
+Developers
+----------
+
+We have included a makefile with convenience methods for working with the Bootstrap library.
+
++ **build** - `make`
+Runs the LESS compiler to rebuild the `/less` files and compiles the docs pages. Requires lessc and uglify-js. <a href="http://twitter.github.com/bootstrap/less.html#compiling">Read more in our docs &raquo;</a>
+
++ **watch** - `make watch`
+This is a convenience method for watching just Less files and automatically building them whenever you save. Requires the Watchr gem.
+
+
+Authors
+-------
+
+**Mark Otto**
+
++ http://twitter.com/mdo
++ http://github.com/markdotto
+
+**Jacob Thornton**
+
++ http://twitter.com/fat
++ http://github.com/fat
+
+
+Copyright and license
+---------------------
+
+Copyright 2012 Twitter, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this work except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file, or at:
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</code></pre></div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="auto" class="auto is-active">Auto</button></div></div><script>// StyleDocco JavaScript for documentation
 // =======================================
 
 (function() {

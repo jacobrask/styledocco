@@ -1,7 +1,21 @@
 <!DOCTYPE html><html><head><title>StyleDocco
-</title><meta charset="utf-8"><link rel="stylesheet" href="docs.css"><style type="text/preview">/*
+</title><meta charset="utf-8"><style>/*
 StyleDocco default styles
 =========================
+
+# Heading level 1
+
+## Heading level 2
+
+### Heading level 3
+
+#### Heading level 4
+
+##### Heading level 5
+
+###### Heading level 6
+
+###### *Heading* _inline_ styles
 This is the default stylesheet for StyleDocco. It also serves as an example of
 the documentation syntax. */
 * {
@@ -91,7 +105,7 @@ it's on the todo-list.
   background: hsl(0, 0%, 100%);
   border-top: 1px solid hsl(240, 8%, 87%);
 }
-  pre + .preview {
+  .preview-code + .preview {
     margin-top: 0;
     border-top: 0;
   }
@@ -105,30 +119,30 @@ it's on the todo-list.
   display: block;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
-.preview.is-loading iframe {
-  visibility: hidden;
-}
-pre {
+.preview-code {
+  display: block;
+  width: 100%;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: hsl(240, 9%, 37%);
-  font-size: 12px;
-  line-height: 1.1 !important;
-}
-.docs pre {
   max-height: 200px;
   padding: 10px 20px;
   overflow-y: auto;
   background: hsl(220, 27%, 98%);
   border: 1px solid hsl(240, 8%, 87%);
   border-left: 0; border-right: 0;
+  box-shadow: inset 2px 2px 2px hsla(0, 0%, 0%, .025);
+  line-height: 1.1 !important;
 }
-  .preview + pre {
-    margin-top: 0;
-    border-top-style: dotted;
+  .preview-code:focus {
+    outline: 0;
   }
-  .docs pre:last-child {
+  .preview + .preview-code {
+    margin-top: 0;
+  }
+  .preview-code:last-child {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
@@ -175,12 +189,12 @@ Fixed to top with a small drop shadow.
   margin: 0 !important;
 }
 .menu, .menu a, .menu a:visited {
-  color: hsla(0, 0%, 100%, .7);
+  color: hsl(0, 0%, 80%);
   text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
 }
 .menu .is-active > a,
 .menu a:hover {
-  color: hsla(0, 0%, 100%, .9);
+  color: hsl(0, 0%, 90%);
   text-decoration: none;
 }
 /* ```
@@ -191,12 +205,13 @@ Fixed to top with a small drop shadow.
   margin-right: 20px;
   font-weight: bold;
   font-size: 16px;
-  color: hsla(0, 0%, 0%, .9);
+  color: hsl(0, 0%, 10%);
   text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
   text-decoration: none;
 }
   .brand:hover, a.brand:hover {
     color: hsl(0, 0%, 0%);
+    text-decoration: none;
   }
 /*
 Showing previews of absolutely positioned elements can be tricky, but most of
@@ -206,7 +221,7 @@ by including a custom previews stylesheet with overrides.
 <div class="bar top">
   <ul class="menu">
     <li><a href="#">css-file</a>
-    <li><a href="#" class="dropdown-toggle">folder</a>
+    <li><a href="#" class="dropdown-toggle is-active" unselectable="on">folder</a>
         <ul class="dropdown is-active">
           <li><a href="#">css-file</a>
           <li><a href="#">css-file</a>
@@ -272,12 +287,23 @@ by including a custom previews stylesheet with overrides.
 .dropdown li:hover {
   background-color: hsl(197, 5%, 30%);
 }
+.settings .search {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAMFBMVEX///////////////////////////////////////////////////////8AAAD///++CtLxAAAAD3RSTlNPz49/D6+/X98/7x8vnwDjrzSxAAAAoElEQVR42o3RSw7DIAxF0fCLSYhh/7sN9qtjJCa9I+DYSqUeXSM+Z6n1L4Wjjl+cV+Dh3Y+DvteYUoEYHHIjvTShYFB9CtsEID1aMlYBjJMlc03hHCMukCdcBqkv/QWle88Hyb7mv7crtIEVX2CAzrC937oPyHKplOezzPgGxtYYMCVsIiBRxZ/BjSECqF0zOZgALJcI2KUANglZYCuW3F9+zR3AHggPQQAAAABJRU5ErkJggg==);
+}
+.settings .toc {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
+}
 
 
 /*
 # Settings and configuration
 */
-.settings {
+.bar.top .settings {
+  text-align: right;
+}
+.bar.bottom .settings {
   text-align: center;
 }
 .settings button {
@@ -300,23 +326,23 @@ by including a custom previews stylesheet with overrides.
  /* Glyphicons Free. http://glyphicons.com */
 .settings .desktop {
   width: 28px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYBAMAAAAbsoCxAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoLLk56XJsAAAASUExURf///////////////////////7rldAIAAAAFdFJOUwA/Tc/vbrbEvQAAAAFiS0dEBfhv6ccAAAA2SURBVBhXY3ANRQIhDKEogCFUCQkMDy6aB5FAQCgDWmhAAFAZEmAMDRVA4gqHhhrCOXBjMbgASVE+V+Tuaj4AAAAASUVORK5CYII=);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAMAAADeQm2wAAAAElBMVEX///////////8AAAD///////9H1zSfAAAABXRSTlPPP+8ATau1O/wAAAA+SURBVHja7dIxDgAgCENRCvb+V1aZiApxc/GvL6QLokxTYdHAlvTxIaZVaGT9CRbyg1BETMQZ4fuCDbl0gR1IHgr1A5eU5AAAAABJRU5ErkJggg==);
 }
 .settings .laptop {
   width: 28px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAYAAAD3T6+hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoME1lThk0AAAA8SURBVDjLY/j//z8DFPMD8fv/1AfvkexgYECzkFYAq4UMSAp8qYRHLRy1cNTCUQsHyEK6ApCF6+lo33oA6TKxvKfzn5kAAAAASUVORK5CYII=);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAMAAADAkV+TAAAAElBMVEX///////////8AAAD///////9H1zSfAAAABXRSTlMP768ATRRu534AAAAuSURBVHja7cnBDQAgDMPAtMH7r0wlnhTEAFj+nWwFTeGSmraFhrH18Q25pDxbTqR5Br/WrCRPAAAAAElFTkSuQmCC);
 }
 .settings .tablet {
   width: 20px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAYAAAB836/YAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMNhJXUgoAAABJSURBVEjHY/j//3//f+qB8wz/qQxobqAvmXjUwFEDRw0cNXDUwFEDaW4gNtAJxMJQ3EmNatQeqo4ByiZoIKGWQz2SgfUE1PYDAKR3kM4foJivAAAAAElFTkSuQmCC);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAMAAABLAV/qAAAAG1BMVEX///////////////////////8AAAD////////6N1ZCAAAACHRSTlPPiX8/E48ATXBCobkAAAA3SURBVHja7dFLCgAgDEPBfmPvf2JBiiCtBxCcVXjbkEdBFI1rHIcfn4kLm3G5WAHd0XMIIDl9Ak7UD3Zn9nwyAAAAAElFTkSuQmCC);
 }
 .settings .smartphone {
   width: 14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYBAMAAAA46dFkAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMJg/gQm4AAAAYUExURf///////////////////////////////ykrwMgAAAAHdFJOUwAPP01vz+/RYU9PAAAAAWJLR0QHFmGI6wAAADRJREFUCFtjUCsHgSSGdDBdxlAOAQjaGAQGgC4vT4e4o1QwHEyXMLgD6XQwv4wB6O4yoLsBA2Y3dN88x/AAAAAASUVORK5CYII=);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYCAMAAAD9GTxlAAAAGFBMVEUAAAD///////////////////////////8jfp1fAAAAB3RSTlMAb88/D+9NtRxVGQAAADlJREFUeNrd0MENACAIQ9EiVPbf2BgCgbiB//bCiULpFRWhNHz0clef8sbx/jJbjQJIkP3KHJYx7AHqAQg9+9dkigAAAABJRU5ErkJggg==);
 }
 .settings .featurephone {
   width: 15px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAYAAADuWXTMAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFQoMBjSOYqYAAABjSURBVDjLY/z//z8DFPgDsQMQG0BpdHABijcA8UaQACNQsz6QXgDVRCx4AMQBIM3vgQwBBtLBB5BmmLv9SNC4CebsUc2jmonWTDKgmmZGJPH/RPCpp3nU2YPe2fVAuoEMvQ0AyViFVz5H3XIAAAAASUVORK5CYII=);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEX///////////////////////////////////8AAAD///////8oRfFWAAAAC3RSTlOfv4/fTy/vf88ATY0kZhAAAAA6SURBVHjazco7CgAgEEPB+Dfm/vcVC9lF7HUgxYOAzDFo6cgkSpdJBVVehTSM9GE71ya5d/aDf5PXJnc+DuRZoesaAAAAAElFTkSuQmCC);
 }
 .settings .auto {
   color: #fff;
@@ -344,11 +370,12 @@ as side margins.
     <p>Paragraph #1
     <p>Paragraph #2
     <ul><li>List</ul> */
-p, ol, ul, dl,
+.docs pre, p, ol, ul, dl,
 figure, blockquote, table {
   margin-left: 20px; margin-right: 20px;
 }
-pre, .preview,
+.preview-code, .preview,
+.docs pre,
 p, ol, ul, dl,
 figure, blockquote, table {
   margin-top: 10px;
@@ -375,7 +402,7 @@ hr,
 h1, h2, h3, h4, h5, h6 {
   margin: 1em 20px .5em;
 }
-  h1:first-child {
+  h1:first-of-type {
     margin-top: 20px;
   }
 h1, h2, h3, h4, h5, h6 {
@@ -391,7 +418,7 @@ h1 a, h1 a:hover, h1 a:visited {
   height: 23px;
   position: absolute;
   top: 15px; right: 15px;
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxgEwMAAAAEHRSTlMADx8vP09fb3+Pn6+/z9/v+t8hjgAAAKNJREFUGFdt0FsShSAIAFDITNNrsP/VxsMcdS4famcAQ4ApjlzzCVtcrFHxDzK3mQ0ryfLb8AJssuUNwZh2BIhycjwNMeo5Da2GTbO16nG1G5o1eWSNrqTqvcPXP6B1MCYsHSn7bcYJOjKF/mftmwB1xlvTKIQxl2YV3QU14TDN8kheZNifIGtp7+9V9sHOCwLcyjGuCFC4x4yDV5Qb5UmeNMELNfcMqAUDqMgAAAAASUVORK5CYII=) 50% 50% no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAAM1BMVEX///////////////////////////////////////////////////////////8AAAD///8VtYL2AAAAEHRSTlO/jx9vP9+vT8+fD38v718AyvCTSAAAAKlJREFUeNpV0FsOxSAIBNC+VVBx/6u9zJCU3vmw5FQwutknhz56ofjqXMgj1MRIldDEZ/iyUROnSfWPbv9o5AFNRIpXoRdRCurz1YdY14yuOxQnWOWQ29cSOqAxu+MXtAsnkIe0adA+9Fovn3wHxzV6dGO0UgV33LFt9O5lKHY13MMRGw6q+iMZIkS1ULSiIjYL7QucGGo7uJREqrWFEFPBiammt7/TaZkfXB8aoN4G6bsAAAAASUVORK5CYII=) 50% 50% no-repeat;
   opacity: .1;
 }
   .permalink:hover {
@@ -399,23 +426,27 @@ h1 a, h1 a:hover, h1 a:visited {
   }
 
 h1 {
-  font-size: 2.49em;
+  font-size: 3.052em;
+  font-weight: normal;
 }
 h2 {
-  font-size: 2.07em;
+  font-size: 1.953em;
 }
 h3 {
-  font-size: 1.73em;
+  font-size: 1.536em;
+}
+h1, h2, h3 {
+  letter-spacing: -.05em;
 }
 h4 {
-  font-size: 1.44em;
+  font-size: 1.25em;
 }
 h5 {
-  font-size: 1.2em;
+  font-size: 1em;
+  text-transform: uppercase;
 }
 h6 {
   font-size: 1em;
-  text-transform: uppercase;
 }
 
 /*
@@ -450,16 +481,28 @@ default monospace fonts.
 <pre>
 <code>The font in &lt;pre&gt; code blocks is small but legible.</code>
 </pre>
+```
+
+```php
+<?php
+echo "Hello World;
+?>
 ``` */
-code, var {
+.preview-code,
+pre, code, var {
+  font-style: normal;
+  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+  font-size: 12px;
+}
+.docs pre, code, var {
   padding: .1em 3px;
   background: hsla(0, 0%, 0%, .025);
   border: 1px solid hsla(0, 0%, 0%, .05);
   border-radius: 3px;
-  font-style: normal;
-  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
 }
-
+.code pre {
+  line-height: 1.1 !important;
+}
 pre code {
   padding: 0;
   background: transparent;
@@ -475,95 +518,220 @@ pre code {
   text-shadow: none;
 }
 
-body {
-  padding: 1%;
-}
-.bar {
-  position: static;
-  margin: -1%;
-}
-.bar.top {
-  margin-bottom: 1%;
-}
-.bar.bottom {
-  margin-top: 1%;
+[unselectable="on"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">StyleDocco</a><ul class="menu"><li><a href="docs.html">docs
-</a></li></ul></div></nav><section class="container"><article id="styledocco" class="section"><div class="docs"><h1>StyleDocco</h1><a href="#styledocco" class="permalink ir">StyleDocco</a><p>StyleDocco generates documentation and style guide documents from your stylesheets.
+</a></li></ul><div class="settings2"><button title="Table of Contents" class="toc ir">Table of Contents</button></div></div></nav><section class="container"><article id="style-guide" class="section"><div class="docs"><a href="#style-guide" class="permalink ir">Style Guide</a><h1 id="style-guide">Style Guide</h1>
+<p>Use the menu to the left to navigate.
 
 </p>
-<p>Stylesheet comments will be parsed through <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and displayed in a generated HTML document. You can write HTML code prefixed with 4 spaces or between <a href="http://github.github.com/github-flavored-markdown/">code fences</a> (<code>```</code>) in your comments, and StyleDocco renders a preview with the styles applied, and shows the example HTML code.
-
+<p>Please add a Readme file to your project to update this message. The Readme file will be parsed with Markdown.
 </p>
-<p>An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
+</div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="auto" class="auto is-active">Auto</button></div></div><script>// StyleDocco JavaScript for documentation
+// =======================================
 
-</p>
-<p>Suggestions, feature requests and bug reports are very welcome, either at <a href="https://github.com/jacobrask/styledocco/issues">GitHub</a> or on Twitter (<a href="https://twitter.com/jacobrask">@jacobrask</a>).
+(function() {
 
+'use strict';
 
-</p>
-<h2>Installation</h2>
-<p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>. After installing Node.js, run <code>npm install -g styledocco</code> or clone this repository.
+// Helper functions
+// ================
+// Using `Array.prototype` to make them work on `NodeList`s.
+var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
+var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
+var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
+var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
+var add = function(a, b) { return a + b; };
 
-</p>
-<p>StyleDocco is free software, released under the <a href="https://raw.github.com/jacobrask/styledocco/master/LICENSE">MIT license</a>.
+// Parse `key=value; key=value` strings (for cookies).
+var keyvalParse = function(str) {
+  var obj = {};
+  var pairs = str.split(';');
+  for (var i = 0; pairs.length > i; i++) {
+    var kvs = pairs[i].trim().split('=');
+    obj[kvs[0]] = kvs[1];
+  };
+  return obj;
+};
 
-
-</p>
-</div></article><article id="usage" class="section"><div class="docs"><h1>Usage</h1><a href="#usage" class="permalink ir">Usage</a><p><code>styledocco [options] [INPUT]</code>
-
-</p>
-<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
-
-</p>
-<p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
-
-</p>
-<h2>Options</h2>
-<ul>
-<li><code>--name</code>, <code>-n</code>      Name of the project <em>(required)</em></li>
-<li><code>--out</code>, <code>-o</code>       Output directory <em>(default: &quot;docs&quot;)</em></li>
-<li><code>--resources</code>, <code>-s</code> Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. <em>(optional)</em></li>
-<li><code>--preprocessor</code>    Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
-<li><code>--include</code>         Include specified CSS and/or JavaScript files in the previews. <em>(optional)</em> (ex: <code>--include mysite.css --include app.js</code>)</li>
-<li><code>--verbose</code>         Show log messages when generating the documentation. <em>(default: false)</em></li>
-<li>Directory containing the stylesheets to document.</li>
-</ul>
-<h2>Usage examples</h2>
-<p>Generate documentation for <em>My Project</em> in the <code>docs</code> folder, from the files in the <code>css</code> directory.
-
-</p>
-<p><code>styledocco -n &quot;My Project&quot; css</code>
-
-</p>
-<p>Generate documentation for <em>My Project</em> in the <code>mydocs</code> folder, from source files in the <code>styles</code> folder. Use the Less binary in <code>~/bin/lessc</code>.
-
-</p>
-<p><code>styledocco -n &quot;My Project&quot; -o mydocs -s mydocs --preprocessor &quot;~/bin/lessc&quot; styles</code>
+var bodyEl = document.getElementsByTagName('body')[0];
+var headEl = document.getElementsByTagName('head')[0];
 
 
-</p>
-<h2>Syntax</h2>
-<pre><code class="lang-css">/* Provides extra visual weight and identifies the primary action in a set of buttons.
+// Iframe rendering and handling
+// =============================
+(function() {
+  // Don't run this function if we're rendering a preview page.
+  if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
-    &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt; */
-.btn.primary {
-    background: blue;
-    color: white;
-}</code></pre>
-<p>Would display the description, a rendered button as well as the example HTML code. The CSS will be applied to the preview.
+  var resizeableElOffset = 30; // `.resizeable` padding
+  
+  var resizePreviews = function(width) {
+    document.cookie = 'preview-width=' + width;
+    forEach(bodyEl.getElementsByClassName('resizeable'), function(el) {
+      if (width === 'auto') width = el.parentNode.offsetWidth;
+      el.style.width = width + 'px';
+      // TODO: Add CSS transitions and update height after `transitionend` event
+      el.getElementsByTagName('iframe')[0].contentDocument.defaultView.postMessage('getHeight', '*');
+    });
+  };
 
-</p>
-<p>See the <code>examples</code> folder for more in-depth examples.
+  window.addEventListener('message', function (ev) {
+    if (ev.data == null || !ev.source) return;
+    var data = ev.data;
+    var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
+    // Set iframe height
+    if (data.height != null && sourceFrameEl) {
+      sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
+    }
+  }, false);
 
-</p>
-<h2>Tips and tricks</h2>
-<ul>
-<li>Put some whitespace before a comment block to exclude it from the documentation.</li>
-<li>Level 1 headings will automatically create a new section in the documentation.</li>
-<li>Add <code>:hover</code>, <code>:focus</code>, etc as class names in example code and the pseudo class styles will be applied in the preview.</li>
-</ul>
-<h2>Acknowledgements</h2>
-<p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/kneath/kss">Knyle Style Sheets</a> have also been sources of inspiration for StyleDocco.
-</p>
-</div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="100%" class="auto is-active">Auto</button></div></div><script src="docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+  // Get preview styles intended for preview iframes.
+  var styles = reduce(
+    pluck(headEl.querySelectorAll('style[type="text/preview"]'), 'innerHTML'),
+  add, '');
+  // Get preview scripts intended for preview iframes.
+  var scripts = reduce(
+    pluck(headEl.querySelectorAll('script[type="text/preview"]'), 'innerHTML'),
+  add, '');
+
+  // Check if browser treats data uris as same origin.
+  // This will always display an error in WebKit.
+  var iframeEl = document.createElement('iframe');
+  iframeEl.src = 'data:text/html,';
+  bodyEl.appendChild(iframeEl);
+  iframeEl.addEventListener('load', function() {
+    var support = {};
+    if (this.contentDocument) support.dataIframes = true;
+    else support.dataIframes = false;
+    this.parentNode.removeChild(this);
+
+    // Loop through code textareas and render the code in iframes.
+    var previewUrl = location.href + '#__preview__';
+    var iframeId = 0;
+    forEach(bodyEl.getElementsByTagName('textarea'), function(codeEl) {
+      var previewEl, resizeableEl, iframeEl;
+      previewEl = document.createElement('div');
+      previewEl.appendChild(resizeableEl = document.createElement('div'));
+      resizeableEl.appendChild(iframeEl = document.createElement('iframe'));
+      previewEl.className = 'preview';
+      resizeableEl.className = 'resizeable';
+      iframeEl.setAttribute('scrolling', 'no');
+      iframeEl.name = 'iframe' + iframeId++;
+      iframeEl.addEventListener('load', function(event) {
+        var htmlEl, bodyEl, scriptEl, styleEl;
+        var doc = this.contentDocument;
+        // Abort if we're loading a data uri in a browser without support.
+        if (!support.dataIframes && this.src !== previewUrl) {
+          return;
+        } else if (this.src === previewUrl) {
+          // Replace iframe content with the preview HTML.
+          htmlEl = doc.createElement('html');
+          htmlEl.appendChild(doc.createElement('head'));
+          htmlEl.appendChild(bodyEl = doc.createElement('body'));
+          bodyEl.innerHTML = codeEl.textContent;
+          doc.replaceChild(htmlEl, doc.documentElement);
+        }
+        var win = doc.defaultView;
+        // Add scripts and styles.
+        var headEl = doc.createElement('head');
+        headEl.appendChild(styleEl = doc.createElement('style'));
+        headEl.appendChild(scriptEl = doc.createElement('script'));
+        scriptEl.textContent = scripts;
+        styleEl.textContent = styles;
+        var oldHeadEl = doc.getElementsByTagName('head')[0];
+        oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
+        win.postMessage('getHeight', '*');
+      });
+      if (!support.dataIframes) {
+        iframeEl.setAttribute('src', previewUrl);
+      } else {
+        iframeEl.setAttribute('src', 'data:text/html;charset=utf-8,' +
+          encodeURIComponent(codeEl.textContent));
+      }
+      codeEl.parentNode.insertBefore(previewEl, codeEl);
+      resizeableEl.style.width = resizeableEl.offsetWidth + 'px';
+      
+      var previewWidth = keyvalParse(document.cookie)['preview-width'];
+      if (previewWidth) {
+        resizePreviews(previewWidth);
+        bodyEl.getElementsByClassName('settings')[0]
+          .querySelector('button[data-width="' + previewWidth + '"]')
+          .classList.add('is-active');      
+      }
+      // An element with the same styles and content as the textarea to
+      // calculate the height of the textarea content.
+      var mirrorEl = document.createElement('div');
+      mirrorEl.className = 'preview-code';
+      mirrorEl.style.position = 'absolute';
+      mirrorEl.style.left = '-99999px';
+      bodyEl.appendChild(mirrorEl);
+      // Auto update iframe when `textarea` changes and auto-resize textarea
+      // to fit content.
+      var maxHeight = parseInt(window.getComputedStyle(codeEl).getPropertyValue('max-height'));
+      var codeDidChange = function() {
+        iframeEl.contentDocument.body.innerHTML = codeEl.value;
+        mirrorEl.textContent = codeEl.value + '\n';
+        var height = mirrorEl.offsetHeight + 2;
+        if (height >= maxHeight) {
+          codeEl.style.overflow = 'auto';
+        } else {
+          codeEl.style.overflow = 'hidden';
+        }
+
+
+        codeEl.style.height = (mirrorEl.offsetHeight + 2) + 'px';
+      };
+      codeEl.addEventListener('keypress', codeDidChange);
+      codeEl.addEventListener('keyup', codeDidChange);
+      codeDidChange();
+    });
+  });
+
+  // Resizing buttons
+  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
+  if (settingsEl) {
+    settingsEl.addEventListener('click', function(event) {
+      if (event.target.tagName.toLowerCase() !== 'button') return;
+      event.preventDefault();
+      var btn = event.target;
+      forEach(btn.parentNode.getElementsByTagName('button'), function(el) {
+        el.classList.remove('is-active');
+      });
+      btn.classList.add('is-active');
+      var width = btn.dataset.width;
+      resizePreviews(width);
+    });
+  }
+})();
+
+// Dropdown menus
+bodyEl.addEventListener('click', function(event) {
+  var el = event.target;
+  var dropdown = el.parentNode.getElementsByClassName('dropdown')[0];
+  var activateDropdown = false;
+  if (el.classList.contains('dropdown-toggle')) {
+    event.preventDefault();
+    // Click fired on an inactive dropdown toggle
+    if (!el.classList.contains('is-active')) activateDropdown = true;
+  }
+  // Deactivate *all* dropdowns
+  forEach(bodyEl.getElementsByClassName('dropdown-toggle'), function(el) {
+    el.classList.remove('is-active');
+    dropdown.classList.remove('is-active');
+  });
+  // Activate the clicked dropdown
+  if (activateDropdown) {
+    (function() {
+    el.classList.add('is-active');
+    dropdown.classList.add('is-active');
+    })();;
+  }
+});
+
+})();
+var toc=[{"title":"StyleDocco default styles","filename":"docs","url":"docs.html#styledocco-default-styles"},{"title":"Heading level 1","filename":"docs","url":"docs.html#heading-level-1"},{"title":"Previews and code","filename":"docs","url":"docs.html#previews-and-code"},{"title":"Navigation","filename":"docs","url":"docs.html#navigation"},{"title":"Settings and configuration","filename":"docs","url":"docs.html#settings-and-configuration"},{"title":"Typography and text styles","filename":"docs","url":"docs.html#typography-and-text-styles"},{"title":"Links","filename":"docs","url":"docs.html#links"},{"title":"Code","filename":"docs","url":"docs.html#code"}];</script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->

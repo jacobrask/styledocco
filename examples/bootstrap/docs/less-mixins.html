@@ -1,5 +1,715 @@
 <!DOCTYPE html><html><head><title>mixins | Twitter Bootstrap
-</title><meta charset="utf-8"><link rel="stylesheet" href="docs.css"><style type="text/preview">.clearfix {
+</title><meta charset="utf-8"><style>/*
+StyleDocco default styles
+=========================
+
+# Heading level 1
+
+## Heading level 2
+
+### Heading level 3
+
+#### Heading level 4
+
+##### Heading level 5
+
+###### Heading level 6
+
+###### *Heading* _inline_ styles
+This is the default stylesheet for StyleDocco. It also serves as an example of
+the documentation syntax. */
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+body {
+  /* Top/bottom paddings for bars */
+  padding: 60px 0;
+  background-color: hsl(200, 5%, 90%);
+  color: hsl(240, 11%, 30%);
+}
+/* The page content has a maximum width of 1500 pixels. */
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.section {
+  position: relative;
+  margin-bottom: 20px;
+}
+/* When StyleDocco encounters a first level heading, the documentation is
+split into a new section with a pair of documentation and CSS code.
+
+```
+<article class="section">
+  <div class="docs">
+    <h1>Documentation</h1>
+  </div>
+  <div class="code"><pre><code>CSS code</code></pre></div>
+</article>
+``` */
+.docs {
+  position: relative;
+  z-index: 2;
+  width: 68%;
+  min-height: 200px;
+  background-color: hsl(0, 0%, 100%);
+  background-clip: padding-box;
+  border: 1px solid hsla(0, 0%, 0%, .1);
+  border-radius: 5px;
+  box-shadow: 0 0 3px hsla(0, 0%, 0%, .1);
+}
+.code {
+  position: absolute;
+  top: 5px; bottom: 5px;
+  right: 0;
+  z-index: 1;
+  width: 33%;
+  padding: 10px 10px 10px 20px;
+  border-radius: 0 5px 5px 0;
+  border: 1px solid hsla(0, 0%, 0%, .1);
+  background-color: hsla(0, 0%, 100%, .75);
+  background-clip: padding-box;
+  opacity: .75;
+  -webkit-transition: opacity .25s;
+  -moz-transition:    opacity .25s;
+  -o-transition:      opacity .25s;
+  transition:         opacity .25s;
+}
+  .code:hover {
+    opacity: 1;
+  }
+
+/* # Previews and code
+Previews are rendered in sandboxed iframes and are resizable.
+
+```
+<div class="docs">
+  <div class="preview"><div class="resizeable">Rendered preview. Resize me!</div></div>
+  <pre><code>HTML code</code></pre>
+</div>
+```
+
+<small>Custom resizing currently only works properly in Firefox. In WebKit
+browsers you can only enlarge the previews.</small>.
+
+There is currently no syntax highlighting of neither CSS nor HTML code, but
+it's on the todo-list.
+*/
+.preview {
+  margin-top: 10px;
+  background: hsl(0, 0%, 100%);
+  border-top: 1px solid hsl(240, 8%, 87%);
+}
+  .preview-code + .preview {
+    margin-top: 0;
+    border-top: 0;
+  }
+.resizeable {
+  padding: 15px;
+  overflow: auto;
+  resize: both;
+  background: hsl(0, 0%, 100%);
+}
+.preview iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.preview-code {
+  display: block;
+  width: 100%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: hsl(240, 9%, 37%);
+  max-height: 200px;
+  padding: 10px 20px;
+  overflow-y: auto;
+  background: hsl(220, 27%, 98%);
+  border: 1px solid hsl(240, 8%, 87%);
+  border-left: 0; border-right: 0;
+  box-shadow: inset 2px 2px 2px hsla(0, 0%, 0%, .025);
+  line-height: 1.1 !important;
+}
+  .preview-code:focus {
+    outline: 0;
+  }
+  .preview + .preview-code {
+    margin-top: 0;
+  }
+  .preview-code:last-child {
+    border-bottom: 0;
+    border-radius: 0 0 5px 5px;
+  }
+.code pre {
+  height: 100%;
+  margin-top: 0;
+  overflow-y: auto;
+}
+
+
+/*
+# Navigation
+
+Fixed to top with a small drop shadow.
+```
+<nav class="bar top"></nav>
+```
+*/
+.bar {
+  position: fixed;
+  left: 0; right: 0;
+  z-index: 9999;
+  min-height: 40px;
+  line-height: 40px;
+  background-image: -webkit-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:    -moz-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:      -o-linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+  background-image:         linear-gradient(hsla(197, 4%, 35%, .98),
+                                            hsla(197, 4%, 22%, .91));
+}
+.bar.top {
+  top: 0;
+  box-shadow: 0 1px 3px hsla(0, 0%, 0%, .25);
+}
+.bar.bottom {
+  bottom: 0;
+  box-shadow: 0 -1px 3px hsla(0, 0%, 0%, .25);
+}
+
+.bar ul {
+  margin: 0 !important;
+}
+.menu, .menu a, .menu a:visited {
+  color: hsl(0, 0%, 80%);
+  text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
+}
+.menu .is-active > a,
+.menu a:hover {
+  color: hsl(0, 0%, 90%);
+  text-decoration: none;
+}
+/* ```
+<div class="bar top"><a href="#" class="brand">Site name</a></div>
+``` */
+.brand, a.brand, a.brand:visited {
+  float: left;
+  margin-right: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  color: hsl(0, 0%, 10%);
+  text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
+  text-decoration: none;
+}
+  .brand:hover, a.brand:hover {
+    color: hsl(0, 0%, 0%);
+    text-decoration: none;
+  }
+/*
+Showing previews of absolutely positioned elements can be tricky, but most of
+the time you can solve it by adding inline styles in the example code, or
+by including a custom previews stylesheet with overrides.
+```
+<div class="bar top">
+  <ul class="menu">
+    <li><a href="#">css-file</a>
+    <li><a href="#" class="dropdown-toggle is-active" unselectable="on">folder</a>
+        <ul class="dropdown is-active">
+          <li><a href="#">css-file</a>
+          <li><a href="#">css-file</a>
+        </ul>
+  </ul>
+</div>
+``` */
+.menu {
+  font-size: 13px;
+}
+.menu li {
+  float: left;
+  position: relative;
+  list-style: none;
+}
+.menu a {
+  display: block;
+  margin-right: 15px;
+}
+
+.dropdown-toggle {
+  position: relative;
+  padding-right: 15px;
+}
+ /* Arrow */
+.dropdown-toggle:after {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 18px;
+  content: '';
+  border: 5px solid;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: -11px;
+  width: 175px;
+  max-height: 500px;
+  padding: 0;
+  z-index: 9999;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 23px;
+  background-color: hsla(197, 5%, 30%, .95);
+  border: 1px solid hsla(0, 0%, 0%, .2);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 0 3px hsla(0, 0%, 0%, .3);
+}
+.dropdown.is-active {
+  display: block;
+}
+.dropdown li {
+  float: none;
+}
+.dropdown a {
+  padding: 0 10px;
+}
+.dropdown li:hover {
+  background-color: hsl(197, 5%, 30%);
+}
+.settings .search {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAMFBMVEX///////////////////////////////////////////////////////8AAAD///++CtLxAAAAD3RSTlNPz49/D6+/X98/7x8vnwDjrzSxAAAAoElEQVR42o3RSw7DIAxF0fCLSYhh/7sN9qtjJCa9I+DYSqUeXSM+Z6n1L4Wjjl+cV+Dh3Y+DvteYUoEYHHIjvTShYFB9CtsEID1aMlYBjJMlc03hHCMukCdcBqkv/QWle88Hyb7mv7crtIEVX2CAzrC937oPyHKplOezzPgGxtYYMCVsIiBRxZ/BjSECqF0zOZgALJcI2KUANglZYCuW3F9+zR3AHggPQQAAAABJRU5ErkJggg==);
+}
+.settings .toc {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
+}
+
+
+/*
+# Settings and configuration
+*/
+.bar.top .settings {
+  text-align: right;
+}
+.bar.bottom .settings {
+  text-align: center;
+}
+.settings button {
+  display: inline-block;
+  vertical-align: middle;
+  opacity: .4;
+  height: 30px;
+  margin: 0 7px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.settings button:first-child {
+  margin-left: 0;
+}
+.settings button:hover,
+.settings button.is-active {
+  opacity: .7;
+}
+ /* Glyphicons Free. http://glyphicons.com */
+.settings .desktop {
+  width: 28px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAMAAADeQm2wAAAAElBMVEX///////////8AAAD///////9H1zSfAAAABXRSTlPPP+8ATau1O/wAAAA+SURBVHja7dIxDgAgCENRCvb+V1aZiApxc/GvL6QLokxTYdHAlvTxIaZVaGT9CRbyg1BETMQZ4fuCDbl0gR1IHgr1A5eU5AAAAABJRU5ErkJggg==);
+}
+.settings .laptop {
+  width: 28px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAMAAADAkV+TAAAAElBMVEX///////////8AAAD///////9H1zSfAAAABXRSTlMP768ATRRu534AAAAuSURBVHja7cnBDQAgDMPAtMH7r0wlnhTEAFj+nWwFTeGSmraFhrH18Q25pDxbTqR5Br/WrCRPAAAAAElFTkSuQmCC);
+}
+.settings .tablet {
+  width: 20px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAMAAABLAV/qAAAAG1BMVEX///////////////////////8AAAD////////6N1ZCAAAACHRSTlPPiX8/E48ATXBCobkAAAA3SURBVHja7dFLCgAgDEPBfmPvf2JBiiCtBxCcVXjbkEdBFI1rHIcfn4kLm3G5WAHd0XMIIDl9Ak7UD3Zn9nwyAAAAAElFTkSuQmCC);
+}
+.settings .smartphone {
+  width: 14px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYCAMAAAD9GTxlAAAAGFBMVEUAAAD///////////////////////////8jfp1fAAAAB3RSTlMAb88/D+9NtRxVGQAAADlJREFUeNrd0MENACAIQ9EiVPbf2BgCgbiB//bCiULpFRWhNHz0clef8sbx/jJbjQJIkP3KHJYx7AHqAQg9+9dkigAAAABJRU5ErkJggg==);
+}
+.settings .featurephone {
+  width: 15px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEX///////////////////////////////////8AAAD///////8oRfFWAAAAC3RSTlOfv4/fTy/vf88ATY0kZhAAAAA6SURBVHjazco7CgAgEEPB+Dfm/vcVC9lF7HUgxYOAzDFo6cgkSpdJBVVehTSM9GE71ya5d/aDf5PXJnc+DuRZoesaAAAAAElFTkSuQmCC);
+}
+.settings .auto {
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 32px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+/*
+# Typography and text styles
+
+We use the generic `sans-serif` font family to get Arial on Windows and
+Helvetica on Mac. The body font-size is set to 14px.
+
+    Lorem ipsum dolor sit amet. */
+body {
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.618;
+}
+/* Paragraphs, lists, tables and blockquotes get some bottom margins as well
+as side margins.
+
+    <p>Paragraph #1
+    <p>Paragraph #2
+    <ul><li>List</ul> */
+.docs pre, p, ol, ul, dl,
+figure, blockquote, table {
+  margin-left: 20px; margin-right: 20px;
+}
+.preview-code, .preview,
+.docs pre,
+p, ol, ul, dl,
+figure, blockquote, table {
+  margin-top: 10px;
+}
+  ul ul, ol ol, ul ol, ol ul,
+  blockquote p:last-child {
+    margin-top: 0;
+  }
+ul, ol {
+  padding-left: 1.5em;
+}
+p:last-child, ol:last-child, ul:last-child, dl:last-child {
+  margin-bottom: 20px;
+}
+/* Headings get font-sizes at a modular scale of 5:6.
+
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h2>
+    <h4>Heading 4</h2>
+    <h5>Heading 5</h2>
+    <h6>Heading 6</h3> */
+hr,
+h1, h2, h3, h4, h5, h6 {
+  margin: 1em 20px .5em;
+}
+  h1:first-of-type {
+    margin-top: 20px;
+  }
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  color: hsl(211, 11%, 37%);
+}
+h1 a, h1 a:hover, h1 a:visited {
+  color: inherit;
+  text-decoration: inherit;
+}
+.permalink {
+  width: 21px;
+  height: 23px;
+  position: absolute;
+  top: 15px; right: 15px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAAM1BMVEX///////////////////////////////////////////////////////////8AAAD///8VtYL2AAAAEHRSTlO/jx9vP9+vT8+fD38v718AyvCTSAAAAKlJREFUeNpV0FsOxSAIBNC+VVBx/6u9zJCU3vmw5FQwutknhz56ofjqXMgj1MRIldDEZ/iyUROnSfWPbv9o5AFNRIpXoRdRCurz1YdY14yuOxQnWOWQ29cSOqAxu+MXtAsnkIe0adA+9Fovn3wHxzV6dGO0UgV33LFt9O5lKHY13MMRGw6q+iMZIkS1ULSiIjYL7QucGGo7uJREqrWFEFPBiammt7/TaZkfXB8aoN4G6bsAAAAASUVORK5CYII=) 50% 50% no-repeat;
+  opacity: .1;
+}
+  .permalink:hover {
+    opacity: .3;
+  }
+
+h1 {
+  font-size: 3.052em;
+  font-weight: normal;
+}
+h2 {
+  font-size: 1.953em;
+}
+h3 {
+  font-size: 1.536em;
+}
+h1, h2, h3 {
+  letter-spacing: -.05em;
+}
+h4 {
+  font-size: 1.25em;
+}
+h5 {
+  font-size: 1em;
+  text-transform: uppercase;
+}
+h6 {
+  font-size: 1em;
+}
+
+/*
+# Links
+
+To show pseudo selectors styles in previews, add the pseudo selector
+(including the `:`) as a regular class.
+
+    <a href="#">Link</a>
+    <a href="#" class=":hover">Link</a>
+    <a href="#" class=":visited">Link</a>
+*/
+a {
+  color: hsl(203, 90%, 50%);
+  text-decoration: none;
+}
+  a:hover {
+    color: hsl(203, 95%, 40%);
+    text-decoration: underline;
+  }
+  a:visited {
+    color: hsl(203, 100%, 35%);
+  }
+
+/*
+# Code
+For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com),
+falling back on some fonts that should look better at smaller sizes than the
+default monospace fonts.
+
+```
+<pre>
+<code>The font in &lt;pre&gt; code blocks is small but legible.</code>
+</pre>
+```
+
+```php
+<?php
+echo "Hello World;
+?>
+``` */
+.preview-code,
+pre, code, var {
+  font-style: normal;
+  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+  font-size: 12px;
+}
+.docs pre, code, var {
+  padding: .1em 3px;
+  background: hsla(0, 0%, 0%, .025);
+  border: 1px solid hsla(0, 0%, 0%, .05);
+  border-radius: 3px;
+}
+.code pre {
+  line-height: 1.1 !important;
+}
+pre code {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+/* Helper classes */
+.cf:before, .cf:after { content: ''; display: table; }
+.cf:after { clear: both; }
+.ir {
+  color: transparent;
+  font: 0/0 a;
+  text-shadow: none;
+}
+
+[unselectable="on"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+</style><script type="text/preview">// StyleDocco JavaScript for preview iframes
+// =========================================
+
+(function () {
+
+'use strict';
+
+// Helper functions
+// ================
+// Using `Array.prototype` to make them work on `NodeList`s.
+var filter = function(arr, it) { return Array.prototype.filter.call(arr, it); };
+var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
+var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
+var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
+var add = function(a, b) { return a + b; };
+
+var bodyEl = document.getElementsByTagName('body')[0];
+
+// Get bottom-most point in document with an element.
+// `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
+var getContentHeight = (function() {
+  var bodyStyle = window.getComputedStyle(bodyEl, null);
+  return function() {
+    if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
+    var els = bodyEl.getElementsByTagName('*');
+    var elHeights = [];
+    for (var i = 0, l = els.length; i < l; i++) {
+      elHeights.push(els[i].offsetTop + els[i].offsetHeight);
+    }
+    var height = Math.max.apply(Math, elHeights);
+    var padding = bodyStyle.getPropertyValue('padding-bottom');
+    return height + parseInt(padding);
+  };
+})();
+
+// Scans your stylesheet for pseudo classes and adds a class with the same name.
+// Compile regular expression.
+var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
+                'enabled', 'disabled', 'checked' ];
+var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
+var processedPseudoClasses = reduce(map(
+  filter(document.styleSheets, function(ss) { return !(ss.href != null); }),
+  function(ss) {
+    return reduce(map(
+      filter(ss.cssRules, function(rule) {
+        // Keep only rules with pseudo classes.
+        return rule.selectorText && rule.selectorText.match(pseudoRe);
+      }), function(rule) {
+       // Replace : with . and encoded :
+       return rule.cssText.replace(pseudoRe, ".\\3A $1");
+      }),
+      add, ''
+    );
+  }
+), add, '');
+if (processedPseudoClasses.length) {
+  // Add a new style element with the processed pseudo class styles.
+  var styleEl = document.createElement('style');
+  styleEl.innerText = processedPseudoClasses;
+  document.getElementsByTagName('head')[0].appendChild(styleEl);
+}
+
+var callbacks = {
+  getHeight: function() {
+    window.parent.postMessage({ height: getContentHeight() }, '*');
+  }
+};
+
+window.addEventListener('message', function (ev) {
+  if (ev.data == null) return;
+  if (typeof ev.data === 'string') callbacks[ev.data]();
+}, false);
+
+}());
+</script><style type="text/preview">TWITTER BOOTSTRAP
+=================
+
+Bootstrap is Twitter's toolkit for kickstarting CSS for websites, apps, and more. It includes base CSS styles for typography, forms, buttons, tables, grids, navigation, alerts, and more.
+
+To get started -- checkout http://twitter.github.com/bootstrap!
+
+
+Versioning
+----------
+
+For transparency and insight into our release cycle, and for striving to maintain backward compatibility, Bootstrap will be maintained under the Semantic Versioning guidelines as much as possible.
+
+Releases will be numbered with the follow format:
+
+`<major>.<minor>.<patch>`
+
+And constructed with the following guidelines:
+
+* Breaking backward compatibility bumps the major
+* New additions without breaking backward compatibility bumps the minor
+* Bug fixes and misc changes bump the patch
+
+For more information on SemVer, please visit http://semver.org/.
+
+
+Bug tracker
+-----------
+
+Have a bug? Please create an issue here on GitHub!
+
+https://github.com/twitter/bootstrap/issues
+
+
+Twitter account
+---------------
+
+Keep up to date on announcements and more by following Bootstrap on Twitter, <a href="http://twitter.com/TwBootstrap">@TwBootstrap</a>.
+
+
+Mailing list
+------------
+
+Have a question? Ask on our mailing list!
+
+twitter-bootstrap@googlegroups.com
+
+http://groups.google.com/group/twitter-bootstrap
+
+
+IRC
+---
+
+Server: irc.freenode.net
+
+Channel: ##twitter-bootstrap (the double ## is not a typo)
+
+
+Developers
+----------
+
+We have included a makefile with convenience methods for working with the Bootstrap library.
+
++ **build** - `make`
+Runs the LESS compiler to rebuild the `/less` files and compiles the docs pages. Requires lessc and uglify-js. <a href="http://twitter.github.com/bootstrap/less.html#compiling">Read more in our docs &raquo;</a>
+
++ **watch** - `make watch`
+This is a convenience method for watching just Less files and automatically building them whenever you save. Requires the Watchr gem.
+
+
+Authors
+-------
+
+**Mark Otto**
+
++ http://twitter.com/mdo
++ http://github.com/markdotto
+
+**Jacob Thornton**
+
++ http://twitter.com/fat
++ http://github.com/fat
+
+
+Copyright and license
+---------------------
+
+Copyright 2012 Twitter, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this work except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file, or at:
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
   *zoom: 1;
 }
 .clearfix:before,
@@ -312,28 +1022,20 @@ input[type="submit"].btn.small {
   *padding-top: 3px;
   *padding-bottom: 3px;
 }
-.clearfix {
-  *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-</style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">Twitter Bootstrap</a><ul class="menu"><li><a href="buttons.html">buttons
-</a></li><li><a href="mixins.html">mixins
-</a></li><li><a href="variables.html">variables
-</a></li></ul></div></nav><section class="container"><article id="mixins" class="section"><div class="docs"><h1>Mixins</h1><a href="#mixins" class="permalink ir">Mixins</a><p> Snippets of reusable CSS to develop faster and keep code readable
+</style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">Twitter Bootstrap</a><ul class="menu"><li><a href="#" unselectable="on" class="dropdown-toggle">less</a><ul class="dropdown"><li><a href="less-README.html">README
+</a></li><li><a href="less-mixins.html">mixins
+</a></li><li><a href="less-variables.html">variables
+</a></li><li><a href="less-buttons.html">buttons
+</a></li></ul></li></ul><div class="settings2"><button title="Table of Contents" class="toc ir">Table of Contents</button></div></div></nav><section class="container"><article id="mixins" class="section"><div class="docs"><a href="#mixins" class="permalink ir">Mixins</a><h1 id="mixins"> Mixins</h1>
+<p> Snippets of reusable CSS to develop faster and keep code readable
 </p>
-</div></article><article id="utility-mixins" class="section"><div class="docs"><h1>Utility mixins</h1><a href="#utility-mixins" class="permalink ir">Utility mixins</a><h2> Clearfix</h2>
+</div></article><article id="utility-mixins" class="section"><div class="docs"><a href="#utility-mixins" class="permalink ir">Utility mixins</a><h1 id="utility-mixins"> Utility mixins</h1>
+<h2 id="clearfix"> Clearfix</h2>
 <p> For clearing floats like a boss h5bp.com/q
 </p>
-<h2> Webkit-style focus</h2>
-<h2> Center-align a block level element</h2>
-<h2> IE7 inline-block</h2>
+<h2 id="webkitstyle-focus"> Webkit-style focus</h2>
+<h2 id="centeralign-a-block-level-element"> Center-align a block level element</h2>
+<h2 id="ie7-inlineblock"> IE7 inline-block</h2>
 <p> IE7 likes to collapse whitespace on either side of the inline-block elements.
  Ems because we&#39;re attempting to match the width of a space character. Left
  version is for form buttons, which typically come after other elements, and
@@ -341,9 +1043,9 @@ input[type="submit"].btn.small {
  mean that space between those elements will be .6em (~2 space characters) in IE7,
  instead of the 1 space in other browsers.
 </p>
-<h2> Sizing shortcuts</h2>
-<h2> Placeholder text</h2>
-<h2> Text overflow</h2>
+<h2 id="sizing-shortcuts"> Sizing shortcuts</h2>
+<h2 id="placeholder-text"> Placeholder text</h2>
+<h2 id="text-overflow"> Text overflow</h2>
 <p> Requires inline-block or block for proper styling
 </p>
 </div><div class="code"><pre><code>.clearfix {
@@ -414,7 +1116,7 @@ input[type="submit"].btn.small {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}</code></pre></div></article><article id="fonts" class="section"><div class="docs"><h1>Fonts</h1><a href="#fonts" class="permalink ir">Fonts</a>
+}</code></pre></div></article><article id="fonts" class="section"><div class="docs"><a href="#fonts" class="permalink ir">Fonts</a><h1 id="fonts"> Fonts</h1>
 </div><div class="code"><pre><code>#font {
   #family {
     .serif() {
@@ -444,14 +1146,15 @@ input[type="submit"].btn.small {
     #font > #family > .monospace;
     #font > .shorthand(@size, @weight, @lineHeight);
   }
-}</code></pre></div></article><article id="grid-system" class="section"><div class="docs"><h1>Grid System</h1><a href="#grid-system" class="permalink ir">Grid System</a><h2> Site container</h2>
-<h2> Le grid system</h2>
-<h2> Fluid grid system</h2>
-<h2> Input grid system</h2>
-<h2> Make a Grid</h2>
+}</code></pre></div></article><article id="grid-system" class="section"><div class="docs"><a href="#grid-system" class="permalink ir">Grid System</a><h1 id="grid-system"> Grid System</h1>
+<h2 id="site-container"> Site container</h2>
+<h2 id="le-grid-system"> Le grid system</h2>
+<h2 id="fluid-grid-system"> Fluid grid system</h2>
+<h2 id="input-grid-system"> Input grid system</h2>
+<h2 id="make-a-grid"> Make a Grid</h2>
 <p> Use .makeRow and .makeColumn to assign semantic layouts grid system behavior
 </p>
-<h2> Form field states (used in forms.less)</h2>
+<h2 id="form-field-states-used-in-formsless"> Form field states (used in forms.less)</h2>
 <p> Mixin for form field states
 </p>
 </div><div class="code"><pre><code>.container-fixed() {
@@ -615,7 +1318,8 @@ input[type="submit"].btn.small {
     background-color: @backgroundColor;
     border-color: @textColor;
   }
-}</code></pre></div></article><article id="css3-properties" class="section"><div class="docs"><h1>CSS3 properties</h1><a href="#css3-properties" class="permalink ir">CSS3 properties</a><p> Border Radius
+}</code></pre></div></article><article id="css3-properties" class="section"><div class="docs"><a href="#css3-properties" class="permalink ir">CSS3 properties</a><h1 id="css3-properties"> CSS3 properties</h1>
+<p> Border Radius
 </p>
 <p> Drop shadows
 </p>
@@ -739,7 +1443,8 @@ input[type="submit"].btn.small {
 .opacity(@opacity: 100) {
   opacity: @opacity / 100;
    filter: e(%("alpha(opacity=%d)", @opacity));
-}</code></pre></div></article><article id="backgrounds" class="section"><div class="docs"><h1>Backgrounds</h1><a href="#backgrounds" class="permalink ir">Backgrounds</a><p> Add an alphatransparency value to any background or border color (via Elyse Holladay)
+}</code></pre></div></article><article id="backgrounds" class="section"><div class="docs"><a href="#backgrounds" class="permalink ir">Backgrounds</a><h1 id="backgrounds"> Backgrounds</h1>
+<p> Add an alphatransparency value to any background or border color (via Elyse Holladay)
 </p>
 <p> Gradient Bar Colors for buttons and alerts
 </p>
@@ -847,7 +1552,8 @@ input[type="submit"].btn.small {
   &.active {
     background-color: darken(@endColor, 10%) e("\9");
   }
-}</code></pre></div></article><article id="component-mixins" class="section"><div class="docs"><h1>Component mixins</h1><a href="#component-mixins" class="permalink ir">Component mixins</a><h2> Popover arrows</h2>
+}</code></pre></div></article><article id="component-mixins" class="section"><div class="docs"><a href="#component-mixins" class="permalink ir">Component mixins</a><h1 id="component-mixins"> Component mixins</h1>
+<h2 id="popover-arrows"> Popover arrows</h2>
 <p> For tipsies and popovers
 </p>
 </div><div class="code"><pre><code>#popoverArrow {
@@ -883,4 +1589,207 @@ input[type="submit"].btn.small {
     border-bottom: @arrowWidth solid transparent;
     border-right: @arrowWidth solid @black;
   }
-}</code></pre></div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="100%" class="auto is-active">Auto</button></div></div><script src="docs.js"></script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+}</code></pre></div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="auto" class="auto is-active">Auto</button></div></div><script>// StyleDocco JavaScript for documentation
+// =======================================
+
+(function() {
+
+'use strict';
+
+// Helper functions
+// ================
+// Using `Array.prototype` to make them work on `NodeList`s.
+var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
+var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
+var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
+var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
+var add = function(a, b) { return a + b; };
+
+// Parse `key=value; key=value` strings (for cookies).
+var keyvalParse = function(str) {
+  var obj = {};
+  var pairs = str.split(';');
+  for (var i = 0; pairs.length > i; i++) {
+    var kvs = pairs[i].trim().split('=');
+    obj[kvs[0]] = kvs[1];
+  };
+  return obj;
+};
+
+var bodyEl = document.getElementsByTagName('body')[0];
+var headEl = document.getElementsByTagName('head')[0];
+
+
+// Iframe rendering and handling
+// =============================
+(function() {
+  // Don't run this function if we're rendering a preview page.
+  if (location.hash === '#__preview__' || location.protocol === 'data:') return;
+
+  var resizeableElOffset = 30; // `.resizeable` padding
+  
+  var resizePreviews = function(width) {
+    document.cookie = 'preview-width=' + width;
+    forEach(bodyEl.getElementsByClassName('resizeable'), function(el) {
+      if (width === 'auto') width = el.parentNode.offsetWidth;
+      el.style.width = width + 'px';
+      // TODO: Add CSS transitions and update height after `transitionend` event
+      el.getElementsByTagName('iframe')[0].contentDocument.defaultView.postMessage('getHeight', '*');
+    });
+  };
+
+  window.addEventListener('message', function (ev) {
+    if (ev.data == null || !ev.source) return;
+    var data = ev.data;
+    var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
+    // Set iframe height
+    if (data.height != null && sourceFrameEl) {
+      sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
+    }
+  }, false);
+
+  // Get preview styles intended for preview iframes.
+  var styles = reduce(
+    pluck(headEl.querySelectorAll('style[type="text/preview"]'), 'innerHTML'),
+  add, '');
+  // Get preview scripts intended for preview iframes.
+  var scripts = reduce(
+    pluck(headEl.querySelectorAll('script[type="text/preview"]'), 'innerHTML'),
+  add, '');
+
+  // Check if browser treats data uris as same origin.
+  // This will always display an error in WebKit.
+  var iframeEl = document.createElement('iframe');
+  iframeEl.src = 'data:text/html,';
+  bodyEl.appendChild(iframeEl);
+  iframeEl.addEventListener('load', function() {
+    var support = {};
+    if (this.contentDocument) support.dataIframes = true;
+    else support.dataIframes = false;
+    this.parentNode.removeChild(this);
+
+    // Loop through code textareas and render the code in iframes.
+    var previewUrl = location.href + '#__preview__';
+    var iframeId = 0;
+    forEach(bodyEl.getElementsByTagName('textarea'), function(codeEl) {
+      var previewEl, resizeableEl, iframeEl;
+      previewEl = document.createElement('div');
+      previewEl.appendChild(resizeableEl = document.createElement('div'));
+      resizeableEl.appendChild(iframeEl = document.createElement('iframe'));
+      previewEl.className = 'preview';
+      resizeableEl.className = 'resizeable';
+      iframeEl.setAttribute('scrolling', 'no');
+      iframeEl.name = 'iframe' + iframeId++;
+      iframeEl.addEventListener('load', function(event) {
+        var htmlEl, bodyEl, scriptEl, styleEl;
+        var doc = this.contentDocument;
+        // Abort if we're loading a data uri in a browser without support.
+        if (!support.dataIframes && this.src !== previewUrl) {
+          return;
+        } else if (this.src === previewUrl) {
+          // Replace iframe content with the preview HTML.
+          htmlEl = doc.createElement('html');
+          htmlEl.appendChild(doc.createElement('head'));
+          htmlEl.appendChild(bodyEl = doc.createElement('body'));
+          bodyEl.innerHTML = codeEl.textContent;
+          doc.replaceChild(htmlEl, doc.documentElement);
+        }
+        var win = doc.defaultView;
+        // Add scripts and styles.
+        var headEl = doc.createElement('head');
+        headEl.appendChild(styleEl = doc.createElement('style'));
+        headEl.appendChild(scriptEl = doc.createElement('script'));
+        scriptEl.textContent = scripts;
+        styleEl.textContent = styles;
+        var oldHeadEl = doc.getElementsByTagName('head')[0];
+        oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
+        win.postMessage('getHeight', '*');
+      });
+      if (!support.dataIframes) {
+        iframeEl.setAttribute('src', previewUrl);
+      } else {
+        iframeEl.setAttribute('src', 'data:text/html;charset=utf-8,' +
+          encodeURIComponent(codeEl.textContent));
+      }
+      codeEl.parentNode.insertBefore(previewEl, codeEl);
+      resizeableEl.style.width = resizeableEl.offsetWidth + 'px';
+      
+      var previewWidth = keyvalParse(document.cookie)['preview-width'];
+      if (previewWidth) {
+        resizePreviews(previewWidth);
+        bodyEl.getElementsByClassName('settings')[0]
+          .querySelector('button[data-width="' + previewWidth + '"]')
+          .classList.add('is-active');      
+      }
+      // An element with the same styles and content as the textarea to
+      // calculate the height of the textarea content.
+      var mirrorEl = document.createElement('div');
+      mirrorEl.className = 'preview-code';
+      mirrorEl.style.position = 'absolute';
+      mirrorEl.style.left = '-99999px';
+      bodyEl.appendChild(mirrorEl);
+      // Auto update iframe when `textarea` changes and auto-resize textarea
+      // to fit content.
+      var maxHeight = parseInt(window.getComputedStyle(codeEl).getPropertyValue('max-height'));
+      var codeDidChange = function() {
+        iframeEl.contentDocument.body.innerHTML = codeEl.value;
+        mirrorEl.textContent = codeEl.value + '\n';
+        var height = mirrorEl.offsetHeight + 2;
+        if (height >= maxHeight) {
+          codeEl.style.overflow = 'auto';
+        } else {
+          codeEl.style.overflow = 'hidden';
+        }
+
+
+        codeEl.style.height = (mirrorEl.offsetHeight + 2) + 'px';
+      };
+      codeEl.addEventListener('keypress', codeDidChange);
+      codeEl.addEventListener('keyup', codeDidChange);
+      codeDidChange();
+    });
+  });
+
+  // Resizing buttons
+  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
+  if (settingsEl) {
+    settingsEl.addEventListener('click', function(event) {
+      if (event.target.tagName.toLowerCase() !== 'button') return;
+      event.preventDefault();
+      var btn = event.target;
+      forEach(btn.parentNode.getElementsByTagName('button'), function(el) {
+        el.classList.remove('is-active');
+      });
+      btn.classList.add('is-active');
+      var width = btn.dataset.width;
+      resizePreviews(width);
+    });
+  }
+})();
+
+// Dropdown menus
+bodyEl.addEventListener('click', function(event) {
+  var el = event.target;
+  var dropdown = el.parentNode.getElementsByClassName('dropdown')[0];
+  var activateDropdown = false;
+  if (el.classList.contains('dropdown-toggle')) {
+    event.preventDefault();
+    // Click fired on an inactive dropdown toggle
+    if (!el.classList.contains('is-active')) activateDropdown = true;
+  }
+  // Deactivate *all* dropdowns
+  forEach(bodyEl.getElementsByClassName('dropdown-toggle'), function(el) {
+    el.classList.remove('is-active');
+    dropdown.classList.remove('is-active');
+  });
+  // Activate the clicked dropdown
+  if (activateDropdown) {
+    (function() {
+    el.classList.add('is-active');
+    dropdown.classList.add('is-active');
+    })();;
+  }
+});
+
+})();
+var toc=[{"title":"","filename":"README","url":"less-README.html#"},{"title":"Mixins","filename":"mixins","url":"less-mixins.html#mixins"},{"title":"Utility mixins","filename":"mixins","url":"less-mixins.html#utility-mixins"},{"title":"Fonts","filename":"mixins","url":"less-mixins.html#fonts"},{"title":"Grid System","filename":"mixins","url":"less-mixins.html#grid-system"},{"title":"CSS3 properties","filename":"mixins","url":"less-mixins.html#css3-properties"},{"title":"Backgrounds","filename":"mixins","url":"less-mixins.html#backgrounds"},{"title":"Component mixins","filename":"mixins","url":"less-mixins.html#component-mixins"},{"title":"Variables","filename":"variables","url":"less-variables.html#variables"},{"title":"Button Styles","filename":"buttons","url":"less-buttons.html#button-styles"},{"title":"Base styles","filename":"buttons","url":"less-buttons.html#base-styles"},{"title":"Multiple sizes","filename":"buttons","url":"less-buttons.html#multiple-sizes"},{"title":"Alternate button styles","filename":"buttons","url":"less-buttons.html#alternate-button-styles"}];</script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
