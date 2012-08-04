@@ -38,13 +38,13 @@ var headEl = document.getElementsByTagName('head')[0];
   var resizeableElOffset = 30; // `.resizeable` padding
   
   var resizePreviews = function(width) {
+    document.cookie = 'preview-width=' + width;
     forEach(bodyEl.getElementsByClassName('resizeable'), function(el) {
       if (width === 'auto') width = el.parentNode.offsetWidth;
       el.style.width = width + 'px';
       // TODO: Add CSS transitions and update height after `transitionend` event
       el.getElementsByTagName('iframe')[0].contentDocument.defaultView.postMessage('getHeight', '*');
     });
-    document.cookie = 'preview-width=' + width;
   };
 
   window.addEventListener('message', function (ev) {
@@ -75,6 +75,7 @@ var headEl = document.getElementsByTagName('head')[0];
     var support = {};
     if (this.contentDocument) support.dataIframes = true;
     else support.dataIframes = false;
+    this.parentNode.removeChild(this);
 
     // Loop through code textareas and render the code in iframes.
     var previewUrl = location.href + '#__preview__';
@@ -129,10 +130,32 @@ var headEl = document.getElementsByTagName('head')[0];
           .querySelector('button[data-width="' + previewWidth + '"]')
           .classList.add('is-active');      
       }
-      // Auto update iframe when `textarea` changes.
-      codeEl.addEventListener('keyup', function(ev) {
-        iframeEl.contentDocument.body.innerHTML = this.value;
-      });
+      // An element with the same styles and content as the textarea to
+      // calculate the height of the textarea content.
+      var mirrorEl = document.createElement('div');
+      mirrorEl.className = 'preview-code';
+      mirrorEl.style.position = 'absolute';
+      mirrorEl.style.left = '-99999px';
+      bodyEl.appendChild(mirrorEl);
+      // Auto update iframe when `textarea` changes and auto-resize textarea
+      // to fit content.
+      var maxHeight = parseInt(window.getComputedStyle(codeEl).getPropertyValue('max-height'));
+      var codeDidChange = function() {
+        iframeEl.contentDocument.body.innerHTML = codeEl.value;
+        mirrorEl.textContent = codeEl.value + '\n';
+        var height = mirrorEl.offsetHeight + 2;
+        if (height >= maxHeight) {
+          codeEl.style.overflow = 'auto';
+        } else {
+          codeEl.style.overflow = 'hidden';
+        }
+
+
+        codeEl.style.height = (mirrorEl.offsetHeight + 2) + 'px';
+      };
+      codeEl.addEventListener('keypress', codeDidChange);
+      codeEl.addEventListener('keyup', codeDidChange);
+      codeDidChange();
     });
   });
 

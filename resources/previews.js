@@ -14,21 +14,24 @@ var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
 var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
 var add = function(a, b) { return a + b; };
 
+var bodyEl = document.getElementsByTagName('body')[0];
+
 // Get bottom-most point in document with an element.
 // `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
-var getContentHeight = function() {
-  var body = document.body;
-  if (body.childElementCount === 0) return body.offsetHeight;
-  var els = body.getElementsByTagName('*');
-  var elHeights = [];
-  for (var i = 0, l = els.length; i < l; i++) {
-    elHeights.push(els[i].offsetTop + els[i].offsetHeight);
-  }
-  var height = Math.max.apply(Math, elHeights);
-  var padding = window.getComputedStyle(body, null)
-    .getPropertyValue('padding-bottom');
-  return height + parseInt(padding);
-};
+var getContentHeight = (function() {
+  var bodyStyle = window.getComputedStyle(bodyEl, null);
+  return function() {
+    if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
+    var els = bodyEl.getElementsByTagName('*');
+    var elHeights = [];
+    for (var i = 0, l = els.length; i < l; i++) {
+      elHeights.push(els[i].offsetTop + els[i].offsetHeight);
+    }
+    var height = Math.max.apply(Math, elHeights);
+    var padding = bodyStyle.getPropertyValue('padding-bottom');
+    return height + parseInt(padding);
+  };
+})();
 
 // Scans your stylesheet for pseudo classes and adds a class with the same name.
 // Compile regular expression.

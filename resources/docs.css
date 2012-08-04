@@ -121,14 +121,11 @@ it's on the todo-list.
   overflow: hidden;
 }
 .preview-code {
+  display: block;
   width: 100%;
-  min-height: 150px;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: hsl(240, 9%, 37%);
-}
-.docs .preview-code {
-  display: block;
   max-height: 200px;
   padding: 10px 20px;
   overflow-y: auto;
@@ -136,14 +133,15 @@ it's on the todo-list.
   border: 1px solid hsl(240, 8%, 87%);
   border-left: 0; border-right: 0;
   box-shadow: inset 2px 2px 2px hsla(0, 0%, 0%, .025);
+  line-height: 1.1 !important;
 }
-  .docs .preview-code:focus {
+  .preview-code:focus {
     outline: 0;
   }
   .preview + .preview-code {
     margin-top: 0;
   }
-  .docs .preview-code:last-child {
+  .preview-code:last-child {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
