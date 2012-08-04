@@ -179,7 +179,7 @@ var cli = function(options) {
           cb(null, all.concat(files));
         });
       }, function(err, files) {
-        files.filter(function(file) {
+        files = files.filter(function(file) {
           // No hidden files
           if (file.match(/(\/|^)\.[^\.\/]/)) return false;
           // Only supported file types
