@@ -28,9 +28,9 @@ var getContentHeight = (function() {
       elHeights.push(els[i].offsetTop + els[i].offsetHeight);
     }
     var height = Math.max.apply(Math, elHeights);
-    var padding = bodyStyle.getPropertyValue('padding-bottom');
-    return height + parseInt(padding);
-  };
+    height += parseInt(bodyStyle.getPropertyValue('padding-bottom'));
+    return Math.max(height, bodyEl.offsetHeight)
+  }
 })();
 
 // Scans your stylesheet for pseudo classes and adds a class with the same name.

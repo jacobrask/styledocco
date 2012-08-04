@@ -149,9 +149,8 @@ var headEl = document.getElementsByTagName('head')[0];
         } else {
           codeEl.style.overflow = 'hidden';
         }
-
-
         codeEl.style.height = (mirrorEl.offsetHeight + 2) + 'px';
+        iframeEl.contentDocument.defaultView.postMessage('getHeight', '*');
       };
       codeEl.addEventListener('keypress', codeDidChange);
       codeEl.addEventListener('keyup', codeDidChange);
