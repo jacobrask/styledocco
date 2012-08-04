@@ -524,88 +524,115 @@ pre code {
   -ms-user-select: none;
   user-select: none;
 }
-</style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">Twitter Bootstrap</a><ul class="menu"><li><a href="#" unselectable="on" class="dropdown-toggle">less</a><ul class="dropdown"><li><a href="less-README.html">README
-</a></li><li><a href="less-mixins.html">mixins
-</a></li><li><a href="less-variables.html">variables
-</a></li><li><a href="less-buttons.html">buttons
-</a></li></ul></li></ul><div class="settings2"><button title="Table of Contents" class="toc ir">Table of Contents</button></div></div></nav><section class="container"><article id="styledocco" class="section"><div class="docs"><a href="#styledocco" class="permalink ir">StyleDocco</a><h1 id="styledocco">StyleDocco</h1>
-<p>StyleDocco generates documentation and style guide documents from your stylesheets.
+</style></head><body><nav class="bar top cf"><div class="container"><a href="index.html" class="brand">Twitter Bootstrap</a><ul class="menu"><li><a href="buttons.html">buttons
+</a></li><li><a href="mixins.html">mixins
+</a></li><li><a href="variables.html">variables
+</a></li></ul><div class="settings2"><button title="Table of Contents" class="toc ir">Table of Contents</button></div></div></nav><section class="container"><article id="twitter-bootstrap" class="section"><div class="docs"><a href="#twitter-bootstrap" class="permalink ir">TWITTER BOOTSTRAP</a><h1 id="twitter-bootstrap">TWITTER BOOTSTRAP</h1>
+<p>Bootstrap is Twitter&#39;s toolkit for kickstarting CSS for websites, apps, and more. It includes base CSS styles for typography, forms, buttons, tables, grids, navigation, alerts, and more.
 
 </p>
-<p>Stylesheet comments will be parsed through <a href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> and displayed in a generated HTML document. You can write HTML code prefixed with 4 spaces or between <a href="http://github.github.com/github-flavored-markdown/">code fences</a> (<code>```</code>) in your comments, and StyleDocco renders a preview with the styles applied, and shows the example HTML code.
-
-</p>
-<p>An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
-
-</p>
-<p>Suggestions, feature requests and bug reports are very welcome, either at <a href="https://github.com/jacobrask/styledocco/issues">GitHub</a> or on Twitter (<a href="https://twitter.com/jacobrask">@jacobrask</a>).
+<p>To get started -- checkout <a href="http://twitter.github.com/bootstrap!">http://twitter.github.com/bootstrap!</a>
 
 
 </p>
-<h2 id="installation">Installation</h2>
-<p>StyleDocco requires <a href="http://nodejs.org">Node.js</a>. After installing Node.js, run <code>npm install -g styledocco</code> or clone this repository.
+<h2 id="versioning">Versioning</h2>
+<p>For transparency and insight into our release cycle, and for striving to maintain backward compatibility, Bootstrap will be maintained under the Semantic Versioning guidelines as much as possible.
 
 </p>
-<p>StyleDocco is free software, released under the <a href="https://raw.github.com/jacobrask/styledocco/master/LICENSE">MIT license</a>.
-
-
-</p>
-</div></article><article id="usage" class="section"><div class="docs"><a href="#usage" class="permalink ir">Usage</a><h1 id="usage">Usage</h1>
-<p><code>styledocco [options] [INPUT]</code>
+<p>Releases will be numbered with the follow format:
 
 </p>
-<p>StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
+<p><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>
 
 </p>
-<p>If your project includes a <code>README</code> file, it will be used as the base for an <code>index.html</code>. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
+<p>And constructed with the following guidelines:
 
 </p>
-<h2 id="options">Options</h2>
 <ul>
-<li><code>--name</code>, <code>-n</code>      Name of the project <em>(required)</em></li>
-<li><code>--out</code>, <code>-o</code>       Output directory <em>(default: &quot;docs&quot;)</em></li>
-<li><code>--resources</code>, <code>-s</code> Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. <em>(optional)</em></li>
-<li><code>--preprocessor</code>    Custom preprocessor command. <em>(optional)</em> (ex: <code>--preprocessor &quot;scss --load-path=deps/&quot;</code>)</li>
-<li><code>--include</code>         Include specified CSS and/or JavaScript files in the previews. <em>(optional)</em> (ex: <code>--include mysite.css --include app.js</code>)</li>
-<li><code>--verbose</code>         Show log messages when generating the documentation. <em>(default: false)</em></li>
-<li>Directory containing the stylesheets to document.</li>
+<li>Breaking backward compatibility bumps the major</li>
+<li>New additions without breaking backward compatibility bumps the minor</li>
+<li>Bug fixes and misc changes bump the patch</li>
 </ul>
-<h2 id="usage-examples">Usage examples</h2>
-<p>Generate documentation for <em>My Project</em> in the <code>docs</code> folder, from the files in the <code>css</code> directory.
-
-</p>
-<p><code>styledocco -n &quot;My Project&quot; css</code>
-
-</p>
-<p>Generate documentation for <em>My Project</em> in the <code>mydocs</code> folder, from source files in the <code>styles</code> folder. Use the Less binary in <code>~/bin/lessc</code>.
-
-</p>
-<p><code>styledocco -n &quot;My Project&quot; -o mydocs -s mydocs --preprocessor &quot;~/bin/lessc&quot; styles</code>
+<p>For more information on SemVer, please visit <a href="http://semver.org/">http://semver.org/</a>.
 
 
 </p>
-<h2 id="syntax">Syntax</h2>
-<pre><code class="lang-css">/* Provides extra visual weight and identifies the primary action in a set of buttons.
-
-    &lt;button class=&quot;btn primary&quot;&gt;Primary&lt;/button&gt; */
-.btn.primary {
-    background: blue;
-    color: white;
-}</code></pre>
-<p>Would display the description, a rendered button as well as the example HTML code. The CSS will be applied to the preview.
+<h2 id="bug-tracker">Bug tracker</h2>
+<p>Have a bug? Please create an issue here on GitHub!
 
 </p>
-<p>See the <code>examples</code> folder for more in-depth examples.
+<p><a href="https://github.com/twitter/bootstrap/issues">https://github.com/twitter/bootstrap/issues</a>
+
 
 </p>
-<h2 id="tips-and-tricks">Tips and tricks</h2>
+<h2 id="twitter-account">Twitter account</h2>
+<p>Keep up to date on announcements and more by following Bootstrap on Twitter, <a href="http://twitter.com/TwBootstrap">@TwBootstrap</a>.
+
+
+</p>
+<h2 id="mailing-list">Mailing list</h2>
+<p>Have a question? Ask on our mailing list!
+
+</p>
+<p>twitter-bootstrap@googlegroups.com
+
+</p>
+<p><a href="http://groups.google.com/group/twitter-bootstrap">http://groups.google.com/group/twitter-bootstrap</a>
+
+
+</p>
+<h2 id="irc">IRC</h2>
+<p>Server: irc.freenode.net
+
+</p>
+<p>Channel: ##twitter-bootstrap (the double ## is not a typo)
+
+
+</p>
+<h2 id="developers">Developers</h2>
+<p>We have included a makefile with convenience methods for working with the Bootstrap library.
+
+</p>
 <ul>
-<li>Put some whitespace before a comment block to exclude it from the documentation.</li>
-<li>Level 1 headings will automatically create a new section in the documentation.</li>
-<li>Add <code>:hover</code>, <code>:focus</code>, etc as class names in example code and the pseudo class styles will be applied in the preview.</li>
+<li><p><strong>build</strong> - <code>make</code>
+Runs the LESS compiler to rebuild the <code>/less</code> files and compiles the docs pages. Requires lessc and uglify-js. <a href="http://twitter.github.com/bootstrap/less.html#compiling">Read more in our docs &raquo;</a></p>
+</li>
+<li><p><strong>watch</strong> - <code>make watch</code>
+This is a convenience method for watching just Less files and automatically building them whenever you save. Requires the Watchr gem.</p>
+</li>
 </ul>
-<h2 id="acknowledgements">Acknowledgements</h2>
-<p>A lot of the heavy lifting in StyleDocco is done by the excellent <a href="https://github.com/chjj/marked">Marked</a> module by Christopher Jeffrey. The original <a href="https://github.com/jashkenas/docco">Docco</a> by Jeremy Ashkenas and <a href="https://github.com/kneath/kss">Knyle Style Sheets</a> have also been sources of inspiration for StyleDocco.
+<h2 id="authors">Authors</h2>
+<p><strong>Mark Otto</strong>
+
+</p>
+<ul>
+<li><a href="http://twitter.com/mdo">http://twitter.com/mdo</a></li>
+<li><a href="http://github.com/markdotto">http://github.com/markdotto</a></li>
+</ul>
+<p><strong>Jacob Thornton</strong>
+
+</p>
+<ul>
+<li><a href="http://twitter.com/fat">http://twitter.com/fat</a></li>
+<li><a href="http://github.com/fat">http://github.com/fat</a></li>
+</ul>
+<h2 id="copyright-and-license">Copyright and license</h2>
+<p>Copyright 2012 Twitter, Inc.
+
+</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this work except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file, or at:
+
+</p>
+<p>   <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+
+</p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 </p>
 </div></article></section><div class="bar bottom"><div class="settings container"><button title="Desktop (1280)" data-width='1280' class="desktop ir">Desktop</button><button title="Laptop (1024)" data-width='1024' class="laptop ir">Laptop</button><button title="Tablet (768)" data-width='768' class="tablet ir">Tablet</button><button title="Smart phone (320)" data-width='320' class="smartphone ir">Smart phone</button><button title="Feature phone (240)" data-width='240' class="featurephone ir">Feature phone</button><button title="Auto (100%)" data-width="auto" class="auto is-active">Auto</button></div></div><script>// StyleDocco JavaScript for documentation
 // =======================================
@@ -810,4 +837,4 @@ bodyEl.addEventListener('click', function(event) {
 });
 
 })();
-var toc=[{"title":"","filename":"README","url":"less-README.html#"},{"title":"Mixins","filename":"mixins","url":"less-mixins.html#mixins"},{"title":"Utility mixins","filename":"mixins","url":"less-mixins.html#utility-mixins"},{"title":"Fonts","filename":"mixins","url":"less-mixins.html#fonts"},{"title":"Grid System","filename":"mixins","url":"less-mixins.html#grid-system"},{"title":"CSS3 properties","filename":"mixins","url":"less-mixins.html#css3-properties"},{"title":"Backgrounds","filename":"mixins","url":"less-mixins.html#backgrounds"},{"title":"Component mixins","filename":"mixins","url":"less-mixins.html#component-mixins"},{"title":"Variables","filename":"variables","url":"less-variables.html#variables"},{"title":"Button Styles","filename":"buttons","url":"less-buttons.html#button-styles"},{"title":"Base styles","filename":"buttons","url":"less-buttons.html#base-styles"},{"title":"Multiple sizes","filename":"buttons","url":"less-buttons.html#multiple-sizes"},{"title":"Alternate button styles","filename":"buttons","url":"less-buttons.html#alternate-button-styles"}];</script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+var toc=[{"title":"Button Styles","filename":"buttons","url":"buttons.html#button-styles"},{"title":"Base styles","filename":"buttons","url":"buttons.html#base-styles"},{"title":"Multiple sizes","filename":"buttons","url":"buttons.html#multiple-sizes"},{"title":"Alternate button styles","filename":"buttons","url":"buttons.html#alternate-button-styles"},{"title":"Mixins","filename":"mixins","url":"mixins.html#mixins"},{"title":"Utility mixins","filename":"mixins","url":"mixins.html#utility-mixins"},{"title":"Fonts","filename":"mixins","url":"mixins.html#fonts"},{"title":"Grid System","filename":"mixins","url":"mixins.html#grid-system"},{"title":"CSS3 properties","filename":"mixins","url":"mixins.html#css3-properties"},{"title":"Backgrounds","filename":"mixins","url":"mixins.html#backgrounds"},{"title":"Component mixins","filename":"mixins","url":"mixins.html#component-mixins"},{"title":"Variables","filename":"variables","url":"variables.html#variables"}];</script></body></html><!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
