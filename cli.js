@@ -249,8 +249,8 @@ var cli = function(options) {
             sections: file.docs,
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: docsScript, css: resources.docs.css },
-              previews: { js: resources.previews.js, css: previewStyles }
+              docs: { js: minjs(docsScript), css: mincss(resources.docs.css) },
+              previews: { js: minjs(resources.previews.js), css: mincss(previewStyles) }
             }
           })
         };
