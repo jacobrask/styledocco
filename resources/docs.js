@@ -13,6 +13,8 @@ var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
 var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
 var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
 var add = function(a, b) { return a + b; };
+
+// Parse `key=value; key=value` strings (for cookies).
 var keyvalParse = function(str) {
   var obj = {};
   var pairs = str.split(';');
@@ -25,6 +27,7 @@ var keyvalParse = function(str) {
 
 var bodyEl = document.getElementsByTagName('body')[0];
 var headEl = document.getElementsByTagName('head')[0];
+
 
 // Iframe rendering and handling
 // =============================
@@ -126,6 +129,10 @@ var headEl = document.getElementsByTagName('head')[0];
           .querySelector('button[data-width="' + previewWidth + '"]')
           .classList.add('is-active');      
       }
+      // Auto update iframe when `textarea` changes.
+      codeEl.addEventListener('keyup', function(ev) {
+        iframeEl.contentDocument.body.innerHTML = this.value;
+      });
     });
   });
 
