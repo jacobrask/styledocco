@@ -7,12 +7,10 @@
 
 // Helper functions
 // ================
-// Using `Array.prototype` to make them work on `NodeList`s.
+// Using `Array.prototype` to make them work on Array-like objects.
 var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
 var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
-var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
 var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
-var add = function(a, b) { return a + b; };
 
 // Parse `key=value; key=value` strings (for cookies).
 var keyvalParse = function(str) {
@@ -58,13 +56,9 @@ var headEl = document.getElementsByTagName('head')[0];
   }, false);
 
   // Get preview styles intended for preview iframes.
-  var styles = reduce(
-    pluck(headEl.querySelectorAll('style[type="text/preview"]'), 'innerHTML'),
-  add, '');
+  var styles = pluck(headEl.querySelectorAll('style[type="text/preview"]'), 'innerHTML').join('');
   // Get preview scripts intended for preview iframes.
-  var scripts = reduce(
-    pluck(headEl.querySelectorAll('script[type="text/preview"]'), 'innerHTML'),
-  add, '');
+  var scripts = pluck(headEl.querySelectorAll('script[type="text/preview"]'), 'innerHTML').join('');
 
   // Check if browser treats data uris as same origin.
   // This will always display an error in WebKit.
@@ -178,7 +172,6 @@ var headEl = document.getElementsByTagName('head')[0];
 // Dropdown menus
 bodyEl.addEventListener('click', function(event) {
   var el = event.target;
-  var dropdown = el.parentNode.getElementsByClassName('dropdown')[0];
   var activateDropdown = false;
   if (el.classList.contains('dropdown-toggle')) {
     event.preventDefault();
@@ -188,14 +181,12 @@ bodyEl.addEventListener('click', function(event) {
   // Deactivate *all* dropdowns
   forEach(bodyEl.getElementsByClassName('dropdown-toggle'), function(el) {
     el.classList.remove('is-active');
-    dropdown.classList.remove('is-active');
+    el.parentNode.getElementsByClassName('dropdown')[0].classList.remove('is-active');
   });
   // Activate the clicked dropdown
   if (activateDropdown) {
-    (function() {
     el.classList.add('is-active');
-    dropdown.classList.add('is-active');
-    })();;
+    el.parentNode.getElementsByClassName('dropdown')[0].classList.add('is-active');
   }
 });
 

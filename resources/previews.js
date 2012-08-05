@@ -7,12 +7,9 @@
 
 // Helper functions
 // ================
-// Using `Array.prototype` to make them work on `NodeList`s.
+// Using `Array.prototype` to make them work on Array like objects.
 var filter = function(arr, it) { return Array.prototype.filter.call(arr, it); };
-var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
 var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
-var reduce = function(arr, it, memo) { return Array.prototype.reduce.call(arr, it, memo); };
-var add = function(a, b) { return a + b; };
 
 var bodyEl = document.getElementsByTagName('body')[0];
 
@@ -38,21 +35,18 @@ var getContentHeight = (function() {
 var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
                 'enabled', 'disabled', 'checked' ];
 var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
-var processedPseudoClasses = reduce(map(
+var processedPseudoClasses = map(
   filter(document.styleSheets, function(ss) { return !(ss.href != null); }),
   function(ss) {
-    return reduce(map(
+    return map(
       filter(ss.cssRules, function(rule) {
         // Keep only rules with pseudo classes.
         return rule.selectorText && rule.selectorText.match(pseudoRe);
       }), function(rule) {
        // Replace : with . and encoded :
        return rule.cssText.replace(pseudoRe, ".\\3A $1");
-      }),
-      add, ''
-    );
-  }
-), add, '');
+      }).join('');
+  }).join('');
 if (processedPseudoClasses.length) {
   // Add a new style element with the processed pseudo class styles.
   var styleEl = document.createElement('style');
