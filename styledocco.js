@@ -98,7 +98,7 @@ var makeSections = exports.makeSections = function(blocks) {
           if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
             token.type = 'html';
             token.pre = true;
-            token.text = '<textarea class="preview-code">' + token.text + '</textarea>';
+            token.text = '<textarea class="preview-code" spellcheck="false">' + token.text + '</textarea>';
           // Add permalink `id`s and some custom properties to headings.
           } else if (token.type === 'heading') {
             var slug = slugify(token.text);

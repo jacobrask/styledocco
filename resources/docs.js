@@ -35,7 +35,6 @@ var headEl = document.getElementsByTagName('head')[0];
   if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
   var resizeableElOffset = 30; // `.resizeable` padding
-  
   var resizePreviews = function(width) {
     document.cookie = 'preview-width=' + width;
     forEach(bodyEl.getElementsByClassName('resizeable'), function(el) {
@@ -109,11 +108,11 @@ var headEl = document.getElementsByTagName('head')[0];
         oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
         win.postMessage('getHeight', '*');
       });
+      var dataHtmlPrefix = 'data:text/html;charset=utf-8,' + encodeURIComponent('<!doctype html><html><head></head></body>');
       if (!support.dataIframes) {
         iframeEl.setAttribute('src', previewUrl);
       } else {
-        iframeEl.setAttribute('src', 'data:text/html;charset=utf-8,' +
-          encodeURIComponent(codeEl.textContent));
+        iframeEl.setAttribute('src', dataHtmlPrefix + encodeURIComponent(codeEl.textContent));
       }
       codeEl.parentNode.insertBefore(previewEl, codeEl);
       resizeableEl.style.width = resizeableEl.offsetWidth + 'px';
