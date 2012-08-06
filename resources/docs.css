@@ -27,7 +27,7 @@ the documentation syntax. */
 body {
   /* Top/bottom paddings for bars */
   padding: 60px 0;
-  background-color: hsl(200, 5%, 90%);
+  background-color: hsl(200, 5%, 89%);
   color: hsl(240, 11%, 30%);
 }
 /* The page content has a maximum width of 1500 pixels. */
@@ -100,7 +100,6 @@ There is currently no syntax highlighting of neither CSS nor HTML code, but
 it's on the todo-list.
 */
 .preview {
-  margin-top: 10px;
   background: hsl(0, 0%, 100%);
   border-top: 1px solid hsl(240, 8%, 87%);
 }
@@ -113,6 +112,7 @@ it's on the todo-list.
   overflow: auto;
   resize: both;
   background: hsl(0, 0%, 100%);
+  box-shadow: 0 0 2px hsla(0, 0%, 0%, .2);
 }
 .preview iframe {
   display: block;
@@ -123,13 +123,11 @@ it's on the todo-list.
 .preview-code {
   display: block;
   width: 100%;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   color: hsl(240, 9%, 37%);
   max-height: 200px;
   padding: 10px 20px;
   overflow-y: auto;
-  background: hsl(220, 27%, 98%);
+  background: hsl(220, 27%, 97%);
   border: 1px solid hsl(240, 8%, 87%);
   border-left: 0; border-right: 0;
   box-shadow: inset 2px 2px 2px hsla(0, 0%, 0%, .025);
@@ -145,10 +143,15 @@ it's on the todo-list.
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
+.preview-code,
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-y: auto;
+}
 .code pre {
   height: 100%;
   margin-top: 0;
-  overflow-y: auto;
 }
 
 
