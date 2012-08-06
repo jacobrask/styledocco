@@ -21,12 +21,8 @@ html
         a.brand(href="index.html") #{project.name}
         ul.menu
           each links, folder in project.menu
-            if folder == './'
-              each link in links
-                li
-                  a(href="#{link.href}")
-                    #{link.name}
-            else
+            if folder != './' || links.length > 10
+              - if (folder === './') folder = 'files'
               li
                 a.dropdown-toggle(href="#",unselectable="on") #{folder}
                 ul.dropdown
@@ -34,6 +30,11 @@ html
                     li
                       a(href="#{link.href}")
                         #{link.name}
+            else
+              each link in links
+                li
+                  a(href="#{link.href}")
+                    #{link.name}
 
         .search
           input(type="search",placeholder="Search")
