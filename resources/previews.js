@@ -1,18 +1,45 @@
 // StyleDocco JavaScript for preview iframes
 // =========================================
-
 (function () {
 
 'use strict';
 
 // Helper functions
 // ================
-// Using `Array.prototype` to make them work on Array like objects.
-var filter = function(arr, it) { return Array.prototype.filter.call(arr, it); };
-var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
+var toArray = function(obj) { return Array.prototype.slice.call(obj); };
 
 var bodyEl = document.getElementsByTagName('body')[0];
 
+// Pseudo classes
+// ==============
+// Scans your stylesheet for pseudo classes and adds a class with the same name.
+// Compile regular expression.
+var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
+                'enabled', 'disabled', 'checked' ];
+var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
+var processedPseudoClasses = toArray(document.styleSheets)
+  .map(function(ss) {
+    return toArray(ss.cssRules)
+      .filter(function(rule) {
+        // Keep only rules with pseudo classes.
+        return rule.selectorText && rule.selectorText.match(pseudoRe);
+      })
+      .map(function(rule) {
+        // Replace : with . and encoded :
+        return rule.cssText.replace(pseudoRe, ".\\3A $1");
+      })
+      .join('');
+  })
+  .join('');
+if (processedPseudoClasses.length) {
+  // Add a new style element with the processed pseudo class styles.
+  var styleEl = document.createElement('style');
+  styleEl.innerText = processedPseudoClasses;
+  document.getElementsByTagName('head')[0].appendChild(styleEl);
+}
+
+// Resizing
+// ========
 // Get bottom-most point in document with an element.
 // `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
 var getContentHeight = (function() {
@@ -30,36 +57,11 @@ var getContentHeight = (function() {
   }
 })();
 
-// Scans your stylesheet for pseudo classes and adds a class with the same name.
-// Compile regular expression.
-var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
-                'enabled', 'disabled', 'checked' ];
-var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
-var processedPseudoClasses = map(
-  filter(document.styleSheets, function(ss) { return !(ss.href != null); }),
-  function(ss) {
-    return map(
-      filter(ss.cssRules, function(rule) {
-        // Keep only rules with pseudo classes.
-        return rule.selectorText && rule.selectorText.match(pseudoRe);
-      }), function(rule) {
-       // Replace : with . and encoded :
-       return rule.cssText.replace(pseudoRe, ".\\3A $1");
-      }).join('');
-  }).join('');
-if (processedPseudoClasses.length) {
-  // Add a new style element with the processed pseudo class styles.
-  var styleEl = document.createElement('style');
-  styleEl.innerText = processedPseudoClasses;
-  document.getElementsByTagName('head')[0].appendChild(styleEl);
-}
-
 var callbacks = {
   getHeight: function() {
     window.parent.postMessage({ height: getContentHeight() }, '*');
   }
 };
-
 window.addEventListener('message', function (ev) {
   if (ev.data == null) return;
   if (typeof ev.data === 'string') callbacks[ev.data]();
