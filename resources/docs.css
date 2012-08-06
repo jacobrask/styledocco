@@ -187,10 +187,12 @@ Fixed to top with a small drop shadow.
 .bar ul {
   margin: 0 !important;
 }
+.search a, .search a:visited,
 .menu, .menu a, .menu a:visited {
   color: hsl(0, 0%, 80%);
   text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
 }
+.search a:hover,
 .menu .is-active > a,
 .menu a:hover {
   color: hsl(0, 0%, 90%);
@@ -257,12 +259,13 @@ by including a custom previews stylesheet with overrides.
   border-right-color: transparent;
   border-bottom-color: transparent;
 }
+.search-results,
 .dropdown {
   display: none;
   position: absolute;
   top: 40px;
   left: -11px;
-  width: 175px;
+  width: 200px;
   max-height: 500px;
   padding: 0;
   z-index: 9999;
@@ -274,6 +277,11 @@ by including a custom previews stylesheet with overrides.
   border-radius: 0 0 3px 3px;
   box-shadow: 0 0 3px hsla(0, 0%, 0%, .3);
 }
+.search-results {
+  right: 0;
+  left: auto;
+}
+.search-results.is-active,
 .dropdown.is-active {
   display: block;
 }
@@ -286,23 +294,31 @@ by including a custom previews stylesheet with overrides.
 .dropdown li:hover {
   background-color: hsl(197, 5%, 30%);
 }
-.settings .search {
-  width: 24px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAMFBMVEX///////////////////////////////////////////////////////8AAAD///++CtLxAAAAD3RSTlNPz49/D6+/X98/7x8vnwDjrzSxAAAAoElEQVR42o3RSw7DIAxF0fCLSYhh/7sN9qtjJCa9I+DYSqUeXSM+Z6n1L4Wjjl+cV+Dh3Y+DvteYUoEYHHIjvTShYFB9CtsEID1aMlYBjJMlc03hHCMukCdcBqkv/QWle88Hyb7mv7crtIEVX2CAzrC937oPyHKplOezzPgGxtYYMCVsIiBRxZ/BjSECqF0zOZgALJcI2KUANglZYCuW3F9+zR3AHggPQQAAAABJRU5ErkJggg==);
-}
-.settings .toc {
+.ir.toc {
   width: 24px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
 }
-
+.search {
+  float: right;
+  position: relative;
+}
+input[type="search"] {
+  padding: 2px 4px;
+  color: #fff;
+  width: 150px;
+  border: 1px solid hsla(0, 0%, 100%, .4);
+  background: hsla(0, 0%, 100%, .05);
+  border-radius: 10px;
+}
+input[type="search"]:focus {
+  outline: 0;
+  border: 1px solid hsla(0, 0%, 100%, .6);
+}
 
 /*
 # Settings and configuration
 */
-.bar.top .settings {
-  text-align: right;
-}
-.bar.bottom .settings {
+.settings {
   text-align: center;
 }
 .settings button {

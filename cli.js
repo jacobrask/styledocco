@@ -241,7 +241,7 @@ var cli = function(options) {
         }));
       }));
       toc = 'var toc=' + JSON.stringify(toc) + ';';
-      var docsScript = resources.docs.js + toc;
+      var docsScript = toc + resources.docs.js;
       // Render files
       var htmlFiles = files.map(function(file) {
         return {

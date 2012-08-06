@@ -8,6 +8,7 @@
 // Helper functions
 // ================
 // Using `Array.prototype` to make them work on Array-like objects.
+var toArray = function(obj) { return Array.prototype.slice.call(obj); };
 var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
 var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
 var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
@@ -72,7 +73,7 @@ var headEl = document.getElementsByTagName('head')[0];
     this.parentNode.removeChild(this);
 
     // Loop through code textareas and render the code in iframes.
-    var previewUrl = location.href + '#__preview__';
+    var previewUrl = location.href.split('#')[0] + '#__preview__';
     var iframeId = 0;
     forEach(bodyEl.getElementsByTagName('textarea'), function(codeEl) {
       var previewEl, resizeableEl, iframeEl;
@@ -189,5 +190,59 @@ bodyEl.addEventListener('click', function(event) {
     el.parentNode.getElementsByClassName('dropdown')[0].classList.add('is-active');
   }
 });
+
+
+(function() {
+  var searchEl = bodyEl.getElementsByClassName('search')[0];
+  if (!searchEl) return;
+
+  // Generate HTML elements for each ToC item
+  var searchList = document.createElement('ul');
+  searchList.className = 'search-results';
+  toc.forEach(function(item) {
+    var el = document.createElement('li');
+    var a = document.createElement('a');
+    el.appendChild(a);
+    a.href = item.url;
+    a.innerHTML = item.title;
+    if (item.filename) {
+      el.innerHTML += item.filename;
+      el._filename = item.filename.toLowerCase();
+    }
+    el._title = item.title.toLowerCase();
+    el.hidden = true;
+    searchList.appendChild(el);
+  });
+
+  searchEl.appendChild(searchList);
+
+  var searchItems = toArray(searchList.children);
+
+  var doSearch = function(ev) {
+    searchItems.forEach(function(el) { el.hidden = true; });
+    var val = this.value.toLowerCase();
+    var filtered = [];
+    if (val !== '') {
+      filtered = searchItems.filter(function(el) {
+        return el._title.indexOf(val) !== -1;
+      });
+    }
+    if (filtered.length > 0) {
+      filtered.forEach(function(el) { el.hidden = false; });
+      searchList.classList.add('is-active');
+    } else {
+      searchList.classList.remove('is-active');
+    }
+  };
+  var searchInputEl = searchEl.querySelector('input[type="search"]');
+  searchInputEl.addEventListener('keyup', doSearch);
+  searchInputEl.addEventListener('focus', doSearch);
+  
+  bodyEl.addEventListener('click', function(event) {
+    if (event.target.parentNode.className === 'search-results'
+      || event.target.parentNode.className === 'search') return;
+    searchList.classList.remove('is-active');
+  });
+})();
 
 })();
