@@ -232,11 +232,13 @@ var cli = function(options) {
       previewStyles += resources.previews.css;
       // Build a JSON string of all files and their headings.
       var toc = flatten(files.map(function(file) {
-        return file.docs.map(function(section) {
+        var arr = [ { title: baseFilename(file.path),
+                      url: htmlFilename(file.path, options.basePath) } ];
+        return arr.concat(file.docs.map(function(section) {
           return { title: section.title,
                    filename: baseFilename(file.path),
                    url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
-        })
+        }));
       }));
       toc = 'var toc=' + JSON.stringify(toc) + ';';
       var docsScript = resources.docs.js + toc;
