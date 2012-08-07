@@ -13,30 +13,25 @@ Suggestions, feature requests and bug reports are very welcome, either at [GitHu
 Installation
 ------------
 
-StyleDocco requires [Node.js](http://nodejs.org). After installing Node.js, run `npm install -g styledocco` or clone this repository.
+StyleDocco requires [Node.js](http://nodejs.org). After installing Node.js, run `npm install -g styledocco` or clone this repository and run `./bin/styledocco`.
 
-StyleDocco is free software, released under the [MIT license](https://raw.github.com/jacobrask/styledocco/master/LICENSE).
+StyleDocco is free and open source software, released under the [MIT license](https://raw.github.com/jacobrask/styledocco/master/LICENSE).
 
 
 Usage
 =====
 
-`styledocco [options] [INPUT]`
-
-StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
-
-If your project includes a `README` file, it will be used as the base for an `index.html`. StyleDocco will also add some default styles to your documentation, but they are easy to modify to make it fit with your project.
+`styledocco [options] [STYLESHEET(S)]`
 
 Options
 -------
 
- * `--name`, `-n`      Name of the project *(required)*
+ * `--name`, `-n`      Name of the project
  * `--out`, `-o`       Output directory *(default: "docs")*
- * `--resources`, `-s` Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
  * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
  * `--include`         Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include mysite.css --include app.js`)
  * `--verbose`         Show log messages when generating the documentation. *(default: false)*
- *                     Directory containing the stylesheets to document.
+ *                     Stylesheet (or directory of stylesheets) to process.
 
 Usage examples
 --------------
@@ -70,6 +65,9 @@ See the `examples` folder for more in-depth examples.
 Tips and tricks
 ---------------
 
+ * StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
+ * If your project includes a `README.md` file, it will be used as the base for an `index.html`.
+ * If you don't specify a custom name, StyleDocco will use the name from a `package.json` file if it finds one.
  * Put some whitespace before a comment block to exclude it from the documentation.
  * Level 1 headings will automatically create a new section in the documentation.
  * Add `:hover`, `:focus`, etc as class names in example code and the pseudo class styles will be applied in the preview.
