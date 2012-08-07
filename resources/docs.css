@@ -285,6 +285,20 @@ by including a custom previews stylesheet with overrides.
   right: 0;
   left: auto;
 }
+.search-results-filename {
+  display: block;
+  font-size: 11px;
+  opacity: .75;
+}
+.search-results a {
+  display: block;
+  line-height: 15px;
+  padding: 5px 10px;
+  border-bottom: 1px solid hsla(0, 0%, 100%, .25);
+}
+.search-results li:last-child a {
+  border-bottom: 0;
+}
 .search-results.is-active,
 .dropdown.is-active {
   display: block;

@@ -205,9 +205,12 @@ bodyEl.addEventListener('click', function(event) {
     a.href = item.url;
     a.innerHTML = item.title;
     if (item.filename) {
-      el.innerHTML += item.filename;
-      el._filename = item.filename.toLowerCase();
+      var filenameEl = document.createElement('span');
+      filenameEl.innerHTML = item.filename;
+      filenameEl.className = 'search-results-filename';
+      a.appendChild(filenameEl);
     }
+    el._filename = item.filename ? item.filename.toLowerCase() : '';
     el._title = item.title.toLowerCase();
     el.hidden = true;
     searchList.appendChild(el);
@@ -223,7 +226,7 @@ bodyEl.addEventListener('click', function(event) {
     var filtered = [];
     if (val !== '') {
       filtered = searchItems.filter(function(el) {
-        return el._title.indexOf(val) !== -1;
+        return (el._title.indexOf(val) !== -1 || el._filename.indexOf(val) !== -1);
       });
     }
     if (filtered.length > 0) {
@@ -236,11 +239,14 @@ bodyEl.addEventListener('click', function(event) {
   var searchInputEl = searchEl.querySelector('input[type="search"]');
   searchInputEl.addEventListener('keyup', doSearch);
   searchInputEl.addEventListener('focus', doSearch);
-  
+  // Hide search results
   bodyEl.addEventListener('click', function(event) {
-    if (event.target.parentNode.className === 'search-results'
-      || event.target.parentNode.className === 'search') return;
+    if (event.target.parentNode.className === 'search') return;
     searchList.classList.remove('is-active');
+  });
+  // Reset search box
+  searchList.addEventListener('click', function(event) {
+    searchInputEl.value = '';
   });
 })();
 
