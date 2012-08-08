@@ -10,6 +10,10 @@ the documentation syntax. */
   padding: 0;
   border: 0;
 }
+/*
+Main layout
+-----------
+*/
 body {
   /* Top/bottom paddings for bars */
   padding: 60px 0 40px;
@@ -70,24 +74,17 @@ split into a new section with a pair of documentation and CSS code.
   }
 
 /* # Previews and code
-Previews are rendered in sandboxed iframes with the project CSS applied.
+Previews are rendered in sandboxed iframes with the documented CSS applied.
 The code is editable and the previews will be automatically updated.
 
-The width of the previews can be adjusted to test responsive design.
-The height will be adjusted automatically to fit the content.
-
-```
-<div class="docs">
-  <div class="preview"><div class="resizeable">Rendered preview. Resize me!</div></div>
-  <textarea class="preview-code">HTML code</textarea>
-</div>
-```
-
-<small>Custom resizing currently only works properly in Firefox. In WebKit
-browsers you can only enlarge the previews.</small>. */
+The width of the previews can be adjusted to test responsive designs. The
+height will be automatically adjusted to fit the content. <small>Free hand
+resizing currently only works properly in Firefox. In WebKit browsers you can
+only enlarge the previews and other browsers have not implemented CSS `resize`
+</small>. */
 .preview {
   background: hsl(207, 0%, 100%);
-  border-top: 1px solid hsl(207, 9%, 87%);
+  border-top: 1px solid hsl(207, 10%, 87%);
 }
   .preview-code + .preview {
     margin-top: 0;
@@ -99,6 +96,12 @@ browsers you can only enlarge the previews.</small>. */
   height: 100%;
   overflow: hidden;
 }
+/*
+Editable code blocks have a desaturated orange background. They will be
+automatically resized to fit the text inside.
+
+    <textarea class="preview-code">Code</textarea>
+*/
 .preview-code {
   display: block;
   width: 100%;
@@ -115,12 +118,13 @@ browsers you can only enlarge the previews.</small>. */
 }
   .preview-code:focus {
     outline: 0;
+    background: hsl(27, 45%, 95%);
   }
   .preview-code:last-child {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
-/* Previews are placed in a resizeable container. `iframe` elements cannot be
+/* Previews are placed in a resizeable container as `iframe` elements cannot be
 resized with the CSS `resize` property. */
 .resizeable {
   padding: 15px;
@@ -196,14 +200,14 @@ Fixed to top with a small drop shadow.
   margin-right: 20px;
   font-weight: bold;
   font-size: 16px;
-  text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .2);
   text-decoration: none;
 }
 .brand, a.brand, a.brand:visited {
   color: hsl(27, 5%, 10%);
+  text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .2);
 }
   .brand:hover, a.brand:hover {
-    color: hsl(27, 5%, 0%);
+    color: hsl(27, 5%, 2%);
     text-decoration: none;
   }
 
@@ -422,27 +426,16 @@ h1, h2, h3, h4, h5, h6 {
   }
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
-  color: hsl(207, 11%, 37%);
+  color: hsl(207, 10%, 50%);
 }
 h1 a, h1 a:hover, h1 a:visited {
   color: inherit;
   text-decoration: inherit;
 }
-.permalink {
-  width: 21px;
-  height: 23px;
-  position: absolute;
-  top: 15px; right: 15px;
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAAM1BMVEX///////////////////////////////////////////////////////////8AAAD///8VtYL2AAAAEHRSTlO/jx9vP9+vT8+fD38v718AyvCTSAAAAKlJREFUeNpV0FsOxSAIBNC+VVBx/6u9zJCU3vmw5FQwutknhz56ofjqXMgj1MRIldDEZ/iyUROnSfWPbv9o5AFNRIpXoRdRCurz1YdY14yuOxQnWOWQ29cSOqAxu+MXtAsnkIe0adA+9Fovn3wHxzV6dGO0UgV33LFt9O5lKHY13MMRGw6q+iMZIkS1ULSiIjYL7QucGGo7uJREqrWFEFPBiammt7/TaZkfXB8aoN4G6bsAAAAASUVORK5CYII=) 50% 50% no-repeat;
-  opacity: .1;
-}
-  .permalink:hover {
-    opacity: .3;
-  }
-
 h1 {
   font-size: 3.052em;
   font-weight: normal;
+  color: hsl(207, 10%, 45%);
 }
 h2 {
   font-size: 1.953em;
@@ -463,6 +456,18 @@ h5 {
 h6 {
   font-size: 1em;
 }
+.permalink {
+  width: 21px;
+  height: 23px;
+  position: absolute;
+  top: 15px; right: 15px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAAM1BMVEX///////////////////////////////////////////////////////////8AAAD///8VtYL2AAAAEHRSTlO/jx9vP9+vT8+fD38v718AyvCTSAAAAKlJREFUeNpV0FsOxSAIBNC+VVBx/6u9zJCU3vmw5FQwutknhz56ofjqXMgj1MRIldDEZ/iyUROnSfWPbv9o5AFNRIpXoRdRCurz1YdY14yuOxQnWOWQ29cSOqAxu+MXtAsnkIe0adA+9Fovn3wHxzV6dGO0UgV33LFt9O5lKHY13MMRGw6q+iMZIkS1ULSiIjYL7QucGGo7uJREqrWFEFPBiammt7/TaZkfXB8aoN4G6bsAAAAASUVORK5CYII=) 50% 50% no-repeat;
+  opacity: .1;
+}
+  .permalink:hover {
+    opacity: .3;
+  }
+
 
 /*
 # Links
@@ -541,4 +546,8 @@ pre code {
 }
 [hidden] {
   display: none !important;
+}
+small {
+  font-size: 85%;
+  opacity: .9;
 }
