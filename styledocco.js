@@ -83,6 +83,10 @@ var separate = function(css) {
 };
 
 
+var htmlEntities = function(str) {
+  return str.replace(/</g, '&lt;');
+};
+
 var makeSections = exports.makeSections = function(blocks) {
   return blocks
     .map(function(block) {
@@ -98,7 +102,7 @@ var makeSections = exports.makeSections = function(blocks) {
           if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
             token.type = 'html';
             token.pre = true;
-            token.text = '<textarea class="preview-code" spellcheck="false">' + token.text + '</textarea>';
+            token.text = '<textarea class="preview-code" spellcheck="false">' + htmlEntities(token.text) + '</textarea>';
           // Add permalink `id`s and some custom properties to headings.
           } else if (token.type === 'heading') {
             var slug = slugify(token.text);
