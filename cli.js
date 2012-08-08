@@ -233,10 +233,11 @@ var cli = function(options) {
       // Build a JSON string of all files and their headings.
       var toc = flatten(files.map(function(file) {
         var arr = [ { title: baseFilename(file.path),
+                      filename: file.path,
                       url: htmlFilename(file.path, options.basePath) } ];
         return arr.concat(file.docs.map(function(section) {
           return { title: section.title,
-                   filename: baseFilename(file.path),
+                   filename: file.path,
                    url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
         }));
       }));

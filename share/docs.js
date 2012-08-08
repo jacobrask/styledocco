@@ -210,7 +210,6 @@ bodyEl.addEventListener('click', function(event) {
       filenameEl.className = 'search-results-filename';
       a.appendChild(filenameEl);
     }
-    el._filename = item.filename ? item.filename.toLowerCase() : '';
     el._title = item.title.toLowerCase();
     el.hidden = true;
     searchList.appendChild(el);
@@ -226,7 +225,7 @@ bodyEl.addEventListener('click', function(event) {
     var filtered = [];
     if (val !== '') {
       filtered = searchItems.filter(function(el) {
-        return (el._title.indexOf(val) !== -1 || el._filename.indexOf(val) !== -1);
+        return (el._title.indexOf(val) !== -1);
       });
     }
     if (filtered.length > 0) {
