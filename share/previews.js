@@ -52,9 +52,9 @@ var getContentHeight = (function() {
       elHeights.push(els[i].offsetTop + els[i].offsetHeight);
     }
     var height = Math.max.apply(Math, elHeights);
-    height += parseInt(bodyStyle.getPropertyValue('padding-bottom'));
-    return Math.max(height, bodyEl.offsetHeight)
-  }
+    height += parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
+    return Math.max(height, bodyEl.offsetHeight);
+  };
 })();
 
 var callbacks = {

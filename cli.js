@@ -226,7 +226,7 @@ var cli = function(options) {
         cb(null, data);
       });
     }, function(err, files) {
-      if (err != null) return cb(err);
+      if (err != null) throw err;
       // Get the combined CSS from all files.
       var previewStyles = pluck(files, 'css').reduce(add, '');
       previewStyles += resources.previews.css;

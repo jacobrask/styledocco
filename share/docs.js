@@ -1,3 +1,4 @@
+/*global toc:false*/
 // StyleDocco JavaScript for documentation
 // =======================================
 
@@ -20,7 +21,7 @@ var keyvalParse = function(str) {
   for (var i = 0; pairs.length > i; i++) {
     var kvs = pairs[i].trim().split('=');
     obj[kvs[0]] = kvs[1];
-  };
+  }
   return obj;
 };
 
@@ -133,7 +134,9 @@ var headEl = document.getElementsByTagName('head')[0];
       bodyEl.appendChild(mirrorEl);
       // Auto update iframe when `textarea` changes and auto-resize textarea
       // to fit content.
-      var maxHeight = parseInt(window.getComputedStyle(codeEl).getPropertyValue('max-height'));
+      var maxHeight = parseInt(
+        window.getComputedStyle(codeEl).getPropertyValue('max-height'),
+        10);
       var codeDidChange = function() {
         iframeEl.contentDocument.body.innerHTML = codeEl.value;
         mirrorEl.textContent = codeEl.value + '\n';
