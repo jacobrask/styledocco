@@ -1,20 +1,6 @@
 /*
 StyleDocco default styles
 =========================
-
-# Heading level 1
-
-## Heading level 2
-
-### Heading level 3
-
-#### Heading level 4
-
-##### Heading level 5
-
-###### Heading level 6
-
-###### *Heading* _inline_ styles
 This is the default stylesheet for StyleDocco. It also serves as an example of
 the documentation syntax. */
 * {
@@ -26,9 +12,9 @@ the documentation syntax. */
 }
 body {
   /* Top/bottom paddings for bars */
-  padding: 60px 0;
-  background-color: hsl(200, 5%, 89%);
-  color: hsl(240, 11%, 30%);
+  padding: 60px 0 40px;
+  background-color: hsl(207, 5%, 89%);
+  color: hsl(207, 5%, 30%);
 }
 /* The page content has a maximum width of 1500 pixels. */
 .container {
@@ -56,11 +42,11 @@ split into a new section with a pair of documentation and CSS code.
   z-index: 2;
   width: 68%;
   min-height: 200px;
-  background-color: hsl(0, 0%, 100%);
+  background-color: hsl(207, 0%, 100%);
   background-clip: padding-box;
-  border: 1px solid hsla(0, 0%, 0%, .1);
+  border: 1px solid hsla(207, 5%, 5%, .1);
   border-radius: 5px;
-  box-shadow: 0 0 3px hsla(0, 0%, 0%, .1);
+  box-shadow: 0 0 3px hsla(207, 5%, 5%, .1);
 }
 .code {
   position: absolute;
@@ -70,8 +56,8 @@ split into a new section with a pair of documentation and CSS code.
   width: 33%;
   padding: 10px 10px 10px 20px;
   border-radius: 0 5px 5px 0;
-  border: 1px solid hsla(0, 0%, 0%, .1);
-  background-color: hsla(0, 0%, 100%, .75);
+  border: 1px solid hsla(207, 5%, 5%, .1);
+  background-color: hsla(207, 5%, 95%, .75);
   background-clip: padding-box;
   opacity: .5;
   -webkit-transition: opacity .4s;
@@ -84,36 +70,29 @@ split into a new section with a pair of documentation and CSS code.
   }
 
 /* # Previews and code
-Previews are rendered in sandboxed iframes and are resizable.
+Previews are rendered in sandboxed iframes with the project CSS applied.
+The code is editable and the previews will be automatically updated.
+
+The width of the previews can be adjusted to test responsive design.
+The height will be adjusted automatically to fit the content.
 
 ```
 <div class="docs">
   <div class="preview"><div class="resizeable">Rendered preview. Resize me!</div></div>
-  <pre><code>HTML code</code></pre>
+  <textarea class="preview-code">HTML code</textarea>
 </div>
 ```
 
 <small>Custom resizing currently only works properly in Firefox. In WebKit
-browsers you can only enlarge the previews.</small>.
-
-There is currently no syntax highlighting of neither CSS nor HTML code, but
-it's on the todo-list.
-*/
+browsers you can only enlarge the previews.</small>. */
 .preview {
-  background: hsl(0, 0%, 100%);
-  border-top: 1px solid hsl(240, 8%, 87%);
+  background: hsl(207, 0%, 100%);
+  border-top: 1px solid hsl(207, 9%, 87%);
 }
   .preview-code + .preview {
     margin-top: 0;
     border-top: 0;
   }
-.resizeable {
-  padding: 15px;
-  overflow: auto;
-  resize: both;
-  background: hsl(0, 0%, 100%);
-  box-shadow: 0 0 2px hsla(0, 0%, 0%, .2);
-}
 .preview iframe {
   display: block;
   width: 100%;
@@ -123,29 +102,35 @@ it's on the todo-list.
 .preview-code {
   display: block;
   width: 100%;
-  color: hsl(240, 9%, 37%);
+  color: hsl(207, 9%, 37%);
   max-height: 200px;
   padding: 10px 20px;
   overflow-y: auto;
-  background: hsl(44, 40%, 97%);
-  border: 1px solid hsl(240, 8%, 87%);
+  background: hsl(27, 42%, 97%);
+  border: 1px solid hsl(207, 9%, 87%);
   border-left: 0; border-right: 0;
-  box-shadow: inset 0 1px 3px hsl(41, 61%, 89%);
+  box-shadow: inset 0 1px 3px hsl(27, 61%, 89%);
   line-height: 1.1 !important;
   resize: none;
 }
   .preview-code:focus {
     outline: 0;
   }
-  .preview + .preview-code {
-    margin-top: 0;
-  }
   .preview-code:last-child {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
-.preview-code,
-pre {
+/* Previews are placed in a resizeable container. `iframe` elements cannot be
+resized with the CSS `resize` property. */
+.resizeable {
+  padding: 15px;
+  overflow: auto;
+  background: hsl(207, 0%, 100%);
+  box-shadow: 0 0 2px hsla(207, 5%, 0%, .2);
+  resize: both;
+}
+/* No code is allowed to overflow horizontally. */
+.preview-code, pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-y: auto;
@@ -167,80 +152,81 @@ Fixed to top with a small drop shadow.
 .bar {
   position: fixed;
   left: 0; right: 0;
-  z-index: 9999;
+  z-index: 1010;
   min-height: 40px;
   line-height: 40px;
-  background-image: -webkit-linear-gradient(hsla(206, 7%, 35%, .98),
-                                            hsla(206, 7%, 22%, .91));
-  background-image:    -moz-linear-gradient(hsla(206, 7%, 35%, .98),
-                                            hsla(206, 7%, 22%, .91));
-  background-image:      -o-linear-gradient(hsla(206, 7%, 35%, .98),
-                                            hsla(206, 7%, 22%, .91));
-  background-image:         linear-gradient(hsla(206, 7%, 35%, .98),
-                                            hsla(206, 7%, 22%, .91));
+  background-image: -webkit-linear-gradient(hsla(207, 10%, 31%, .99),
+                                            hsla(207, 10%, 19%, .91));
+  background-image:    -moz-linear-gradient(hsla(207, 10%, 31%, .99),
+                                            hsla(207, 10%, 19%, .91));
+  background-image:      -o-linear-gradient(hsla(207, 10%, 31%, .99),
+                                            hsla(207, 10%, 19%, .91));
+  background-image:         linear-gradient(hsla(207, 10%, 31%, .99),
+                                            hsla(207, 10%, 19%, .91));
 }
 .bar.top {
   top: 0;
-  box-shadow: 0 1px 3px hsla(0, 0%, 0%, .25);
+  box-shadow: 0 1px 2px hsla(207, 5%, 0%, .2);
 }
 .bar.bottom {
   bottom: 0;
-  box-shadow: 0 -1px 3px hsla(0, 0%, 0%, .25);
+  box-shadow: 0 -1px 2px hsla(207, 5%, 0%, .2);
 }
-
 .bar ul {
   margin: 0 !important;
 }
-.search a, .search a:visited,
-.menu, .menu a, .menu a:visited {
-  color: hsl(0, 0%, 80%);
-  text-shadow: 1px 1px 0 hsla(0, 0%, 0%, .3);
+.bar li {
+  display: block;
+  list-style: none;
 }
-.search a:hover,
-.menu .is-active > a,
-.menu a:hover {
-  color: hsl(0, 0%, 90%);
-  text-decoration: none;
+.bar, .bar a, .bar a:visited {
+  color: hsl(27, 10%, 80%);
+  text-shadow: 1px 1px 0 hsla(27, 5%, 0%, .3);
 }
+    .bar a:hover,
+    .menu .is-active > a {
+      color: hsl(27, 40%, 90%);
+      text-decoration: none;
+    }
 /* ```
 <div class="bar top"><a href="#" class="brand">Site name</a></div>
 ``` */
-.brand, a.brand, a.brand:visited {
+.brand {
   float: left;
   margin-right: 20px;
   font-weight: bold;
   font-size: 16px;
-  color: hsl(0, 0%, 10%);
-  text-shadow: 1px 1px 0 hsla(0, 0%, 100%, .25);
+  text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .2);
   text-decoration: none;
 }
+.brand, a.brand, a.brand:visited {
+  color: hsl(27, 5%, 10%);
+}
   .brand:hover, a.brand:hover {
-    color: hsl(0, 0%, 0%);
+    color: hsl(27, 5%, 0%);
     text-decoration: none;
   }
+
 /*
-Showing previews of absolutely positioned elements can be tricky, but most of
-the time you can solve it by adding inline styles in the example code, or
-by including a custom previews stylesheet with overrides.
-```
-<div class="bar top">
-  <ul class="menu">
-    <li><a href="#">css-file</a>
-    <li><a href="#" class="dropdown-toggle is-active" unselectable="on">folder</a>
-        <ul class="dropdown is-active">
-          <li><a href="#">css-file</a>
-          <li><a href="#">css-file</a>
-        </ul>
-  </ul>
-</div>
-``` */
+## Dropdown and search ##
+
+    <div class="bar top">
+      <ul class="menu">
+        <li><a href="#">css-file</a>
+        <li><a href="#" class="dropdown-toggle is-active" unselectable="on">folder</a>
+            <ul class="dropdown is-active">
+              <li><a href="#">css-file</a>
+              <li><a href="#">css-file</a>
+            </ul>
+      </ul>
+    </div>
+*/
 .menu {
-  font-size: 13px;
+  font-size: 12px;
 }
-.menu li {
+.menu > li {
   float: left;
   position: relative;
-  list-style: none;
 }
 .menu a {
   display: block;
@@ -267,19 +253,19 @@ by including a custom previews stylesheet with overrides.
 .dropdown {
   display: none;
   position: absolute;
-  top: 40px;
-  left: -11px;
-  width: 200px;
+  z-index: 1020;
+  top: 30px;
+  left: -16px;
+  width: 175px;
   max-height: 500px;
-  padding: 0;
-  z-index: 9999;
+  padding: 10px 0;
   overflow-y: auto;
-  font-size: 13px;
-  line-height: 23px;
-  background-color: hsla(197, 5%, 30%, .95);
-  border: 1px solid hsla(0, 0%, 0%, .2);
-  border-radius: 0 0 3px 3px;
-  box-shadow: 0 0 3px hsla(0, 0%, 0%, .3);
+  font-size: 11px;
+  line-height: 20px;
+  background-color: hsla(207, 10%, 25%, .95);
+  border: 1px solid hsla(207, 5%, 0%, .3);
+  border-radius: 3px;
+  box-shadow: 0 0 3px hsla(207, 5%, 0%, .2);
 }
 .search-results {
   right: 0;
@@ -287,54 +273,51 @@ by including a custom previews stylesheet with overrides.
 }
 .search-results-filename {
   display: block;
-  font-size: 11px;
+  font-size: 10px;
   opacity: .75;
 }
 .search-results a {
   display: block;
   line-height: 15px;
   padding: 5px 10px;
-  border-bottom: 1px solid hsla(0, 0%, 100%, .25);
-}
-.search-results li:last-child a {
-  border-bottom: 0;
+  border-bottom: 1px solid hsla(27, 10%, 90%, .1);
 }
 .search-results.is-active,
 .dropdown.is-active {
   display: block;
 }
-.dropdown li {
-  float: none;
-}
 .dropdown a {
-  padding: 0 10px;
+  padding: 0 15px;
 }
 .dropdown li:hover {
-  background-color: hsl(197, 5%, 30%);
-}
-.ir.toc {
-  width: 24px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
+  background-color: hsl(207, 10%, 20%);
 }
 .search {
   float: right;
   position: relative;
 }
-input[type="search"] {
+.search input[type="search"] {
   padding: 2px 4px;
   color: #fff;
   width: 150px;
-  border: 1px solid hsla(0, 0%, 100%, .4);
-  background: hsla(0, 0%, 100%, .05);
+  border: 1px solid hsla(207, 5%, 0%, .3);
+  background: hsla(207, 12%, 40%, .9);
+  box-shadow: inset 1px 1px 3px hsla(207, 5%, 0%, .05),
+                    1px 1px 0 hsla(207, 5%, 100%, .05);
   border-radius: 10px;
+  -webkit-appearance: textfield;
 }
-input[type="search"]:focus {
-  outline: 0;
-  border: 1px solid hsla(0, 0%, 100%, .6);
+  input[type="search"]:focus {
+    outline: 0;
+    background: hsla(207, 7%, 45%, .9);
+  }
+.ir.toc {
+  width: 24px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
 }
 
 /*
-# Settings and configuration
+# Settings and configuration #
 */
 .settings {
   text-align: center;
@@ -407,8 +390,7 @@ as side margins.
 figure, blockquote, table {
   margin-left: 20px; margin-right: 20px;
 }
-.preview-code, .preview,
-.docs pre,
+.preview, .docs pre,
 p, ol, ul, dl,
 figure, blockquote, table {
   margin-top: 10px;
@@ -440,7 +422,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
-  color: hsl(211, 11%, 37%);
+  color: hsl(207, 11%, 37%);
 }
 h1 a, h1 a:hover, h1 a:visited {
   color: inherit;
@@ -493,15 +475,15 @@ To show pseudo selectors styles in previews, add the pseudo selector
     <a href="#" class=":visited">Link</a>
 */
 a {
-  color: hsl(203, 90%, 50%);
+  color: hsl(207, 90%, 50%);
   text-decoration: none;
 }
   a:hover {
-    color: hsl(203, 95%, 40%);
+    color: hsl(207, 95%, 40%);
     text-decoration: underline;
   }
   a:visited {
-    color: hsl(203, 100%, 35%);
+    color: hsl(207, 100%, 35%);
   }
 
 /*
@@ -529,8 +511,8 @@ pre, code, var {
 }
 .docs pre, code, var {
   padding: .1em 3px;
-  background: hsla(0, 0%, 0%, .025);
-  border: 1px solid hsla(0, 0%, 0%, .05);
+  background: hsla(207, 5%, 0%, .025);
+  border: 1px solid hsla(207, 5%, 0%, .05);
   border-radius: 3px;
 }
 .code pre {
@@ -556,4 +538,7 @@ pre code {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+[hidden] {
+  display: none !important;
 }
