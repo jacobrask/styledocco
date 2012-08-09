@@ -21,7 +21,6 @@ marked.setOptions({ sanitize: false, gfm: true });
 // Helper functions
 var mincss = function(css) { return cleancss.process(css); };
 var minjs = uglifyjs;
-var add = function(a, b) { return a + b; };
 var pluck = function(arr, prop) {
   return arr.map(function(item) { return item[prop]; });
 };
@@ -51,8 +50,8 @@ var findFile = function(dir, re, cb) {
   fs.stat(dir, function(err, stat) {
     var files = fs.readdir(dir, function(err, files) {
       files = files.sort().filter(function(file) { return file.match(re); });
-      if (files.length) cb(null, path.join(dir, files[0]));
-      else cb(new Error('No file found.'));
+      if (!files.length) cb(new Error('No file found.'));
+      else cb(null, path.join(dir, files[0]));
     });
   });
 };
@@ -125,6 +124,7 @@ var cli = function(options) {
   var log = options.verbose ? function(str) { console.log(str); }
                             : function() {};
 
+  // Custom error also outputing StyleDocco and Node versions.
   var SDError = function(msg, err) {
     this.message = msg + '\n' + err.message + '\n' +
       'StyleDocco v' + version +
@@ -156,15 +156,14 @@ var cli = function(options) {
       fs.readFile(resourcesDir + 'previews.js', 'utf8', function(err, js) {
         if (err != null) return cb(err);
         var code = { js: js, css: '' };
-        var files = options.include.filter(
-          function(file) { return inArray(['.css', '.js'], path.extname(file)); }
-        );
+        var files = options.include.filter(function(file) {
+          return inArray(['.css', '.js'], path.extname(file));
+        });
         async.filter(files, path.exists, function(files) {
           async.reduce(files, code, function(tot, cur, cb) {
             fs.readFile(cur, 'utf8', function(err, contents) {
               if (err != null) return cb(err);
-              if (path.extname(cur) === '.css') tot.css += contents;
-              if (path.extname(cur) === '.js') tot.js += contents;
+              tot[path.extname(cur).slice(1)] += contents;
               cb(null, tot);
             });
           }, cb);
@@ -228,9 +227,9 @@ var cli = function(options) {
     }, function(err, files) {
       if (err != null) throw err;
       // Get the combined CSS from all files.
-      var previewStyles = pluck(files, 'css').reduce(add, '');
+      var previewStyles = pluck(files, 'css').join('');
       previewStyles += resources.previews.css;
-      // Build a JSON string of all files and their headings.
+      // Build a JSON string of all files and their headings, for client side search.
       var toc = flatten(files.map(function(file) {
         var arr = [ { title: baseFilename(file.path),
                       filename: file.path,
@@ -258,7 +257,7 @@ var cli = function(options) {
           })
         };
       });
-      // Add readme with "fake" index path
+      // Add readme with "fake" index path.
       htmlFiles.push({
         path: path.join(options.basePath, 'index'),
         html: resources.template({
@@ -278,16 +277,6 @@ var cli = function(options) {
       });
     });
   });
-
-/*
-    // Write static resources to the output dir
-    Object.keys(staticFiles).forEach(function(file) {
-      var dest = path.join(options.out, file);
-      log('styledocco: writing ' + file + ' -> ' + dest);
-      fs.writeFileSync(dest, staticFiles[file]);
-    });
-  });
-  */
 };
 
 module.exports = cli;
