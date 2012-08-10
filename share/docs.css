@@ -160,13 +160,13 @@ Fixed to top with a small drop shadow.
   min-height: 40px;
   line-height: 40px;
   background-image: -webkit-linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 10%, 19%, .91));
+                                            hsla(207, 5%, 19%, .91));
   background-image:    -moz-linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 10%, 19%, .91));
+                                            hsla(207, 5%, 19%, .91));
   background-image:      -o-linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 10%, 19%, .91));
+                                            hsla(207, 5%, 19%, .91));
   background-image:         linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 10%, 19%, .91));
+                                            hsla(207, 5%, 19%, .91));
 }
 .bar.top {
   top: 0;
@@ -184,7 +184,7 @@ Fixed to top with a small drop shadow.
   list-style: none;
 }
 .bar, .bar a, .bar a:visited {
-  color: hsl(27, 10%, 80%);
+  color: hsl(27, 50%, 85%);
   text-shadow: 1px 1px 0 hsla(27, 5%, 0%, .3);
 }
     .bar a:hover,
@@ -203,7 +203,7 @@ Fixed to top with a small drop shadow.
   text-decoration: none;
 }
 .brand, a.brand, a.brand:visited {
-  color: hsl(27, 5%, 10%);
+  color: hsl(27, 5%, 8%);
   text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .2);
 }
   .brand:hover, a.brand:hover {
@@ -248,7 +248,7 @@ Fixed to top with a small drop shadow.
   right: 0;
   top: 18px;
   content: '';
-  border: 5px solid;
+  border: 4px solid;
   border-left-color: transparent;
   border-right-color: transparent;
   border-bottom-color: transparent;
@@ -258,7 +258,7 @@ Fixed to top with a small drop shadow.
   display: none;
   position: absolute;
   z-index: 1020;
-  top: 30px;
+  top: 32px;
   left: -16px;
   width: 175px;
   max-height: 500px;
@@ -266,8 +266,8 @@ Fixed to top with a small drop shadow.
   overflow-y: auto;
   font-size: 11px;
   line-height: 20px;
-  background-color: hsla(207, 10%, 25%, .95);
-  border: 1px solid hsla(207, 5%, 0%, .3);
+  background-color: hsla(207, 10%, 25%, .97);
+  border: 1px solid hsla(207, 5%, 70%, .3);
   border-radius: 3px;
   box-shadow: 0 0 3px hsla(207, 5%, 0%, .2);
 }
@@ -284,7 +284,10 @@ Fixed to top with a small drop shadow.
   display: block;
   line-height: 15px;
   padding: 5px 10px;
-  border-bottom: 1px solid hsla(27, 10%, 90%, .1);
+}
+ /* Match everything after the first non-hidden `li`. */
+.search-results li:not([hidden]) ~ li a {
+  border-top: 1px solid hsla(27, 10%, 90%, .1);
 }
 .search-results.is-active,
 .dropdown.is-active {
@@ -294,7 +297,7 @@ Fixed to top with a small drop shadow.
   padding: 0 15px;
 }
 .dropdown li:hover {
-  background-color: hsl(207, 10%, 20%);
+  background-color: hsl(207, 10%, 22%);
 }
 .search {
   float: right;
@@ -329,7 +332,7 @@ Fixed to top with a small drop shadow.
 .settings button {
   display: inline-block;
   vertical-align: middle;
-  opacity: .4;
+  opacity: .6;
   height: 30px;
   margin: 0 7px;
   background-color: transparent;
@@ -341,31 +344,31 @@ Fixed to top with a small drop shadow.
 }
 .settings button:hover,
 .settings button.is-active {
-  opacity: .7;
+  opacity: .9;
 }
  /* Glyphicons Free. http://glyphicons.com */
 .settings .desktop {
   width: 28px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAMAAADeQm2wAAAAElBMVEX///////////8AAAD///////9H1zSfAAAABXRSTlPPP+8ATau1O/wAAAA+SURBVHja7dIxDgAgCENRCvb+V1aZiApxc/GvL6QLokxTYdHAlvTxIaZVaGT9CRbyg1BETMQZ4fuCDbl0gR1IHgr1A5eU5AAAAABJRU5ErkJggg==);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYBAMAAAAbsoCxAAAAAXNSR0IArs4c6QAAABJQTFRF////69XC69XC69XC69XC69XCsKjc1AAAAAV0Uk5TAD9Nz+9utsS9AAAANklEQVQYV2NwDUUCIQyhKIAhVAkJDA8umgeRQEAoA1poQABQGRJgDA0VQOIKh4YawjlwYzG4AElRPlfk7mo+AAAAAElFTkSuQmCC);
 }
 .settings .laptop {
   width: 28px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAMAAADAkV+TAAAAElBMVEX///////////8AAAD///////9H1zSfAAAABXRSTlMP768ATRRu534AAAAuSURBVHja7cnBDQAgDMPAtMH7r0wlnhTEAFj+nWwFTeGSmraFhrH18Q25pDxbTqR5Br/WrCRPAAAAAElFTkSuQmCC);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAMAAADAkV+TAAAAElBMVEXr1cLm0L4AAADr1cLdyLbr1cK81tkGAAAABHRSTlMPswBNJIULqAAAAC5JREFUeNrtycENACAMw8A01PuvTCWeFMQAWP6dbCVN6ZKatoWGsfXxDbmkOFtMvhcFsfZOYKIAAAAASUVORK5CYII=);
 }
 .settings .tablet {
   width: 20px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAMAAABLAV/qAAAAG1BMVEX///////////////////////8AAAD////////6N1ZCAAAACHRSTlPPiX8/E48ATXBCobkAAAA3SURBVHja7dFLCgAgDEPBfmPvf2JBiiCtBxCcVXjbkEdBFI1rHIcfn4kLm3G5WAHd0XMIIDl9Ak7UD3Zn9nwyAAAAAElFTkSuQmCC);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAMAAABLAV/qAAAAG1BMVEXfyrjr1cLr1cLr1cLr1cLr1cIAAADr1cLr1cJ8BJOtAAAACHRSTlPbPxN/iY8ATT4ucloAAAA3SURBVHja7dFLCgAgDEPBfmPvf2JBiiCtBxCcVXjbkEdBFI1rHIcfn4mLiVi5mAHe0XMooDl9Ak7UD3akKiswAAAAAElFTkSuQmCC);
 }
 .settings .smartphone {
   width: 14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYCAMAAAD9GTxlAAAAGFBMVEUAAAD///////////////////////////8jfp1fAAAAB3RSTlMAb88/D+9NtRxVGQAAADlJREFUeNrd0MENACAIQ9EiVPbf2BgCgbiB//bCiULpFRWhNHz0clef8sbx/jJbjQJIkP3KHJYx7AHqAQg9+9dkigAAAABJRU5ErkJggg==);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYCAMAAAD9GTxlAAAAGFBMVEXr1cIAAADfyrjr1cLr1cLr1cLdyLbr1cLLd4FAAAAABnRSTlNvANsPP009vtSqAAAAOUlEQVR42t2QSQ4AIAgDi2D5/4+NG4H4A+fUSU8tjB7QsCwcXni1B5/qhGV+U21JIXICc8t7LPexA4RJB7GsUfWoAAAAAElFTkSuQmCC);
 }
 .settings .featurephone {
   width: 15px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEX///////////////////////////////////8AAAD///////8oRfFWAAAAC3RSTlOfv4/fTy/vf88ATY0kZhAAAAA6SURBVHjazco7CgAgEEPB+Dfm/vcVC9lF7HUgxYOAzDFo6cgkSpdJBVVehTSM9GE71ya5d/aDf5PXJnc+DuRZoesaAAAAAElFTkSuQmCC);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEXr1cLdyLbr1cLizbvr1cLr1cLfyrjr1cIAAADr1cLdyLbr1cLNhLPeAAAACnRSTlOP7qDHL0/bfwBNv2ECtwAAADpJREFUeNrNyjsKACAQQ8H4j+b+9xUL2UXsdSDFg4AsSFpqLCRylQkZQ96A1I30YTvXJrl39oN/k9cm7WsOQEZJiNEAAAAASUVORK5CYII=);
 }
 .settings .auto {
-  color: #fff;
+  color: hsl(27, 50%, 85%);
   text-transform: uppercase;
   line-height: 32px;
   font-size: 11px;
@@ -537,7 +540,6 @@ pre code {
   font: 0/0 a;
   text-shadow: none;
 }
-
 [unselectable="on"] {
   -webkit-user-select: none;
   -moz-user-select: none;
