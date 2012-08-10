@@ -1,6 +1,6 @@
-/*global toc:false*/
 // StyleDocco JavaScript for documentation
 // =======================================
+/*global toc:false*/
 
 (function() {
 
@@ -9,7 +9,7 @@
 // Helper functions
 // ================
 // Using `Array.prototype` to make them work on Array-like objects.
-var toArray = function(obj) { return Array.prototype.slice.call(obj); };
+var filter = function(arr, it) { return Array.prototype.filter.call(arr, it); };
 var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
 var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
 var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
@@ -24,6 +24,9 @@ var keyvalParse = function(str) {
   }
   return obj;
 };
+var postMessage = function(target, msg) {
+  target.contentDocument.defaultView.postMessage(msg, '*');
+};
 
 var bodyEl = document.getElementsByTagName('body')[0];
 var headEl = document.getElementsByTagName('head')[0];
@@ -35,14 +38,16 @@ var headEl = document.getElementsByTagName('head')[0];
   // Don't run this function if we're rendering a preview page.
   if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
+  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
   var resizeableElOffset = 30; // `.resizeable` padding
+  var resizeableEls = bodyEl.getElementsByClassName('resizeable');
   var resizePreviews = function(width) {
     document.cookie = 'preview-width=' + width;
-    forEach(bodyEl.getElementsByClassName('resizeable'), function(el) {
+    forEach(resizeableEls, function(el) {
       if (width === 'auto') width = el.parentNode.offsetWidth;
       el.style.width = width + 'px';
       // TODO: Add CSS transitions and update height after `transitionend` event
-      el.getElementsByTagName('iframe')[0].contentDocument.defaultView.postMessage('getHeight', '*');
+      postMessage(el.getElementsByTagName('iframe')[0], 'getHeight');
     });
   };
 
@@ -107,7 +112,7 @@ var headEl = document.getElementsByTagName('head')[0];
         styleEl.textContent = styles;
         var oldHeadEl = doc.getElementsByTagName('head')[0];
         oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
-        win.postMessage('getHeight', '*');
+        postMessage(iframeEl, 'getHeight');
       });
       var dataHtmlPrefix = 'data:text/html;charset=utf-8,' + encodeURIComponent('<!doctype html><html><head></head></body>');
       if (!support.dataIframes) {
@@ -117,13 +122,15 @@ var headEl = document.getElementsByTagName('head')[0];
       }
       codeEl.parentNode.insertBefore(previewEl, codeEl);
       resizeableEl.style.width = resizeableEl.offsetWidth + 'px';
-      
+
       var previewWidth = keyvalParse(document.cookie)['preview-width'];
       if (previewWidth) {
         resizePreviews(previewWidth);
-        bodyEl.getElementsByClassName('settings')[0]
-          .querySelector('button[data-width="' + previewWidth + '"]')
-          .classList.add('is-active');      
+        forEach(settingsEl.getElementsByClassName('is-active'), function(el) {
+          el.classList.remove('is-active');
+        });
+        settingsEl.querySelector('button[data-width="' + previewWidth + '"]')
+          .classList.add('is-active');
       }
       // An element with the same styles and content as the textarea to
       // calculate the height of the textarea content.
@@ -147,7 +154,7 @@ var headEl = document.getElementsByTagName('head')[0];
           codeEl.style.overflow = 'hidden';
         }
         codeEl.style.height = (mirrorEl.offsetHeight + 2) + 'px';
-        iframeEl.contentDocument.defaultView.postMessage('getHeight', '*');
+        postMessage(iframeEl, 'getHeight');
       };
       codeEl.addEventListener('keypress', codeDidChange);
       codeEl.addEventListener('keyup', codeDidChange);
@@ -156,13 +163,12 @@ var headEl = document.getElementsByTagName('head')[0];
   });
 
   // Resizing buttons
-  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
   if (settingsEl) {
     settingsEl.addEventListener('click', function(event) {
       if (event.target.tagName.toLowerCase() !== 'button') return;
       event.preventDefault();
       var btn = event.target;
-      forEach(btn.parentNode.getElementsByTagName('button'), function(el) {
+      forEach(btn.parentNode.getElementsByClassName('is-active'), function(el) {
         el.classList.remove('is-active');
       });
       btn.classList.add('is-active');
@@ -201,7 +207,7 @@ bodyEl.addEventListener('click', function(event) {
   // Generate HTML elements for each ToC item
   var searchList = document.createElement('ul');
   searchList.className = 'search-results';
-  toc.forEach(function(item) {
+  forEach(toc, function(item) {
     var el = document.createElement('li');
     var a = document.createElement('a');
     el.appendChild(a);
@@ -220,19 +226,20 @@ bodyEl.addEventListener('click', function(event) {
 
   searchEl.appendChild(searchList);
 
-  var searchItems = toArray(searchList.children);
+  var searchItems = searchList.children;
 
   var doSearch = function(ev) {
-    searchItems.forEach(function(el) { el.hidden = true; });
+    // Hide all items
+    forEach(searchItems, function(el) { el.hidden = true; });
     var val = this.value.toLowerCase();
     var filtered = [];
     if (val !== '') {
-      filtered = searchItems.filter(function(el) {
+      filtered = filter(searchItems, function(el) {
         return (el._title.indexOf(val) !== -1);
       });
     }
     if (filtered.length > 0) {
-      filtered.forEach(function(el) { el.hidden = false; });
+      forEach(filtered, function(el) { el.hidden = false; });
       searchList.classList.add('is-active');
     } else {
       searchList.classList.remove('is-active');
