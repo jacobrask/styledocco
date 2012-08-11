@@ -27,16 +27,13 @@ html
                 a.dropdown-toggle(href="#",unselectable="on") #{folder}
                 ul.dropdown
                   each link in links
-                    li
-                      a(href="#{link.href}")
-                        #{link.name}
+                    li: a(href="#{link.href}") #{link.name}
             else
               each link in links
-                li
-                  a(href="#{link.href}")
-                    #{link.name}
+                li: a(href="#{link.href}") #{link.name}
 
-        .search
+        .nav
+          button.ir(title="Table of Contents"): i.toc
           input(type="search",placeholder="Search")
 
     section.container
@@ -47,15 +44,14 @@ html
             !{section.docs}
           if section.code
             .code
-              pre
-                code !{section.code}
+              pre: code !{section.code}
     .bar.bottom
       .settings.container
-        button.desktop.ir(title="Desktop (1280)",data-width=1280) Desktop
-        button.laptop.ir(title="Laptop (1024)",data-width=1024) Laptop
-        button.tablet.ir(title="Tablet (768)",data-width=768) Tablet
-        button.smartphone.ir(title="Smart phone (320)",data-width=320) Smart phone
-        button.featurephone.ir(title="Feature phone (240)",data-width=240) Feature phone
+        button.ir(title="Desktop (1280)",data-width=1280): i.desktop
+        button.ir(title="Laptop (1024)",data-width=1024): i.laptop
+        button.ir(title="Tablet (768)",data-width=768): i.tablet
+        button.ir(title="Smart phone (320)",data-width=320): i.smartphone
+        button.ir(title="Feature phone (240)",data-width=240): i.featurephone
         button.auto.is-active(title="Auto (100%)",data-width="auto") Auto
     if (resources.docs && resources.docs.js)
       script !{resources.docs.js}
