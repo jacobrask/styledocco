@@ -6,11 +6,23 @@
 
 'use strict';
 
-/*global index:false*/
+/*global searchIndex:false, toc: false*/
 
 // Helper functions. Using `Array.prototype` to make them work on NodeLists.
+var inArray = function(arr, str) { return arr.indexOf(str) !== -1; };
+var isArray = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
+};
 var filter = function(arr, it) { return Array.prototype.filter.call(arr, it); };
+var flatten = function(arr) {
+  arr = toArray(arr);
+  return arr.reduce(function(tot, cur) {
+    cur = toArray(cur);
+    return tot.concat(isArray(cur) ? flatten(cur) : cur);
+  }, []);
+};
 var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
+var toArray = function(obj) { return Array.prototype.slice.call(obj); };
 
 // Parse `key=value; key=value` strings (for cookies).
 var keyvalParse = function(str) {
@@ -151,13 +163,41 @@ bodyEl.addEventListener('click', function(event) {
   searchEl.addEventListener('focus', doSearch);
   // Hide search results
   bodyEl.addEventListener('click', function(event) {
-    if (event.target.parentNode.className === 'nav') return;
+    if (event.target.classList.contains('search')) return;
     searchList.classList.remove('is-active');
   });
   // Reset search box
   searchList.addEventListener('click', function(event) {
     searchEl.value = '';
   });
+
+  var tocList = document.createElement('ul');
+  tocList.className = 'nav-results toc-list';
+  filter(bodyEl.getElementsByTagName('*'), function(el) {
+    return inArray(['h1', 'h2', 'h3'], el.tagName.toLowerCase());
+  }).map(function(h) {
+    var el = document.createElement('li');
+    var a = document.createElement('a');
+    var level = h.tagName.toLowerCase()[1];
+    a.classList.add('level-' + level);
+    el.appendChild(a);
+    a.href = '#' + h.id;
+    a.innerHTML = h.innerHTML;
+    tocList.appendChild(el);
+  });
+
+  bodyEl.addEventListener('click', function(event) {
+    var el = event.target;
+    if (el.classList.contains('toc')) {
+      event.preventDefault();
+      tocList.classList.toggle('is-active');
+    } else {
+      tocList.classList.remove('is-active');
+    }
+  });
+
+  navEl.appendChild(tocList);
+
 })();
 
 })();

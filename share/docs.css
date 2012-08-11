@@ -271,6 +271,9 @@ Fixed to top with a small drop shadow.
   border-radius: 3px;
   box-shadow: 0 0 3px hsla(207, 5%, 0%, .2);
 }
+.toc-list {
+  width: 200px;
+}
 .nav-results {
   right: 0;
   left: auto;
