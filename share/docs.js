@@ -1,6 +1,6 @@
 // StyleDocco JavaScript for documentation
 // =======================================
-/*global toc:false*/
+/*global index:false*/
 
 (function() {
 
@@ -201,13 +201,13 @@ bodyEl.addEventListener('click', function(event) {
 
 
 (function() {
-  var searchEl = bodyEl.getElementsByClassName('search')[0];
-  if (!searchEl) return;
+  var navEl = bodyEl.getElementsByClassName('nav')[0];
+  if (!navEl) return;
 
   // Generate HTML elements for each ToC item
   var searchList = document.createElement('ul');
   searchList.className = 'search-results';
-  forEach(toc, function(item) {
+  forEach(searchIndex, function(item) {
     var el = document.createElement('li');
     var a = document.createElement('a');
     el.appendChild(a);
@@ -224,7 +224,7 @@ bodyEl.addEventListener('click', function(event) {
     searchList.appendChild(el);
   });
 
-  searchEl.appendChild(searchList);
+  navEl.appendChild(searchList);
 
   var searchItems = searchList.children;
 
@@ -245,9 +245,9 @@ bodyEl.addEventListener('click', function(event) {
       searchList.classList.remove('is-active');
     }
   };
-  var searchInputEl = searchEl.querySelector('input[type="search"]');
-  searchInputEl.addEventListener('keyup', doSearch);
-  searchInputEl.addEventListener('focus', doSearch);
+  var searchEl = navEl.querySelector('input[type="search"]');
+  searchEl.addEventListener('keyup', doSearch);
+  searchEl.addEventListener('focus', doSearch);
   // Hide search results
   bodyEl.addEventListener('click', function(event) {
     if (event.target.parentNode.className === 'search') return;
@@ -255,7 +255,7 @@ bodyEl.addEventListener('click', function(event) {
   });
   // Reset search box
   searchList.addEventListener('click', function(event) {
-    searchInputEl.value = '';
+    searchEl.value = '';
   });
 })();
 

@@ -230,7 +230,7 @@ var cli = function(options) {
       var previewStyles = pluck(files, 'css').join('');
       previewStyles += resources.previews.css;
       // Build a JSON string of all files and their headings, for client side search.
-      var toc = flatten(files.map(function(file) {
+      var searchIndex = flatten(files.map(function(file) {
         var arr = [ { title: baseFilename(file.path),
                       filename: file.path,
                       url: htmlFilename(file.path, options.basePath) } ];
@@ -240,8 +240,8 @@ var cli = function(options) {
                    url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
         }));
       }));
-      toc = 'var toc=' + JSON.stringify(toc) + ';';
-      var docsScript = toc + resources.docs.js;
+      searchIndex = 'var searchIndex=' + JSON.stringify(searchIndex) + ';';
+      var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
       // Render files
       var htmlFiles = files.map(function(file) {
         return {
