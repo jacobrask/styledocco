@@ -20,7 +20,8 @@ marked.setOptions({ sanitize: false, gfm: true });
 
 // Helper functions
 var mincss = function(css) { return cleancss.process(css); };
-var minjs = uglifyjs;
+//var minjs = uglifyjs;
+var minjs = function(str) { return str; };
 var pluck = function(arr, prop) {
   return arr.map(function(item) { return item[prop]; });
 };
@@ -148,7 +149,15 @@ var cli = function(options) {
     docs: function(cb) {
       async.parallel({
         css: async.apply(fs.readFile, resourcesDir + 'docs.css', 'utf8'),
-        js: async.apply(fs.readFile, resourcesDir + 'docs.js', 'utf8')
+        js: function(cb) {
+          async.parallel([
+            async.apply(fs.readFile, resourcesDir + 'docs.ui.js', 'utf8'),
+            async.apply(fs.readFile, resourcesDir + 'docs.previews.js', 'utf8')
+          ], function(err, res) {
+            if (err != null) return cb(err);
+            cb(null, res.join(''));
+          });
+        }
       }, cb);
     },
     // Extra JavaScript and CSS files to include in previews.

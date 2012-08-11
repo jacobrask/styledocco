@@ -253,7 +253,7 @@ Fixed to top with a small drop shadow.
   border-right-color: transparent;
   border-bottom-color: transparent;
 }
-.search-results,
+.nav-results,
 .dropdown {
   display: none;
   position: absolute;
@@ -271,25 +271,26 @@ Fixed to top with a small drop shadow.
   border-radius: 3px;
   box-shadow: 0 0 3px hsla(207, 5%, 0%, .2);
 }
-.search-results {
+.nav-results {
   right: 0;
   left: auto;
+  padding: 5px 0;
 }
-.search-results-filename {
+.nav-results-filename {
   display: block;
   font-size: 10px;
   opacity: .75;
 }
-.search-results a {
+.nav-results a {
   display: block;
   line-height: 15px;
   padding: 5px 10px;
 }
  /* Match everything after the first non-hidden `li`. */
-.search-results li:not([hidden]) ~ li a {
+.nav-results li:not([hidden]) ~ li a {
   border-top: 1px solid hsla(27, 10%, 90%, .1);
 }
-.search-results.is-active,
+.nav-results.is-active,
 .dropdown.is-active {
   display: block;
 }
@@ -299,11 +300,11 @@ Fixed to top with a small drop shadow.
 .dropdown li:hover {
   background-color: hsl(207, 10%, 22%);
 }
-.search {
+.nav {
   float: right;
   position: relative;
 }
-.search input[type="search"] {
+.nav input[type="search"] {
   padding: 2px 4px;
   color: #fff;
   width: 150px;
@@ -314,13 +315,13 @@ Fixed to top with a small drop shadow.
   border-radius: 10px;
   -webkit-appearance: textfield;
 }
-  input[type="search"]:focus {
+  .nav input[type="search"]:focus {
     outline: 0;
     background: hsla(207, 7%, 45%, .9);
   }
-.ir.toc {
+i.toc {
   width: 24px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAMAAABrN94UAAAACVBMVEX///8AAAD///9+749PAAAAAnRSTlMfALvJw6YAAAArSURBVHjazZCxCQAACMNs/j9acBWHgkOzZgkpQMVmhCyhA18EVymy6udVAxE6Av61mQeKAAAAAElFTkSuQmCC);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAYAAABc6S4mAAAAAXNSR0IArs4c6QAAAFZJREFUOMtjfH310H8GKBDRsmV8c+2wPAMDwwMGKgEmdAERLduHDFQETAw0Boz///+nqQU09wHNLWB5c+3waCoaTUVUTkUMDAwMyGKjQTSaikbLIsoBAOrOK0XRs05qAAAAAElFTkSuQmCC);
 }
 
 /*
@@ -329,41 +330,45 @@ Fixed to top with a small drop shadow.
 .settings {
   text-align: center;
 }
-.settings button {
+.bar button {
   display: inline-block;
   vertical-align: middle;
+  margin: 0 7px;
+  background: transparent;
+}
+.bar i {
+  display: inline-block;
   opacity: .6;
   height: 30px;
-  margin: 0 7px;
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: 50%;
 }
-.settings button:first-child {
+.bar button:first-child {
   margin-left: 0;
 }
-.settings button:hover,
-.settings button.is-active {
+.bar button:hover i,
+.bar button.is-active i {
   opacity: .9;
 }
  /* Glyphicons Free. http://glyphicons.com */
-.settings .desktop {
+i.desktop {
   width: 28px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYBAMAAAAbsoCxAAAAAXNSR0IArs4c6QAAABJQTFRF////69XC69XC69XC69XC69XCsKjc1AAAAAV0Uk5TAD9Nz+9utsS9AAAANklEQVQYV2NwDUUCIQyhKIAhVAkJDA8umgeRQEAoA1poQABQGRJgDA0VQOIKh4YawjlwYzG4AElRPlfk7mo+AAAAAElFTkSuQmCC);
 }
-.settings .laptop {
+i.laptop {
   width: 28px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAMAAADAkV+TAAAAElBMVEXr1cLm0L4AAADr1cLdyLbr1cK81tkGAAAABHRSTlMPswBNJIULqAAAAC5JREFUeNrtycENACAMw8A01PuvTCWeFMQAWP6dbCVN6ZKatoWGsfXxDbmkOFtMvhcFsfZOYKIAAAAASUVORK5CYII=);
 }
-.settings .tablet {
+i.tablet {
   width: 20px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAMAAABLAV/qAAAAG1BMVEXfyrjr1cLr1cLr1cLr1cLr1cIAAADr1cLr1cJ8BJOtAAAACHRSTlPbPxN/iY8ATT4ucloAAAA3SURBVHja7dFLCgAgDEPBfmPvf2JBiiCtBxCcVXjbkEdBFI1rHIcfn4mLiVi5mAHe0XMooDl9Ak7UD3akKiswAAAAAElFTkSuQmCC);
 }
-.settings .smartphone {
+i.smartphone {
   width: 14px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYCAMAAAD9GTxlAAAAGFBMVEXr1cIAAADfyrjr1cLr1cLr1cLdyLbr1cLLd4FAAAAABnRSTlNvANsPP009vtSqAAAAOUlEQVR42t2QSQ4AIAgDi2D5/4+NG4H4A+fUSU8tjB7QsCwcXni1B5/qhGV+U21JIXICc8t7LPexA4RJB7GsUfWoAAAAAElFTkSuQmCC);
 }
-.settings .featurephone {
+i.featurephone {
   width: 15px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEXr1cLdyLbr1cLizbvr1cLr1cLfyrjr1cIAAADr1cLdyLbr1cLNhLPeAAAACnRSTlOP7qDHL0/bfwBNv2ECtwAAADpJREFUeNrNyjsKACAQQ8H4j+b+9xUL2UXsdSDFg4AsSFpqLCRylQkZQ96A1I30YTvXJrl39oN/k9cm7WsOQEZJiNEAAAAASUVORK5CYII=);
 }
