@@ -58,15 +58,18 @@ if (previewWidth) {
   forEach(settingsEl.getElementsByClassName('is-active'), function(el) {
     el.classList.remove('is-active');
   });
-  settingsEl.querySelector('button[data-width="' + previewWidth + '"]')
-    .classList.add('is-active');
+  var btn = settingsEl.querySelector('button[data-width="' + previewWidth + '"]');
+  if (btn) { btn.classList.add('is-active'); }
 }
 // Resizing buttons
 if (settingsEl) {
   settingsEl.addEventListener('click', function(event) {
-    if (event.target.tagName.toLowerCase() !== 'button') return;
+    var tagName = event.target.tagName.toLowerCase();
+    if (tagName === 'button') var btn = event.target;
+    else if (tagName === 'i') var btn = event.target.parentNode;
+    else return;
+    if (btn.tagName.toLowerCase() !== 'button') return;
     event.preventDefault();
-    var btn = event.target;
     forEach(btn.parentNode.getElementsByClassName('is-active'), function(el) {
       el.classList.remove('is-active');
     });
