@@ -217,8 +217,9 @@ Fixed to top with a small drop shadow.
     <div class="bar top">
       <ul class="menu">
         <li><a href="#">css-file</a>
-        <li><a href="#" class="dropdown-toggle is-active" unselectable="on">folder</a>
-            <ul class="dropdown is-active">
+        <li><a href="#" class="dropdown-toggle is-active" unselectable="on"
+               data-toggle="dropdown-1">folder</a>
+            <ul class="dropdown" id="dropdown-1">
               <li><a href="#">css-file</a>
               <li><a href="#">css-file</a>
             </ul>
@@ -255,7 +256,6 @@ Fixed to top with a small drop shadow.
 }
 .nav-results,
 .dropdown {
-  display: none;
   position: absolute;
   z-index: 1020;
   top: 32px;
@@ -292,10 +292,6 @@ Fixed to top with a small drop shadow.
  /* Match everything after the first non-hidden `li`. */
 .nav-results li:not([hidden]) ~ li a {
   border-top: 1px solid hsla(27, 10%, 90%, .1);
-}
-.nav-results.is-active,
-.dropdown.is-active {
-  display: block;
 }
 .dropdown a {
   padding: 0 15px;
@@ -338,10 +334,10 @@ i.toc {
   vertical-align: middle;
   margin: 0 7px;
   background: transparent;
+  opacity: .6;
 }
 .bar i {
   display: inline-block;
-  opacity: .6;
   height: 30px;
   background-color: transparent;
   background-repeat: no-repeat;
@@ -350,8 +346,8 @@ i.toc {
 .bar button:first-child {
   margin-left: 0;
 }
-.bar button:hover i,
-.bar button.is-active i {
+.bar button:hover,
+.bar button.is-active {
   opacity: .9;
 }
  /* Glyphicons Free. http://glyphicons.com */
@@ -376,7 +372,7 @@ i.featurephone {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEXr1cLdyLbr1cLizbvr1cLr1cLfyrjr1cIAAADr1cLdyLbr1cLNhLPeAAAACnRSTlOP7qDHL0/bfwBNv2ECtwAAADpJREFUeNrNyjsKACAQQ8H4j+b+9xUL2UXsdSDFg4AsSFpqLCRylQkZQ96A1I30YTvXJrl39oN/k9cm7WsOQEZJiNEAAAAASUVORK5CYII=);
 }
 .settings .auto {
-  color: hsl(27, 50%, 85%);
+  color: hsl(27, 50%, 90%);
   text-transform: uppercase;
   line-height: 32px;
   font-size: 11px;

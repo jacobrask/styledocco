@@ -20,12 +20,14 @@ html
       .container
         a.brand(href="index.html") #{project.name}
         ul.menu
+          - var dropdownid = 0
           each links, folder in project.menu
             if folder != './' || links.length > 10
               - if (folder === './') folder = 'files'
+              - dropdownid++
               li
-                a.dropdown-toggle(href="#",unselectable="on") #{folder}
-                ul.dropdown
+                a.dropdown-toggle(href="#",data-toggle="dropdown-#{dropdownid}",href="#",unselectable="on") #{folder}
+                ul.dropdown(id="dropdown-#{dropdownid}",hidden)
                   each link in links
                     li: a(href="#{link.href}") #{link.name}
             else
@@ -33,7 +35,7 @@ html
                 li: a(href="#{link.href}") #{link.name}
 
         .nav
-          button.toc.ir(title="Table of Contents",data-toggle="toc"): i.toc
+          button.toc.ir(title="Table of Contents",data-toggle="nav-toc"): i.toc
           input.search(type="search",placeholder="Search")
 
     section.container

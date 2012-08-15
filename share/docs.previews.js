@@ -1,5 +1,5 @@
 // StyleDocco documentation code/preview rendering and handling
-// ==================================================================
+// ===================================================================
 // Takes the HTML code from preview textareas and renders iframes with
 // the specified preview CSS and JavaScript applied.
 
@@ -12,9 +12,38 @@
 if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
 // Helper functions. Using `Array.prototype` to make them work on NodeLists.
-var forEach = function(arr, it) { return Array.prototype.forEach.call(arr, it); };
-var map = function(arr, it) { return Array.prototype.map.call(arr, it); };
-var pluck = function(arr, prop) { return map(arr, function(item) { return item[prop]; } ); };
+var forEach = function(arr, it) {
+  return Array.prototype.forEach.call(arr, it);
+};
+var invoke = function(obj, fn) {
+  var args = Array.prototype.slice.call(arguments, 2);
+  return map(obj, function(value) {
+    return (isFunction(fn) ? fn || value : value[fn]).apply(value, args);
+  });
+};
+var isFunction = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object Function]';
+};
+var map = function(arr, it) {
+  return Array.prototype.map.call(arr, it);
+};
+var pluck = function(arr, prop) {
+  return map(arr, function(item) { return item[prop]; } );
+};
+
+// Parse `key=value; key=value` strings (for cookies).
+var keyvalParse = function(str) {
+  var obj = {};
+  var pairs = str.split(';');
+  for (var i = 0; pairs.length > i; i++) {
+    var kvs = pairs[i].trim().split('=');
+    obj[kvs[0]] = kvs[1];
+  }
+  return obj;
+};
+var removeClass = function(els, className) {
+  return invoke(pluck(els, 'classList'), 'remove', className);
+};
 
 var postMessage = function(target, msg) {
   target.contentDocument.defaultView.postMessage(msg, '*');
@@ -35,7 +64,6 @@ var scripts = pluck(
 var previewUrl = location.href.split('#')[0] + '#__preview__';
 
 // Check if browser treats data uris as same origin.
-// This will always display an error in WebKit :-(
 var iframeEl = document.createElement('iframe');
 iframeEl.src = 'data:text/html,';
 bodyEl.appendChild(iframeEl);
@@ -54,12 +82,12 @@ var addIframe = function(codeEl, support, iframeId) {
   var previewEl, resizeableEl, iframeEl;
   previewEl = document.createElement('div');
   previewEl.appendChild(resizeableEl = document.createElement('div'));
-  resizeableEl.appendChild(iframeEl = document.createElement('iframe'));
   previewEl.className = 'preview';
+  resizeableEl.appendChild(iframeEl = document.createElement('iframe'));
   resizeableEl.className = 'resizeable';
   iframeEl.setAttribute('scrolling', 'no');
   iframeEl.name = 'iframe' + iframeId++;
-  iframeEl.addEventListener('load', function(event) {
+  iframeEl.addEventListener('load', function() {
     var htmlEl, bodyEl, scriptEl, styleEl, headEl, oldHeadEl, doc;
     doc = this.contentDocument;
     // Abort if we're loading a data uri in a browser without same
@@ -87,9 +115,9 @@ var addIframe = function(codeEl, support, iframeId) {
   if (!support.sameOriginDataUri) {
     var iframeSrc = previewUrl;
   } else {
-    var iframeSrc = 'data:text/html;charset=utf-8,' + encodeURIComponent(
-      '<!doctype html><html><head></head></body>' +
-      codeEl.textContent);
+    var iframeSrc = 'data:text/html;charset=utf-8,' +
+      encodeURIComponent('<!doctype html><html><head></head></body>' +
+        codeEl.textContent);
   }
   iframeEl.setAttribute('src', iframeSrc);
   var codeDidChange = function() {
@@ -101,9 +129,9 @@ var addIframe = function(codeEl, support, iframeId) {
   codeEl.parentNode.insertBefore(previewEl, codeEl);
 };
 
+// Add an element with the same styles and content as the textarea to
+// calculate the height of the textarea content.
 var autoResizeTextArea = function(el) {
-  // Add an element with the same styles and content as the textarea to
-  // calculate the height of the textarea content.
   var mirrorEl = document.createElement('div');
   mirrorEl.className = 'preview-code';
   mirrorEl.style.position = 'absolute';
@@ -125,6 +153,53 @@ var autoResizeTextArea = function(el) {
   el.addEventListener('keypress', codeDidChange);
   el.addEventListener('keyup', codeDidChange);
   codeDidChange.call(el);
+};
+
+var settingsEl = bodyEl.getElementsByClassName('settings')[0];
+var resizeableEls = bodyEl.getElementsByClassName('resizeable');
+var resizeableElOffset = 30; // `.resizeable` padding
+var resizePreviews = function(width) {
+  document.cookie = 'preview-width=' + width;
+  forEach(resizeableEls, function(el) {
+    if (width === 'auto') width = el.parentNode.offsetWidth;
+    el.style.width = width + 'px';
+    // TODO: Add CSS transitions and update height after `transitionend` event
+    postMessage(el.getElementsByTagName('iframe')[0], 'getHeight');
+  });
+};
+
+// Resize previews to the cookie value.
+var previewWidth = keyvalParse(document.cookie)['preview-width'];
+if (previewWidth) {
+  resizePreviews(previewWidth);
+  removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
+  var btn = settingsEl.querySelector('button[data-width="' + previewWidth + '"]');
+  if (btn) { btn.classList.add('is-active'); }
+}
+
+window.addEventListener('message', function (ev) {
+  if (ev.data == null || !ev.source) return;
+  var data = ev.data;
+  var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
+  // Set iframe height
+  if (data.height != null && sourceFrameEl) {
+    sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
+  }
+}, false);
+
+// Resizing buttons
+if (settingsEl) {
+  settingsEl.addEventListener('click', function(event) {
+    var tagName = event.target.tagName.toLowerCase();
+    if (tagName === 'button') var btn = event.target;
+    else if (tagName === 'i') var btn = event.target.parentNode;
+    else return;
+    event.preventDefault();
+    removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
+    btn.classList.add('is-active');
+    var width = btn.dataset.width;
+    resizePreviews(width);
+  });
 };
 
 })();
