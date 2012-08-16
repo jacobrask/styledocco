@@ -9,6 +9,7 @@
   "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
   "repository": { "type": "git", "url": "git://github.com/jacobrask/styledocco.git" },
   "engines": { "node": ">=0.4.0" },
+  "preferGlobal": true,
   "dependencies": {
     "async": "0.1.x",
     "clean-css": "0.4.x",
@@ -19,6 +20,7 @@
     "optimist": "0.x.x",
     "uglify-js": "1.2.x" },
   "devDependencies": {
+    "browserify": "1.13.x",
     "jshint": "0.7.x",
     "nodeunit": "0.7.x"
   },
