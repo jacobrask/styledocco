@@ -99,7 +99,7 @@ var menuLinks = function(files, basePath) {
   }, {});
 };
 
-var preprocess = function(file, pp, cb) {
+var preprocess = function(file, pp, options, cb) {
   // stdin would have been nice here, but not all preprocessors (less)
   // accepts that, so we need to read the file both here and for the parser.
   if (pp != null) {
@@ -107,7 +107,7 @@ var preprocess = function(file, pp, cb) {
       // log('styledocco: preprocessing ' + file + ' with ' + pp);
       // Fail gracefully on preprocessor errors
       if (err != null) console.error(err.message);
-      if (stderr.length) console.error(stderr);
+      if (stderr.length && options.verbose) console.error(stderr);
       cb(null, stdout || '');
     });
   } else {
@@ -228,7 +228,7 @@ var cli = function(options) {
     async.map(resources.files, function(file, cb) {
       async.parallel({
         css: async.apply(preprocess, file,
-               options.preprocessor || fileTypes[path.extname(file)]),
+               options.preprocessor || fileTypes[path.extname(file)], options),
         docs: function(cb) {
           fs.readFile(file, 'utf8', function(err, code) {
             if (err != null) return cb(err);
