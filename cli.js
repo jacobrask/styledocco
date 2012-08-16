@@ -38,6 +38,13 @@ var isArray = function(obj) {
 // Get a filename without the extension
 var baseFilename = function(str) { return path.basename(str, path.extname(str)); };
 
+var basePathname = function(file, basePath) {
+  return path.join(
+    path.dirname(path.relative(basePath, file) || path.basename(basePath)),
+    baseFilename(file)
+  );
+};
+
 // Build an HTML file name, named by it's path relative to basePath
 var htmlFilename = function(file, basePath) {
   return path.join(
@@ -241,11 +248,11 @@ var cli = function(options) {
       // Build a JSON string of all files and their headings, for client side search.
       var searchIndex = flatten(files.map(function(file) {
         var arr = [ { title: baseFilename(file.path),
-                      filename: file.path,
+                      filename: basePathname(file.path, options.basePath),
                       url: htmlFilename(file.path, options.basePath) } ];
         return arr.concat(file.docs.map(function(section) {
           return { title: section.title,
-                   filename: file.path,
+                   filename: basePathname(file.path, options.basePath),
                    url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
         }));
       }));
