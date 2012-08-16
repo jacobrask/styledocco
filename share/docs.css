@@ -184,12 +184,12 @@ Fixed to top with a small drop shadow.
   list-style: none;
 }
 .bar, .bar a, .bar a:visited {
-  color: hsl(27, 50%, 85%);
+  color: hsl(27, 40%, 85%);
   text-shadow: 1px 1px 0 hsla(27, 5%, 0%, .3);
 }
     .bar a:hover,
     .menu .is-active > a {
-      color: hsl(27, 40%, 90%);
+      color: hsl(27, 30%, 90%);
       text-decoration: none;
     }
 /* ```
@@ -264,6 +264,7 @@ Fixed to top with a small drop shadow.
   max-height: 500px;
   padding: 10px 0;
   overflow-y: auto;
+  word-wrap: break-word;
   font-size: 11px;
   line-height: 20px;
   background-color: hsla(207, 10%, 25%, .97);
@@ -276,6 +277,7 @@ Fixed to top with a small drop shadow.
 }
 .nav-results {
   right: 0;
+  width: 200px;
   left: auto;
   padding: 5px 0;
 }
