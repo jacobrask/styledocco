@@ -20,8 +20,7 @@ marked.setOptions({ sanitize: false, gfm: true });
 
 // Helper functions
 var mincss = function(css) { return cleancss.process(css); };
-//var minjs = uglifyjs;
-var minjs = function(str) { return str; };
+var minjs = uglifyjs;
 var pluck = function(arr, prop) {
   return arr.map(function(item) { return item[prop]; });
 };
@@ -281,7 +280,7 @@ var cli = function(options) {
           sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
           project: { name: options.name, menu: menu },
           resources: {
-            docs: { js: docsScript, css: resources.docs.css }
+            docs: { js: minjs(docsScript), css: mincss(resources.docs.css) }
           }
         })
       });
