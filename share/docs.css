@@ -543,9 +543,9 @@ pre code {
 .cf:before, .cf:after { content: ''; display: table; }
 .cf:after { clear: both; }
 .ir {
-  color: transparent;
-  font: 0/0 a;
-  text-shadow: none;
+  color: transparent !important;
+  font: 0/0 a !important;
+  text-shadow: none !important;
 }
 [unselectable="on"] {
   -webkit-user-select: none;
