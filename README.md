@@ -13,7 +13,7 @@ Suggestions, feature requests and bug reports are welcome either at [GitHub](htt
 Installation
 ------------
 
-StyleDocco requires [Node.js](http://nodejs.org). After installing Node.js, run `npm install -g styledocco` or clone this repository and run `./bin/styledocco`.
+StyleDocco requires [Node.js](http://nodejs.org). After installing Node.js, run `npm install -fg styledocco` or clone this repository and run `./bin/styledocco`.
 
 StyleDocco is free and open source software, released under the [MIT license](https://raw.github.com/jacobrask/styledocco/master/LICENSE).
 
