@@ -188,7 +188,7 @@ Fixed to top with a small drop shadow.
   text-shadow: 1px 1px 0 hsla(27, 5%, 0%, .3);
 }
     .bar a:hover,
-    .menu .is-active > a {
+    .bar a.is-active {
       color: hsl(27, 30%, 90%);
       text-decoration: none;
     }
