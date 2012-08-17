@@ -105,7 +105,7 @@ var preprocess = function(file, pp, options, cb) {
     exec(pp + ' ' + file, function(err, stdout, stderr) {
       // log('styledocco: preprocessing ' + file + ' with ' + pp);
       // Fail gracefully on preprocessor errors
-      if (err != null) console.error(err.message);
+      if (err != null && options.verbose) console.error(err.message);
       if (stderr.length && options.verbose) console.error(stderr);
       cb(null, stdout || '');
     });
