@@ -35,7 +35,9 @@ var isArray = function(obj) {
 };
 
 // Get a filename without the extension
-var baseFilename = function(str) { return path.basename(str, path.extname(str)); };
+var baseFilename = function(str) {
+  return path.basename(str, path.extname(str)).replace(/^_/, '');
+};
 
 var basePathname = function(file, basePath) {
   return path.join(
