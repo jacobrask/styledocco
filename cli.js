@@ -101,7 +101,8 @@ var menuLinks = function(files, basePath) {
 var preprocess = function(file, pp, options, cb) {
   // stdin would have been nice here, but not all preprocessors (less)
   // accepts that, so we need to read the file both here and for the parser.
-  if (pp != null) {
+  // Ignore SASS partials.
+  if (pp != null && !file.match(/(^|\/)_.*\.s(c|s)ss$/)) {
     exec(pp + ' ' + file, function(err, stdout, stderr) {
       // log('styledocco: preprocessing ' + file + ' with ' + pp);
       // Fail gracefully on preprocessor errors
