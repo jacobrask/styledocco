@@ -159,14 +159,14 @@ Fixed to top with a small drop shadow.
   z-index: 1010;
   min-height: 40px;
   line-height: 40px;
-  background-image: -webkit-linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 5%, 19%, .91));
-  background-image:    -moz-linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 5%, 19%, .91));
-  background-image:      -o-linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 5%, 19%, .91));
-  background-image:         linear-gradient(hsla(207, 10%, 31%, .99),
-                                            hsla(207, 5%, 19%, .91));
+  background-image: -webkit-linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207, 5%, 25%, .92));
+  background-image:    -moz-linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207, 5%, 25%, .92));
+  background-image:      -o-linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207, 5%, 25%, .92));
+  background-image:         linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207, 5%, 25%, .92));
 }
 .bar.top {
   top: 0;
@@ -183,13 +183,37 @@ Fixed to top with a small drop shadow.
   display: block;
   list-style: none;
 }
+.bar .icon path {
+  fill: hsla(27, 10%, 75%, .75);
+}
+.docs .icon path {
+  fill: hsla(207, 10%, 75%, .5);
+}
+  .docs .permalink:hover .icon path {
+    fill: hsl(207, 10%, 75%);
+  }
+.bar button {
+  color: hsla(27, 10%, 75%, .75);
+}
+  .bar button:hover .icon path,
+  .bar button.is-active .icon path {
+    fill: hsl(27, 10%, 85%);
+  }
+  .bar button:hover, .bar button.is-active {
+    color: hsl(27, 10%, 85%);
+  }
+.bar .icon {
+  vertical-align: middle;
+  display: inline-block;
+}
 .bar, .bar a, .bar a:visited {
-  color: hsl(27, 40%, 85%);
-  text-shadow: 1px 1px 0 hsla(27, 5%, 0%, .3);
+  color: hsl(27, 10%, 85%);
+  text-shadow: 1px 1px 0 hsla(27, 5%, 0%, .5);
 }
     .bar a:hover,
     .bar a.is-active {
-      color: hsl(27, 30%, 90%);
+      color: hsl(27, 10%, 95%);
+      text-shadow: 1px 1px 0 hsla(27, 5%, 0%, 1);
       text-decoration: none;
     }
 /* ```
@@ -203,11 +227,12 @@ Fixed to top with a small drop shadow.
   text-decoration: none;
 }
 .brand, a.brand, a.brand:visited {
-  color: hsl(27, 5%, 8%);
+  color: hsl(27, 5%, 5%);
   text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .2);
 }
   .brand:hover, a.brand:hover {
-    color: hsl(27, 5%, 2%);
+    color: hsl(27, 5%, 0%);
+    text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .3);
     text-decoration: none;
   }
 
@@ -320,10 +345,7 @@ Fixed to top with a small drop shadow.
     outline: 0;
     background: hsla(207, 7%, 45%, .9);
   }
-i.toc {
-  width: 24px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAYAAABc6S4mAAAAAXNSR0IArs4c6QAAAFZJREFUOMtjfH310H8GKBDRsmV8c+2wPAMDwwMGKgEmdAERLduHDFQETAw0Boz///+nqQU09wHNLWB5c+3waCoaTUVUTkUMDAwMyGKjQTSaikbLIsoBAOrOK0XRs05qAAAAAElFTkSuQmCC);
-}
+
 
 /*
 # Settings and configuration #
@@ -334,52 +356,20 @@ i.toc {
 .bar button {
   display: inline-block;
   vertical-align: middle;
-  margin: 0 7px;
+  padding: 0 5px;
+  margin: 0 3px;
   background: transparent;
-  opacity: .6;
-}
-.bar i {
-  display: inline-block;
-  height: 30px;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: 50%;
 }
 .bar button:first-child {
   margin-left: 0;
 }
-.bar button:hover,
-.bar button.is-active {
-  opacity: .9;
-}
- /* Glyphicons Free. http://glyphicons.com */
-i.desktop {
-  width: 28px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYBAMAAAAbsoCxAAAAAXNSR0IArs4c6QAAABJQTFRF////69XC69XC69XC69XC69XCsKjc1AAAAAV0Uk5TAD9Nz+9utsS9AAAANklEQVQYV2NwDUUCIQyhKIAhVAkJDA8umgeRQEAoA1poQABQGRJgDA0VQOIKh4YawjlwYzG4AElRPlfk7mo+AAAAAElFTkSuQmCC);
-}
-i.laptop {
-  width: 28px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAPCAMAAADAkV+TAAAAElBMVEXr1cLm0L4AAADr1cLdyLbr1cK81tkGAAAABHRSTlMPswBNJIULqAAAAC5JREFUeNrtycENACAMw8A01PuvTCWeFMQAWP6dbCVN6ZKatoWGsfXxDbmkOFtMvhcFsfZOYKIAAAAASUVORK5CYII=);
-}
-i.tablet {
-  width: 20px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAMAAABLAV/qAAAAG1BMVEXfyrjr1cLr1cLr1cLr1cLr1cIAAADr1cLr1cJ8BJOtAAAACHRSTlPbPxN/iY8ATT4ucloAAAA3SURBVHja7dFLCgAgDEPBfmPvf2JBiiCtBxCcVXjbkEdBFI1rHIcfn4mLiVi5mAHe0XMooDl9Ak7UD3akKiswAAAAAElFTkSuQmCC);
-}
-i.smartphone {
-  width: 14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAYCAMAAAD9GTxlAAAAGFBMVEXr1cIAAADfyrjr1cLr1cLr1cLdyLbr1cLLd4FAAAAABnRSTlNvANsPP009vtSqAAAAOUlEQVR42t2QSQ4AIAgDi2D5/4+NG4H4A+fUSU8tjB7QsCwcXni1B5/qhGV+U21JIXICc8t7LPexA4RJB7GsUfWoAAAAAElFTkSuQmCC);
-}
-i.featurephone {
-  width: 15px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAMAAADZh4T+AAAAJFBMVEXr1cLdyLbr1cLizbvr1cLr1cLfyrjr1cIAAADr1cLdyLbr1cLNhLPeAAAACnRSTlOP7qDHL0/bfwBNv2ECtwAAADpJREFUeNrNyjsKACAQQ8H4j+b+9xUL2UXsdSDFg4AsSFpqLCRylQkZQ96A1I30YTvXJrl39oN/k9cm7WsOQEZJiNEAAAAASUVORK5CYII=);
-}
 .settings .auto {
-  color: hsl(27, 50%, 90%);
-  text-transform: uppercase;
   line-height: 32px;
   font-size: 11px;
   font-weight: bold;
   letter-spacing: -1px;
+  text-shadow: none;
+  text-transform: uppercase;
 }
 /*
 # Typography and text styles
@@ -466,18 +456,9 @@ h6 {
   font-size: 1em;
 }
 .permalink {
-  width: 21px;
-  height: 23px;
   position: absolute;
   top: 15px; right: 15px;
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAXCAMAAADTAfSvAAAAM1BMVEWTrMGZs8iZs8iZs8iZs8iQqLyWr8SZs8iRqr6Zs8iZs8iZs8iZs8iZs8gAAACPqLyZs8iu6GNKAAAAD3RSTlPHjx8/b+6zT9ugD38vXwB8QpTPAAAAqUlEQVR42lXQWw7FIAgE0L5VUHT/q73MkJTe+bDkVDC62SeHPnqi+OpYyCPUxEiV0MRn+rJRE4dJ9Y9u/2jkCU1EilehJ1EK6uvVh1jXiK47FCdY5ZDb1xI6oTG74xe0CyeQp7Rh0D71XC9ffAfHNXt0Y7RSBXfcsW327mUodjXcwxEbDqr6IxkiRLVQtKIiNgvtC5wYaju4lESqtYUQU8GJqaa3v9NlmR956BnPbww3fwAAAABJRU5ErkJggg==) 50% 50% no-repeat;
-  opacity: .5;
 }
-  .permalink:hover {
-    text-decoration: none;
-    opacity: .75;
-  }
-
 
 /*
 # Links
@@ -542,11 +523,6 @@ pre code {
 /* Helper classes */
 .cf:before, .cf:after { content: ''; display: table; }
 .cf:after { clear: both; }
-.ir {
-  color: transparent !important;
-  font: 0/0 a !important;
-  text-shadow: none !important;
-}
 [unselectable="on"] {
   -webkit-user-select: none;
   -moz-user-select: none;

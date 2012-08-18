@@ -194,7 +194,7 @@ if (settingsEl) {
     var tagName = event.target.tagName.toLowerCase();
     var btn;
     if (tagName === 'button') btn = event.target;
-    else if (tagName === 'i') btn = event.target.parentNode;
+    else if (tagName === 'svg') btn = event.target.parentNode;
     else return;
     event.preventDefault();
     removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
