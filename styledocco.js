@@ -56,6 +56,9 @@ var trimNewLines = function(str) {
   return str.replace(/^\n*/, '').replace(/\n*$/, '');
 };
 
+var htmlEntities = function(str) {
+  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
 
 var separate = function(css) {
   var lines = css.split('\n');
@@ -82,10 +85,6 @@ var separate = function(css) {
   return blocks;
 };
 
-
-var htmlEntities = function(str) {
-  return str.replace(/</g, '&lt;');
-};
 
 var makeSections = exports.makeSections = function(blocks) {
   return blocks

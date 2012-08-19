@@ -30,7 +30,7 @@ exports["Documentation and code blocks"] = function(test) {
     var blocks = readFileSync(fixturePath + fix + '.blocks.json');
     var extracted = styledocco.separate(css);
     var saved = JSON.parse(blocks);
-    test.deepEqual(extracted, saved, "Match failed for " + fix);
+    test.deepEqual(extracted, saved, "Match output with fixture " + fix);
   });
   test.done();
 };
@@ -41,7 +41,7 @@ exports["Sections"] = function(test) {
     var blocks = readFileSync(fixturePath + fix + '.sections.json');
     var extracted = JSON.parse(JSON.stringify(styledocco(css)));
     var saved = JSON.parse(blocks);
-    test.deepEqual(extracted, saved, "Match failed for " + fix);
+    test.deepEqual(extracted, saved, "Match output with fixture " + fix);
   });
   test.done();
 };
