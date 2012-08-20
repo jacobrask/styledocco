@@ -35,7 +35,8 @@ if (processedPseudoClasses.length) {
   // Add a new style element with the processed pseudo class styles.
   var styleEl = document.createElement('style');
   styleEl.innerText = processedPseudoClasses;
-  document.getElementsByTagName('head')[0].appendChild(styleEl);
+  var oldStyleEl = document.getElementsByTagName('style')[0];
+  oldStyleEl.parentNode.insertBefore(styleEl, oldStyleEl);
 }
 
 // Resizing
