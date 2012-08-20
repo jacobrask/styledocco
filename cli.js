@@ -103,8 +103,10 @@ var menuLinks = function(files, basePath) {
 var preprocess = function(file, pp, options, cb) {
   // stdin would have been nice here, but not all preprocessors (less)
   // accepts that, so we need to read the file both here and for the parser.
-  // Ignore SASS partials.
-  if (pp != null && !file.match(/(^|\/)_.*\.s(c|s)ss$/)) {
+  // Don't process SASS partials.
+  if (file.match(/(^|\/)_.*\.s(c|s)ss$/) != null) {
+    process.nextTick(function() { cb(null, ''); });
+  } else if (pp != null) {
     exec(pp + ' ' + file, function(err, stdout, stderr) {
       // log('styledocco: preprocessing ' + file + ' with ' + pp);
       // Fail gracefully on preprocessor errors
@@ -196,6 +198,7 @@ var cli = function(options) {
           cb(null, all.concat(files));
         });
       }, function(err, files) {
+        if (err != null) return cb(err);
         files = files.filter(function(file) {
           // No hidden files
           if (file.match(/(\/|^)\.[^\.\/]/)) return false;
