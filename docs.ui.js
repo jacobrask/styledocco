@@ -23,7 +23,7 @@ var bodyEl = document.getElementsByTagName('body')[0];
 // Dropdown menus.
 bodyEl.addEventListener('click', function(event) {
   var el = event.target;
-  if (el.tagName.toLowerCase() === 'i') el = el.parentNode; // Button icons
+  if (el.tagName.toLowerCase() === 'svg') el = el.parentNode; // Button icons
   var activateDropdown = false;
   if (el.dataset.toggle != null) {
     event.preventDefault();
@@ -90,7 +90,7 @@ bodyEl.addEventListener('click', function(event) {
   searchEl.addEventListener('focus', doSearch);
   // Hide search results
   bodyEl.addEventListener('click', function(event) {
-    if (event.target.classList.contains('search')) return;
+    if (event.target.classList && event.target.classList.contains('search')) return;
     searchList.hidden = true;
   });
   // Reset search box
