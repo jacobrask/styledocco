@@ -74,6 +74,7 @@ iframeEl.addEventListener('load', function() {
   // Loop through code textareas and render the code in iframes.
   forEach(bodyEl.getElementsByTagName('textarea'), function(codeEl, idx) {
     addIframe(codeEl, support, idx);
+    resizeableButtons();
     autoResizeTextArea(codeEl);
   });
 });
@@ -156,52 +157,55 @@ var autoResizeTextArea = function(el) {
   codeDidChange.call(el);
 };
 
-var settingsEl = bodyEl.getElementsByClassName('settings')[0];
-var resizeableEls = bodyEl.getElementsByClassName('resizeable');
-var resizeableElOffset = 30; // `.resizeable` padding
-var resizePreviews = function(width) {
-  document.cookie = 'preview-width=' + width;
-  forEach(resizeableEls, function(el) {
-    if (width === 'auto') width = el.parentNode.offsetWidth;
-    el.style.width = width + 'px';
-    // TODO: Add CSS transitions and update height after `transitionend` event
-    postMessage(el.getElementsByTagName('iframe')[0], 'getHeight');
-  });
-};
+var resizeableButtons = function() {
+  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
+  var resizeableEls = bodyEl.getElementsByClassName('resizeable');
+  var resizeableElOffset = 30; // `.resizeable` padding
+  var resizePreviews = function(width) {
+    document.cookie = 'preview-width=' + width;
+    forEach(resizeableEls, function(el) {
+      if (width === 'auto') width = el.parentNode.offsetWidth;
+      el.style.width = width + 'px';
+      // TODO: Add CSS transitions and update height after `transitionend` event
+      postMessage(el.getElementsByTagName('iframe')[0], 'getHeight');
+    });
+  };
 
-// Resize previews to the cookie value.
-var previewWidth = keyvalParse(document.cookie)['preview-width'];
-if (previewWidth) {
-  resizePreviews(previewWidth);
-  removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
-  var btn = settingsEl.querySelector('button[data-width="' + previewWidth + '"]');
-  if (btn) { btn.classList.add('is-active'); }
-}
-
-window.addEventListener('message', function (ev) {
-  if (ev.data == null || !ev.source) return;
-  var data = ev.data;
-  var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
-  // Set iframe height
-  if (data.height != null && sourceFrameEl) {
-    sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
-  }
-}, false);
-
-// Resizing buttons
-if (settingsEl) {
-  settingsEl.addEventListener('click', function(event) {
-    var tagName = event.target.tagName.toLowerCase();
-    var btn;
-    if (tagName === 'button') btn = event.target;
-    else if (tagName === 'svg') btn = event.target.parentNode;
-    else return;
-    event.preventDefault();
+  // Resize previews to the cookie value.
+  var previewWidth = keyvalParse(document.cookie)['preview-width'];
+  if (previewWidth) {
+    resizePreviews(previewWidth);
     removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
-    btn.classList.add('is-active');
-    var width = btn.dataset.width;
-    resizePreviews(width);
-  });
-}
+    var btn = settingsEl.querySelector('button[data-width="' + previewWidth + '"]');
+    if (btn) { btn.classList.add('is-active'); }
+  }
+
+  window.addEventListener('message', function (ev) {
+    if (ev.data == null || !ev.source) return;
+    var data = ev.data;
+    var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
+    // Set iframe height
+    if (data.height != null && sourceFrameEl) {
+      sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
+    }
+  }, false);
+
+  // Resizing buttons
+  if (settingsEl && resizeableEls.length > 0) {
+    settingsEl.hidden = false;
+    settingsEl.addEventListener('click', function(event) {
+      var tagName = event.target.tagName.toLowerCase();
+      var btn;
+      if (tagName === 'button') btn = event.target;
+      else if (tagName === 'svg') btn = event.target.parentNode;
+      else return;
+      event.preventDefault();
+      removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
+      btn.classList.add('is-active');
+      var width = btn.dataset.width;
+      resizePreviews(width);
+    });
+  }
+};
 
 })();

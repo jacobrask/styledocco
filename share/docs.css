@@ -17,7 +17,7 @@ Main layout
 body {
   /* Top/bottom paddings for bars */
   padding: 60px 0 40px;
-  background-color: hsl(207, 5%, 89%);
+  background-color: hsl(207, 10%, 90%);
   color: hsl(207, 5%, 30%);
 }
 /* The page content has a maximum width of 1500 pixels. */
