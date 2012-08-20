@@ -49,7 +49,8 @@ var getContentHeight = (function() {
     var els = bodyEl.getElementsByTagName('*');
     var elHeights = [];
     for (var i = 0, l = els.length; i < l; i++) {
-      elHeights.push(els[i].offsetTop + els[i].offsetHeight);
+      elHeights.push(els[i].offsetTop + els[i].offsetHeight +
+        parseInt(window.getComputedStyle(els[i], null).getPropertyValue('margin-bottom')));
     }
     var height = Math.max.apply(Math, elHeights);
     height += parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
