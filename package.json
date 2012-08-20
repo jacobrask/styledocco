@@ -3,7 +3,7 @@
   "description": "Generate documentation and style guides with design patterns from stylesheets.",
   "keywords": [ "styleguide", "css", "documentation", "design", "patterns" ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "homepage": "http://jacobrask.github.com/styledocco/",
   "licenses": [ { "type": "MIT", "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
   "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
