@@ -13,12 +13,16 @@
 }
 </style>
 <style type="text/preview">
+* { margin: 0; padding: 0 }
 .btn.primary {
+  padding: 5px;
   background: steelblue;
   color: snow;
   border: 2px outset steelblue;
+  border-radius: 5px;
 }
 </style>
+<script type="text/preview">(function(){"use strict";var a=function(a){return Array.prototype.slice.call(a)},b=document.getElementsByTagName("body")[0],c=["link","visited","hover","active","focus","target","enabled","disabled","checked"],d=new RegExp(":(("+c.join(")|(")+"))","gi"),e=a(document.styleSheets).map(function(b){return a(b.cssRules).filter(function(a){return a.selectorText&&a.selectorText.match(d)}).map(function(a){return a.cssText.replace(d,".\\3A $1")}).join("")}).join("");if(e.length){var f=document.createElement("style");f.innerText=e;var g=document.getElementsByTagName("style")[0];g.parentNode.insertBefore(f,g)}var h=function(){var a=window.getComputedStyle(b,null);return function(){if(b.childElementCount===0)return b.offsetHeight;var c=b.getElementsByTagName("*"),d=[];for(var e=0,f=c.length;e<f;e++)d.push(c[e].offsetTop+c[e].offsetHeight+parseInt(window.getComputedStyle(c[e],null).getPropertyValue("margin-bottom")));var g=Math.max.apply(Math,d);return g+=parseInt(a.getPropertyValue("padding-bottom"),10),Math.max(g,b.offsetHeight)}}(),i={getHeight:function(){window.parent.postMessage({height:h()},"*")}};window.addEventListener("message",function(a){if(a.data==null)return;typeof a.data=="string"&&i[a.data]()},!1)})()</script>
 </head>
 <body>
   <nav class="bar top cf">
@@ -56,15 +60,17 @@
         <h2>Stylesheet</h2>
         <p>The following is the code you would write in your stylesheet, and the <strong>Output</strong> is what you would see in the documentation.
         <pre><code>/* Provides extra visual weight and identifies the primary action in a set of buttons.
-    &lt;button class="btn primary"&gt;Primary&lt;/button&gt; */
+
+    &lt;button class="btn primary"&gt;Primary&lt;/button&gt;
+*/
 .btn.primary {
     background: steelblue;
     color: snow;
     border: 2px outset steelblue;
 }</code></pre>
         <h2>Output</h2>
-        <p>Provides extra visual weight and identifies the primary action in a set of buttons.
-        <div class="preview"><button class="btn primary">Default</button></div><pre><code>&lt;button class="btn"&gt;Default&lt;/button&gt;</code></pre>
+        <p>Provides extra visual weight and identifies the primary action in a set of buttons.</p>
+        <textarea class="preview-code" spellcheck="false">&lt;button class="btn primary"&gt;Button&lt;/button&gt;</textarea>
         <p>For more in-depth examples, the <a href="examples/styledocco/docs.html">docs</a> file is the documentation of the default StyleDocco CSS file, and an <a href="examples/bootstrap/docs/buttons.html">additional example</a> was generated from a modified file of the Twitter Bootstrap project.
       </div>
     </article>
@@ -130,5 +136,6 @@
     </article>
   </section>
 <script src="docs.ui.js"></script>
+<script src="docs.previews.js"></script>
 </body>
 </html>
