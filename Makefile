@@ -8,7 +8,7 @@ test:
 test-browser: test-browser/tests.js
 	@$(BROWSER) test-browser/test.html
 
-test-browser/tests.js: test/
+test-browser/tests.js: test/ test-browser/ share/
 	@./node_modules/.bin/browserify test-browser/browserify-entry.js \
 		-o test-browser/tests.js
 
