@@ -22,7 +22,7 @@ var processedPseudoClasses = toArray(document.styleSheets)
     return toArray(ss.cssRules)
       .filter(function(rule) {
         // Keep only rules with pseudo classes.
-        return rule.selectorText && rule.selectorText.match(pseudoRe);
+        return rule.cssText && rule.cssText.match(pseudoRe);
       })
       .map(function(rule) {
         // Replace : with . and encoded :
