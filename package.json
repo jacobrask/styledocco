@@ -20,9 +20,8 @@
     "optimist": "0.x.x",
     "uglify-js": "1.2.x" },
   "devDependencies": {
-    "browserify": "1.13.x",
-    "jshint": "0.7.x",
-    "nodeunit": "0.7.x"
+    "buster": "0.6.x",
+    "jshint": "0.7.x"
   },
   "main": "./styledocco",
   "bin": "./bin/styledocco",

@@ -3,14 +3,7 @@ BROWSER = opera
 all:
 
 test:
-	@./node_modules/.bin/nodeunit test
-
-test-browser: test-browser/tests.js
-	@$(BROWSER) test-browser/test.html
-
-test-browser/tests.js: test/ test-browser/ share/
-	@./node_modules/.bin/browserify test-browser/browserify-entry.js \
-		-o test-browser/tests.js
+	@./node_modules/.bin/buster test
 
 examples:
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
@@ -19,6 +12,6 @@ examples:
 		examples/bootstrap/less
 
 lint:
-	@./node_modules/.bin/jshint styledocco.js cli.js share/ bin/
+	@./node_modules/.bin/jshint styledocco.js cli.js share/ bin/ test/
 
-.PHONY: all test test-browser pages examples lint
+.PHONY: all test examples lint
