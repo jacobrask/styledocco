@@ -14,6 +14,7 @@ config["Preview scripts"] = {
     "share/previews.js",
   ],
   tests: [
-    "test/browser/stylesheets.js"
+    "test/browser/stylesheets.js",
+    "test/browser/preview-height.js"
   ]
 };

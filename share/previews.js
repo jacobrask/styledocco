@@ -89,26 +89,25 @@ if (styles.length) {
 // ========
 // Get bottom-most point in document with an element.
 // `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
-var getContentHeight = (function() {
-  var bodyEl = document.getElementsByTagName('body')[0];
-  var bodyStyle = window.getComputedStyle(bodyEl, null);
-  return function() {
-    if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
-    var els = bodyEl.getElementsByTagName('*');
-    var elHeights = [];
-    for (var i = 0, l = els.length; i < l; i++) {
-      elHeights.push(els[i].offsetTop + els[i].offsetHeight +
-        parseInt(window.getComputedStyle(els[i], null).getPropertyValue('margin-bottom')));
-    }
-    var height = Math.max.apply(Math, elHeights);
-    height += parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
-    return Math.max(height, bodyEl.offsetHeight);
-  };
-})();
+var getContentHeight = styledocco.getContentHeight = function(doc) {
+  var win = doc.defaultView;
+  var bodyEl = doc.getElementsByTagName('body')[0];
+  var bodyStyle = win.getComputedStyle(bodyEl, null);
+  if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
+  var els = bodyEl.getElementsByTagName('*');
+  var elHeights = [];
+  for (var i = 0, l = els.length; i < l; i++) {
+    elHeights.push(els[i].offsetTop + els[i].offsetHeight +
+      parseInt(win.getComputedStyle(els[i], null).getPropertyValue('margin-bottom')));
+  }
+  var height = Math.max.apply(Math, elHeights);
+  height += parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
+  return Math.max(height, bodyEl.offsetHeight);
+};
 
 var callbacks = {
   getHeight: function() {
-    window.parent.postMessage({ height: getContentHeight() }, '*');
+    window.parent.postMessage({ height: getContentHeight(document) }, '*');
   }
 };
 window.addEventListener('message', function (ev) {
