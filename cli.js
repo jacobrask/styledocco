@@ -162,6 +162,7 @@ var cli = function(options) {
         css: async.apply(fs.readFile, resourcesDir + 'docs.css', 'utf8'),
         js: function(cb) {
           async.parallel([
+            async.apply(fs.readFile, resourcesDir + 'shared.js', 'utf8'),
             async.apply(fs.readFile, resourcesDir + 'docs.ui.js', 'utf8'),
             async.apply(fs.readFile, resourcesDir + 'docs.previews.js', 'utf8')
           ], function(err, res) {
@@ -173,7 +174,11 @@ var cli = function(options) {
     },
     // Extra JavaScript and CSS files to include in previews.
     previews: function(cb) {
-      fs.readFile(resourcesDir + 'previews.js', 'utf8', function(err, js) {
+      async.parallel([
+        async.apply(fs.readFile, resourcesDir + 'shared.js', 'utf8'),
+        async.apply(fs.readFile, resourcesDir + 'previews.js', 'utf8')
+      ], function(err, res) {
+        var js = res.join('');
         if (err != null) return cb(err);
         var code = { js: js, css: '' };
         var files = options.include.filter(function(file) {
