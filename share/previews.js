@@ -4,7 +4,7 @@
 
 'use strict';
 
-var styledocco = window.styledocco = window.styledocco || {};
+var _ = styledocco._;
 
 // Clone pseudo classes
 // ====================

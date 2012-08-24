@@ -7,29 +7,11 @@
 
 'use strict';
 
+var _ = styledocco._;
+
 // Abort if rendering a preview page (to avoid recursive iframe loading).
 // This can happen in WebKit where we set the iframe src to `location.href`.
 if (location.hash === '#__preview__' || location.protocol === 'data:') return;
-
-// Helper functions. Using `Array.prototype` to make them work on NodeLists.
-var forEach = function(arr, it) {
-  return Array.prototype.forEach.call(arr, it);
-};
-var invoke = function(obj, fn) {
-  var args = Array.prototype.slice.call(arguments, 2);
-  return map(obj, function(value) {
-    return (isFunction(fn) ? fn || value : value[fn]).apply(value, args);
-  });
-};
-var isFunction = function(obj) {
-  return Object.prototype.toString.call(obj) === '[object Function]';
-};
-var map = function(arr, it) {
-  return Array.prototype.map.call(arr, it);
-};
-var pluck = function(arr, prop) {
-  return map(arr, function(item) { return item[prop]; } );
-};
 
 // Parse `key=value; key=value` strings (for cookies).
 var keyvalParse = function(str) {
@@ -42,38 +24,43 @@ var keyvalParse = function(str) {
   return obj;
 };
 var removeClass = function(els, className) {
-  return invoke(pluck(els, 'classList'), 'remove', className);
+  return _(els).pluck('classList').invoke('remove', className);
 };
 
 var postMessage = function(target, msg) {
   target.contentDocument.defaultView.postMessage(msg, '*');
 };
 
-var headEl = document.getElementsByTagName('head')[0];
-var bodyEl = document.getElementsByTagName('body')[0];
+var headEl = document.head;
+var bodyEl = document.body;
 
 // Get preview styles intended for preview iframes.
-var styles = pluck(
-  headEl.querySelectorAll('style[type="text/preview"]'),
-  'innerHTML').join('');
+var styles = _(headEl.querySelectorAll('style[type="text/preview"]'))
+  .pluck('innerHTML')
+  .join('');
 // Get preview scripts intended for preview iframes.
-var scripts = pluck(
-  headEl.querySelectorAll('script[type="text/preview"]'),
-  'innerHTML').join('');
+var scripts = _(headEl.querySelectorAll('script[type="text/preview"]'))
+  .pluck('innerHTML')
+  .join('');
 
-var previewUrl = location.href.split('#')[0] + '#__preview__';
 
 // Check if browser treats data uris as same origin.
-var iframeEl = document.createElement('iframe');
-iframeEl.src = 'data:text/html,';
-bodyEl.appendChild(iframeEl);
-iframeEl.addEventListener('load', function() {
-  var support = { sameOriginDataUri: false };
-  if (this.contentDocument) support.sameOriginDataUri = true;
-  this.parentNode.removeChild(this);
+var sameOriginDataUri = styledocco.sameOriginDataUri = function(doc, cb) {
+  var iframeEl = doc.createElement('iframe');
+  iframeEl.src = 'data:text/html,';
+  doc.body.appendChild(iframeEl);
+  iframeEl.addEventListener('load', function() {
+    var support = false;
+    if (this.contentDocument) support = true;
+    doc.body.removeChild(this);
+    cb(null, support);
+  });
+};
+
+sameOriginDataUri(document, function(err, support) {
   // Loop through code textareas and render the code in iframes.
-  forEach(bodyEl.getElementsByTagName('textarea'), function(codeEl, idx) {
-    addIframe(codeEl, support, idx);
+  _(bodyEl.getElementsByTagName('textarea')).forEach(function(codeEl, idx) {
+    addIframe(codeEl, { sameOriginDataUri: support }, idx);
     resizeableButtons();
     autoResizeTextArea(codeEl);
   });
@@ -81,6 +68,7 @@ iframeEl.addEventListener('load', function() {
 
 var addIframe = function(codeEl, support, iframeId) {
   var previewEl, resizeableEl, iframeEl;
+  var previewUrl = location.href.split('#')[0] + '#__preview__';
   previewEl = document.createElement('div');
   previewEl.appendChild(resizeableEl = document.createElement('div'));
   previewEl.className = 'preview';
@@ -163,7 +151,7 @@ var resizeableButtons = function() {
   var resizeableElOffset = 30; // `.resizeable` padding
   var resizePreviews = function(width) {
     document.cookie = 'preview-width=' + width;
-    forEach(resizeableEls, function(el) {
+    _(resizeableEls).forEach(function(el) {
       if (width === 'auto') width = el.parentNode.offsetWidth;
       el.style.width = width + 'px';
       // TODO: Add CSS transitions and update height after `transitionend` event

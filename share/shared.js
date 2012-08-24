@@ -4,6 +4,9 @@
 
 'use strict';
 
+// If there is no local styledocco object, expose globally
+window.styledocco = {};
+
 var addFns = function(obj, mix) {
   for (var key in mix) {
     Object.defineProperty(obj, key, {
@@ -15,15 +18,15 @@ var addFns = function(obj, mix) {
   return obj;
 };
 
-var understreck = {
+var fns = {
   filter: function(fn) {
-    return addFns(Array.prototype.filter.call(this, fn), understreck);
+    return addFns(Array.prototype.filter.call(this, fn), fns);
   },
-  forEach: function() {
-    return addFns(Array.prototype.forEach.call(this), understreck);
+  forEach: function(fn) {
+    Array.prototype.forEach.call(this, fn);
   },
   map: function(fn) {
-    return addFns(Array.prototype.map.call(this, fn), understreck);
+    return addFns(Array.prototype.map.call(this, fn), fns);
   },
   // Remove falsy values
   compact: function() {
@@ -44,11 +47,9 @@ var understreck = {
   }
 };
 
-var _ = function(obj) {
-  return addFns(obj, understreck);
+styledocco._ = function(obj) {
+  return addFns(obj, fns);
 };
-
-window._ = _;
 
 }());
 

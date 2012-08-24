@@ -267,7 +267,8 @@ var cli = function(options) {
         }));
       }));
       searchIndex = 'var searchIndex=' + JSON.stringify(searchIndex) + ';';
-      var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
+      var docsScripts = '(function(){var styledocco={};' + searchIndex + resources.docs.js + '})();';
+      var previewsScripts = '(function(){var styledocco={};' + resources.previews.js + '})();';
       // Render files
       var htmlFiles = files.map(function(file) {
         return {
@@ -277,8 +278,8 @@ var cli = function(options) {
             sections: file.docs,
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: minjs(docsScript), css: mincss(resources.docs.css) },
-              previews: { js: minjs(resources.previews.js), css: mincss(previewStyles) }
+              docs: { js: minjs(docsScripts), css: mincss(resources.docs.css) },
+              previews: { js: minjs(previewsScripts), css: mincss(previewStyles) }
             }
           })
         };
@@ -291,7 +292,7 @@ var cli = function(options) {
           sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
           project: { name: options.name, menu: menu },
           resources: {
-            docs: { js: minjs(docsScript), css: mincss(resources.docs.css) }
+            docs: { js: minjs(docsScripts), css: mincss(resources.docs.css) }
           }
         })
       });
