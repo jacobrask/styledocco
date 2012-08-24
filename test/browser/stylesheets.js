@@ -1,16 +1,25 @@
-buster.testCase("Pseudo classes", {
+var styleEl;
+var clone = styledocco.clonePseudoClasses;
+
+buster.testCase("Clone pseudo classes", {
   setUp: function() {
-    var styleEl = document.createElement('style');
-    document.getElementsByTagName('head')[0].appendChild(styleEl);
+    document.getElementsByTagName('head')[0].appendChild(
+      styleEl = document.createElement('style'));
   },
   "Regular": function() {
-    document.getElementsByTagName('style')[0].innerHTML = "test1:hover { color: red; }";
-    var processed = styledocco.processPseudoClasses(document.styleSheets);
-    assert.match(processed, /test1\.\\3A\ hover {\s?color: red;? }/);
+    styleEl.innerHTML = "test1:hover { color: red; }";
+    assert.match(clone(
+        document.styleSheets),
+      /test1\.\\3A\ hover {\s?color: red;? }/);
+    styleEl.innerHTML = "input[type=text]:disabled { color: red; }";
+    assert.match(
+      clone(document.styleSheets),
+      /input\[type="?text"?\]\.\\3A\ disabled {\s?color: red;? }/);
   },
   "Media query": function() {
-    document.getElementsByTagName('style')[0].innerHTML = "@media screen { test2:focus { color: blue; } }";
-    var processed = styledocco.processPseudoClasses(document.styleSheets);
-    assert.match(processed, /@media screen {\s*test2\.\\3A focus { color: blue;? }\s*}/);
+    styleEl.innerHTML = "@media screen { test2:focus { color: blue; } }";
+    assert.match(
+      clone(document.styleSheets),
+      /@media screen {\s*test2\.\\3A focus { color: blue;? }\s*}/);
   }
 });

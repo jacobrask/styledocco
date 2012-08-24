@@ -8,40 +8,55 @@ var styledocco = window.styledocco = window.styledocco || {};
 
 // Helper functions
 // ================
-var mixin = function(obj, mix) {
+var addFns = function(obj, mix) {
   for (var key in mix) {
-    if (mix.hasOwnProperty(key)) {
-      Object.defineProperty(obj, key, Object.getOwnPropertyDescriptor(mix, key));
-    }
+    Object.defineProperty(obj, key, {
+      configurable: true,
+      writeable: true,
+      value: mix[key]
+    });
   }
   return obj;
 };
+
 var understreck = {
-  compact: function() {
-    return understreck.filter.call(this, function(val) { return !!val; });
-  },
   filter: function(fn) {
-    return mixin(Array.prototype.filter.call(this, fn), understreck);
+    return addFns(Array.prototype.filter.call(this, fn), understreck);
   },
   forEach: function() {
-    return mixin(Array.prototype.forEach.call(this), understreck);
+    return addFns(Array.prototype.forEach.call(this), understreck);
   },
   map: function(fn) {
-    return mixin(Array.prototype.map.call(this, fn), understreck);
+    return addFns(Array.prototype.map.call(this, fn), understreck);
   },
+  // Remove falsy values
+  compact: function() {
+    return this.filter(function(val) { return !!val; });
+  },
+  // Filter based on regular expression
+  filterRe: function(exp) {
+    return this.filter(function(item) { return item.match(exp); });
+  },
+  // Invoke method
+  invoke: function(method) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return this.map(function(obj) { return obj[method].apply(obj, args); });
+  },
+  // Get object property
   pluck: function(prop) {
-    return understreck.map.call(this, function(item) { return item[prop]; } );
+    return this.map(function(item) { return item[prop]; } );
   }
 };
+
 var _ = function(obj) {
-  return mixin(obj, understreck);
+  return addFns(obj, understreck);
 };
 
 
-// Pseudo classes
-// ==============
+// Clone pseudo classes
+// ====================
 // Scans your stylesheet for pseudo classes and adds a class with the same name.
-var processPseudoClasses = styledocco.processPseudoClasses = (function() {
+var clonePseudoClasses = styledocco.clonePseudoClasses = (function() {
   // Compile regular expression.
   var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
                   'enabled', 'disabled', 'checked' ];
@@ -52,18 +67,15 @@ var processPseudoClasses = styledocco.processPseudoClasses = (function() {
       .map(function(rule) {
         return _(rule)
           .pluck('cssText')
-          .compact()
-          // Keep only rules with pseudo classes.
-          .filter(function(css) { return css.match(pseudoRe); })
-          // Replace : with . and encoded :
-          .map(function(css) { return css.replace(pseudoRe, ".\\3A $1"); })
+          .filterRe(pseudoRe) // Keep only rules with pseudo classes
+          .invoke('replace', pseudoRe, ".\\3A $1") // Replace : with . and encoded :
           .join('');
       })
       .join('');
   };
 })();
 
-var styles = processPseudoClasses(document.styleSheets);
+var styles = clonePseudoClasses(document.styleSheets);
 if (styles.length) {
   // Add a new style element with the processed pseudo class styles.
   var styleEl = document.createElement('style');
@@ -71,6 +83,7 @@ if (styles.length) {
   var oldStyleEl = document.getElementsByTagName('style')[0];
   oldStyleEl.parentNode.insertBefore(styleEl, oldStyleEl);
 }
+
 
 // Resizing
 // ========
