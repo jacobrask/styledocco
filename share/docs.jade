@@ -9,12 +9,19 @@ html
       else if title 
         #{title}
     meta(charset='utf-8')
-    if (resources.docs && resources.docs.css)
-      style !{resources.docs.css}
-    if (resources.previews && resources.previews.js)
-      script(type="text/preview") !{resources.previews.js}
-    if (resources.previews && resources.previews.css)
-      style(type="text/preview") !{resources.previews.css}
+    // Documentation styles
+    != '<style>'
+      include docs.css
+    != '</style>'
+    // Preview styles (all input CSS)
+    if (resources && resources.css)
+      style(type="text/preview") !{resources.css}
+    // Preview scripts
+    != '<script type="text/preview">'
+      include previews.js
+    - if (resources && resources.js)
+      !{resources.js}
+    != '</script>'
   body
     nav.bar.top.cf
       .container
@@ -70,6 +77,11 @@ html
           svg.icon(viewBox="0 0 201 412",height=24,width=12)
             path(d="M 165.5,0.2 V 45 H 25 c -13.8,0 -25,11.2 -25,25 V 387 c 0,13.8 11.2,25 25,25 h 150.5 c 13.8,0 25,-11.2 25,-25 V 0.2 h -35 z M 65.2,366.5 H 34.2 v -24.5 h 31 v 24.5 z m 0,-44.3 H 34.2 v -24.5 h 31 v 24.5 z m 50.5,44.3 H 84.7 v -24.5 h 31 v 24.5 z m 0,-44.3 H 84.7 v -24.5 h 31 v 24.5 z m 50.5,44.3 h -31 v -24.5 h 31 v 24.5 z m 0,-44.3 h -31 v -24.5 h 31 v 24.5 z m 0,-59.3 h -132 V 95.4 h 132 V 262.9 z")
         button.auto.is-active(title="Auto (100%)",data-width="auto") Auto
-    if (resources.docs && resources.docs.js)
-      script !{resources.docs.js}
-<!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
+
+    != '<script>'
+    - if (resources && resources.searchIndex)
+      != "var searchIndex = !{resources.searchIndex};"
+      include docs.js
+    != '</script>'
+
+// Generated with StyleDocco (http://jacobrask.github.com/styledocco).

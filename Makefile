@@ -1,6 +1,6 @@
-BROWSER = opera
+all: build
 
-all:
+build: grunt
 
 test:
 	@./node_modules/.bin/buster test
@@ -12,6 +12,6 @@ examples:
 		examples/bootstrap/less
 
 lint:
-	@./node_modules/.bin/jshint styledocco.js cli.js share/ bin/ test/
+	grunt lint
 
-.PHONY: all test examples lint
+.PHONY: all build test examples lint

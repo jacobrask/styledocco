@@ -11,6 +11,7 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 var uglifyjs = require('uglify-js');
 var util = require('util');
+var _ = require('iterhate');
 
 var styledocco = require('./styledocco');
 
@@ -18,27 +19,15 @@ var version = require('./package').version;
 
 marked.setOptions({ sanitize: false, gfm: true });
 
-// Helper functions
-var mincss = function(css) { return cleancss.process(css); };
+var mincss = cleancss.process;
 var minjs = uglifyjs;
-var pluck = function(arr, prop) {
-  return arr.map(function(item) { return item[prop]; });
-};
-var flatten = function(arr) {
-  return arr.reduce(function(tot, cur) {
-    return tot.concat(isArray(cur) ? flatten(cur) : cur);
-  }, []);
-};
-var inArray = function(arr, str) { return arr.indexOf(str) !== -1; };
-var isArray = function(obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
-};
 
 // Get a filename without the extension
 var baseFilename = function(str) {
   return path.basename(str, path.extname(str)).replace(/^_/, '');
 };
 
+// Get a pathname relative to the basePath, without the extension
 var basePathname = function(file, basePath) {
   return path.join(
     path.dirname(path.relative(basePath, file) || path.basename(basePath)),
@@ -122,7 +111,7 @@ var preprocess = function(file, pp, options, cb) {
 
 var cli = function(options) {
 
-  var resourcesDir = __dirname + '/share/';
+  var resourcesDir = __dirname + '/lib/';
 
   // Filetypes and matching preprocessor binaries.
   var fileTypes = {
@@ -154,45 +143,23 @@ var cli = function(options) {
     template: function(cb) {
       fs.readFile(resourcesDir + 'docs.jade', 'utf8', function(err, contents) {
         if (err != null) return cb(err);
-        cb(null, jade.compile(contents));
+        cb(null, jade.compile(contents, { filename: resourcesDir + 'docs.jade' }));
       });
-    },
-    docs: function(cb) {
-      async.parallel({
-        css: async.apply(fs.readFile, resourcesDir + 'docs.css', 'utf8'),
-        js: function(cb) {
-          async.parallel([
-            async.apply(fs.readFile, resourcesDir + 'shared.js', 'utf8'),
-            async.apply(fs.readFile, resourcesDir + 'docs.ui.js', 'utf8'),
-            async.apply(fs.readFile, resourcesDir + 'docs.previews.js', 'utf8')
-          ], function(err, res) {
-            if (err != null) return cb(err);
-            cb(null, res.join(''));
-          });
-        }
-      }, cb);
     },
     // Extra JavaScript and CSS files to include in previews.
     previews: function(cb) {
-      async.parallel([
-        async.apply(fs.readFile, resourcesDir + 'shared.js', 'utf8'),
-        async.apply(fs.readFile, resourcesDir + 'previews.js', 'utf8')
-      ], function(err, res) {
-        var js = res.join('');
-        if (err != null) return cb(err);
-        var code = { js: js, css: '' };
-        var files = options.include.filter(function(file) {
-          return inArray(['.css', '.js'], path.extname(file));
-        });
-        async.filter(files, path.exists, function(files) {
-          async.reduce(files, code, function(tot, cur, cb) {
-            fs.readFile(cur, 'utf8', function(err, contents) {
-              if (err != null) return cb(err);
-              tot[path.extname(cur).slice(1)] += contents;
-              cb(null, tot);
-            });
-          }, cb);
-        });
+      var code = { js: '', css: '' };
+      var files = options.include.filter(function(file) {
+        return _(['.css', '.js']).include(path.extname(file));
+      });
+      async.filter(files, path.exists, function(files) {
+        async.reduce(files, code, function(tot, cur, cb) {
+          fs.readFile(cur, 'utf8', function(err, contents) {
+            if (err != null) return cb(err);
+            tot[path.extname(cur).slice(1)] += contents;
+            cb(null, tot);
+          });
+        }, cb);
       });
     },
     // Find input files.
@@ -253,22 +220,26 @@ var cli = function(options) {
     }, function(err, files) {
       if (err != null) throw err;
       // Get the combined CSS from all files.
-      var previewStyles = pluck(files, 'css').join('');
-      previewStyles += resources.previews.css;
+      var previewsStyles = mincss(
+        _(files).pluck('css').join('') + resources.previews.css
+      );
       // Build a JSON string of all files and their headings, for client side search.
-      var searchIndex = flatten(files.map(function(file) {
-        var arr = [ { title: baseFilename(file.path),
+      var searchIndex = JSON.stringify(
+        _(files)
+          .map(function(file) {
+            return [{ title: baseFilename(file.path),
                       filename: basePathname(file.path, options.basePath),
-                      url: htmlFilename(file.path, options.basePath) } ];
-        return arr.concat(file.docs.map(function(section) {
-          return { title: section.title,
-                   filename: basePathname(file.path, options.basePath),
-                   url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
-        }));
-      }));
-      searchIndex = 'var searchIndex=' + JSON.stringify(searchIndex) + ';';
-      var docsScripts = '(function(){var styledocco={};' + searchIndex + resources.docs.js + '})();';
-      var previewsScripts = '(function(){var styledocco={};' + resources.previews.js + '})();';
+                      url: htmlFilename(file.path, options.basePath) }]
+              .concat(file.docs.map(function(section) {
+                return { title: section.title,
+                         filename: basePathname(file.path, options.basePath),
+                         url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
+              })
+            );
+          })
+          .flatten()
+      );
+      var previewsScripts = minjs(resources.previews.js);
       // Render files
       var htmlFiles = files.map(function(file) {
         return {
@@ -278,8 +249,9 @@ var cli = function(options) {
             sections: file.docs,
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: minjs(docsScripts), css: mincss(resources.docs.css) },
-              previews: { js: minjs(previewsScripts), css: mincss(previewStyles) }
+              searchIndex: searchIndex,
+              js: previewsScripts,
+              css: previewsStyles
             }
           })
         };
@@ -292,7 +264,7 @@ var cli = function(options) {
           sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
           project: { name: options.name, menu: menu },
           resources: {
-            docs: { js: minjs(docsScripts), css: mincss(resources.docs.css) }
+            searchIndex: searchIndex
           }
         })
       });
