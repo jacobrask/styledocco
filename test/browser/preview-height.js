@@ -1,5 +1,8 @@
+'use strict';
+
+var getContentHeight = test.getContentHeight;
+
 var doc = document;
-var getContentHeight = styledocco.getContentHeight;
 var contentEl = doc.createElement('div');
 contentEl.id = 'content';
 doc.body.appendChild(contentEl);
@@ -43,6 +46,5 @@ buster.testCase("Get document height", {
     this.styleSheet.insertRule('body { padding: 20px }', 1);
     this.styleSheet.insertRule('#content { height: 160px }', 2);
     assert.equals(getContentHeight(doc), 200);
-  },
-
+  }
 });
