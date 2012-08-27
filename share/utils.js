@@ -13,6 +13,7 @@ var makeElFn = function (doc) {
     html: 'innerHTML',
     id: 'id',
     name: 'name',
+    src: 'src',
     text: 'textContent',
     value: 'value'
   };
@@ -32,8 +33,10 @@ var makeElFn = function (doc) {
   };
 
   var appendChildren = function (el, children) {
+    if (el.tagName.toLowerCase() === 'html') console.log(children);
     for (var i = 0, child; i < children.length; i += 1) {
       child = children[i];
+      if (!child) console.log(el);
       if (child instanceof win.Array) {
         appendChildren(el, child);
       } else {
@@ -72,8 +75,16 @@ var makeElFn = function (doc) {
   return create;
 };
 
+// Get the style property of element. Convert numerical values to integers.
+var getStyle = function(el, prop) {
+  var val = win.getComputedStyle(el).getPropertyValue(prop);
+  var integer = parseInt(val, 10);
+  return isNaN(integer) ? val : integer;
+};
+
 var styledocco = window.styledocco = {};
 styledocco.el = makeElFn(document);
 styledocco.el.makeElFn = makeElFn;
+styledocco.getStyle = getStyle;
 
 }());

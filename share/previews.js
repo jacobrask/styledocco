@@ -4,12 +4,19 @@
 
 'use strict';
 
-var _ = styledocco._;
+var doc = document;
+var win = window;
+var el = styledocco.el;
+
+// Filter based on regular expression
+_.fns.filterRe = function(exp) {
+  return this.filter(function(item) { return item.match(exp); });
+};
 
 // Clone pseudo classes
 // ====================
 // Scans your stylesheet for pseudo classes and adds a class with the same name.
-var clonePseudoClasses = styledocco.clonePseudoClasses = (function() {
+var clonePseudoClasses = (function() {
   // Compile regular expression.
   var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
                   'enabled', 'disabled', 'checked' ];
@@ -28,13 +35,16 @@ var clonePseudoClasses = styledocco.clonePseudoClasses = (function() {
   };
 })();
 
-var styles = clonePseudoClasses(document.styleSheets);
+var headEl = doc.head;
+var bodyEl = doc.body;
+
+// Add a new style element with the processed pseudo class styles.
+var styles = clonePseudoClasses(doc.styleSheets);
 if (styles.length) {
-  // Add a new style element with the processed pseudo class styles.
-  var styleEl = document.createElement('style');
-  styleEl.innerText = styles;
-  var oldStyleEl = document.getElementsByTagName('style')[0];
-  oldStyleEl.parentNode.insertBefore(styleEl, oldStyleEl);
+  headEl.insertBefore(
+    el('style', { text: styles }),
+    headEl.getElementsByTagName('style')[0]
+  );
 }
 
 
@@ -42,30 +52,36 @@ if (styles.length) {
 // ========
 // Get bottom-most point in document with an element.
 // `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
-var getContentHeight = styledocco.getContentHeight = function(doc) {
-  var win = doc.defaultView;
-  var bodyEl = doc.getElementsByTagName('body')[0];
-  var bodyStyle = win.getComputedStyle(bodyEl, null);
-  if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
-  var els = bodyEl.getElementsByTagName('*');
-  var elHeights = [];
-  for (var i = 0, l = els.length; i < l; i++) {
-    elHeights.push(els[i].offsetTop + els[i].offsetHeight +
-      parseInt(win.getComputedStyle(els[i], null).getPropertyValue('margin-bottom')));
-  }
-  var height = Math.max.apply(Math, elHeights);
-  height += parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
-  return Math.max(height, bodyEl.offsetHeight);
-};
+var getContentHeight = (function() {
+  var extraHeight = styledocco.getStyle(bodyEl, 'padding-bottom');
+  return function() {
+    if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
+    var els = bodyEl.getElementsByTagName('*');
+    for (var i = 0, l = els.length, elHeights = [], el; i < l; i++) {
+      elem = els[i];
+      elHeights.push(elem.offsetTop + elem.offsetHeight +
+        styledocco.getStyle(elem, 'margin-bottom')
+      );
+    }
+    var height = Math.max.apply(Math, elHeights) + extraHeight;
+    return Math.max(height, bodyEl.offsetHeight);
+  };
+})();
 
 var callbacks = {
   getHeight: function() {
-    window.parent.postMessage({ height: getContentHeight(document) }, '*');
+    win.parent.postMessage({ height: getContentHeight() }, '*');
   }
 };
-window.addEventListener('message', function (ev) {
+win.addEventListener('message', function (ev) {
   if (ev.data == null) return;
   if (typeof ev.data === 'string') callbacks[ev.data]();
 }, false);
+
+// Expose testable functions
+if (typeof test !== 'undefined') {
+  test.clonePseudoClasses = clonePseudoClasses;
+  test.getContentHeight = getContentHeight;
+}
 
 }());

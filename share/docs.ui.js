@@ -5,7 +5,13 @@
 (function() {
 
 'use strict';
-/*global searchIndex:false*/
+/*global searchIndex:false, styledocco:false*/
+
+var doc = document;
+var win = window;
+var _ = styledocco._;
+var el = styledocco.el;
+var bodyEl = doc.body;
 
 // Helper functions. Using `Array.prototype` to make them work on NodeLists.
 var inArray = function(arr, item) {
@@ -17,28 +23,37 @@ var filter = function(arr, iterator) {
 var forEach = function(arr, iterator) {
   return Array.prototype.forEach.call(arr, iterator);
 };
+var toArray = function(obj) {
+  return Array.prototype.slice.call(obj);
+};
+var getElementsByTagNames = function() {
+  var tagNames = toArray(arguments);
+  for (var i = 0, l = tagNames.length, els; i < l; i++) {
+    els = els.concat(toArray(doc.getElementsByTagName(tagNames[i])));
+  }
+  return els;
+};
 
-var bodyEl = document.getElementsByTagName('body')[0];
 
 // Dropdown menus.
 bodyEl.addEventListener('click', function(event) {
-  var el = event.target;
-  if (el.tagName.toLowerCase() === 'svg') el = el.parentNode; // Button icons
   var activateDropdown = false;
-  if (el.dataset.toggle != null) {
+  var elem = event.target;
+  if (elem.tagName.toLowerCase() === 'svg') elem = elem.parentNode; // Button icons
+  if (elem.dataset.toggle != null) {
     event.preventDefault();
     // Click fired on an inactive dropdown toggle
-    if (!el.classList.contains('is-active')) activateDropdown = true;
+    if (!elem.classList.contains('is-active')) activateDropdown = true;
   }
   // Deactivate *all* dropdowns
-  forEach(bodyEl.querySelectorAll('[data-toggle]'), function(el) {
-    el.classList.remove('is-active');
-    document.getElementById(el.dataset.toggle).hidden = true;
+  _(bodyEl.querySelectorAll('[data-toggle]')).forEach(function(elem) {
+    elem.classList.remove('is-active');
+    doc.getElementById(elem.dataset.toggle).hidden = true;
   });
   // Activate the clicked dropdown
   if (activateDropdown) {
-    el.classList.add('is-active');
-    document.getElementById(el.dataset.toggle).hidden = false;
+    elem.classList.add('is-active');
+    doc.getElementById(elem.dataset.toggle).hidden = false;
   }
 });
 
@@ -48,23 +63,20 @@ bodyEl.addEventListener('click', function(event) {
   if (!navEl) return;
 
   // Generate HTML elements for each search item.
-  var searchList = document.createElement('ul');
-  searchList.className = 'nav-results';
-  searchList.id = 'nav-search';
-  searchList.hidden = true;
-  forEach(searchIndex, function(item) {
-    var el, linkEl, filenameEl;
-    el = document.createElement('li');
-    el._title = item.title.toLowerCase();
-    el.hidden = true;
-    el.appendChild(linkEl = document.createElement('a'));
-    linkEl.href = item.url;
-    linkEl.innerHTML = item.title;
-    linkEl.appendChild(filenameEl = document.createElement('span'));
-    filenameEl.innerHTML = item.filename;
-    filenameEl.className = 'nav-results-filename';
-    searchList.appendChild(el);
-  });
+  var searchList = el('ul#nav-search.nav-results', { hidden: true }, [
+    searchIndex.map(function(item) {
+      var elem = el('li', { hidden: true }, [
+        el('a', {
+          href: item.url,
+          text: item.title
+        }, [
+          el('span.nav-results-filename', [ item.filename ])
+        ])
+      ]);
+      elem._title = item.title.toLowerCase();
+      return elem;
+    })
+  ]);
   navEl.appendChild(searchList);
   var searchItems = searchList.children;
 
@@ -98,24 +110,21 @@ bodyEl.addEventListener('click', function(event) {
     searchEl.value = '';
   });
 
-
-  var tocList = document.createElement('ul');
-  tocList.id = 'nav-toc';
-  tocList.hidden = true;
-  tocList.className = 'nav-results toc-list';
-  filter(bodyEl.getElementsByTagName('*'), function(el) {
-    return inArray(['h1', 'h2', 'h3'], el.tagName.toLowerCase());
-  }).map(function(h) {
-    var el = document.createElement('li');
-    var a = document.createElement('a');
-    var level = h.tagName.toLowerCase()[1];
-    a.classList.add('level-' + level);
-    el.appendChild(a);
-    a.href = '#' + h.id;
-    a.innerHTML = h.innerHTML;
-    tocList.appendChild(el);
-  });
-  navEl.appendChild(tocList);
+  // Build Table of Contents from page headings.
+  /*
+  navEl.appendChild(
+    el('ul#nav-toc.nav-results.toc-list', { hidden: true }, [
+      getElementsByTagNames('h1', 'h2', 'h3').map(function(h) {
+        return el('li', [
+          el('a', {
+            href: '#' + h.id,
+            text: h.textContent,
+            className: 'level' + h.tagName.toLowerCase()[1]
+          })
+        ]);
+      })
+    ])
+  );*/
 
 })();
 

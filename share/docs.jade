@@ -80,7 +80,7 @@ html
 
     != '<script>'
     - if (resources && resources.searchIndex)
-      != "var searchIndex = !{resources.searchIndex};"
+      | var searchIndex = !{resources.searchIndex};
       include docs.js
     != '</script>'
 

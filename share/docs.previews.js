@@ -7,11 +7,15 @@
 
 'use strict';
 
-var _ = styledocco._;
-
-// Abort if rendering a preview page (to avoid recursive iframe loading).
+// Abort if rendering a preview page to avoid recursive iframe loading.
 // This can happen in WebKit where we set the iframe src to `location.href`.
 if (location.hash === '#__preview__' || location.protocol === 'data:') return;
+
+var doc = document;
+var win = window;
+var el = styledocco.el;
+var headEl = doc.head;
+var bodyEl = doc.body;
 
 // Parse `key=value; key=value` strings (for cookies).
 var keyvalParse = function(str) {
@@ -23,6 +27,7 @@ var keyvalParse = function(str) {
   }
   return obj;
 };
+
 var removeClass = function(els, className) {
   return _(els).pluck('classList').invoke('remove', className);
 };
@@ -31,8 +36,17 @@ var postMessage = function(target, msg) {
   target.contentDocument.defaultView.postMessage(msg, '*');
 };
 
-var headEl = document.head;
-var bodyEl = document.body;
+// Check if browser treats data uris as same origin.
+var sameOriginDataUri = function(doc, cb) {
+  var iframeEl = el('iframe', { src: 'data:text/html,' });
+  doc.body.appendChild(iframeEl);
+  iframeEl.addEventListener('load', function() {
+    var support = false;
+    if (this.contentDocument) support = true;
+    doc.body.removeChild(this);
+    cb(null, support);
+  });
+};
 
 // Get preview styles intended for preview iframes.
 var styles = _(headEl.querySelectorAll('style[type="text/preview"]'))
@@ -43,21 +57,7 @@ var scripts = _(headEl.querySelectorAll('script[type="text/preview"]'))
   .pluck('innerHTML')
   .join('');
 
-
-// Check if browser treats data uris as same origin.
-var sameOriginDataUri = styledocco.sameOriginDataUri = function(doc, cb) {
-  var iframeEl = doc.createElement('iframe');
-  iframeEl.src = 'data:text/html,';
-  doc.body.appendChild(iframeEl);
-  iframeEl.addEventListener('load', function() {
-    var support = false;
-    if (this.contentDocument) support = true;
-    doc.body.removeChild(this);
-    cb(null, support);
-  });
-};
-
-sameOriginDataUri(document, function(err, support) {
+sameOriginDataUri(doc, function(err, support) {
   // Loop through code textareas and render the code in iframes.
   _(bodyEl.getElementsByTagName('textarea')).forEach(function(codeEl, idx) {
     addIframe(codeEl, { sameOriginDataUri: support }, idx);
@@ -67,38 +67,31 @@ sameOriginDataUri(document, function(err, support) {
 });
 
 var addIframe = function(codeEl, support, iframeId) {
-  var previewEl, resizeableEl, iframeEl;
   var previewUrl = location.href.split('#')[0] + '#__preview__';
-  previewEl = document.createElement('div');
-  previewEl.appendChild(resizeableEl = document.createElement('div'));
-  previewEl.className = 'preview';
-  resizeableEl.appendChild(iframeEl = document.createElement('iframe'));
-  resizeableEl.className = 'resizeable';
-  iframeEl.setAttribute('scrolling', 'no');
-  iframeEl.name = 'iframe' + iframeId++;
+  var iframeEl;
+  var previewEl = el('div.preview', [
+    el('div.resizeable', [
+      iframeEl = el('iframe', {
+        scrolling: 'no',
+        name: 'iframe' + iframeId
+      })
+    ])
+  ]);
   iframeEl.addEventListener('load', function() {
-    var htmlEl, bodyEl, scriptEl, styleEl, headEl, oldHeadEl, doc;
-    doc = this.contentDocument;
-    // Abort if we're loading a data uri in a browser without same
-    // origin data uri support.
-    if (!support.sameOriginDataUri && this.src !== previewUrl) {
-      return;
-    // Otherwise replace iframe content with the preview code.
-    } else if (this.src === previewUrl) {
-      htmlEl = doc.createElement('html');
-      htmlEl.appendChild(doc.createElement('head'));
-      htmlEl.appendChild(bodyEl = doc.createElement('body'));
-      bodyEl.innerHTML = codeEl.textContent;
-      doc.replaceChild(htmlEl, doc.documentElement);
+    // Abort if we're loading a data uri in a browser without same origin data uri support.
+    if (!support.sameOriginDataUri && this.src !== previewUrl) return;
+    var doc = this.contentDocument;
+    var el = styledocco.el.makeElFn(doc);
+    if (!support.sameOriginDataUri) {
+      // Replace iframe content with the preview code.
+      doc.head.innerHTML = '';
+      doc.body.parentNode.replaceChild(
+        el('body', { html: codeEl.textContent }),
+        doc.body);
     }
     // Add scripts and styles.
-    headEl = doc.createElement('head');
-    headEl.appendChild(styleEl = doc.createElement('style'));
-    headEl.appendChild(scriptEl = doc.createElement('script'));
-    scriptEl.textContent = scripts;
-    styleEl.textContent = styles;
-    oldHeadEl = doc.getElementsByTagName('head')[0];
-    oldHeadEl.parentNode.replaceChild(headEl, oldHeadEl);
+    doc.head.appendChild(el('style', { text: styles }));
+    doc.head.appendChild(el('script', { text: scripts }));
     postMessage(this, 'getHeight');
   });
   var iframeSrc;
@@ -109,7 +102,7 @@ var addIframe = function(codeEl, support, iframeId) {
       encodeURIComponent('<!doctype html><html><head></head></body>' +
         codeEl.textContent);
   }
-  iframeEl.setAttribute('src', iframeSrc);
+  iframeEl.src = iframeSrc;
   var codeDidChange = function() {
     iframeEl.contentDocument.body.innerHTML = this.value;
     postMessage(iframeEl, 'getHeight');
@@ -121,15 +114,12 @@ var addIframe = function(codeEl, support, iframeId) {
 
 // Add an element with the same styles and content as the textarea to
 // calculate the height of the textarea content.
-var autoResizeTextArea = function(el) {
-  var mirrorEl = document.createElement('div');
-  mirrorEl.className = 'preview-code';
+var autoResizeTextArea = function(elem) {
+  var mirrorEl = el('div.preview-code');
   mirrorEl.style.position = 'absolute';
   mirrorEl.style.left = '-9999px';
   bodyEl.appendChild(mirrorEl);
-  var maxHeight = parseInt(
-    window.getComputedStyle(el).getPropertyValue('max-height'),
-    10);
+  var maxHeight = styledocco.getStyle('max-height');
   var codeDidChange = function(ev) {
     mirrorEl.textContent = this.value + '\n';
     var height = mirrorEl.offsetHeight + 2; // Account for borders.
@@ -140,9 +130,9 @@ var autoResizeTextArea = function(el) {
     }
     this.style.height = (mirrorEl.offsetHeight + 2) + 'px';
   };
-  el.addEventListener('keypress', codeDidChange);
-  el.addEventListener('keyup', codeDidChange);
-  codeDidChange.call(el);
+  elem.addEventListener('keypress', codeDidChange);
+  elem.addEventListener('keyup', codeDidChange);
+  codeDidChange.call(elem);
 };
 
 var resizeableButtons = function() {
@@ -150,7 +140,7 @@ var resizeableButtons = function() {
   var resizeableEls = bodyEl.getElementsByClassName('resizeable');
   var resizeableElOffset = 30; // `.resizeable` padding
   var resizePreviews = function(width) {
-    document.cookie = 'preview-width=' + width;
+    doc.cookie = 'preview-width=' + width;
     _(resizeableEls).forEach(function(el) {
       if (width === 'auto') width = el.parentNode.offsetWidth;
       el.style.width = width + 'px';
@@ -160,18 +150,18 @@ var resizeableButtons = function() {
   };
 
   // Resize previews to the cookie value.
-  var previewWidth = keyvalParse(document.cookie)['preview-width'];
+  var previewWidth = keyvalParse(doc.cookie)['preview-width'];
   if (previewWidth) {
     resizePreviews(previewWidth);
     removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
     var btn = settingsEl.querySelector('button[data-width="' + previewWidth + '"]');
-    if (btn) { btn.classList.add('is-active'); }
+    if (btn) btn.classList.add('is-active');
   }
 
-  window.addEventListener('message', function (ev) {
+  win.addEventListener('message', function (ev) {
     if (ev.data == null || !ev.source) return;
     var data = ev.data;
-    var sourceFrameEl = document.getElementsByName(ev.source.name)[0];
+    var sourceFrameEl = doc.getElementsByName(ev.source.name)[0];
     // Set iframe height
     if (data.height != null && sourceFrameEl) {
       sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
@@ -195,5 +185,10 @@ var resizeableButtons = function() {
     });
   }
 };
+
+// Expose testable functions
+if (typeof test !== 'undefined') {
+  test.sameOriginDataUri = sameOriginDataUri;
+}
 
 })();
