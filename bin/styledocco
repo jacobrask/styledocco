@@ -4,6 +4,8 @@
 // =======================================================================
 // Normalizes options to pass to StyleDocco.
 
+'use strict';
+
 var fs = require('fs');
 var optimist = require('optimist');
 var path = require('path');

@@ -1,11 +1,12 @@
 all: build
 
-build: grunt
+build:
+	grunt
 
 test:
 	@./node_modules/.bin/buster test
 
-examples:
+examples: build
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
 		--include share/previews.css --include share/docs.ui.js share/docs.css
 	@./bin/styledocco -n "Twitter Bootstrap" -o ./examples/bootstrap/docs \
