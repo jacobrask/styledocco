@@ -20,6 +20,7 @@ config["Preview scripts"] = {
   tests: [
     "test/browser/stylesheets.js",
     "test/browser/preview-height.js",
-    "test/browser/iframes.js"
+    "test/browser/iframes.js",
+    "test/browser/code-editing.js"
   ]
 };

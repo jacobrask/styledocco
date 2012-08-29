@@ -121,25 +121,24 @@ var addIframe = function(codeEl, support, iframeId) {
 
 // Add an element with the same styles and content as the textarea to
 // calculate the height of the textarea content.
-var autoResizeTextArea = function(elem) {
-  var mirrorEl = el('div.preview-code');
+var autoResizeTextArea = function(origEl) {
+  var mirrorEl = el('div', { className: origEl.className });
   mirrorEl.style.position = 'absolute';
   mirrorEl.style.left = '-9999px';
-  bodyEl.appendChild(mirrorEl);
-  var maxHeight = styledocco.getStyle(elem, 'max-height');
+  origEl.parentNode.appendChild(mirrorEl);
+  var borderHeight = styledocco.getStyle(origEl, 'border-top') +
+                     styledocco.getStyle(origEl, 'border-bottom');
+  var maxHeight = styledocco.getStyle(origEl, 'max-height');
   var codeDidChange = function(ev) {
-    mirrorEl.textContent = this.value + '\n';
-    var height = mirrorEl.offsetHeight + 2; // Account for borders.
-    if (height >= maxHeight) {
-      this.style.overflow = 'auto';
-    } else {
-      this.style.overflow = 'hidden';
-    }
-    this.style.height = (mirrorEl.offsetHeight + 2) + 'px';
+    mirrorEl.textContent = origEl.value + '\n';
+    var height = mirrorEl.offsetHeight;
+    origEl.style.height = (height - borderHeight) + 'px';
+    origEl.style.overflowY = (maxHeight && height >= maxHeight) ? 'auto' : 'hidden';
   };
-  elem.addEventListener('keypress', codeDidChange);
-  elem.addEventListener('keyup', codeDidChange);
-  codeDidChange.call(elem);
+  origEl.addEventListener('keypress', codeDidChange);
+  origEl.addEventListener('keyup', codeDidChange);
+  codeDidChange(origEl);
+  return mirrorEl;
 };
 
 var resizeableButtons = function() {
@@ -195,6 +194,7 @@ var resizeableButtons = function() {
 
 // Expose testable functions
 if (typeof test !== 'undefined') {
+  test.autoResizeTextArea = autoResizeTextArea;
   test.createPreview = createPreview;
   test.sameOriginDataUri = sameOriginDataUri;
   test.replaceDocumentContent = replaceDocumentContent;
