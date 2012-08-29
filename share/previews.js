@@ -57,7 +57,7 @@ var getContentHeight = (function() {
   return function() {
     if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
     var els = bodyEl.getElementsByTagName('*');
-    for (var i = 0, l = els.length, elHeights = [], el; i < l; i++) {
+    for (var i = 0, l = els.length, elHeights = [], elem; i < l; i++) {
       elem = els[i];
       elHeights.push(elem.offsetTop + elem.offsetHeight +
         styledocco.getStyle(elem, 'margin-bottom')

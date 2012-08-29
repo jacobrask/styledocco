@@ -37,7 +37,7 @@ var postMessage = function(target, msg) {
 };
 
 // Check if browser treats data uris as same origin.
-var sameOriginDataUri = function(doc, cb) {
+var sameOriginDataUri = function(cb) {
   var iframeEl = el('iframe', { src: 'data:text/html,' });
   doc.body.appendChild(iframeEl);
   iframeEl.addEventListener('load', function() {
@@ -57,7 +57,7 @@ var scripts = _(headEl.querySelectorAll('script[type="text/preview"]'))
   .pluck('innerHTML')
   .join('');
 
-sameOriginDataUri(doc, function(err, support) {
+sameOriginDataUri(function(err, support) {
   // Loop through code textareas and render the code in iframes.
   _(bodyEl.getElementsByTagName('textarea')).forEach(function(codeEl, idx) {
     addIframe(codeEl, { sameOriginDataUri: support }, idx);
@@ -66,43 +66,48 @@ sameOriginDataUri(doc, function(err, support) {
   });
 });
 
+
+var createPreview = (function() {
+  var dataUriSrc = 'data:text/html;charset=utf-8,' +
+      encodeURIComponent('<!doctype html><html><head></head><body>');
+  var fallbackSrc = location.href.split('#')[0] + '#__preview__';
+
+  return function(id, dataUriSameOrigin) {
+    var iframeEl = el('iframe', {
+      scrolling: 'no',
+      name: 'iframe' + id
+    });
+    iframeEl.src = dataUriSameOrigin ? dataUriSrc : fallbackSrc;
+    return iframeEl;
+  };
+})();
+
+var replaceDocumentContent = function(doc, content) {
+  var el = styledocco.el.makeElFn(doc);
+  doc.head.innerHTML = '';
+  if (content.styles) {
+    doc.head.appendChild(el('style', { text: content.styles }));
+  }
+  if (content.scripts) {
+    doc.head.appendChild(el('script', { text: content.scripts }));
+  }
+  // Replace element to get rid of event listeners
+  doc.body.parentNode.replaceChild(el('body', { html: content.html }), doc.body);
+  return doc;
+};
+
 var addIframe = function(codeEl, support, iframeId) {
-  var previewUrl = location.href.split('#')[0] + '#__preview__';
   var iframeEl;
   var previewEl = el('div.preview', [
     el('div.resizeable', [
-      iframeEl = el('iframe', {
-        scrolling: 'no',
-        name: 'iframe' + iframeId
-      })
+      iframeEl = createPreview(iframeId, support.sameOriginDataUri)
     ])
   ]);
   iframeEl.addEventListener('load', function() {
-    // Abort if we're loading a data uri in a browser without same origin data uri support.
-    if (!support.sameOriginDataUri && this.src !== previewUrl) return;
-    var doc = this.contentDocument;
-    var el = styledocco.el.makeElFn(doc);
-    if (!support.sameOriginDataUri) {
-      // Replace iframe content with the preview code.
-      doc.head.innerHTML = '';
-      doc.body.parentNode.replaceChild(
-        el('body', { html: codeEl.textContent }),
-        doc.body);
-    }
-    // Add scripts and styles.
-    doc.head.appendChild(el('style', { text: styles }));
-    doc.head.appendChild(el('script', { text: scripts }));
+    replaceDocumentContent(this.contentDocument, {
+      styles: styles, scripts: scripts, html: codeEl.textContent });
     postMessage(this, 'getHeight');
   });
-  var iframeSrc;
-  if (!support.sameOriginDataUri) {
-    iframeSrc = previewUrl;
-  } else {
-    iframeSrc = 'data:text/html;charset=utf-8,' +
-      encodeURIComponent('<!doctype html><html><head></head></body>' +
-        codeEl.textContent);
-  }
-  iframeEl.src = iframeSrc;
   var codeDidChange = function() {
     iframeEl.contentDocument.body.innerHTML = this.value;
     postMessage(iframeEl, 'getHeight');
@@ -188,7 +193,9 @@ var resizeableButtons = function() {
 
 // Expose testable functions
 if (typeof test !== 'undefined') {
+  test.createPreview = createPreview;
   test.sameOriginDataUri = sameOriginDataUri;
+  test.replaceDocumentContent = replaceDocumentContent;
 }
 
 })();

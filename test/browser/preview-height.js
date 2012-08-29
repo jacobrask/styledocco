@@ -3,9 +3,6 @@
 var getContentHeight = test.getContentHeight;
 
 var doc = document;
-var contentEl = doc.createElement('div');
-contentEl.id = 'content';
-doc.body.appendChild(contentEl);
 
 buster.testCase("Get document height", {
   setUp: function() {
@@ -14,9 +11,13 @@ buster.testCase("Get document height", {
     }
     this.styleSheet = doc.styleSheets[0];
     this.styleSheet.insertRule('* { margin: 0; padding: 0 }', 0);
+    this.testEl = doc.createElement('div');
+    this.testEl.id = 'content';
+    doc.body.appendChild(this.testEl);
   },
   tearDown: function() {
     while (this.styleSheet.cssRules.length) this.styleSheet.deleteRule(0);
+    doc.body.removeChild(this.testEl);
   },
   "position: static": function() {
     this.styleSheet.insertRule('#content { height: 200px }', 1);

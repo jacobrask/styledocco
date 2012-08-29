@@ -4,6 +4,9 @@
 
 'use strict';
 
+var doc = document;
+var win = window;
+
 // Inspired by / stolen from "Sugared DOM" https://gist.github.com/1532562
 var makeElFn = function (doc) {
   var win = doc.defaultView;
@@ -82,8 +85,8 @@ var getStyle = function(el, prop) {
   return isNaN(integer) ? val : integer;
 };
 
-var styledocco = window.styledocco = {};
-styledocco.el = makeElFn(document);
+var styledocco = win.styledocco = {};
+styledocco.el = makeElFn(doc);
 styledocco.el.makeElFn = makeElFn;
 styledocco.getStyle = getStyle;
 
