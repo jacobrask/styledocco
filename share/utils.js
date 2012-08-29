@@ -35,10 +35,8 @@ var makeElFn = function (doc) {
   };
 
   var appendChildren = function (el, children) {
-    if (el.tagName.toLowerCase() === 'html') console.log(children);
     for (var i = 0, child; i < children.length; i += 1) {
       child = children[i];
-      if (!child) console.log(el);
       if (child instanceof win.Array) {
         appendChildren(el, child);
       } else {
