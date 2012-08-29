@@ -52,25 +52,24 @@ if (styles.length) {
 // ========
 // Get bottom-most point in document with an element.
 // `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
-var getContentHeight = (function() {
+var getContentHeight = function(doc) {
+  var bodyEl = doc.body;
+  if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
+  var els = bodyEl.getElementsByTagName('*');
+  for (var i = 0, l = els.length, elHeights = [], elem; i < l; i++) {
+    elem = els[i];
+    elHeights.push(elem.offsetTop + elem.offsetHeight +
+      styledocco.getStyle(elem, 'margin-bottom')
+    );
+  }
   var extraHeight = styledocco.getStyle(bodyEl, 'padding-bottom');
-  return function() {
-    if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
-    var els = bodyEl.getElementsByTagName('*');
-    for (var i = 0, l = els.length, elHeights = [], elem; i < l; i++) {
-      elem = els[i];
-      elHeights.push(elem.offsetTop + elem.offsetHeight +
-        styledocco.getStyle(elem, 'margin-bottom')
-      );
-    }
-    var height = Math.max.apply(Math, elHeights) + extraHeight;
-    return Math.max(height, bodyEl.offsetHeight);
-  };
-})();
+  var height = Math.max.apply(Math, elHeights) + extraHeight;
+  return Math.max(height, bodyEl.offsetHeight);
+};
 
 var callbacks = {
   getHeight: function() {
-    win.parent.postMessage({ height: getContentHeight() }, '*');
+    win.parent.postMessage({ height: getContentHeight(doc) }, '*');
   }
 };
 win.addEventListener('message', function (ev) {
