@@ -7,8 +7,6 @@
 var doc = document;
 var win = window;
 var el = styledocco.el;
-var headEl = doc.head;
-var bodyEl = doc.body;
 
 // Filter based on regular expression
 _.fns.filterRe = function(exp) {
@@ -68,15 +66,15 @@ if (typeof test !== 'undefined') {
 // Add a new style element with the processed pseudo class styles.
 var styles = clonePseudoClasses(doc.styleSheets);
 if (styles.length) {
-  headEl.insertBefore(
+  doc.head.insertBefore(
     el('style', { text: styles }),
-    headEl.getElementsByTagName('style')[0]
+    doc.head.getElementsByTagName('style')[0]
   );
 }
 
 var callbacks = {
   getHeight: function() {
-    win.parent.postMessage({ height: getContentHeight(bodyEl) }, '*');
+    win.parent.postMessage({ height: getContentHeight(doc.body) }, '*');
   }
 };
 win.addEventListener('message', function (ev) {
