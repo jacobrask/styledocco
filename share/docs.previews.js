@@ -124,7 +124,7 @@ var autoResizeTextArea = function(elem) {
   mirrorEl.style.position = 'absolute';
   mirrorEl.style.left = '-9999px';
   bodyEl.appendChild(mirrorEl);
-  var maxHeight = styledocco.getStyle('max-height');
+  var maxHeight = styledocco.getStyle(elem, 'max-height');
   var codeDidChange = function(ev) {
     mirrorEl.textContent = this.value + '\n';
     var height = mirrorEl.offsetHeight + 2; // Account for borders.

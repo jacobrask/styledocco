@@ -7,6 +7,8 @@
 var doc = document;
 var win = window;
 var el = styledocco.el;
+var headEl = doc.head;
+var bodyEl = doc.body;
 
 // Filter based on regular expression
 _.fns.filterRe = function(exp) {
@@ -15,7 +17,8 @@ _.fns.filterRe = function(exp) {
 
 // Clone pseudo classes
 // ====================
-// Scans your stylesheet for pseudo classes and adds a class with the same name.
+// Find the pseudo classes in a stylesheet object and return a string with
+// the pseudo class selectors replaced with regular class selectors.
 var clonePseudoClasses = (function() {
   // Compile regular expression.
   var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
@@ -35,8 +38,32 @@ var clonePseudoClasses = (function() {
   };
 })();
 
-var headEl = doc.head;
-var bodyEl = doc.body;
+
+// Get content height
+// ==================
+// Get the distance between element`s offsetParent and the bottom-most
+// point of element. `offsetHeight` does not work with absolute or
+// fixed positioned elements.
+var getContentHeight = function(elem) {
+  if (elem.childElementCount === 0) return elem.offsetHeight;
+  var children = elem.getElementsByTagName('*');
+  for (var i = 0, l = children.length, childHeights = [], child; i < l; i++) {
+    child = children[i];
+    childHeights.push(child.offsetTop + child.offsetHeight +
+      styledocco.getStyle(child, 'margin-bottom')
+    );
+  }
+  var extraHeight = styledocco.getStyle(elem, 'padding-bottom');
+  var height = Math.max.apply(Math, childHeights) + extraHeight;
+  return Math.max(height, elem.offsetHeight);
+};
+
+// Expose testable functions
+if (typeof test !== 'undefined') {
+  test.clonePseudoClasses = clonePseudoClasses;
+  test.getContentHeight = getContentHeight;
+}
+
 
 // Add a new style element with the processed pseudo class styles.
 var styles = clonePseudoClasses(doc.styleSheets);
@@ -47,40 +74,14 @@ if (styles.length) {
   );
 }
 
-
-// Resizing
-// ========
-// Get bottom-most point in document with an element.
-// `offsetHeight`/`scrollHeight` will not work with absolute or fixed elements.
-var getContentHeight = function(doc) {
-  var bodyEl = doc.body;
-  if (bodyEl.childElementCount === 0) return bodyEl.offsetHeight;
-  var els = bodyEl.getElementsByTagName('*');
-  for (var i = 0, l = els.length, elHeights = [], elem; i < l; i++) {
-    elem = els[i];
-    elHeights.push(elem.offsetTop + elem.offsetHeight +
-      styledocco.getStyle(elem, 'margin-bottom')
-    );
-  }
-  var extraHeight = styledocco.getStyle(bodyEl, 'padding-bottom');
-  var height = Math.max.apply(Math, elHeights) + extraHeight;
-  return Math.max(height, bodyEl.offsetHeight);
-};
-
 var callbacks = {
   getHeight: function() {
-    win.parent.postMessage({ height: getContentHeight(doc) }, '*');
+    win.parent.postMessage({ height: getContentHeight(bodyEl) }, '*');
   }
 };
 win.addEventListener('message', function (ev) {
   if (ev.data == null) return;
   if (typeof ev.data === 'string') callbacks[ev.data]();
 }, false);
-
-// Expose testable functions
-if (typeof test !== 'undefined') {
-  test.clonePseudoClasses = clonePseudoClasses;
-  test.getContentHeight = getContentHeight;
-}
 
 }());

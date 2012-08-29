@@ -5,7 +5,6 @@
 'use strict';
 
 var doc = document;
-var win = window;
 
 // Inspired by / stolen from "Sugared DOM" https://gist.github.com/1532562
 var makeElFn = function (doc) {
@@ -80,12 +79,12 @@ var makeElFn = function (doc) {
 
 // Get the style property of element. Convert numerical values to integers.
 var getStyle = function(el, prop) {
-  var val = win.getComputedStyle(el).getPropertyValue(prop);
+  var val = el.ownerDocument.defaultView.getComputedStyle(el).getPropertyValue(prop);
   var integer = parseInt(val, 10);
   return isNaN(integer) ? val : integer;
 };
 
-var styledocco = win.styledocco = {};
+var styledocco = window.styledocco = {};
 styledocco.el = makeElFn(doc);
 styledocco.el.makeElFn = makeElFn;
 styledocco.getStyle = getStyle;
