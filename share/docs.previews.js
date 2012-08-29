@@ -64,26 +64,6 @@ var createPreview = (function() {
   };
 })();
 
-
-// Get preview styles intended for preview iframes.
-var styles = _(headEl.querySelectorAll('style[type="text/preview"]'))
-  .pluck('innerHTML')
-  .join('');
-// Get preview scripts intended for preview iframes.
-var scripts = _(headEl.querySelectorAll('script[type="text/preview"]'))
-  .pluck('innerHTML')
-  .join('');
-
-sameOriginDataUri(function(err, support) {
-  // Loop through code textareas and render the code in iframes.
-  _(bodyEl.getElementsByTagName('textarea')).forEach(function(codeEl, idx) {
-    addIframe(codeEl, { sameOriginDataUri: support }, idx);
-    resizeableButtons();
-    autoResizeTextArea(codeEl);
-  });
-});
-
-
 var replaceDocumentContent = function(doc, content) {
   var el = styledocco.el.makeElFn(doc);
   doc.head.innerHTML = '';
@@ -98,26 +78,39 @@ var replaceDocumentContent = function(doc, content) {
   return doc;
 };
 
-var addIframe = function(codeEl, support, iframeId) {
-  var iframeEl;
-  var previewEl = el('div.preview', [
-    el('div.resizeable', [
-      iframeEl = createPreview(iframeId, support.sameOriginDataUri)
-    ])
-  ]);
-  iframeEl.addEventListener('load', function() {
-    replaceDocumentContent(this.contentDocument, {
-      styles: styles, scripts: scripts, html: codeEl.textContent });
-    postMessage(this, 'getHeight');
-  });
-  var codeDidChange = function() {
-    iframeEl.contentDocument.body.innerHTML = this.value;
-    postMessage(iframeEl, 'getHeight');
+var addIframe = (function() {
+  // Get preview styles intended for preview iframes.
+  var styles = _(headEl.querySelectorAll('style[type="text/preview"]'))
+    .pluck('innerHTML')
+    .join('');
+  // Get preview scripts intended for preview iframes.
+  var scripts = _(headEl.querySelectorAll('script[type="text/preview"]'))
+    .pluck('innerHTML')
+    .join('');
+
+  return function(codeEl, support, iframeId) {
+    var iframeEl;
+    var previewEl = el('div.preview', [
+      el('div.resizeable', [
+        iframeEl = createPreview(iframeId, support.sameOriginDataUri)
+      ])
+    ]);
+    iframeEl.addEventListener('load', function() {
+      replaceDocumentContent(this.contentDocument, {
+        styles: styles, scripts: scripts, html: codeEl.textContent });
+      postMessage(this, 'getHeight');
+    });
+    var codeDidChange = function() {
+      iframeEl.contentDocument.body.innerHTML = this.value;
+      postMessage(iframeEl, 'getHeight');
+    };
+    codeEl.addEventListener('keypress', codeDidChange);
+    codeEl.addEventListener('keyup', codeDidChange);
+    codeEl.parentNode.insertBefore(previewEl, codeEl);
   };
-  codeEl.addEventListener('keypress', codeDidChange);
-  codeEl.addEventListener('keyup', codeDidChange);
-  codeEl.parentNode.insertBefore(previewEl, codeEl);
-};
+})();
+
+
 
 // Add an element with the same styles and content as the textarea to
 // calculate the height of the textarea content.
@@ -199,5 +192,15 @@ if (typeof test !== 'undefined') {
   test.sameOriginDataUri = sameOriginDataUri;
   test.replaceDocumentContent = replaceDocumentContent;
 }
+
+
+sameOriginDataUri(function(err, support) {
+  // Loop through code textareas and render the code in iframes.
+  _(bodyEl.getElementsByTagName('textarea')).forEach(function(codeEl, idx) {
+    addIframe(codeEl, { sameOriginDataUri: support }, idx);
+    resizeableButtons();
+    autoResizeTextArea(codeEl);
+  });
+});
 
 })();
