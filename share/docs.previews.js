@@ -75,7 +75,6 @@ var replaceDocumentContent = function(doc, content) {
   }
   // Replace element to get rid of event listeners
   doc.body.parentNode.replaceChild(el('body', { html: content.html }), doc.body);
-  return doc;
 };
 
 var addIframe = (function() {
@@ -89,27 +88,23 @@ var addIframe = (function() {
     .join('');
 
   return function(codeEl, support, iframeId) {
-    var iframeEl;
-    var previewEl = el('div.preview', [
-      el('div.resizeable', [
-        iframeEl = createPreview(iframeId, support.sameOriginDataUri)
-      ])
-    ]);
+    var iframeEl = createPreview(iframeId, support.sameOriginDataUri);
+    var previewEl = el('.preview', [ el('.resizeable', [ iframeEl ]) ]);
     iframeEl.addEventListener('load', function() {
       replaceDocumentContent(this.contentDocument, {
-        styles: styles, scripts: scripts, html: codeEl.textContent });
+        styles: styles, scripts: scripts, html: codeEl.textContent
+      });
       postMessage(this, 'getHeight');
     });
     var codeDidChange = function() {
       iframeEl.contentDocument.body.innerHTML = this.value;
-      postMessage(iframeEl, 'getHeight');
+      postMessage(this, 'getHeight');
     };
     codeEl.addEventListener('keypress', codeDidChange);
     codeEl.addEventListener('keyup', codeDidChange);
     codeEl.parentNode.insertBefore(previewEl, codeEl);
   };
 })();
-
 
 
 // Add an element with the same styles and content as the textarea to
@@ -134,6 +129,13 @@ var autoResizeTextArea = function(origEl) {
   return mirrorEl;
 };
 
+// Add `className` to `el` and remove `className` from `el`'s siblings
+var toggleSiblingClassNames = function(className, el) {
+  _(el.parentNode.children).pluck('classList').invoke('remove', className);
+  el.classList.add(className);
+};
+var activateElement = toggleSiblingClassNames.bind(undefined, 'is-active');
+
 var resizeableButtons = function() {
   var settingsEl = bodyEl.getElementsByClassName('settings')[0];
   var resizeableEls = bodyEl.getElementsByClassName('resizeable');
@@ -141,8 +143,7 @@ var resizeableButtons = function() {
   var resizePreviews = function(width) {
     doc.cookie = 'preview-width=' + width;
     _(resizeableEls).forEach(function(el) {
-      if (width === 'auto') width = el.parentNode.offsetWidth;
-      el.style.width = width + 'px';
+      el.width = (width === 'auto' ? el.parentNode.offsetWidth : width) + 'px';
       // TODO: Add CSS transitions and update height after `transitionend` event
       postMessage(el.getElementsByTagName('iframe')[0], 'getHeight');
     });
@@ -152,9 +153,7 @@ var resizeableButtons = function() {
   var previewWidth = keyvalParse(doc.cookie)['preview-width'];
   if (previewWidth) {
     resizePreviews(previewWidth);
-    removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
-    var btn = settingsEl.querySelector('button[data-width="' + previewWidth + '"]');
-    if (btn) btn.classList.add('is-active');
+    activateElement('button[data-width="' + previewWidth + '"]');
   }
 
   win.addEventListener('message', function (ev) {
@@ -187,6 +186,7 @@ var resizeableButtons = function() {
 
 // Expose testable functions
 if (typeof test !== 'undefined') {
+  test.activateElement = activateElement;
   test.autoResizeTextArea = autoResizeTextArea;
   test.createPreview = createPreview;
   test.sameOriginDataUri = sameOriginDataUri;

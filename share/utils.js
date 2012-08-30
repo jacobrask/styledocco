@@ -17,6 +17,7 @@ var makeElFn = function (doc) {
     name: 'name',
     src: 'src',
     text: 'textContent',
+    title: 'title',
     value: 'value'
   };
   var booleanProperties = [ 'checked', 'disabled', 'hidden', 'multiple', 'selected' ];
@@ -25,7 +26,7 @@ var makeElFn = function (doc) {
     var prop = directProperties[key];
     if (prop) {
       el[prop] = (value == null ? '' : '' + value);
-    } else if (booleanProperties.indexOf(key !== -1)) {
+    } else if (booleanProperties.indexOf(key) !== -1) {
       el[key] = !!value;
     } else if (value == null) {
       el.removeAttribute(key);
