@@ -17,6 +17,11 @@ var el = styledocco.el;
 var headEl = doc.head;
 var bodyEl = doc.body;
 
+// Filter based on regular expression
+_.fns.filterRe = function(exp) {
+  return this.filter(function(item) { return item.match(exp); });
+};
+
 // Parse `key=value; key=value` strings (for cookies).
 var keyvalParse = function(str) {
   var obj = {};
@@ -35,6 +40,30 @@ var removeClass = function(els, className) {
 var postMessage = function(target, msg) {
   target.contentDocument.defaultView.postMessage(msg, '*');
 };
+
+// Clone pseudo classes
+// ====================
+// Find the pseudo classes in a stylesheet object and return a string with
+// the pseudo class selectors replaced with regular class selectors.
+var clonePseudoClasses = (function() {
+  // Compile regular expression.
+  var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
+                  'enabled', 'disabled', 'checked' ];
+  var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
+  return function(styleSheets) {
+    return _(styleSheets)
+      .pluck('cssRules')
+      .map(function(rule) {
+        return _(rule)
+          .pluck('cssText')
+          .filterRe(pseudoRe) // Keep only rules with pseudo classes
+          .invoke('replace', pseudoRe, ".\\3A $1") // Replace : with . and encoded :
+          .join('');
+      })
+      .join('');
+  };
+})();
+
 
 // Check if browser treats data uris as same origin.
 var sameOriginDataUri = function(cb) {
@@ -91,9 +120,18 @@ var addIframe = (function() {
     var iframeEl = createPreview(iframeId, support.sameOriginDataUri);
     var previewEl = el('.preview', [ el('.resizeable', [ iframeEl ]) ]);
     iframeEl.addEventListener('load', function() {
-      replaceDocumentContent(this.contentDocument, {
+      var doc = this.contentDocument;
+      replaceDocumentContent(doc, {
         styles: styles, scripts: scripts, html: codeEl.textContent
       });
+      // Add a new style element with the processed pseudo class styles.
+      var processedStyles = clonePseudoClasses(doc.styleSheets);
+      if (processedStyles.length) {
+        doc.head.insertBefore(
+          el('style', { text: processedStyles }),
+          doc.head.getElementsByTagName('style')[0]
+        );
+      }
       postMessage(this, 'getHeight');
     });
     var codeDidChange = function() {
@@ -188,6 +226,7 @@ var resizeableButtons = function() {
 if (typeof test !== 'undefined') {
   test.activateElement = activateElement;
   test.autoResizeTextArea = autoResizeTextArea;
+  test.clonePseudoClasses = clonePseudoClasses;
   test.createPreview = createPreview;
   test.sameOriginDataUri = sameOriginDataUri;
   test.replaceDocumentContent = replaceDocumentContent;
