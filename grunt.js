@@ -10,17 +10,13 @@ module.exports = function(grunt) {
                'test/**/*.js' ]
     },
     min: {
-      docs: {
+      dist: {
         src: [ 'node_modules/iterhate/iterhate.js', 'share/utils.js', 'share/docs*.js' ],
         dest: 'lib/docs.js'
-      },
-      previews: {
-        src: [ 'node_modules/iterhate/iterhate.js', 'share/utils.js', 'share/previews*.js' ],
-        dest: 'lib/previews.js'
       }
     },
     cssmin: {
-      docs: {
+      dist: {
         src: ['share/docs.css'],
         dest: 'lib/docs.css'
       }

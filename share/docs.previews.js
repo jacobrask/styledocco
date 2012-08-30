@@ -64,6 +64,24 @@ var clonePseudoClasses = (function() {
   };
 })();
 
+// Get content height
+// ==================
+// Get the distance between element`s offsetParent and the bottom-most
+// point of element. `offsetHeight` does not work with absolute or
+// fixed positioned elements.
+var getContentHeight = function(elem) {
+  if (elem.childElementCount === 0) return elem.offsetHeight;
+  var children = elem.getElementsByTagName('*');
+  for (var i = 0, l = children.length, childHeights = [], child; i < l; i++) {
+    child = children[i];
+    childHeights.push(child.offsetTop + child.offsetHeight +
+      styledocco.getStyle(child, 'margin-bottom')
+    );
+  }
+  var extraHeight = styledocco.getStyle(elem, 'padding-bottom');
+  var height = Math.max.apply(Math, childHeights) + extraHeight;
+  return Math.max(height, elem.offsetHeight);
+};
 
 // Check if browser treats data uris as same origin.
 var sameOriginDataUri = function(cb) {
@@ -132,11 +150,12 @@ var addIframe = (function() {
           doc.head.getElementsByTagName('style')[0]
         );
       }
-      postMessage(this, 'getHeight');
+      iframeEl.parentNode.style.height = (getContentHeight(doc.body) + 30) + 'px';
     });
     var codeDidChange = function() {
-      iframeEl.contentDocument.body.innerHTML = this.value;
-      postMessage(this, 'getHeight');
+      var iframeBodyEl = iframeEl.contentDocument.body;
+      iframeBodyEl.innerHTML = this.value;
+      iframeEl.parentNode.style.height = (getContentHeight(iframeBodyEl) + 30) + 'px';
     };
     codeEl.addEventListener('keypress', codeDidChange);
     codeEl.addEventListener('keyup', codeDidChange);
@@ -183,7 +202,10 @@ var resizeableButtons = function() {
     _(resizeableEls).forEach(function(el) {
       el.width = (width === 'auto' ? el.parentNode.offsetWidth : width) + 'px';
       // TODO: Add CSS transitions and update height after `transitionend` event
-      postMessage(el.getElementsByTagName('iframe')[0], 'getHeight');
+      el.style.height = (
+        getContentHeight(
+          el.getElementsByTagName('iframe')[0].contentDocument.body
+        ) + 30) + 'px';
     });
   };
 
@@ -193,16 +215,6 @@ var resizeableButtons = function() {
     resizePreviews(previewWidth);
     activateElement('button[data-width="' + previewWidth + '"]');
   }
-
-  win.addEventListener('message', function (ev) {
-    if (ev.data == null || !ev.source) return;
-    var data = ev.data;
-    var sourceFrameEl = doc.getElementsByName(ev.source.name)[0];
-    // Set iframe height
-    if (data.height != null && sourceFrameEl) {
-      sourceFrameEl.parentNode.style.height = (data.height + resizeableElOffset) + 'px';
-    }
-  }, false);
 
   // Resizing buttons
   if (settingsEl && resizeableEls.length > 0) {
@@ -228,6 +240,7 @@ if (typeof test !== 'undefined') {
   test.autoResizeTextArea = autoResizeTextArea;
   test.clonePseudoClasses = clonePseudoClasses;
   test.createPreview = createPreview;
+  test.getContentHeight = getContentHeight;
   test.sameOriginDataUri = sameOriginDataUri;
   test.replaceDocumentContent = replaceDocumentContent;
 }

@@ -14,7 +14,6 @@ config["Preview scripts"] = {
     "test/browser/setup.js",
     "node_modules/iterhate/iterhate.js",
     "share/utils.js",
-    "share/previews.js",
     "share/docs.previews.js"
   ],
   tests: [

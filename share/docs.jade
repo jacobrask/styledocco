@@ -16,12 +16,9 @@ html
     // Preview styles (all input CSS)
     if (resources && resources.css)
       style(type="text/preview") !{resources.css}
-    // Preview scripts
-    != '<script type="text/preview">'
-      include previews.js
-    - if (resources && resources.js)
-      !{resources.js}
-    != '</script>'
+    // Custom preview scripts to include
+    if (resources && resources.js)
+      script(type="text/preview") !{resources.js}
   body
     nav.bar.top.cf
       .container
