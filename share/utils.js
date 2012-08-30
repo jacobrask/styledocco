@@ -75,9 +75,11 @@ var makeElFn = function (doc) {
   return create;
 };
 
-// Get the style property of element. Convert numerical values to integers.
+// Get the style property of element. Convert numerical values to integers
+// and falsy values to null.
 var getStyle = function(el, prop) {
   var val = el.ownerDocument.defaultView.getComputedStyle(el).getPropertyValue(prop);
+  val = ([ 'none', '' ].indexOf(val) !== -1) ? null : val;
   var integer = parseInt(val, 10);
   return isNaN(integer) ? val : integer;
 };
