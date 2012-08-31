@@ -1,4 +1,4 @@
-// StyleDocco documentation code/preview rendering and handling
+// StyleDocco preview rendering
 // ===================================================================
 // Takes the HTML code from preview textareas and renders iframes with
 // the specified preview CSS and JavaScript applied.
@@ -12,43 +12,38 @@
 if (location.hash === '#__preview__' || location.protocol === 'data:') return;
 
 var doc = document;
-var win = window;
 var el = styledocco.el;
 var headEl = doc.head;
 var bodyEl = doc.body;
 
-// Filter based on regular expression
+var styledocco = window.styledocco || {};
+
+styledocco.addPreviews = function(selector, cb) {
+  var codeEls = bodyEl.querySelectorAll(selector);
+  var done = codeEls.length;
+  // Loop through code examples and render the code in iframes.
+  _(codeEls).forEach(function(codeEl) {
+    addIframe(codeEl);
+    if (done--) cb();
+  });
+};
+
+// Filter based on regular expression.
 _.fns.filterRe = function(exp) {
   return this.filter(function(item) { return item.match(exp); });
 };
 
-// Parse `key=value; key=value` strings (for cookies).
-var keyvalParse = function(str) {
-  var obj = {};
-  var pairs = str.split(';');
-  for (var i = 0; pairs.length > i; i++) {
-    var kvs = pairs[i].trim().split('=');
-    obj[kvs[0]] = kvs[1];
-  }
-  return obj;
-};
-
-var removeClass = function(els, className) {
-  return _(els).pluck('classList').invoke('remove', className);
-};
-
-var postMessage = function(target, msg) {
-  target.contentDocument.defaultView.postMessage(msg, '*');
-};
 
 // Clone pseudo classes
 // ====================
-// Find the pseudo classes in a stylesheet object and return a string with
-// the pseudo class selectors replaced with regular class selectors.
+// Clone pseudo class selectors in a stylesheet with regular class selectors.
+// For example, `a:hover` becomes `a.:hover`.
+//
+// [StyleSheetList] -> [String]
 var clonePseudoClasses = (function() {
   // Compile regular expression.
   var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
-                  'enabled', 'disabled', 'checked' ];
+    'enabled', 'disabled', 'checked' ];
   var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
   return function(styleSheets) {
     return _(styleSheets)
@@ -64,65 +59,74 @@ var clonePseudoClasses = (function() {
   };
 })();
 
-// Get content height
-// ==================
-// Get the distance between element`s offsetParent and the bottom-most
-// point of element. `offsetHeight` does not work with absolute or
-// fixed positioned elements.
-var getContentHeight = function(elem) {
-  if (elem.childElementCount === 0) return elem.offsetHeight;
-  var children = elem.getElementsByTagName('*');
-  for (var i = 0, l = children.length, childHeights = [], child; i < l; i++) {
-    child = children[i];
-    childHeights.push(child.offsetTop + child.offsetHeight +
-      styledocco.getStyle(child, 'margin-bottom')
-    );
-  }
-  var extraHeight = styledocco.getStyle(elem, 'padding-bottom');
-  var height = Math.max.apply(Math, childHeights) + extraHeight;
-  return Math.max(height, elem.offsetHeight);
-};
 
+// Detect same origin data uri support
+// ===================================
 // Check if browser treats data uris as same origin.
-var sameOriginDataUri = function(cb) {
-  var iframeEl = el('iframe', { src: 'data:text/html,' });
-  doc.body.appendChild(iframeEl);
-  iframeEl.addEventListener('load', function() {
-    var support = false;
-    if (this.contentDocument) support = true;
-    doc.body.removeChild(this);
-    cb(null, support);
-  });
-};
+//
+// [Function] -> *async* -> [Boolean]
+var sameOriginDataUri = (function() {
+  var support = null;
+  return function(cb) {
+    if (support !== null) return setTimeout(cb, 10, support);
+    var iframeEl = el('iframe', { src: 'data:text/html,' });
+    doc.body.appendChild(iframeEl);
+    iframeEl.addEventListener('load', function() {
+      support = typeof this.contentDocument !== 'undefined';
+      doc.body.removeChild(this);
+      return cb(support);
+    });
+  };
+})();
 
-// Create a preview iframe with a data uri src for supporting browsers,
+
+// Create local iframe
+// ===================
+// Create an iframe with a data uri src for supporting browsers,
 // and fallback for others.
-var createPreview = (function() {
+//
+// [Boolean] -> [HTMLIFrameElement]
+var createLocalIframe = (function() {
   var dataUriSrc = 'data:text/html;charset=utf-8,' +
       encodeURIComponent('<!doctype html><html><head></head><body>');
   var fallbackSrc = location.href.split('#')[0] + '#__preview__';
-  return function(id, dataUriSameOrigin) {
-    var iframeEl = el('iframe', {
-      scrolling: 'no',
-      name: 'iframe' + id
-    });
+  return function(dataUriSameOrigin) {
+    var iframeEl = el('iframe', { scrolling: 'no' });
     iframeEl.src = dataUriSameOrigin ? dataUriSrc : fallbackSrc;
     return iframeEl;
   };
 })();
+var createPreview = function(cb) {
+  return sameOriginDataUri(function(support) {
+    cb(createLocalIframe(support));
+  });
+};
 
+
+// Replace document content
+// ========================
+// Replace an entire `documentElement` with a new one.
+// Add supplied body content, scripts and styles.
+//
+// [HTMLDocument, Object] -> [HTMLDocument]
 var replaceDocumentContent = function(doc, content) {
+  // We want to replace the HTML element to avoid leaking any properties,
+  // listeners, etc. doc.write did unpredictable things.
   var el = styledocco.el.makeElFn(doc);
-  doc.head.innerHTML = '';
+  var htmlEl = el('html');
+  var headEl = el('head');
+  htmlEl.appendChild(headEl);
   if (content.styles) {
-    doc.head.appendChild(el('style', { text: content.styles }));
+    headEl.appendChild(el('style', { text: content.styles }));
   }
   if (content.scripts) {
-    doc.head.appendChild(el('script', { text: content.scripts }));
+    headEl.appendChild(el('script', { text: content.scripts }));
   }
-  // Replace element to get rid of event listeners
-  doc.body.parentNode.replaceChild(el('body', { html: content.html }), doc.body);
+  htmlEl.appendChild(el('body', { html: content.html }));
+  doc.replaceChild(htmlEl, doc.documentElement);
 };
+
+
 
 var addIframe = (function() {
   // Get preview styles intended for preview iframes.
@@ -134,125 +138,41 @@ var addIframe = (function() {
     .pluck('innerHTML')
     .join('');
 
-  return function(codeEl, support, iframeId) {
-    var iframeEl = createPreview(iframeId, support.sameOriginDataUri);
-    var previewEl = el('.preview', [ el('.resizeable', [ iframeEl ]) ]);
-    iframeEl.addEventListener('load', function() {
-      var doc = this.contentDocument;
-      replaceDocumentContent(doc, {
-        styles: styles, scripts: scripts, html: codeEl.textContent
+  return function(codeEl) {
+    createPreview(function(iframeEl) {
+      var previewEl = el('.preview', [ el('.resizeable', [ iframeEl ]) ]);
+      iframeEl.addEventListener('load', function() {
+        var doc = this.contentDocument;
+        replaceDocumentContent(doc, {
+          styles: styles, scripts: scripts, html: codeEl.textContent
+        });
+        // Add a new style element with the processed pseudo class styles.
+        var processedStyles = clonePseudoClasses(doc.styleSheets);
+        if (processedStyles.length) {
+          doc.head.insertBefore(
+            el('style', { text: processedStyles }),
+            doc.head.getElementsByTagName('style')[0]
+          );
+        }
       });
-      // Add a new style element with the processed pseudo class styles.
-      var processedStyles = clonePseudoClasses(doc.styleSheets);
-      if (processedStyles.length) {
-        doc.head.insertBefore(
-          el('style', { text: processedStyles }),
-          doc.head.getElementsByTagName('style')[0]
-        );
-      }
-      iframeEl.parentNode.style.height = (getContentHeight(doc.body) + 30) + 'px';
-    });
-    var codeDidChange = function() {
-      var iframeBodyEl = iframeEl.contentDocument.body;
-      iframeBodyEl.innerHTML = this.value;
-      iframeEl.parentNode.style.height = (getContentHeight(iframeBodyEl) + 30) + 'px';
+      var codeDidChange = function() {
+        var iframeBodyEl = iframeEl.contentDocument.body;
+        iframeBodyEl.innerHTML = this.value;
+      };
+      codeEl.addEventListener('keypress', codeDidChange);
+      codeEl.addEventListener('keyup', codeDidChange);
+      codeEl.parentNode.insertBefore(previewEl, codeEl);
     };
-    codeEl.addEventListener('keypress', codeDidChange);
-    codeEl.addEventListener('keyup', codeDidChange);
-    codeEl.parentNode.insertBefore(previewEl, codeEl);
   };
 })();
 
 
-// Add an element with the same styles and content as the textarea to
-// calculate the height of the textarea content.
-var autoResizeTextArea = function(origEl) {
-  var mirrorEl = el('div', { className: origEl.className });
-  mirrorEl.style.position = 'absolute';
-  mirrorEl.style.left = '-9999px';
-  origEl.parentNode.appendChild(mirrorEl);
-  var borderHeight = styledocco.getStyle(origEl, 'border-top') +
-                     styledocco.getStyle(origEl, 'border-bottom');
-  var maxHeight = styledocco.getStyle(origEl, 'max-height');
-  var codeDidChange = function(ev) {
-    mirrorEl.textContent = origEl.value + '\n';
-    var height = mirrorEl.offsetHeight;
-    origEl.style.height = (height - borderHeight) + 'px';
-    origEl.style.overflowY = (maxHeight && height >= maxHeight) ? 'auto' : 'hidden';
-  };
-  origEl.addEventListener('keypress', codeDidChange);
-  origEl.addEventListener('keyup', codeDidChange);
-  codeDidChange(origEl);
-  return mirrorEl;
-};
-
-// Add `className` to `el` and remove `className` from `el`'s siblings
-var toggleSiblingClassNames = function(className, el) {
-  _(el.parentNode.children).pluck('classList').invoke('remove', className);
-  el.classList.add(className);
-};
-var activateElement = toggleSiblingClassNames.bind(undefined, 'is-active');
-
-var resizeableButtons = function() {
-  var settingsEl = bodyEl.getElementsByClassName('settings')[0];
-  var resizeableEls = bodyEl.getElementsByClassName('resizeable');
-  var resizeableElOffset = 30; // `.resizeable` padding
-  var resizePreviews = function(width) {
-    doc.cookie = 'preview-width=' + width;
-    _(resizeableEls).forEach(function(el) {
-      el.width = (width === 'auto' ? el.parentNode.offsetWidth : width) + 'px';
-      // TODO: Add CSS transitions and update height after `transitionend` event
-      el.style.height = (
-        getContentHeight(
-          el.getElementsByTagName('iframe')[0].contentDocument.body
-        ) + 30) + 'px';
-    });
-  };
-
-  // Resize previews to the cookie value.
-  var previewWidth = keyvalParse(doc.cookie)['preview-width'];
-  if (previewWidth) {
-    resizePreviews(previewWidth);
-    activateElement('button[data-width="' + previewWidth + '"]');
-  }
-
-  // Resizing buttons
-  if (settingsEl && resizeableEls.length > 0) {
-    settingsEl.hidden = false;
-    settingsEl.addEventListener('click', function(event) {
-      var tagName = event.target.tagName.toLowerCase();
-      var btn;
-      if (tagName === 'button') btn = event.target;
-      else if (tagName === 'svg') btn = event.target.parentNode;
-      else return;
-      event.preventDefault();
-      removeClass(settingsEl.getElementsByClassName('is-active'), 'is-active');
-      btn.classList.add('is-active');
-      var width = btn.dataset.width;
-      resizePreviews(width);
-    });
-  }
-};
-
 // Expose testable functions
 if (typeof test !== 'undefined') {
-  test.activateElement = activateElement;
-  test.autoResizeTextArea = autoResizeTextArea;
   test.clonePseudoClasses = clonePseudoClasses;
   test.createPreview = createPreview;
-  test.getContentHeight = getContentHeight;
   test.sameOriginDataUri = sameOriginDataUri;
   test.replaceDocumentContent = replaceDocumentContent;
 }
-
-
-sameOriginDataUri(function(err, support) {
-  // Loop through code textareas and render the code in iframes.
-  _(bodyEl.getElementsByTagName('textarea')).forEach(function(codeEl, idx) {
-    addIframe(codeEl, { sameOriginDataUri: support }, idx);
-    resizeableButtons();
-    autoResizeTextArea(codeEl);
-  });
-});
 
 })();
