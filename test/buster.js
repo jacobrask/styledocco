@@ -7,6 +7,14 @@ config["StyleDocco parser"] = {
     "cli.js"
   ]
 };
+
+config['Sandbocss'] = {
+  environment: 'browser',
+  rootPath: '../',
+  sources: [ 'share/sandbocss.js' ],
+  tests: [ 'test/browser/sandbocss.js' ]
+};
+
 config["Preview scripts"] = {
   environment: "browser",
   rootPath: '../',

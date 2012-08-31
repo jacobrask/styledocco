@@ -2,13 +2,13 @@
 
 var doc = document;
 
-buster.testCase("Iframes", {
+buster.testCase("CSS sandboxing", {
   tearDown: function() {
     doc.body.innerHTML = '';
     doc.head.innerHTML = '';
   },
   "Same origin data uri feature detection": function(done) {
-    test.sameOriginDataUri(function(support) {
+    sandbocss.sameOriginDataUri(function(support) {
       if (doc.defaultView.navigator.userAgent.match(/webkit/i)) {
         refute(support);
       } else {
@@ -18,23 +18,18 @@ buster.testCase("Iframes", {
     });
   },
   "Create an iframe": function() {
-    assert.equals(
-      test.createPreview(true).src.split(':')[0],
-      'data');
-    assert.equals(
-      test.createPreview(false).src,
-      location.href + '#__preview__');
+    assert.equals(sandbocss.createLocalIFrame(true).src.split(':')[0], 'data');
+    assert.equals(sandbocss.createLocalIFrame(false).src, location.href + '#__sandbocss__');
   },
   "Replace document content": function() {
-    test.replaceDocumentContent(doc, {
-      scripts: 'window.TESTING = true',
-      styles: 'body{display:none}',
-      html: 'TESTING'
-    });
+    sandbocss.replaceDocumentContent(
+      doc,
+      'TESTING',
+      'body{display:none}'
+    );
     assert.equals(doc.body.innerHTML, 'TESTING', 'Change body content');
     assert.equals(
       doc.defaultView.getComputedStyle(doc.body).getPropertyValue('display'),
       'none', 'Update document styles');
-    assert(doc.defaultView.TESTING, 'Add and execute JavaScript');
   }
 });
