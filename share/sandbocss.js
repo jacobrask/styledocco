@@ -1,6 +1,6 @@
 // CSS sandboxer
 // ===================================================================
-// Takes strings of HTML and CSS and renders the content in an iframe.
+// Takes strings of HTML and CSS and returns an iframe element.
 
 (function() {
 
@@ -75,8 +75,8 @@ var sandbocss = function(html, css, cb) {
     var iframeEl = createLocalIFrame(support);
     iframeEl.addEventListener('load', function() {
       replaceDocumentContent(this.contentDocument, html, css);
-      cb(null, iframeEl);
     });
+    cb(null, iframeEl);
   });
 };
 
