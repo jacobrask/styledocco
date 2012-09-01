@@ -11,7 +11,7 @@ module.exports = function(grunt) {
     },
     min: {
       dist: {
-        src: [ 'node_modules/iterhate/iterhate.js', 'share/utils.js', 'share/docs*.js' ],
+        src: [ 'lib/docs.js' ],
         dest: 'lib/docs.js'
       }
     },
@@ -26,6 +26,11 @@ module.exports = function(grunt) {
         files: {
           lib: 'share/**.jade'
         }
+      }
+    },
+    browserify: {
+      "lib/docs.js": {
+        entries: [ 'share/docs.js']
       }
     },
     watch: {
@@ -48,8 +53,9 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', 'min cssmin copy');
+  grunt.registerTask('default', 'browserify min cssmin copy');
   grunt.loadNpmTasks("grunt-contrib"); 
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-css');
 
 };

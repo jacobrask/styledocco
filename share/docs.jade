@@ -9,14 +9,11 @@ html
       else if title 
         #{title}
     meta(charset='utf-8')
-    // Documentation styles
     != '<style>'
       include docs.css
     != '</style>'
-    // Preview styles (all input CSS)
     if (resources && resources.css)
       style(type="text/preview") !{resources.css}
-    // Custom preview scripts to include
     if (resources && resources.js)
       script(type="text/preview") !{resources.js}
   body
