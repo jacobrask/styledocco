@@ -15,10 +15,9 @@ module.exports = function(grunt) {
         dest: 'lib/docs.js'
       }
     },
-    cssmin: {
-      dist: {
-        src: ['share/docs.css'],
-        dest: 'lib/docs.css'
+    mincss: {
+      files: {
+        'lib/docs.css': 'share/docs.css'
       }
     },
     copy: {
@@ -53,9 +52,7 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', 'browserify min cssmin copy');
+  grunt.registerTask('default', 'browserify min mincss copy');
   grunt.loadNpmTasks("grunt-contrib"); 
   grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-css');
-
 };
