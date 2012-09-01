@@ -18,9 +18,12 @@ var doc = document;
 //
 // [Function] -> *async* -> [Boolean]
 var sameOriginDataUri = (function() {
-  var support = null;
+  var support, checking;
   return function(cb) {
-    if (support !== null) return setTimeout(cb, 10, support);
+    if (support != null) return setTimeout(cb, 10, support);
+    // Already checking, please wait...
+    if (checking) return setTimeout(sameOriginDataUri, 100, cb);
+    checking = true;
     var iframeEl = doc.createElement('iframe');
     iframeEl.src = 'data:text/html,';
     doc.body.appendChild(iframeEl);
