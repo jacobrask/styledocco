@@ -22,11 +22,7 @@ buster.testCase("CSS sandboxing", {
     assert.equals(sandbocss.createLocalIFrame(false).src, location.href + '#__sandbocss__');
   },
   "Replace document content": function() {
-    sandbocss.replaceDocumentContent(
-      doc,
-      'TESTING',
-      'body{display:none}'
-    );
+    sandbocss.replaceDocumentContent(doc, 'TESTING', 'body { display:none }');
     assert.equals(doc.body.innerHTML, 'TESTING', 'Change body content');
     assert.equals(
       doc.defaultView.getComputedStyle(doc.body).getPropertyValue('display'),
