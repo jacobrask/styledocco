@@ -11,7 +11,7 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 var uglifyjs = require('uglify-js');
 var util = require('util');
-var _ = require('iterhate');
+var _ = require('./share/iterhate');
 
 var styledocco = require('./styledocco');
 
