@@ -3,7 +3,7 @@
   "description": "Generate documentation and style guides with design patterns from stylesheets.",
   "keywords": [ "styleguide", "css", "documentation", "design", "patterns" ],
   "author": { "name": "Jacob Rask", "email": "jacob@jacobrask.net" },
-  "version": "0.6.1",
+  "version": "0.6.2",
   "homepage": "http://jacobrask.github.com/styledocco/",
   "licenses": [ { "type": "MIT", "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
   "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
@@ -12,17 +12,19 @@
   "preferGlobal": true,
   "dependencies": {
     "async": "0.1.x",
-    "clean-css": "0.4.x",
-    "findit": "0.x.x",
-    "jade": "0.23.x",
+    "clean-css": "0.6.x",
+    "findit": "0.1.x",
+    "jade": "0.27.x",
     "marked": "0.2.x",
-    "mkdirp": "0.x.x",
-    "optimist": "0.x.x",
-    "uglify-js": "1.2.x"
+    "mkdirp": "0.3.x",
+    "optimist": "0.3.x",
+    "uglify-js": "1.3.x"
   },
   "devDependencies": {
     "buster": "0.6.x",
     "grunt": "0.3.x",
+    "grunt-browserify": "0.1.x",
+    "grunt-contrib": "0.1.x",
     "jshint": "0.7.x"
   },
   "main": "./styledocco",
