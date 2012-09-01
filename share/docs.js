@@ -15,8 +15,7 @@ var sandbocss = require('./sandbocss');
 var doc = document;
 var el = domsugar(doc);
 
-// Clone pseudo classes
-// ====================
+
 // Clone pseudo class selectors in a stylesheet with regular class selectors.
 // For example, `a:hover` becomes `a.:hover`.
 //
@@ -42,22 +41,27 @@ var clonePseudoClasses = (function() {
   };
 })();
 
+var autoUpdateFrame = function(codeEl, frameEl) {
+  var updateFrameContent = function() {
+    this.contentDocument.body.innerHTML = this.value;
+  };
+  codeEl.addEventListener('keypress', updateFrameContent);
+  codeEl.addEventListener('keyup', updateFrameContent);
+};
 
-var addIframe = (function() {
-  // Get preview styles intended for preview iframes.
+
+var addIFrame = (function() {
+  // Get preview styles and scripts intended for preview iframes.
   var styles = _(doc.head.querySelectorAll('style[type="text/preview"]'))
-    .pluck('innerHTML')
-    .join('');
-  // Get preview scripts intended for preview iframes.
+    .pluck('innerHTML').join('');
   var scripts = _(doc.head.querySelectorAll('script[type="text/preview"]'))
-    .pluck('innerHTML')
-    .join('');
+    .pluck('innerHTML').join('');
 
   return function(codeEl) {
-    sandbocss(codeEl.textContent, styles, function(err, iframeEl) {
-      iframeEl.scrolling = 'no';
-      var previewEl = el('.preview', [ el('.resizeable', [ iframeEl ]) ]);
-      iframeEl.addEventListener('load', function() {
+    sandbocss(codeEl.textContent, styles, function(err, iFrameEl) {
+      iFrameEl.scrolling = 'no';
+      var previewEl = el('.preview', [ el('.resizeable', [ iFrameEl ]) ]);
+      iFrameEl.addEventListener('load', function() {
         var doc = this.contentDocument;
         var el = domsugar(doc);
         // Add specified preview scripts.
@@ -68,13 +72,7 @@ var addIframe = (function() {
           doc.head.getElementsByTagName('style')[0]
         );
       });
-
-      var updateIFrameContent = function() {
-        this.contentDocument.body.innerHTML = this.value;
-      };
-      codeEl.addEventListener('keypress', updateIFrameContent);
-      codeEl.addEventListener('keyup', updateIFrameContent);
-
+      autoUpdateFrame(codeEl, iFrameEl);
       codeEl.parentNode.insertBefore(previewEl, codeEl);
     });
   };
@@ -82,7 +80,7 @@ var addIframe = (function() {
 
 
 _(doc.getElementsByClassName('preview-code')).forEach(function(codeEl) {
-  addIframe(codeEl);
+  addIFrame(codeEl);
 });
 
 }());
