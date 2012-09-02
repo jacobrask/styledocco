@@ -41,15 +41,8 @@ var clonePseudoClasses = (function() {
   };
 })();
 
-var autoUpdateFrame = function(codeEl, frameEl) {
-  var updateFrameContent = function() {
-    this.contentDocument.body.innerHTML = this.value;
-  };
-  codeEl.addEventListener('keypress', updateFrameContent);
-  codeEl.addEventListener('keyup', updateFrameContent);
-};
 
-
+// Create and insert an iframe
 var addIFrame = (function() {
   // Get preview styles and scripts intended for preview iframes.
   var styles = _(doc.head.querySelectorAll('style[type="text/preview"]'))
@@ -57,10 +50,14 @@ var addIFrame = (function() {
   var scripts = _(doc.head.querySelectorAll('script[type="text/preview"]'))
     .pluck('innerHTML').join('');
 
-  return function(codeEl) {
+  return function(codeEl, cb) {
+    cb = cb || function() {};
     sandbocss(codeEl.textContent, styles, function(err, iFrameEl) {
+
       iFrameEl.scrolling = 'no';
+
       var previewEl = el('.preview', [ el('.resizeable', [ iFrameEl ]) ]);
+
       iFrameEl.addEventListener('load', function() {
         var doc = this.contentDocument;
         var el = domsugar(doc);
@@ -71,8 +68,13 @@ var addIFrame = (function() {
           el('style', { text: clonePseudoClasses(doc.styleSheets) }),
           doc.head.getElementsByTagName('style')[0]
         );
+        cb(null, iFrameEl);
       });
-      autoUpdateFrame(codeEl, iFrameEl);
+
+      codeEl.addEventListener('edit', function() {
+        iFrameEl.contentDocument.body.innerHTML = this.value;
+      });
+
       codeEl.parentNode.insertBefore(previewEl, codeEl);
     });
   };
@@ -80,7 +82,18 @@ var addIFrame = (function() {
 
 
 _(doc.getElementsByClassName('preview-code')).forEach(function(codeEl) {
+
   addIFrame(codeEl);
+
+  var editEvent = new CustomEvent('edit');
+  var didChange = function() {
+    if (this._oldValue !== this.value) this.dispatchEvent(editEvent);
+    this._oldValue = this.value;
+  };
+  codeEl.addEventListener('change', didChange);
+  codeEl.addEventListener('keypress', didChange);
+  codeEl.addEventListener('keyup', didChange);
+
 });
 
 }());
