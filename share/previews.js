@@ -8,8 +8,8 @@
 // Abort if rendering a in a soon-to-be-sandboxed iframe.
 if (location.hash === '#__sandbocss__') return;
 
-var _, domsugar, sandbocss;
 // Browserify
+var _, domsugar, sandbocss;
 if (typeof module == "object" && typeof require == "function") {
   _ = require('./iterhate');
   domsugar = require('./domsugar');
