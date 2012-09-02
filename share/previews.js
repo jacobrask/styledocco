@@ -1,5 +1,5 @@
-// StyleDocco documentation main JavaScript
-// ==================================================================
+// StyleDocco preview rendering
+// ============================
 
 (function () {
 
@@ -8,9 +8,17 @@
 // Abort if rendering a in a soon-to-be-sandboxed iframe.
 if (location.hash === '#__sandbocss__') return;
 
-var _ = require('./iterhate');
-var domsugar = require('./domsugar');
-var sandbocss = require('./sandbocss');
+var _, domsugar, sandbocss;
+// Browserify
+if (typeof module == "object" && typeof require == "function") {
+  _ = require('./iterhate');
+  domsugar = require('./domsugar');
+  sandbocss = require('./sandbocss');
+} else {
+  _ = window._;
+  domsugar = window.domsugar;
+  sandbocss = window.sandbocss;
+}
 
 var doc = document;
 var el = domsugar(doc);
@@ -43,7 +51,7 @@ var clonePseudoClasses = (function() {
 
 
 // Create and insert an iframe
-var addIFrame = (function() {
+var renderPreview = (function() {
   // Get preview styles and scripts intended for preview iframes.
   var styles = _(doc.head.querySelectorAll('style[type="text/preview"]'))
     .pluck('innerHTML').join('');
@@ -52,7 +60,7 @@ var addIFrame = (function() {
 
   return function(codeEl, cb) {
     cb = cb || function() {};
-    sandbocss(codeEl.textContent, styles, function(err, iFrameEl) {
+    sandbocss(codeEl.value, styles, function(err, iFrameEl) {
 
       iFrameEl.scrolling = 'no';
 
@@ -80,20 +88,13 @@ var addIFrame = (function() {
   };
 })();
 
+renderPreview.clonePseudoClasses = clonePseudoClasses;
 
-_(doc.getElementsByClassName('preview-code')).forEach(function(codeEl) {
-
-  addIFrame(codeEl);
-
-  var editEvent = new CustomEvent('edit');
-  var didChange = function() {
-    if (this._oldValue !== this.value) this.dispatchEvent(editEvent);
-    this._oldValue = this.value;
-  };
-  codeEl.addEventListener('change', didChange);
-  codeEl.addEventListener('keypress', didChange);
-  codeEl.addEventListener('keyup', didChange);
-
-});
+if (typeof module != 'undefined' && module.exports) {
+  module.exports = renderPreview;
+} else {
+  window.styledocco = window.styledocco || {};
+  window.styledocco.renderPreview = renderPreview;
+}
 
 }());

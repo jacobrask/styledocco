@@ -1,7 +1,8 @@
 'use strict';
 
 var doc = document;
-var clone = test.clonePseudoClasses;
+
+var clone = styledocco.renderPreview.clonePseudoClasses;
 
 buster.testCase("Clone pseudo classes", {
   setUp: function() {
