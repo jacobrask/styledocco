@@ -5,9 +5,6 @@
 
 'use strict';
 
-// Abort if rendering a in a soon-to-be-sandboxed iframe.
-if (location.hash === '#__sandbocss__') return;
-
 // Browserify
 var _, domsugar, sandbocss;
 if (typeof module == "object" && typeof require == "function") {
@@ -60,6 +57,9 @@ var renderPreview = (function() {
 
   return function(codeEl, cb) {
     cb = cb || function() {};
+    if (location.hash === '#__sandbocss__') {
+      return cb(new Error('Attempting to render preview in sandboxed iframe'));
+    }
     sandbocss(codeEl.value, styles, function(err, iFrameEl) {
 
       iFrameEl.scrolling = 'no';
