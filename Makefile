@@ -1,7 +1,7 @@
 all: build
 
 build:
-	grunt
+	@./node_modules/grunt/bin/grunt
 
 test:
 	@./node_modules/.bin/buster test
