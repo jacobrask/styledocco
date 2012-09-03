@@ -27,3 +27,10 @@ config['Preview rendering'] = {
   ],
   tests: [ 'test/browser/previews.js' ]
 };
+
+config['DOM sugar'] = {
+  environment: 'browser',
+  rootPath: '../',
+  sources: [ 'share/domsugar.js' ],
+  tests: [ 'test/browser/domsugar.js' ]
+};
