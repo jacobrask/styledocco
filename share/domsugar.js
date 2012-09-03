@@ -8,6 +8,9 @@ var domsugar = function (doc) {
   var isArray = Array.isArray || function(obj) {
     return Object.prototype.toString.call( obj ) == '[object Array]';
   };
+  var isElement = function(obj) {
+    return !!(obj && obj.nodeType == 1);
+  };
   var directProperties = {
     'class': 'className',
     className: 'className',
@@ -63,7 +66,7 @@ var domsugar = function (doc) {
     }
     props = props || {};
 
-    if (splitter.test(tagName)) {
+    if (!isElement(tagName) && splitter.test(tagName)) {
       var parts = tagName.split(splitter);
       tagName = parts[0] || 'div';
       for (var i = 1, j = 2, name; j < parts.length; i += 2, j += 2) {
@@ -72,7 +75,7 @@ var domsugar = function (doc) {
         else props.className = props.className ? props.className + ' ' + name : name;
       }
     }
-    var el = doc.createElement(tagName);
+    var el = isElement(tagName) ? tagName :doc.createElement(tagName);
     for (var prop in props) {
       setProperty(el, prop, props[prop]);
     }
