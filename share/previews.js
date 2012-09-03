@@ -18,7 +18,6 @@ if (typeof module == "object" && typeof require == "function") {
 }
 
 var doc = document;
-var el = domsugar(doc);
 
 
 // Clone pseudo class selectors in a stylesheet with regular class selectors.
@@ -58,14 +57,12 @@ var renderPreview = (function() {
   return function(codeEl, cb) {
     cb = cb || function() {};
     if (location.hash === '#__sandbocss__') {
-      return cb(new Error('Attempting to render preview in sandboxed iframe'));
+      return setTimeout(function() {
+        cb(new Error('Attempting to render preview in sandboxed iframe'));
+      }, 10);
     }
+
     sandbocss(codeEl.value, styles, function(err, iFrameEl) {
-
-      iFrameEl.scrolling = 'no';
-
-      var previewEl = el('.preview', [ el('.resizeable', [ iFrameEl ]) ]);
-
       iFrameEl.addEventListener('load', function() {
         var doc = this.contentDocument;
         var el = domsugar(doc);
@@ -76,14 +73,11 @@ var renderPreview = (function() {
           el('style', { text: clonePseudoClasses(doc.styleSheets) }),
           doc.head.getElementsByTagName('style')[0]
         );
-        cb(null, iFrameEl);
+        codeEl.addEventListener('codechange', function() {
+          iFrameEl.contentDocument.body.innerHTML = this.html;
+        });
       });
-
-      codeEl.addEventListener('edit', function() {
-        iFrameEl.contentDocument.body.innerHTML = this.value;
-      });
-
-      codeEl.parentNode.insertBefore(previewEl, codeEl);
+      cb(null, iFrameEl);
     });
   };
 })();
