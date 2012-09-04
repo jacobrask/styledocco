@@ -16,8 +16,10 @@ module.exports = function(grunt) {
       }
     },
     mincss: {
-      files: {
-        'lib/docs.css': 'share/docs.css'
+      dist: {
+        files: {
+          'lib/docs.css': 'share/docs.css'
+        }
       }
     },
     copy: {
