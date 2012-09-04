@@ -42,6 +42,9 @@ buster.testCase("DOM sugar", {
     assert.match(el('span', { text: '<b>' }), { innerHTML: '&lt;b&gt;' });
     assert.match(el('span', [ '<b>' ]), { innerHTML: '&lt;b&gt;' });
     assert.match(el('span', { html: '<b>' }), { innerHTML: '<b>' });
+  },
+  style: function() {
+    assert.equals(el('span', { style: 'color:red' }).style.color, 'red');
+    assert.equals(el('span', { style: { color: 'red' } }).style.color, 'red');
   }
-
 });

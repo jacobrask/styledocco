@@ -35,7 +35,9 @@ var domsugar = function (doc) {
 
   var setProperty = function (el, key, value) {
     var prop = directProperties[key];
-    if (prop) {
+    if (value === Object(value)) {
+      for (var subKey in value) { el[key][subKey] = value[subKey]; }
+    } else if (prop) {
       el[prop] = (value == null ? '' : '' + value);
     } else if (booleanProperties[key]) {
       el[key] = !!value;
