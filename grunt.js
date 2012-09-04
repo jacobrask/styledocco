@@ -31,7 +31,7 @@ module.exports = function(grunt) {
     },
     browserify: {
       "lib/docs.js": {
-        entries: [ 'share/docs.js']
+        entries: [ 'share/docs.previews.js', 'share/docs.ui.js' ]
       }
     },
     watch: {

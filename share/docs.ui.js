@@ -6,11 +6,9 @@ var _, domsugar, renderPreview;
 if (typeof module == "object" && typeof require == "function") {
   _ = require('./iterhate');
   domsugar = require('./domsugar');
-  renderPreview = require('./previews');
 } else {
   _ = window._;
   domsugar = window.domsugar;
-  renderPreview = window.styledocco.renderPreview;
 }
 
 var doc = document;
@@ -45,19 +43,9 @@ var autoResizeTextArea = function(origEl) {
   return origEl;
 };
 
-_(doc.getElementsByClassName('preview-code'))
-  .map(function(codeEl) {
-    renderPreview(codeEl, function(err, iFrameEl) {
-      if (err) return;
-      codeEl.parentNode.insertBefore(
-        el('.preview', [ el('.resizeable', [ el(iFrameEl, { scrolling: 'no' }) ]) ]),
-        codeEl
-      );
-    });
-    return codeEl;
-  }).forEach(function(codeEl) {
-    autoResizeTextArea(codeEl);
-  });
+_(doc.querySelectorAll('textarea.preview-code')).forEach(function(codeEl) {
+  autoResizeTextArea(codeEl);
+});
 
 if (typeof module != 'undefined' && module.exports) {
   module.exports = {

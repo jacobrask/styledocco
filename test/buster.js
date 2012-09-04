@@ -23,7 +23,7 @@ config['Preview rendering'] = {
     'share/domsugar.js',
     'share/sandbocss.js' ],
   sources: [
-    'share/previews.js'
+    'share/docs.previews.js'
   ],
   tests: [ 'test/browser/previews.js' ]
 };

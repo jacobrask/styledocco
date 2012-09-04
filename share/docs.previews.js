@@ -18,6 +18,7 @@ if (typeof module == "object" && typeof require == "function") {
 }
 
 var doc = document;
+var el = domsugar(doc);
 
 
 // Clone pseudo class selectors in a stylesheet with regular class selectors.
@@ -103,6 +104,16 @@ var renderPreview = (function() {
   };
 })();
 
+_(doc.querySelectorAll('textarea.preview-code')).forEach(function(codeEl) {
+  renderPreview(codeEl, function(err, iFrameEl) {
+    if (err) return;
+    codeEl.parentNode.insertBefore(
+      el('.preview', [ el('.resizeable', [ el(iFrameEl, { scrolling: 'no' }) ]) ]),
+      codeEl
+    );
+  });
+});
+
 renderPreview.clonePseudoClasses = clonePseudoClasses;
 renderPreview.getContentHeight = getContentHeight;
 
@@ -113,4 +124,4 @@ if (typeof module != 'undefined' && module.exports) {
   window.styledocco.renderPreview = renderPreview;
 }
 
-}());
+})();
