@@ -94,7 +94,9 @@ var renderPreview = (function() {
         );
         codeEl.addEventListener('input', function() {
           doc.body.innerHTML = this.value;
+          iFrameEl.style.height = getContentHeight(doc.body) + 'px';
         });
+        iFrameEl.style.height = getContentHeight(doc.body) + 'px';
       });
       cb(null, iFrameEl);
     });
