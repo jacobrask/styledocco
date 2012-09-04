@@ -2,6 +2,7 @@
 
 var doc = document;
 
+var renderPreview = styledocco.renderPreview;
 var clone = styledocco.renderPreview.clonePseudoClasses;
 
 buster.testCase("Clone pseudo classes", {
@@ -28,5 +29,34 @@ buster.testCase("Clone pseudo classes", {
     assert.match(
       clone(doc.styleSheets),
       /@media screen {\s*test2\.\\3A focus { color: blue;? }\s*}/);
+  }
+});
+
+buster.testCase("Render preview iframe", {
+  Create: function(done) {
+    var mock = doc.createElement('textarea');
+    mock.value = 'Foo';
+    renderPreview(mock, function(err, iFrameEl) {
+      assert.tagName(iFrameEl, 'iframe');
+      doc.body.appendChild(iFrameEl);
+      iFrameEl.addEventListener('load', function() {
+        assert.equals(iFrameEl.contentDocument.body.innerHTML, 'Foo');
+        done();
+      });
+    });
+  },
+  Update: function(done) {
+    var mock = doc.createElement('textarea');
+    mock.value = 'Foo';
+    renderPreview(mock, function(err, iFrameEl) {
+      doc.body.appendChild(iFrameEl);
+      iFrameEl.addEventListener('load', function() {
+        assert.equals(iFrameEl.contentDocument.body.innerHTML, 'Foo');
+        mock.value = 'Bar';
+        mock.dispatchEvent(new CustomEvent('input'));
+        assert.equals(iFrameEl.contentDocument.body.innerHTML, 'Bar');
+        done();
+      });
+    });
   }
 });

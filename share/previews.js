@@ -73,8 +73,8 @@ var renderPreview = (function() {
           el('style', { text: clonePseudoClasses(doc.styleSheets) }),
           doc.head.getElementsByTagName('style')[0]
         );
-        codeEl.addEventListener('codechange', function() {
-          iFrameEl.contentDocument.body.innerHTML = this.html;
+        codeEl.addEventListener('input', function() {
+          doc.body.innerHTML = this.value;
         });
       });
       cb(null, iFrameEl);

@@ -2,7 +2,6 @@
 
 'use strict';
 
-// Browserify
 var _, domsugar, renderPreview;
 if (typeof module == "object" && typeof require == "function") {
   _ = require('./iterhate');
@@ -27,25 +26,26 @@ var getStyle = function(el, prop) {
 };
 
 var autoResizeTextArea = function(origEl) {
-  var mirrorEl = el('div', { className: origEl.className });
-  mirrorEl.style.position = 'absolute';
-  mirrorEl.style.left = '-9999px';
+  var mirrorEl = el('div', { className: origEl.className,
+                             style: { position: 'absolute', left: '-9999px' }});
   origEl.parentNode.appendChild(mirrorEl);
   var borderHeight = getStyle(origEl, 'border-top') +
                      getStyle(origEl, 'border-bottom');
   var maxHeight = getStyle(origEl, 'max-height');
 
-  origEl.addEventListener('codechange', function() {
+  origEl.addEventListener('input', function(ev) {
     mirrorEl.textContent = origEl.value + '\n';
     var height = mirrorEl.offsetHeight;
     origEl.style.height = (height - borderHeight) + 'px';
     origEl.style.overflowY = (maxHeight && height >= maxHeight) ? 'auto' : 'hidden';
   });
-  return mirrorEl;
+
+  return origEl;
 };
 
-
 _(doc.getElementsByClassName('preview-code')).forEach(function(codeEl) {
+
+  autoResizeTextArea(codeEl);
 
   renderPreview(codeEl, function(err, iFrameEl) {
     if (err) return;
@@ -53,25 +53,16 @@ _(doc.getElementsByClassName('preview-code')).forEach(function(codeEl) {
       el('.preview', [ el('.resizeable', [ el(iFrameEl, { scrolling: 'no' }) ]) ]),
       codeEl
     );
-
-    autoResizeTextArea(codeEl);
-
-    codeEl._changeEvent = new CustomEvent('codechange');
-    Object.defineProperty(codeEl, 'html', {
-      get: function() {
-        return this.value;
-      },
-      set: function(val) {
-        this.value = val;
-        this.dispatchEvent(this._changeEvent);
-      }
-    });
-    codeEl.html = codeEl.value;
-    var updateHtml = function() { this.html = this.value; };
-    codeEl.addEventListener('keypress', updateHtml);
-    codeEl.addEventListener('keyup', updateHtml);
   });
-
 });
+
+if (typeof module != 'undefined' && module.exports) {
+  module.exports = {
+    autoResizeTextArea: autoResizeTextArea
+  };
+} else {
+  window.styledocco = window.styledocco || {};
+  window.styledocco.autoResizeTextArea = autoResizeTextArea;
+}
 
 })();
