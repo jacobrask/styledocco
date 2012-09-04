@@ -12,7 +12,7 @@ if (typeof module == "object" && typeof require == "function") {
   domsugar = require('./domsugar');
   sandbocss = require('./sandbocss');
 } else {
-  _ = window._;
+  _ = window.iterhate;
   domsugar = window.domsugar;
   sandbocss = window.sandbocss;
 }

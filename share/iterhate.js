@@ -34,16 +34,16 @@ var addFns = function(obj, mix) {
 
 var fns = {
   filter: function() {
-    return _(ArrayProto.filter.apply(this, arguments));
+    return iterhate(ArrayProto.filter.apply(this, arguments));
   },
   map: function() {
-    return _(ArrayProto.map.apply(this, arguments));
+    return iterhate(ArrayProto.map.apply(this, arguments));
   },
   reduce: function() {
-    return _(ArrayProto.reduce.apply(this, arguments));
+    return iterhate(ArrayProto.reduce.apply(this, arguments));
   },
   reduceRight: function() {
-    return _(ArrayProto.reduceRight.apply(this, arguments));
+    return iterhate(ArrayProto.reduceRight.apply(this, arguments));
   },
   // Remove falsy values
   compact: function() {
@@ -51,7 +51,7 @@ var fns = {
   },
   // Allow concatenation of all kinds of collections
   concat: function() {
-    return _(ArrayProto.concat.apply(
+    return iterhate(ArrayProto.concat.apply(
       toArray(this),
       toArray(arguments).map(function(val) {
         if (isArrayLike(val)) return toArray(val);
@@ -63,7 +63,7 @@ var fns = {
   flatten: function() {
     return this.reduce(function(memo, value) {
       if (isArray(value)) {
-        return memo.concat(_.fns.flatten.call(value));
+        return memo.concat(iterhate.fns.flatten.call(value));
       }
       memo[memo.length] = value;
       return memo;
@@ -92,15 +92,15 @@ var fns = {
   fns[method] = ArrayProto[method];
 });
 
-var _ = function(obj) {
-  return addFns(obj, _.fns);
+var iterhate = function(obj) {
+  return addFns(obj, iterhate.fns);
 };
-_.fns = fns;
+iterhate.fns = fns;
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = _;
+  module.exports = iterhate;
 } else {
-  window._ = _;
+  window.iterhate = iterhate;
 }
 
 }());

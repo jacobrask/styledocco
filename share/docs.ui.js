@@ -7,7 +7,7 @@ if (typeof module == "object" && typeof require == "function") {
   _ = require('./iterhate');
   domsugar = require('./domsugar');
 } else {
-  _ = window._;
+  _ = window.iterhate;
   domsugar = window.domsugar;
 }
 
