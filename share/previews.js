@@ -46,6 +46,25 @@ var clonePseudoClasses = (function() {
 })();
 
 
+// Get the actual height of an element's content by getting the distance
+// between the element`s offsetParent and the bottom-most point of any child
+// elements. `offsetHeight` does not work with absolute or fixed positioned elements.
+var getContentHeight = function(elem) {
+  if (elem.childElementCount === 0) return elem.offsetHeight;
+  var win = elem.ownerDocument.defaultView;
+  var children = elem.getElementsByTagName('*');
+  for (var i = 0, l = children.length, childHeights = [], child; i < l; i++) {
+    child = children[i];
+    childHeights.push(child.offsetTop + child.offsetHeight +
+      parseInt(win.getComputedStyle(child).getPropertyValue('margin-bottom'), 10)
+    );
+  }
+  var extraHeight = parseInt(win.getComputedStyle(elem).getPropertyValue('padding-bottom'), 10);
+  var height = Math.max.apply(Math, childHeights) + extraHeight;
+  return Math.max(height, elem.offsetHeight);
+};
+
+
 // Create and insert an iframe
 var renderPreview = (function() {
   // Get preview styles and scripts intended for preview iframes.
@@ -83,6 +102,7 @@ var renderPreview = (function() {
 })();
 
 renderPreview.clonePseudoClasses = clonePseudoClasses;
+renderPreview.getContentHeight = getContentHeight;
 
 if (typeof module != 'undefined' && module.exports) {
   module.exports = renderPreview;
