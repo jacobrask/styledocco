@@ -57,18 +57,23 @@ var createLocalIFrame = (function() {
 //
 // [HTMLDocument, Object] -> [HTMLDocument]
 var replaceDocumentContent = function(doc, html, css) {
+  var htmlEl, headEl, styleEl, bodyEl;
   // We want to replace the HTML element to avoid leaking any properties,
   // listeners, etc from iframes cloned from location.href.
-  // doc.write did unpredictable things.
-  var htmlEl, headEl, styleEl, bodyEl;
-  htmlEl = doc.createElement('html');
-  headEl = doc.createElement('head');
-  htmlEl.appendChild(headEl);
+  if (doc.defaultView.location.protocol !== 'data:') {
+    htmlEl = doc.createElement('html');
+    headEl = doc.createElement('head');
+    bodyEl = doc.createElement('body');
+    htmlEl.appendChild(headEl);
+    htmlEl.appendChild(bodyEl);
+    doc.replaceChild(htmlEl, doc.documentElement);
+  } else {
+    headEl = doc.head;
+    bodyEl = doc.body;
+  }
   headEl.appendChild(styleEl = doc.createElement('style'));
-  styleEl.textContent = css;
-  htmlEl.appendChild(bodyEl = doc.createElement('body'));
-  bodyEl.innerHTML = html;
-  doc.replaceChild(htmlEl, doc.documentElement);
+  styleEl.textContent = css || '';
+  bodyEl.innerHTML = html || '';
 };
 
 
