@@ -39,7 +39,9 @@ html
           button(title="Table of Contents",data-toggle="nav-toc")
             svg.icon(viewBox="0 0 512 512",height=22,width=22)
               path(d="M108.9,403.1V462H50v-58.9H108.9z M108.9,285.4H50v58.9h58.9V285.4zM108.9,50H50v58.9h58.9V50z M108.9,167.7H50v58.9h58.9V167.7z M167.7,344.3H462v-58.9H167.7V344.3zM167.7,50v58.9H462V50H167.7z M167.7,462H462v-58.9H167.7V462z M167.7,226.6H462v-58.9H167.7V226.6z")
+          ul#nav-toc.nav-results.toc-list(hidden)
           input.search(type="search",placeholder="Search")
+          ul#nav-search.nav-results(hidden)
 
     section.container
       each section, i in sections

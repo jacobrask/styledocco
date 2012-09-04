@@ -43,9 +43,37 @@ var autoResizeTextArea = function(origEl) {
   return origEl;
 };
 
+var clearPopOvers = function() {
+  _(doc.body.querySelectorAll('[data-toggle]')).forEach(function(elem) {
+    elem.classList.remove('is-active');
+    doc.getElementById(elem.dataset.toggle).hidden = true;
+  });
+};
+var activatePopOver = function(elem) {
+  elem.classList.add('is-active');
+  doc.getElementById(elem.dataset.toggle).hidden = false;
+};
+
+
+
+doc.body.addEventListener('click', function(ev) {
+  var activateDropdown = false;
+  var elem = ev.target;
+  if (elem.tagName.toLowerCase() === 'svg') elem = elem.parentNode; // Button icons
+  if (elem.dataset.toggle != null) {
+    event.preventDefault();
+    // Clicked on an inactive dropdown toggle
+    if (!elem.classList.contains('is-active')) activateDropdown = true;
+  }
+  clearPopOvers();
+  // Activate the clicked dropdown
+  if (activateDropdown) activatePopOver(elem);
+});
+
 _(doc.querySelectorAll('textarea.preview-code')).forEach(function(codeEl) {
   autoResizeTextArea(codeEl);
 });
+
 
 if (typeof module != 'undefined' && module.exports) {
   module.exports = {
