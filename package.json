@@ -30,6 +30,6 @@
   "main": "./styledocco",
   "bin": "./bin/styledocco",
   "scripts": {
-    "test": "nodeunit test"
+    "test": "make test"
   }
 }

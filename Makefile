@@ -1,10 +1,17 @@
+BUSTER := ./node_modules/.bin/buster
+GRUNT := ./node_modules/grunt/bin/grunt
+
 all: build
 
 build:
-	@./node_modules/grunt/bin/grunt
+	@$(GRUNT)
+
+test-server:
+	@$(BUSTER)-server
 
 test:
-	@./node_modules/.bin/buster test
+	@$(BUSTER)-test
+	@$(BUSTER)-test --browser
 
 examples: build
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
@@ -13,6 +20,6 @@ examples: build
 		examples/bootstrap/less
 
 lint:
-	grunt lint
+	$(GRUNT) lint
 
 .PHONY: all build test examples lint
