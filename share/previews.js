@@ -75,7 +75,7 @@ var renderPreview = (function() {
 
   return function(codeEl, cb) {
     cb = cb || function() {};
-    if (location.hash === '#__sandbocss__') {
+    if (location.hash === '#__sandbocss__' || location.protocol === 'data:') {
       return setTimeout(function() {
         cb(new Error('Attempting to render preview in sandboxed iframe'));
       }, 10);

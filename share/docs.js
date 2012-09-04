@@ -33,28 +33,31 @@ var autoResizeTextArea = function(origEl) {
                      getStyle(origEl, 'border-bottom');
   var maxHeight = getStyle(origEl, 'max-height');
 
-  origEl.addEventListener('input', function(ev) {
+  var origDidChange = function(ev) {
     mirrorEl.textContent = origEl.value + '\n';
     var height = mirrorEl.offsetHeight;
     origEl.style.height = (height - borderHeight) + 'px';
     origEl.style.overflowY = (maxHeight && height >= maxHeight) ? 'auto' : 'hidden';
-  });
+  };
+  origEl.addEventListener('input', origDidChange);
+  origDidChange.call(origEl);
 
   return origEl;
 };
 
-_(doc.getElementsByClassName('preview-code')).forEach(function(codeEl) {
-
-  autoResizeTextArea(codeEl);
-
-  renderPreview(codeEl, function(err, iFrameEl) {
-    if (err) return;
-    codeEl.parentNode.insertBefore(
-      el('.preview', [ el('.resizeable', [ el(iFrameEl, { scrolling: 'no' }) ]) ]),
-      codeEl
-    );
+_(doc.getElementsByClassName('preview-code'))
+  .map(function(codeEl) {
+    renderPreview(codeEl, function(err, iFrameEl) {
+      if (err) return;
+      codeEl.parentNode.insertBefore(
+        el('.preview', [ el('.resizeable', [ el(iFrameEl, { scrolling: 'no' }) ]) ]),
+        codeEl
+      );
+    });
+    return codeEl;
+  }).forEach(function(codeEl) {
+    autoResizeTextArea(codeEl);
   });
-});
 
 if (typeof module != 'undefined' && module.exports) {
   module.exports = {
