@@ -43,6 +43,17 @@ var autoResizeTextArea = function(origEl) {
   return origEl;
 };
 
+// Parse `key=value; key=value` strings (for cookies).
+var keyvalParse = function(str) {
+  var obj = {};
+  var pairs = str.split(';');
+  for (var i = 0; pairs.length > i; i++) {
+    var kvs = pairs[i].trim().split('=');
+    obj[kvs[0]] = kvs[1];
+  }
+  return obj;
+};
+
 var clearPopOvers = function() {
   _(doc.body.querySelectorAll('[data-toggle]')).forEach(function(elem) {
     elem.classList.remove('is-active');
@@ -54,12 +65,52 @@ var activatePopOver = function(elem) {
   doc.getElementById(elem.dataset.toggle).hidden = false;
 };
 
+var toggleSiblingClassNames = function(className, el) {
+  _(el.parentNode.children).pluck('classList').invoke('remove', className);
+  el.classList.add(className);
+};
+var activateElement = toggleSiblingClassNames.bind(undefined, 'is-active');
+
+(function() {
+  var settingsEl = doc.body.getElementsByClassName('settings')[0];
+  if (!doc.body.getElementsByClassName('preview-code').length || !settingsEl) return;
+
+  var resizeableEls = doc.body.getElementsByClassName('resizeable');
+
+  settingsEl.hidden = false;
+
+  var resizePreviews = function(width) {
+    doc.cookie = 'preview-width=' + width;
+    _(resizeableEls).forEach(function(elem) {
+      elem.style.width = (width === 'auto' ? elem.parentNode.offsetWidth : width) + 'px';
+      elem.getElementsByTagName('iframe')[0].updateHeight();
+    });
+  };
+
+  // Resize previews to the cookie value.
+  var previewWidth = keyvalParse(doc.cookie)['preview-width'];
+  if (previewWidth) {
+    resizePreviews(previewWidth);
+    activateElement(
+      settingsEl.querySelector('button[data-width="' + previewWidth + '"]')
+    );
+  }
+
+  // Resizing buttons
+  settingsEl.addEventListener('click', function(ev) {
+    var btn = ev.target;
+    if (btn.tagName.toLowerCase() !== 'button') return;
+    event.preventDefault();
+
+    activateElement(btn);
+    resizePreviews(btn.dataset.width);
+  });
+})();
 
 
 doc.body.addEventListener('click', function(ev) {
   var activateDropdown = false;
   var elem = ev.target;
-  if (elem.tagName.toLowerCase() === 'svg') elem = elem.parentNode; // Button icons
   if (elem.dataset.toggle != null) {
     event.preventDefault();
     // Clicked on an inactive dropdown toggle

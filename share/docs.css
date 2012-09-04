@@ -215,6 +215,7 @@ Fixed to top with a small drop shadow.
 .bar .icon {
   vertical-align: middle;
   display: inline-block;
+  pointer-events: none;
 }
 .bar, .bar a, .bar a:visited {
   color: hsl(27, 10%, 85%);

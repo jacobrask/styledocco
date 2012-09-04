@@ -83,6 +83,9 @@ var renderPreview = (function() {
     }
 
     sandbocss(codeEl.value, styles, function(err, iFrameEl) {
+      iFrameEl.updateHeight = function() {
+        this.style.height = getContentHeight(this.contentDocument.body) + 'px';
+      };
       iFrameEl.addEventListener('load', function() {
         var doc = this.contentDocument;
         var el = domsugar(doc);
@@ -95,9 +98,9 @@ var renderPreview = (function() {
         );
         codeEl.addEventListener('input', function() {
           doc.body.innerHTML = this.value;
-          iFrameEl.style.height = getContentHeight(doc.body) + 'px';
+          iFrameEl.updateHeight();
         });
-        iFrameEl.style.height = getContentHeight(doc.body) + 'px';
+        iFrameEl.updateHeight();
       });
       cb(null, iFrameEl);
     });
