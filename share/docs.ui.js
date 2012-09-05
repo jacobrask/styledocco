@@ -82,6 +82,26 @@ var getElementsByTagNames = function() {
     });
 };
 
+var buildSearchResultsList = function(searchIndex) {
+  return searchIndex.map(function(item) {
+    var elem = el('li', { hidden: true }, [
+      el('a', { href: item.url, text: item.title }, [
+        el('span.nav-results-filename', [ item.filename ])
+      ])
+    ]);
+    elem._title = item.title.toLowerCase();
+    return elem;
+  })
+};
+
+var filterSearchItems = function(items, value) {
+  if (!value) return [];
+  value = value.toLowerCase();
+  return _(items).filter(function(item) {
+    return (item._title.indexOf(value) !== -1);
+  });
+};
+
 var clearPopOvers = function() {
   _(doc.body.querySelectorAll('[data-toggle]')).forEach(function(elem) {
     elem.classList.remove('is-active');
@@ -132,6 +152,44 @@ var activateElement = toggleSiblingClassNames.bind(undefined, 'is-active');
 
     activateElement(btn);
     resizePreviews(btn.dataset.width);
+  });
+})();
+
+
+(function() {
+  var searchListEl = doc.getElementById('nav-search');
+  if (!searchListEl) return;
+
+  // XXX replace with single appendChild call
+  buildSearchResultsList(searchIndex).forEach(function(item) {
+    searchListEl.appendChild(item);
+  });
+  var items = searchListEl.children;
+  if (!items.length) return;
+
+  var searchEl = doc.getElementsByClassName('search')[0];
+
+  var doSearch = function(ev) {
+    _(items).forEach(function(item) { item.hidden = true; });
+    var matches = filterSearchItems(items, this.value);
+    if (matches.length) {
+      _(matches).forEach(function(item) { item.hidden = false; });
+      searchListEl.hidden = false;
+    } else {
+      searchListEl.hidden = true;
+    }
+  };
+  searchEl.addEventListener('input', doSearch);
+  searchEl.addEventListener('focus', doSearch);
+
+  // Hide search results
+  doc.body.addEventListener('click', function(ev) {
+    if (ev.target === searchEl) return;
+    searchListEl.hidden = true;
+  });
+  // Reset search box on navigation
+  searchListEl.addEventListener('click', function(ev) {
+    searchEl.value = '';
   });
 })();
 
