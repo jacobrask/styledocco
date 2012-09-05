@@ -8,6 +8,16 @@ config['StyleDocco parser'] = {
   ]
 };
 
+config['Navigation'] = {
+  environment: 'browser',
+  rootPath: '../',
+  libs: [
+    'share/iterhate.js',
+    'share/domsugar.js' ],
+  sources: [ 'share/docs.ui.js' ],
+  tests: [ 'test/browser/navigation.js' ]
+};
+
 config['Sandbocss'] = {
   environment: 'browser',
   rootPath: '../',

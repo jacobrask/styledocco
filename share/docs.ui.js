@@ -54,6 +54,34 @@ var keyvalParse = function(str) {
   return obj;
 };
 
+
+var generateToC = function() {
+  var tagNames = Array.prototype.slice.call(arguments);
+  return getElementsByTagNames.apply(doc.body, tagNames).map(generateToC.makeToCItem);
+};
+generateToC.makeToCItem = function(h) {
+  return el('li', [ el('a', {
+    href: '#' + h.id,
+    text: h.textContent,
+    className: 'level' + h.tagName.toLowerCase()[1]
+  }) ]);
+};
+var getElementsByTagNames = function() {
+  var root = this || doc;
+  return _(arguments)
+    .map(function(tag) {
+      return root.getElementsByTagName(tag);
+    })
+    .reduce(function(cur, prev) {
+      return _(cur).concat(prev);
+    })
+    .sort(function(a, b) {
+      // Sort element by position in DOM.
+      // & 6 to get 2 (precedes) or 4 (follows) from compareDocumentPosition.
+      return 3 - (a.compareDocumentPosition(b) & 6);
+    });
+};
+
 var clearPopOvers = function() {
   _(doc.body.querySelectorAll('[data-toggle]')).forEach(function(elem) {
     elem.classList.remove('is-active');
@@ -107,6 +135,16 @@ var activateElement = toggleSiblingClassNames.bind(undefined, 'is-active');
   });
 })();
 
+(function() {
+  var ToCEl = doc.getElementById('nav-toc');
+  if (!ToCEl) return;
+  // Build ToC if we don't have one yet.
+  doc.body.querySelector('button[data-toggle="nav-toc"]')
+    .addEventListener('click', function() {
+      if (!!ToCEl.childElementCount) return;
+      generateToC('h1', 'h2', 'h3').forEach(function(item) { ToCEl.appendChild(item); });
+    });
+})();
 
 doc.body.addEventListener('click', function(ev) {
   var activateDropdown = false;
@@ -128,11 +166,14 @@ _(doc.querySelectorAll('textarea.preview-code')).forEach(function(codeEl) {
 
 if (typeof module != 'undefined' && module.exports) {
   module.exports = {
-    autoResizeTextArea: autoResizeTextArea
+    autoResizeTextArea: autoResizeTextArea,
+    generateToC: generateToC
   };
 } else {
   window.styledocco = window.styledocco || {};
   window.styledocco.autoResizeTextArea = autoResizeTextArea;
+  window.styledocco.generateToC = generateToC;
+  window.styledocco.getElementsByTagNames = getElementsByTagNames;
 }
 
 })();
