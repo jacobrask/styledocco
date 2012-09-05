@@ -1,15 +1,13 @@
 StyleDocco
 ==========
 
-StyleDocco generates documentation and style guide documents from your stylesheets.
+StyleDocco generates style guide documents from your stylesheets by parsing your stylesheet comments through [Markdown](http://en.wikipedia.org/wiki/Markdown).
 
-Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write HTML code prefixed with 4 spaces or between [code fences](http://github.github.com/github-flavored-markdown/) (<code>```</code>) in your comments, and StyleDocco show a preview with the styles applied, and displays the example HTML code. 
-
-The previews are rendered in a resizable iframes to make it easy to demonstrate responsive designs at different viewport sizes.
+You can write HTML snippets in your stylesheet comments, prefixed with 4 spaces or between [code fences](http://github.github.com/github-flavored-markdown/) (<code>```</code>), and StyleDocco will show a preview with the styles applied, as well as display the example HTML code. The previews are rendered in a resizable iframes to make it easy to demonstrate responsive designs at different viewport sizes.
 
 Suggestions, feature requests and bug reports are welcome either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
-[![Build Status](https://secure.travis-ci.org/jacobr/styledocco.png)](http://travis-ci.org/jacobrask/styledocco)
+[![Build Status](https://secure.travis-ci.org/jacobrask/styledocco.png)](http://travis-ci.org/jacobrask/styledocco)
 
 Installation
 ------------
@@ -27,12 +25,12 @@ Usage
 Options
 -------
 
- * `--name`, `-n`      Name of the project
- * `--out`, `-o`       Output directory *(default: "docs")*
- * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "~/bin/lessc"`)
- * `--include`         Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include mysite.css --include app.js`)
- * `--verbose`         Show log messages when generating the documentation. *(default: false)*
- *                     Stylesheet (or directory of stylesheets) to process.
+ * `--name`, `-n`    Name of the project
+ * `--out`, `-o`     Output directory *(default: "docs")*
+ * `--preprocessor`  Custom preprocessor command. *(optional)* (ex: `--preprocessor "~/bin/lessc"`)
+ * `--include`       Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include plugin.css --include app.js`)
+ * `--verbose`       Show log messages when generating the documentation. *(default: false)*
+ *                   Stylesheet (or directory of stylesheets) to process.
 
 Usage examples
 --------------
@@ -41,9 +39,9 @@ Generate documentation for *My Project* in the `docs` folder, from the files in 
 
 `styledocco -n "My Project" css`
 
-Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the `--compass` option for SASS to make Compass imports available.
+Generate documentation for *My Project* in the `mydocs` folder. Use the `--compass` option for SASS to make Compass imports available.
 
-`styledocco -n "My Project" -o mydocs -s mydocs --preprocessor "scss --compass" styles`
+`styledocco -n "My Project" -o mydocs --preprocessor "scss --compass" styles`
 
 
 Syntax
