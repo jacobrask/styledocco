@@ -9,6 +9,7 @@ The previews are rendered in a resizable iframes to make it easy to demonstrate 
 
 Suggestions, feature requests and bug reports are welcome either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
+[![Build Status](https://secure.travis-ci.org/jacobr/styledocco.png)](http://travis-ci.org/jacobrask/styledocco)
 
 Installation
 ------------
