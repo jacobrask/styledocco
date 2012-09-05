@@ -3,11 +3,11 @@ html
   head
     title
       if title && project.name
-        #{title} | #{project.name}
+        !{title} | !{project.name}
       else if project.name
-        #{project.name}
+        !{project.name}
       else if title 
-        #{title}
+        !{title}
     meta(charset='utf-8')
     != '<style>'
       include docs.css
