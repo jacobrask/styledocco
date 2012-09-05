@@ -41,9 +41,14 @@ var options = optimist
   .describe('include', 'Extra CSS/JavaScript to include in previews')
   .describe('verbose', 'Print status messages to stdout')
   .describe('version', 'Display StyleDocco version')
+  .check(function(args) {
+    if (!args._.length) {
+      throw(new Error('Please supply a path to your style sheet files.'));
+    }
+  })
   .argv;
 
-options['in'] = options._.length ? options._ : ['./'];
+options['in'] = options._;
 
 options.include = isArray(options.include) ? options.include
                                            : [ options.include ];
