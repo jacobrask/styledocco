@@ -30,6 +30,7 @@
   "main": "./styledocco",
   "bin": "./bin/styledocco",
   "scripts": {
+    "prepublish": "make build",
     "test": "make test"
   }
 }

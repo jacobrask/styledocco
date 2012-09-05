@@ -18,14 +18,14 @@ module.exports = function(grunt) {
     mincss: {
       dist: {
         files: {
-          'lib/docs.css': 'share/docs.css'
+          'lib/docs.css': 'lib/docs.css'
         }
       }
     },
     copy: {
       dist: {
         files: {
-          lib: 'share/**.jade'
+          lib: [ 'share/*.jade', 'share/*.css' ]
         }
       }
     },
@@ -55,6 +55,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', 'browserify min mincss copy');
+  grunt.registerTask('dev', 'browserify copy');
   grunt.loadNpmTasks("grunt-contrib"); 
   grunt.loadNpmTasks('grunt-browserify');
 };
