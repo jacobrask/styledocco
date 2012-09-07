@@ -6,15 +6,13 @@
 'use strict';
 
 // Browserify
-var _, domsugar, sandbocss;
+var _, domsugar;
 if (typeof module == "object" && typeof require == "function") {
   _ = require('./iterhate');
   domsugar = require('./domsugar');
-  sandbocss = require('./sandbocss');
 } else {
   _ = window.iterhate;
   domsugar = window.domsugar;
-  sandbocss = window.sandbocss;
 }
 
 var doc = document;
@@ -73,48 +71,35 @@ var renderPreview = (function() {
     .pluck('innerHTML').join('');
   var scripts = _(doc.head.querySelectorAll('script[type="text/preview"]'))
     .pluck('innerHTML').join('');
+  var iFrameHtml = '<!DOCTYPE html><html><head>' +
+    '<style>' + styles + '</style>' +
+    '<script>' + scripts + '<\/script></head><body>';
 
-  return function(codeEl, cb) {
-    cb = cb || function() {};
-    if (location.hash === '#__sandbocss__' || location.protocol === 'data:') {
-      return setTimeout(function() {
-        cb(new Error('Attempting to render preview in sandboxed iframe'));
-      }, 10);
-    }
-
-    sandbocss(codeEl.value, styles, function(err, iFrameEl) {
-      iFrameEl.updateHeight = function() {
-        this.style.height = getContentHeight(this.contentDocument.body) + 'px';
-      };
-      iFrameEl.addEventListener('load', function() {
-        var doc = this.contentDocument;
-        var el = domsugar(doc);
-        // Add specified preview scripts.
-        doc.head.appendChild(el('script', { text: scripts }));
-        // Add a new style element with cloned pseudo classes.
-        doc.head.insertBefore(
-          el('style', { text: clonePseudoClasses(doc.styleSheets) }),
-          doc.head.getElementsByTagName('style')[0]
-        );
-        codeEl.addEventListener('input', function() {
-          doc.body.innerHTML = this.value;
-          iFrameEl.updateHeight();
-        });
-        iFrameEl.updateHeight();
-      });
-      cb(null, iFrameEl);
+  return function(codeEl) {
+    var iFrameEl = el('iframe', { src: 'javascript:0', scrolling: 'no' });
+    codeEl.parentNode.insertBefore(
+      el('.preview', [ el('.resizeable', [ iFrameEl ]) ]),
+      codeEl
+    );
+    var iFrameDoc = iFrameEl.contentDocument;
+    iFrameDoc.write(iFrameHtml + codeEl.value);
+    iFrameDoc.head.insertBefore(
+      el('style', { text: clonePseudoClasses(iFrameDoc.styleSheets) }),
+      iFrameDoc.head.getElementsByTagName('style')[0]
+    );
+    iFrameEl.updateHeight = function() {
+      this.style.height = getContentHeight(iFrameDoc.body) + 'px';
+    };
+    codeEl.addEventListener('input', function() {
+      iFrameDoc.body.innerHTML = this.value;
+      iFrameEl.updateHeight();
     });
+    iFrameEl.updateHeight();
   };
 })();
 
 _(doc.querySelectorAll('textarea.preview-code')).forEach(function(codeEl) {
-  renderPreview(codeEl, function(err, iFrameEl) {
-    if (err) return;
-    codeEl.parentNode.insertBefore(
-      el('.preview', [ el('.resizeable', [ el(iFrameEl, { scrolling: 'no' }) ]) ]),
-      codeEl
-    );
-  });
+  renderPreview(codeEl);
 });
 
 renderPreview.clonePseudoClasses = clonePseudoClasses;

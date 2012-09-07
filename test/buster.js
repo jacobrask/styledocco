@@ -18,20 +18,12 @@ config['Navigation'] = {
   tests: [ 'test/browser/navigation.js' ]
 };
 
-config['Sandbocss'] = {
-  environment: 'browser',
-  rootPath: '../',
-  sources: [ 'share/sandbocss.js' ],
-  tests: [ 'test/browser/sandbocss.js' ]
-};
-
 config['Preview rendering'] = {
   environment: 'browser',
   rootPath: '../',
   libs: [
     'share/iterhate.js',
-    'share/domsugar.js',
-    'share/sandbocss.js' ],
+    'share/domsugar.js' ],
   sources: [
     'share/docs.previews.js'
   ],
