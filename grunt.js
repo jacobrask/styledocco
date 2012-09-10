@@ -6,37 +6,43 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: '<json:package.json>',
     lint: {
-      files: [ 'grunt.js', 'styledocco.js', 'cli.js', 'bin/*', 'share/*.js',
+      files: [ 'grunt.js', 'styledocco.js', 'cli.js', 'bin/*', 'web/*.js',
                'test/**/*.js' ]
     },
     min: {
       dist: {
-        src: [ 'lib/docs.js' ],
-        dest: 'lib/docs.js'
+        src: [ 'dist/docs.js' ],
+        dest: 'dist/docs.js'
+      }
+    },
+    browserify: {
+      "dist/docs.js": {
+        entries: [ 'web/app.js' ]
+      },
+      "test/browser/lib/ui.js": {
+        entries: [ 'test/browser/navigation.js' ]
       }
     },
     mincss: {
       dist: {
         files: {
-          'lib/docs.css': 'lib/docs.css'
+          'dist/docs.css': [ 'web/app.css', 'web/navbar/navbar.css' ]
         }
       }
     },
-    copy: {
-      dist: {
-        files: {
-          lib: [ 'share/*.jade', 'share/*.css' ]
+    jade: {
+      html: {
+        src: [ 'web/index.jade' ],
+        dest: 'dist/index.html',
+        options: {
+          client: false,
+          pretty: true
         }
-      }
-    },
-    browserify: {
-      "lib/docs.js": {
-        entries: [ 'share/docs.previews.js', 'share/docs.ui.js' ]
       }
     },
     watch: {
-      files: [ '<config:lint.files>', 'share/*' ],
-      tasks: 'lint min cssmin copy'
+      files: [ '<config:lint.files>', 'web/**' ],
+      tasks: 'jade browserify mincss'
     },
     jshint: {
       options: {
@@ -54,8 +60,8 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', 'browserify min mincss copy');
-  grunt.registerTask('dev', 'browserify copy');
+  grunt.registerTask('default', 'jade browserify min mincss');
+  grunt.registerTask('dev', 'jade browserify mincss');
   grunt.loadNpmTasks("grunt-contrib"); 
   grunt.loadNpmTasks('grunt-browserify');
 };

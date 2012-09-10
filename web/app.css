@@ -1,0 +1,58 @@
+/* StyleDocco layout structure and shared styles */
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+body {
+  /* Top/bottom paddings for bars */
+  padding: 60px 0 40px;
+  background-color: hsl(207, 10%, 90%);
+  color: hsl(207, 5%, 30%);
+}
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Bars */
+.bar {
+  position: fixed;
+  left: 0; right: 0;
+  z-index: 1010;
+  min-height: 40px;
+  line-height: 40px;
+  background-image: -webkit-linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207,  5%, 25%, .92));
+  background-image:    -moz-linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207,  5%, 25%, .92));
+  background-image:      -o-linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207,  5%, 25%, .92));
+  background-image:         linear-gradient(hsla(207, 10%, 35%, .97),
+                                            hsla(207,  5%, 25%, .92));
+}
+.bar.top {
+  top: 0;
+  box-shadow: 0 1px 2px hsla(207, 5%, 0%, .2);
+}
+.bar.bottom {
+  bottom: 0;
+  box-shadow: 0 -1px 2px hsla(207, 5%, 0%, .2);
+}
+
+/*
+# Typography and text styles
+
+We use the generic `sans-serif` font family to get Arial on Windows and
+Helvetica on Mac. The body font-size is set to 14px.
+
+    Lorem ipsum dolor sit amet. */
+body {
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.618;
+}
+

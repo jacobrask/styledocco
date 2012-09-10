@@ -1,11 +1,9 @@
-(function () {
-
 'use strict';
 
-if (typeof module == "object" && typeof require == "function") {
-  var _ = require('underscore');
-  var Backbone = require('backbone-browserify');
-}
+var _ = require('underscore');
+var Backbone = require('backbone');
+var $ = require('jquery-browserify');
+Backbone.setDomLibrary($);
 
 var doc = document;
 var View = Backbone.View;
@@ -14,7 +12,7 @@ var Collection = Backbone.Collection;
 
 var NavBar = Backbone.Model.extend({
   defaults: {
-    name: styledocco.config.name
+    name: ''
   }
 });
 
@@ -23,9 +21,9 @@ var BrandView = View.extend({
   className: 'brand',
   attributes: { href: './' },
 
-  events: { 'click': 'clicked' },
+  events: { 'click': 'onClick' },
 
-  clicked: function(ev) {
+  onClick: function(ev) {
     ev.preventDefault();
     console.log('Activate main view');
   },
@@ -53,16 +51,7 @@ var NavBarView = Backbone.View.extend({
   }
 });
 
-
-if (typeof module == "object" && module.exports) {
-  module.exports = {
-    Model: NavBar,
-    View: NavBarView
-  };
-} else {
-  if (typeof window.styledocco == 'undefined') window.styledocco = {};
-  window.styledocco.NavBar = NavBar;
-  window.styledocco.NavBarView = NavBarView;
-}
-
-})();
+module.exports = {
+  Model: NavBar,
+  View: NavBarView
+};
