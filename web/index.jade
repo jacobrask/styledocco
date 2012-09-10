@@ -1,0 +1,26 @@
+!!! 5
+html
+  head
+    title
+    meta(charset='utf-8')
+    script
+      var styledocco = {};
+      styledocco.config = {
+        name: "Project name",
+        // All paths must be same origin.
+        // Array of CSS file paths.
+        stylesheets: [ ],
+        // Paths to extra CSS and/or JavaScript to include in previews.
+        include: [ ]
+      };
+    link(rel="stylesheet",href="docs.css")
+    script(src="docs.js")
+  body
+    .bar.top
+      #navbar.container
+    section#content.container
+      article.section
+        .docs
+          p Write an introduction to your project here.
+    
+// Generated with StyleDocco (http://jacobrask.github.com/styledocco).
