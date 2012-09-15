@@ -1,4 +1,8 @@
-/* StyleDocco layout structure and shared styles */
+/*
+StyleDocco layout structure and shared styles
+=============================================
+Defines typography, colors and base layouts for StyleDocco.
+*/
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -18,7 +22,14 @@ body {
   padding: 0 20px;
 }
 
-/* Bars */
+/* Bars
+==========
+Fixed to top or bottom with a minor drop shadow.
+
+```
+<nav class="bar top"></nav>
+```
+*/
 .bar {
   position: fixed;
   left: 0; right: 0;

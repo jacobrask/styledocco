@@ -5,10 +5,6 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: '<json:package.json>',
-    lint: {
-      files: [ 'grunt.js', 'styledocco.js', 'cli.js', 'bin/*', 'web/*.js',
-               'test/**/*.js' ]
-    },
     min: {
       dist: {
         src: [ 'dist/docs.js' ],
@@ -16,17 +12,22 @@ module.exports = function(grunt) {
       }
     },
     browserify: {
-      "dist/docs.js": {
+      'dist/docs.js': {
         entries: [ 'web/app.js' ]
       },
-      "test/browser/lib/ui.js": {
-        entries: [ 'test/browser/navigation.js' ]
+      'test/lib/tests.js': {
+        entries: [ 'test/previews.js' ]
+      }
+    },
+    concat: {
+      dist: {
+        src: [ 'web/app.css', 'web/navbar/navbar.css' ],
+        dest: 'dist/docs.css'
       }
     },
     mincss: {
       dist: {
-        files: {
-          'dist/docs.css': [ 'web/app.css', 'web/navbar/navbar.css' ]
+        files: { 'dist/docs.css': [ '<config:concat.dist.src>' ]
         }
       }
     },
@@ -34,15 +35,12 @@ module.exports = function(grunt) {
       html: {
         src: [ 'web/index.jade' ],
         dest: 'dist/index.html',
-        options: {
-          client: false,
-          pretty: true
-        }
+        options: { client: false, pretty: true }
       }
     },
     watch: {
-      files: [ '<config:lint.files>', 'web/**' ],
-      tasks: 'jade browserify mincss'
+      files: [ 'web/**' ],
+      tasks: 'jade browserify concat'
     },
     jshint: {
       options: {
@@ -56,12 +54,18 @@ module.exports = function(grunt) {
         styledocco: true,
         buster: true, assert: true, refute: true, test: true
       }
+    },
+    buster: {
+      test: { config: 'test/buster.js' }
     }
   });
 
   // Default task.
-  grunt.registerTask('default', 'jade browserify min mincss');
-  grunt.registerTask('dev', 'jade browserify mincss');
+  grunt.registerTask('default', 'jade browserify:dist/docs.js min mincss');
+  grunt.registerTask('dev', 'jade browserify:dist/docs.js concat');
+  grunt.registerTask('test', 'browserify:test/lib/tests.js buster');
+
   grunt.loadNpmTasks("grunt-contrib"); 
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-buster');
 };

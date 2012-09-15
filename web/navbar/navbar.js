@@ -1,16 +1,14 @@
 'use strict';
 
-var _ = require('underscore');
 var Backbone = require('backbone');
-var $ = require('jquery-browserify');
-Backbone.setDomLibrary($);
+var $ = Backbone.$ = require('jquery-browserify');
+var _ = require('underscore');
 
 var doc = document;
 var View = Backbone.View;
 var Model = Backbone.Model;
-var Collection = Backbone.Collection;
 
-var NavBar = Backbone.Model.extend({
+var NavBar = Model.extend({
   defaults: {
     name: ''
   }
@@ -35,20 +33,49 @@ var BrandView = View.extend({
 });
 
 
-var NavBarView = Backbone.View.extend({
+var MenuItemView = View.extend({
+  tagName: 'li',
+  
+  events: { 'click': 'onClick' },
 
-  initialize: function() {
-    this.brand = new BrandView({ model: this.model });
-    this.render();
+  render: function() {
+    var mod = this.model;
+    this.el.appendChild(
+      this.make('a', { href: mod.get('name') }, mod.get('name'))
+    );
     return this;
   },
 
+  onClick: function(ev) {
+    ev.preventDefault();
+    this.model.activate();
+  }
+
+});
+
+var NavBarView = View.extend({
+
+  initialize: function() {
+    _.bindAll(this);
+    this.brand = new BrandView({ model: this.model });
+    this.collection.bind("add", this.render);
+    this.collection.bind("remove", this.render);
+    this.render();
+  },
+
   render: function() {
-    this.el.appendChild(
-      this.brand.render().el
-    );
+    this.el.innerHTML = '';
+    this.el.appendChild(this.brand.render().el);
+    this.el.appendChild(this.menuEl = doc.createElement('ul'));
+    this.menuEl.className = 'menu';
+    this.collection.forEach(function(item) {
+      this.menuEl.appendChild(
+        new MenuItemView({ model: item }).render().el
+      );
+    }, this);
     return this;
   }
+
 });
 
 module.exports = {

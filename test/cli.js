@@ -1,5 +1,6 @@
 'use strict';
 
+var buster = require('buster');
 var htmlFilename = require('../cli.js').htmlFilename;
 var menuLinks = require('../cli.js').menuLinks;
 

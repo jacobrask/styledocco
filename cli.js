@@ -111,7 +111,7 @@ var preprocess = function(file, pp, options, cb) {
 
 var cli = function(options) {
 
-  var resourcesDir = __dirname + '/lib/';
+  var resourcesDir = __dirname + '/share/';
 
   // Filetypes and matching preprocessor binaries.
   var fileTypes = {
