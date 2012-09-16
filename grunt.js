@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     },
     concat: {
       dist: {
-        src: [ 'web/app.css', 'web/navbar/navbar.css' ],
+        src: [ 'web/app.css', 'web/views/navbar.css' ],
         dest: 'dist/docs.css'
       }
     },
