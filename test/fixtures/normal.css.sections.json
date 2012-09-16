@@ -1,8 +1,0 @@
-[
-  {
-    "title": "",
-    "slug": "",
-    "docs": "<p> An example of a reasonbly well written CSS file that you would find in &quot;the wild&quot;, but without any Markdown. \n</p>",
-    "code": "body {\n    background: white; /* Set background */\n    /* Good contrast */\n    color: black;\n}\n\n\np {\n    margin: 0; /* Reset margin */\n}"
-  }
-]
