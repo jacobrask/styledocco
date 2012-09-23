@@ -7,7 +7,8 @@ config['StyleDocco parser'] = {
   ]
 };
 
-config['App'] = {
+config['Web'] = {
   env: 'browser',
+  // Tests are Browserified via grunt
   tests: [ 'lib/*.js' ]
 };

@@ -16,12 +16,12 @@ module.exports = function(grunt) {
         entries: [ 'web/app.js' ]
       },
       'test/lib/tests.js': {
-        entries: [ 'test/previews.js' ]
+        entries: [ 'test/navigation.js', 'test/previews.js' ]
       }
     },
     concat: {
       dist: {
-        src: [ 'web/app.css', 'web/views/navbar.css' ],
+        src: [ 'web/app.css', 'web/views/*.css' ],
         dest: 'dist/docs.css'
       }
     },

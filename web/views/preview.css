@@ -1,0 +1,82 @@
+/* # Previews and code
+Previews are rendered in sandboxed iframes with the documented CSS applied.
+The code is editable and the previews will be automatically updated.
+
+The width of the previews can be adjusted to test responsive designs. The
+height will be automatically adjusted to fit the content. <small>Free hand
+resizing currently only works properly in Firefox. In WebKit browsers you can
+only enlarge the previews and other browsers have not implemented CSS `resize`
+</small>. */
+.preview {
+  background: hsl(207, 0%, 100%);
+  border-top: 1px solid hsl(207, 30%, 95%);
+  position: relative;
+  z-index: 1;
+}
+  .preview-code + .preview {
+    margin-top: 0;
+    border-top: 0;
+  }
+.preview iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+/*
+Editable code blocks have a desaturated orange background. They will be
+automatically resized to fit the text inside.
+
+    <textarea class="preview-code">Code</textarea>
+*/
+.preview-code {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  color: hsl(207, 9%, 37%);
+  max-height: 200px;
+  padding: 10px 20px;
+  overflow-y: auto;
+  background: hsl(207, 30%, 95%);
+  border: 1px solid hsl(207, 30%, 85%);
+  border-left: 0; border-right;
+  box-shadow: inset 0 1px 2px hsla(207, 30%, 10%, .1);
+  line-height: 1.1 !important;
+  resize: none;
+  -webkit-transition: height .1s ease-out;
+  -moz-transition:    height .1s ease-out;
+  -o-transition:      height .1s ease-out;
+  transition:         height .1s ease-out;
+}
+  .preview-code:focus {
+    outline: 0;
+    background: hsl(207, 30%, 97%);
+    box-shadow: inset 0 1px 2px hsla(207, 30%, 10%, .1),
+                0 0 5px hsla(207, 75%, 75%, .9);
+  }
+  .preview-code:last-child {
+    border-bottom: 0;
+    border-radius: 0 0 5px 5px;
+  }
+/* Previews are placed in a resizeable container as `iframe` elements cannot be
+resized with the CSS `resize` property. */
+.resizeable {
+  padding: 15px;
+  overflow: auto;
+  background: hsl(207, 0%, 100%);
+  box-shadow: 0 0 2px hsla(207, 10%, 20%, .2);
+  resize: both;
+}
+/* No code is allowed to overflow horizontally. */
+.preview-code, pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-y: auto;
+}
+.code pre {
+  height: 100%;
+  margin-top: 0;
+}
+
+

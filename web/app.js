@@ -9,8 +9,6 @@ var doc = document;
 // External dependencies
 // =====================
 var Backbone = require('backbone');
-// Override `Backbone.history` with own `window` object due to documentcloud/backbone#1653
-Backbone.history = new Backbone.History(window);
 var _ = require('underscore');
 
 
@@ -23,21 +21,6 @@ var Docu = require('./models/documentation');
 var DocuCollection = require('./models/documentationcollection');
 var DocuView = require('./views/documentation');
 
-var Router = Backbone.Router.extend({
-  routes: {
-    'doc/:doc': 'docs'
-  },
-  docs: function(page) {
-    var mod = docus.find(function(mod) { return mod.get('name') === page; });
-    if (mod == null) return;
-    var el = doc.getElementById('content');
-    el.innerHTML = '';
-    el.appendChild(
-      new DocuView({ model: mod }).render().el
-    );
-  }
-});
-
 
 // Initialize models
 // =================
@@ -49,6 +32,22 @@ _.forEach(styledocco.config.stylesheets, function(file) {
 });
 
 var navBar = new NavBarModel({ name: styledocco.config.name });
+
+var Router = Backbone.Router.extend({
+  routes: {
+    'doc/:doc': 'docs'
+  },
+  docs: function(page) {
+    var mod = docus.find(function(mod) { return mod.get('name') === page; });
+    if (mod == null) return;
+    var docu = new DocuView({ model: mod });
+    var el = doc.getElementById('content');
+    el.innerHTML = '';
+    el.appendChild(
+      docu.render().el
+    );
+  }
+});
 
 
 // Initialize views

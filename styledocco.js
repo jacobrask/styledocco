@@ -35,6 +35,7 @@ var formatDocs = function(str) {
 };
 
 var getComments = function(css) {
+  if (!css) return '';
   var lines = css.split('\n');
   var docs = '';
   while (lines.length) {

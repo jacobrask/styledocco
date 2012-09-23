@@ -1,8 +1,8 @@
 'use strict';
 
-var navbar = require('../../web/navbar/navbar');
-var NavBarView = navbar.View;
-var NavBarModel = navbar.Model;
+var Collection = require('backbone').Collection;
+var NavBarView = require('../../web/views/navbar');
+var NavBarModel = require('../../web/models/navbar');
 
 var doc = document;
 
@@ -11,7 +11,8 @@ buster.testCase("Navigation", {
     var name = 'Site name';
     var navBarView = new NavBarView({
       el: doc.createElement('div'),
-      model: new NavBarModel({ name: name })
+      model: new NavBarModel({ name: name }),
+      collection: new Collection()
     });
     assert.tagName(navBarView.el, 'div');
     assert.match(navBarView.brand.el, {

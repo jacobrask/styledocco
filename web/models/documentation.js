@@ -4,7 +4,9 @@
 
 'use strict';
 
-var Model = require('backbone').Model;
+var Backbone = require('backbone');
+var $ = Backbone.$ = require('jquery-browserify');
+var Model = Backbone.Model;
 
 var _ = require('underscore');
 var path = require('path');
@@ -13,37 +15,30 @@ marked.setOptions({ sanitize: false, gfm: true });
 
 var styledocco = require('../../styledocco');
 
-var createCodePreview = _.template(
-  '<div class="preview"><div class="resizeable">' +
-  '<iframe src="javascript:0" scrolling="no"></iframe></div></div>' +
-  '<pre class="preview-code" contenteditable><code><%- code %></code></pre>'
-);
-
-
 var Documentation = Model.extend({
 
   defaults: {
     name: '',
-    docs: 'Loading documentation&hellip;',
-    path: ''
+    css: '',
+    path: '',
+    docs: 'Loading stylesheet documentation&hellip;'
   },
 
   initialize: function() {
     _.bindAll(this);
-    this.fetch({
+    this.fetch();
+    this.set('name', this.baseFileName(this.get('path')));
+  },
+  
+  fetch: function() {
+    Model.prototype.fetch.call(this, {
       dataType: 'text',
-      success: this.success,
       error: this.error
     });
-    this.set('name', this.baseFileName());
   },
 
-  success: function() {
-    this.trigger('ready');
-  },
   error: function() {
     this.set('docs', "Could not fetch documentation from " + this.get('path'));
-    this.trigger('ready');
   },
 
   url: function() {
@@ -51,7 +46,10 @@ var Documentation = Model.extend({
   },
 
   parse: function(res) {
-    return { docs: marked.parser(this.tokenize(res)) };
+    return {
+      css: res,
+      docs: marked.parser(this.tokenize(res))
+    };
   },
 
   // Return Markdown tokens from CSS comments
@@ -62,15 +60,15 @@ var Documentation = Model.extend({
       if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
         token.type = 'html';
         token.pre = true;
-        token.text = createCodePreview({ code: token.text });
+        token.text = _.template('<pre class="preview-code" contenteditable>' +
+          '<code><%- code %></code></pre>')({ code: token.text });
       }
       return token;
     });
   },
 
   // Get a filename without the extension and leading _
-  baseFileName: function() {
-    var name = this.get('path');
+  baseFileName: function(name) {
     return path.basename(name, path.extname(name)).replace(/^_/, '');
   }
 

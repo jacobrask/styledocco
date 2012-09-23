@@ -66,4 +66,103 @@ body {
   font-size: 14px;
   line-height: 1.618;
 }
+/* Paragraphs, lists, tables and blockquotes get some bottom margins as well
+as side margins.
+
+    <p>Paragraph #1
+    <p>Paragraph #2
+    <ul><li>List</ul> */
+.docs pre, p, ol, ul, dl,
+figure, blockquote, table {
+  margin-left: 20px; margin-right: 20px;
+}
+.preview, .docs pre,
+p, ol, ul, dl,
+figure, blockquote, table {
+  margin-top: 10px;
+}
+  ul ul, ol ol, ul ol, ol ul,
+  blockquote p:last-child {
+    margin-top: 0;
+  }
+ul, ol {
+  padding-left: 1.5em;
+}
+p:last-child, ol:last-child, ul:last-child, dl:last-child {
+  margin-bottom: 20px;
+}
+/* Headings get font-sizes at a modular scale of 5:6.
+
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h2>
+    <h4>Heading 4</h2>
+    <h5>Heading 5</h2>
+    <h6>Heading 6</h3> */
+hr,
+h1, h2, h3, h4, h5, h6 {
+  margin: 1em 20px .5em;
+}
+  h1:first-of-type {
+    margin-top: 20px;
+  }
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  color: hsl(207, 10%, 50%);
+}
+h1 a, h1 a:hover, h1 a:visited {
+  color: inherit;
+  text-decoration: inherit;
+}
+h1 {
+  font-size: 3.052em;
+  font-weight: normal;
+  color: hsl(207, 10%, 45%);
+}
+h2 {
+  font-size: 1.953em;
+}
+h3 {
+  font-size: 1.536em;
+}
+h1, h2, h3 {
+  letter-spacing: -.025em;
+}
+h4 {
+  font-size: 1.25em;
+}
+h5 {
+  font-size: 1em;
+  text-transform: uppercase;
+}
+h6 {
+  font-size: 1em;
+}
+.permalink {
+  position: absolute;
+  top: 15px; right: 15px;
+}
+
+/*
+# Links
+
+To show pseudo selectors styles in previews, add the pseudo selector
+(including the `:`) as a regular class.
+
+    <a href="#">Link</a>
+    <a href="#" class=":hover">Link</a>
+    <a href="#" class=":visited">Link</a>
+*/
+a {
+  color: hsl(207, 90%, 50%);
+  text-decoration: none;
+}
+  a:hover {
+    color: hsl(207, 95%, 40%);
+    text-decoration: underline;
+  }
+  a:visited {
+    color: hsl(207, 100%, 35%);
+  }
+
 
