@@ -8,17 +8,16 @@ resizing currently only works properly in Firefox. In WebKit browsers you can
 only enlarge the previews and other browsers have not implemented CSS `resize`
 </small>. */
 .preview {
-  margin-top: 1em;
-  background: hsl(200, 0%, 100%);
   position: relative;
   z-index: 1;
-  overflow: auto;
-  box-shadow: 0 0 3px hsla(200, 14%, 45%, .25);
-  padding: 10px;
-  height: 0;
   overflow: hidden;
+  height: 0;
+  margin-top: 1em;
+  padding: 10px;
   resize: both;
-  border-radius: 3px 3px 0 0;
+  background: hsl(200, 0%, 100%);
+  border-top-left-radius: 0; border-top-right-radius: 0;
+  box-shadow: 0 0 3px hsla(200, 14%, 45%, .25);
 }
   .preview-code + .preview {
     margin-top: 0;
@@ -27,13 +26,12 @@ only enlarge the previews and other browsers have not implemented CSS `resize`
 .preview iframe {
   display: block;
   width: 100%;
+  overflow: hidden;
   max-height: 100%;
   min-height: 100%;
-  overflow: hidden;
 }
 /*
-Editable code blocks have a desaturated orange background. They will be
-automatically resized to fit the text inside.
+Editable code blocks will be automatically resized to fit the text inside.
 
     <textarea class="preview-code">Code</textarea>
 */
@@ -43,20 +41,20 @@ automatically resized to fit the text inside.
   display: block;
   margin: 0;
   width: 100%;
-  color: hsl(200, 14%, 28%);
   max-height: 200px;
-  padding: 10px;
   overflow-y: auto;
-  background: hsl(200, 47%, 93%);
-  border: 1px solid hsl(200, 47%, 85%);
-  box-shadow: inset 0 1px 2px hsla(200, 14%, 28%, .1);
-  line-height: 1.1 !important;
   resize: none;
+  color: hsl(200, 14%, 28%);
+  background: hsl(200, 47%, 93%);
+  line-height: 1.1 !important;
+  border: 1px solid hsl(200, 47%, 85%);
+  border-top: 0;
+  box-shadow: inset 0 1px 2px hsla(200, 14%, 28%, .25);
   border-radius: 0 0 3px 3px;
-  -webkit-transition: all .1s ease-out;
-  -moz-transition:    all .1s ease-out;
-  -o-transition:      all .1s ease-out;
-  transition:         all .1s ease-out;
+  -webkit-transition: all .2s ease-out;
+  -moz-transition:    all .2s ease-out;
+  -o-transition:      all .2s ease-out;
+  transition:         all .2s ease-out;
 }
   .preview-code:hover {
     background: hsl(200, 47%, 95%);
@@ -71,15 +69,3 @@ automatically resized to fit the text inside.
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
-/* No code is allowed to overflow horizontally. */
-.preview-code, pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-y: auto;
-}
-.code pre {
-  height: 100%;
-  margin-top: 0;
-}
-
-

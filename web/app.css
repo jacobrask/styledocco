@@ -72,7 +72,8 @@ a {
 Typography and whitespace
 -------------------------
 We use the generic `sans-serif` font family to get Arial on Windows and
-Helvetica on Mac. The body font-size is [left at the browser default](http://filamentgroup.com/lab/how_we_learned_to_leave_body_font_size_alone/),
+Helvetica on Mac. The body font-size is
+[left at the browser default](http://filamentgroup.com/lab/how_we_learned_to_leave_body_font_size_alone/),
 with body text scaled down to the equivalent of **14px**. The line height is
 set to **1.618**.
 
@@ -104,7 +105,7 @@ h1, h2 {
   font-weight: normal;
 }
 h1, h2, h3 {
-  letter-spacing: -.02em;
+  letter-spacing: -.025em;
 }
 h1 {
   font-size: 2.67em;
@@ -195,4 +196,40 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
   text-decoration: none;
+}
+
+
+/*
+Code
+----
+For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com),
+falling back on some fonts that should look better at smaller sizes than the
+default monospace fonts.
+
+```
+<pre>
+<code>The font in &lt;pre&gt; code blocks is small but legible.</code>
+</pre>
+```
+
+```php
+<?php
+echo "Hello World;
+?>
+```
+*/
+pre, :not(pre) > code, var {
+  padding: .1em 3px;
+  background: hsla(200, 20%, 93%, .5);
+  border: 1px solid hsla(200, 47%, 85%, .5);
+  border-radius: 3px;
+  font-style: normal;
+  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  padding: .4em .5em .5em;
+  overflow-y: auto;
+  line-height: 1.1 !important;
 }

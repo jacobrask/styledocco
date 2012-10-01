@@ -5,6 +5,11 @@ body {
 ._docs-color-table {
   width: 100%;
 }
+._docs-color-table code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
 ._docs-color-table th {
   text-align: right;
 }
