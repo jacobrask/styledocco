@@ -1,11 +1,11 @@
 'use strict';
 
+var _ = require('underscore');
 var Backbone = require('backbone');
 Backbone.$ = require('jquery-browserify');
 var View = Backbone.View;
 
 var PreviewView = require('./preview');
-var _ = require('underscore');
 
 
 var DocumentationView = View.extend({
@@ -23,7 +23,6 @@ var DocumentationView = View.extend({
     return this;
   },
 
-  // This method requires 
   addPreviews: function() {
     var codeEls = this.el.getElementsByClassName('preview-code');
     if (!codeEls.length) return;

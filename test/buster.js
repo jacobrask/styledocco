@@ -1,14 +1,17 @@
 var config = module.exports;
 
-config['StyleDocco parser'] = {
+config['StyleDocco'] = {
   env: 'node',
   tests: [
-    'cli.js'
+    'cli.js',
+    'models/*.js'
   ]
 };
 
-config['Web'] = {
+/*
+config['Views'] = {
   env: 'browser',
   // Tests are Browserified via grunt
-  tests: [ 'lib/*.js' ]
+  tests: [ 'lib/views.js' ]
 };
+*/

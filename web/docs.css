@@ -1,0 +1,21 @@
+body {
+  padding: 1%;
+  padding: 0;
+}
+._docs-color-table {
+  width: 100%;
+}
+._docs-color-table th {
+  text-align: right;
+}
+._docs-color-table td, ._docs-color-table th {
+  padding: 1%;
+}
+._docs-color-table td {
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+}
+._docs-color-table tr:hover td {
+  color: #000;
+}

@@ -12,16 +12,13 @@ module.exports = function(grunt) {
       }
     },
     browserify: {
-      'dist/docs.js': {
-        entries: [ 'web/app.js' ]
-      },
-      'test/lib/tests.js': {
+      'test/lib/views.js': {
         entries: [ 'test/navigation.js', 'test/previews.js' ]
       }
     },
     concat: {
       dist: {
-        src: [ 'web/app.css', 'web/views/*.css' ],
+        src: [ 'web/*.css', 'web/views/*.css' ],
         dest: 'dist/docs.css'
       }
     },
@@ -39,8 +36,8 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: [ 'web/**' ],
-      tasks: 'jade browserify concat'
+      files: [ 'web/**', 'grunt.js' ],
+      tasks: 'jade concat'
     },
     jshint: {
       options: {
@@ -62,7 +59,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', 'jade browserify:dist/docs.js min mincss');
-  grunt.registerTask('dev', 'jade browserify:dist/docs.js concat');
+  grunt.registerTask('dev', 'concat');
   grunt.registerTask('test', 'browserify:test/lib/tests.js buster');
 
   grunt.loadNpmTasks("grunt-contrib"); 

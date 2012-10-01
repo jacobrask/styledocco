@@ -6,163 +6,193 @@ Defines typography, colors and base layouts for StyleDocco.
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: 0;
 }
 body {
   /* Top/bottom paddings for bars */
-  padding: 60px 0 40px;
-  background-color: hsl(207, 10%, 90%);
-  color: hsl(207, 5%, 30%);
+  margin: 0;
+  padding: 4em 0;
 }
+/* The main content is centered in a container with a maximum width of **1100px**. */
 .container {
-  max-width: 1300px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 20px;
 }
+iframe, img {
+  border: 0;
+}
 
-/* Bars
-==========
-Fixed to top or bottom with a minor drop shadow.
-
-```
-<nav class="bar top"></nav>
-```
-*/
-.bar {
-  position: fixed;
-  left: 0; right: 0;
-  z-index: 1010;
-  min-height: 40px;
-  line-height: 40px;
-  background-image: -webkit-linear-gradient(hsla(207, 10%, 35%, .97),
-                                            hsla(207,  5%, 25%, .92));
-  background-image:    -moz-linear-gradient(hsla(207, 10%, 35%, .97),
-                                            hsla(207,  5%, 25%, .92));
-  background-image:      -o-linear-gradient(hsla(207, 10%, 35%, .97),
-                                            hsla(207,  5%, 25%, .92));
-  background-image:         linear-gradient(hsla(207, 10%, 35%, .97),
-                                            hsla(207,  5%, 25%, .92));
-}
-.bar.top {
-  top: 0;
-  box-shadow: 0 1px 2px hsla(207, 5%, 0%, .2);
-}
-.bar.bottom {
-  bottom: 0;
-  box-shadow: 0 -1px 2px hsla(207, 5%, 0%, .2);
-}
 
 /*
-# Typography and text styles
+Colors
+------
+The primary hue is **200°**, and the secondary hue is **6°**. 
+All colors are specified with `hsl` or `hsla`, so tints and shades are easily
+accomplished by adjusting the saturation and brightness.
 
+<table class="_docs-color-table">
+  <tr>
+    <th>Primary Color
+    <td style="background:hsl(200, 47%, 35%)"><code>hsl(200, 47%, 35%)</code>
+    <td style="background:hsl(200, 70%, 20%)"><code>hsl(200, 70%, 20%)</code>
+    <td style="background:hsl(200, 14%, 45%)"><code>hsl(200, 14%, 45%)</code>
+    <td style="background:hsl(200, 32%, 28%)"><code>hsl(200, 32%, 28%)</code>
+    <td style="background:hsl(200, 14%, 28%)"><code>hsl(200, 14%, 28%)</code>
+  </tr>
+  <tr>
+    <th>Secondary Color
+    <td style="background:hsl(6, 65%, 45%)"><code>hsl(6, 60%, 54%)</code>
+    <td style="background:hsl(6, 72%, 31%)"><code>hsl(6, 72%, 31%)</code>
+    <td style="background:hsl(6, 34%, 56%)"><code>hsl(6, 34%, 56%)</code>
+    <td style="background:hsl(6, 64%, 60%)"><code>hsl(6, 64%, 60%)</code>
+  </tr>
+</table>
+*/
+body {
+  background-color: #fefeff; /* We can't get this light with hsl */
+  color: hsl(200, 14%, 28%);
+}
+h1, h2, h3, h4, h5, h6,
+th, strong {
+  color: hsl(200, 32%, 28%);
+}
+/*
+    <a href="#">Link</a>
+    <a href="#" class=":hover">Hovered link</a>
+*/
+a {
+  color: hsl(6, 65%, 45%);
+}
+  a:hover {
+    color: hsl(6, 72%, 31%);
+  }
+
+
+/*
+Typography and whitespace
+-------------------------
 We use the generic `sans-serif` font family to get Arial on Windows and
-Helvetica on Mac. The body font-size is set to 14px.
+Helvetica on Mac. The body font-size is [left at the browser default](http://filamentgroup.com/lab/how_we_learned_to_leave_body_font_size_alone/),
+with body text scaled down to the equivalent of **14px**. The line height is
+set to **1.618**.
 
-    Lorem ipsum dolor sit amet. */
+    <p>Lorem ipsum dolor sit amet.</p>
+*/
 body {
   font-family: sans-serif;
-  font-size: 14px;
-  line-height: 1.618;
+  line-height: 1.618; /* 22.652px */
 }
-/* Paragraphs, lists, tables and blockquotes get some bottom margins as well
-as side margins.
-
-    <p>Paragraph #1
-    <p>Paragraph #2
-    <ul><li>List</ul> */
-.docs pre, p, ol, ul, dl,
-figure, blockquote, table {
-  margin-left: 20px; margin-right: 20px;
+p, ul, ol,
+pre, table,
+h5, h6 {
+  font-size: 0.875em; /* 14px */
 }
-.preview, .docs pre,
-p, ol, ul, dl,
-figure, blockquote, table {
-  margin-top: 10px;
-}
-  ul ul, ol ol, ul ol, ol ul,
-  blockquote p:last-child {
-    margin-top: 0;
-  }
-ul, ol {
-  padding-left: 1.5em;
-}
-p:last-child, ol:last-child, ul:last-child, dl:last-child {
-  margin-bottom: 20px;
-}
-/* Headings get font-sizes at a modular scale of 5:6.
+/* Headings get font-sizes at a [ratio of 4:5](http://modularscale.com),
+but we skip a few steps.
 
     <h1>Heading 1</h1>
     <h2>Heading 2</h2>
-    <h3>Heading 3</h2>
-    <h4>Heading 4</h2>
-    <h5>Heading 5</h2>
-    <h6>Heading 6</h3> */
-hr,
-h1, h2, h3, h4, h5, h6 {
-  margin: 1em 20px .5em;
-}
-  h1:first-of-type {
-    margin-top: 20px;
-  }
+    <h3>Heading 3</h3>
+    <h4>Heading 4</h4>
+    <h5>Heading 5</h5>
+    <h6>Heading 6</h6>
+*/
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
-  color: hsl(207, 10%, 50%);
 }
-h1 a, h1 a:hover, h1 a:visited {
-  color: inherit;
-  text-decoration: inherit;
-}
-h1 {
-  font-size: 3.052em;
+h1, h2 {
   font-weight: normal;
-  color: hsl(207, 10%, 45%);
-}
-h2 {
-  font-size: 1.953em;
-}
-h3 {
-  font-size: 1.536em;
 }
 h1, h2, h3 {
-  letter-spacing: -.025em;
+  letter-spacing: -.02em;
+}
+h1 {
+  font-size: 2.67em;
+}
+h2 {
+  font-size: 2.136em;
+}
+h3 {
+  font-size: 1.367em;
 }
 h4 {
-  font-size: 1.25em;
+  font-size: 1.094em;
 }
 h5 {
-  font-size: 1em;
   text-transform: uppercase;
 }
-h6 {
-  font-size: 1em;
+/* All body content get **½ em** bottom margin. Headings get **2 em** top margin
+and other elements **1 em** top margin.
+
+    <h1 style="background:powderblue">Heading</h1>
+    <h3 style="background:powderblue">Heading</h3>
+    <h2 style="background:powderblue">Heading</h2>
+    <h2 style="background:powderblue">Heading</h2>
+    <h4 style="background:powderblue">Heading</h4>
+    <h5 style="background:powderblue">Heading</h5>
+    <p style="background:powderblue">Paragraph</p>
+    <ol style="background:powderblue"><li>List</ol>
+*/
+h1, h2, h3, h4, h5, h6 {
+  margin: 2em 0 .5em;
 }
-.permalink {
-  position: absolute;
-  top: 15px; right: 15px;
+  h1:first-of-type,
+  h1 + h1, h1 + h2, h1 + h3, h1 + h4, h1 + h5,
+  h2 + h2, h2 + h3, h2 + h4, h2 + h5,
+  h3 + h3, h3 + h4, h3 + h5,
+  h4 + h4, h4 + h5 {
+    margin-top: .5em;
+  }
+  h1 + h5, h2 + h5, h3 + h5, h4 + h5, h5 + h5,
+  h1 + h6, h2 + h6, h3 + h6, h4 + h6, h5 + h6, h6 + h6 {
+    margin-top: 1em;
+  }
+table, pre,
+p, ul, ol {
+  margin: 1em 0 .5em;
 }
+ul, ol {
+  padding-left: 2em;
+}
+
+/* Add the `ui` class to an element to remove all margins, padding and list
+styles from it and its children.
+
+    <div class="ui">
+      <ul><li>List</ul>
+      <p>Paragraph
+    </div>
+*/
+.ui, .ui * {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 
 /*
-# Links
+Interactive elements
+--------------------
+Links, buttons and inputs.
 
 To show pseudo selectors styles in previews, add the pseudo selector
-(including the `:`) as a regular class.
+(including the `:`) in the `class` attribute of an element.
 
-    <a href="#">Link</a>
-    <a href="#" class=":hover">Link</a>
-    <a href="#" class=":visited">Link</a>
+    <a href="#">Link</a> | <a href="#" class=":hover">Hovered link</a>
 */
 a {
-  color: hsl(207, 90%, 50%);
   text-decoration: none;
 }
   a:hover {
-    color: hsl(207, 95%, 40%);
     text-decoration: underline;
   }
-  a:visited {
-    color: hsl(207, 100%, 35%);
-  }
+/* Links inside headings only get hover styles.
 
-
+    <h4><a href="#">Link</a> | <a href="#" class=":hover">Hovered link</a></h4>
+*/
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  color: inherit;
+}
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+  text-decoration: none;
+}

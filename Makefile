@@ -18,7 +18,7 @@ test:
 
 examples: build-dev
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco \
-		--include share/previews.css --include lib/docs.js share/docs.css
+		--include share/previews.css share/docs.css
 	@./bin/styledocco -n "Twitter Bootstrap" -o ./examples/bootstrap/docs \
 		examples/bootstrap/less
 

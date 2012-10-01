@@ -14,6 +14,7 @@ var BrandView = View.extend({
   attributes: { href: './' },
 
   render: function() {
+    console.log(this.model.get('name'));
     this.el.innerText = this.model.get('name');
     return this;
   }
@@ -27,7 +28,7 @@ var MenuItemView = View.extend({
   render: function() {
     var mod = this.model;
     this.el.appendChild(
-      this.make('a', { href: '#doc/' + mod.get('name') }, mod.get('name'))
+      this.make('a', { href: '#' + mod.get('name') }, mod.get('name'))
     );
     return this;
   }
@@ -47,7 +48,7 @@ var NavBarView = View.extend({
   render: function() {
     this.el.innerHTML = '';
     this.el.appendChild(this.brand.render().el);
-    this.el.appendChild(this.menuEl = this.make('ul', { 'class': 'menu' }));
+    this.el.appendChild(this.menuEl = this.make('ul', { 'class': 'menu ui' }));
     this.collection.forEach(function(item) {
       this.menuEl.appendChild(
         new MenuItemView({ model: item }).render().el

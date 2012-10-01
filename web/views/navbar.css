@@ -1,23 +1,39 @@
+/*
+Top navigation styles
+=====================
+*/
+/* ## Project name
+
+    <a href="#" class="brand">StyleDocco</a>
+    <a href="#" class="brand :hover">StyleDocco</a>
+*/
 .brand {
   float: left;
   margin-right: 20px;
   font-weight: bold;
-  font-size: 16px;
   text-decoration: none;
 }
 .brand, a.brand, a.brand:visited {
-  color: hsl(27, 5%, 5%);
-  text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .2);
+  color: hsl(200, 14%, 28%);
+  text-shadow: 1px 1px 0 hsl(200, 100%, 100%);
 }
   .brand:hover, a.brand:hover {
-    color: hsl(27, 5%, 0%);
-    text-shadow: 1px 1px 0 hsla(27, 5%, 100%, .3);
+    color: hsl(200, 0%, 0%);
     text-decoration: none;
   }
 
+/* ## Project menu
+
+    <ul class="menu">
+      <li><a href="#">Item 1</a>
+      <li><a href="#">Item 2</a>
+      <li><a href="#">Item 3</a>
+    </ul>
+*/
 
 .menu {
   font-size: 12px;
+  font-size: 0.875em;
 }
 .menu > li {
   float: left;
@@ -27,5 +43,8 @@
   display: block;
   margin-right: 15px;
 }
-
-
+  .menu a:hover {
+    color: hsl(200, 0%, 0%);
+    text-shadow: 1px 1px 0 hsl(200, 100%, 100%);
+    text-decoration: none;
+  }

@@ -1,6 +1,5 @@
 // StyleDocco main application JavaScript
 // ======================================
-// The only place where we interact with the pre-existing DOM.
 
 'use strict';
 
@@ -8,8 +7,10 @@ var doc = document;
 
 // External dependencies
 // =====================
-var Backbone = require('backbone');
+var async = require('async');
 var _ = require('underscore');
+var $ = require('jquery');
+var Backbone = require('backbone');
 
 
 // Internal modules
@@ -26,25 +27,40 @@ var DocuView = require('./views/documentation');
 // =================
 // Do as much as possible before DOM ready to start sending out XHR's immediately.
 
+// Wrapper around jQuery.ajax to make it compatible with async.
+var ajax = function(path, cb) {
+  $.ajax(path, {
+    success: function(data, code, req) { cb(null, data, code, req); },
+    error: function(req, err, ex) { cb(ex || new Error(err), req); }
+  });
+};
+
 var docus = new DocuCollection();
 _.forEach(styledocco.config.stylesheets, function(file) {
   docus.add(new Docu({ path: file }));
+});
+
+async.map(styledocco.config.includes, ajax, function(err, res) {
+  docus.forEach(function(docu) {
+    docu.set('extraCss', res.join(''));
+  });
 });
 
 var navBar = new NavBarModel({ name: styledocco.config.name });
 
 var Router = Backbone.Router.extend({
   routes: {
-    'doc/:doc': 'docs'
+    ':doc': 'docs'
   },
   docs: function(page) {
     var mod = docus.find(function(mod) { return mod.get('name') === page; });
+    // TODO: Add error handling.
     if (mod == null) return;
-    var docu = new DocuView({ model: mod });
+    var docuView = new DocuView({ model: mod });
     var el = doc.getElementById('content');
     el.innerHTML = '';
     el.appendChild(
-      docu.render().el
+      docuView.render().el
     );
   }
 });
@@ -52,6 +68,8 @@ var Router = Backbone.Router.extend({
 
 // Initialize views
 // ================
+// The only place where we interact with the pre-existing DOM.
+
 $(doc).ready(function() {
 
   var router = new Router();

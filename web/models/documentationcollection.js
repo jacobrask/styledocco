@@ -5,6 +5,8 @@ var Collection = require('backbone').Collection;
 
 var DocumentationCollection = Collection.extend({
 
+  extraCss: ''
+
 });
 
 

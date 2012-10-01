@@ -10,12 +10,6 @@ buster.testCase("Render documentation", {
   tearDown: function() {
     this.server.restore;
   },
-  "Process stylesheets": function() {
-    var css = "/* Foo */\nbody { background: red }";
-    var docu = new Docu({ path: 'foo.css' });
-    assert.equals(docu.tokenize(css)[0].type, 'paragraph');
-    assert.match(docu.tokenize(css)[0].text, 'Foo');
-  },
   "Fetch stylesheets": function(done) {
     var docu = new Docu({ path: 'foo.css' });
     var count = 0;
