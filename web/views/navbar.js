@@ -14,7 +14,6 @@ var BrandView = View.extend({
   attributes: { href: './' },
 
   render: function() {
-    console.log(this.model.get('name'));
     this.el.innerText = this.model.get('name');
     return this;
   }

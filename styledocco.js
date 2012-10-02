@@ -1,5 +1,10 @@
 'use strict';
 
+var _ = require('underscore');
+var marked = require('marked');
+marked.setOptions({ sanitize: false, gfm: true });
+
+
 // Regular expressions to match comments. We only match comments in
 // the beginning of lines. 
 var commentRegexs = {
@@ -35,7 +40,7 @@ var formatDocs = function(str) {
 };
 
 var getComments = function(css) {
-  if (!css) return '';
+  if (typeof css != 'string') return '';
   var lines = css.split('\n');
   var docs = '';
   while (lines.length) {
@@ -58,4 +63,28 @@ var getComments = function(css) {
   return docs;
 };
 
-module.exports = getComments;
+var previewTemplate = _.template(
+  '<pre class="preview-code" contenteditable spellcheck="false">' +
+  '<code class="language-html"><%- code %></code></pre>'
+);
+
+var tokenize = exports.tokenize = function(docs) {
+  var tokens = marked.lexer(docs);
+  _.forEach(tokens, function(token) {
+    // Replace HTML code blocks with editable `pre`'s
+    if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
+      token.type = 'html';
+      token.pre = true;
+      token.text = previewTemplate({ code: token.text });
+    }
+  });
+  return tokens;
+};
+
+module.exports = function(css) {
+  return marked.parser(
+    tokenize(
+      getComments(css)
+    )
+  );
+};
