@@ -123,7 +123,8 @@ h5 {
   text-transform: uppercase;
 }
 /* All body content get **½ em** bottom margin. Headings get **2 em** top margin
-and other elements **1 em** top margin.
+and other elements **1 em** top margin. Adjactent headings get a reduced top
+margin.
 
     <h1 style="background:powderblue">Heading</h1>
     <h3 style="background:powderblue">Heading</h3>
@@ -206,25 +207,31 @@ For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com),
 falling back on some fonts that should look better at smaller sizes than the
 default monospace fonts.
 
-```
-<pre>
-<code>The font in &lt;pre&gt; code blocks is small but legible.</code>
-</pre>
-```
+You can display non-HTML code snippets by specifying another language in the
+code fence:
 
-```php
-<?php
-echo "Hello World;
-?>
+<pre><code>```php
+&lt;?php echo "Hello World" ?&gt;
 ```
+</code></pre>
+
+<pre><code>```css
+body { background: hotpink; }
+```
+</code></pre>
 */
-pre, :not(pre) > code, var {
+pre, code, var {
   padding: .1em 3px;
   background: hsla(200, 20%, 93%, .5);
   border: 1px solid hsla(200, 47%, 85%, .5);
   border-radius: 3px;
   font-style: normal;
   font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+}
+pre code {
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 pre {
   white-space: pre-wrap;
