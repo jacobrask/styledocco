@@ -46,34 +46,86 @@ Editable code blocks will be automatically resized to fit the text inside.
   display: block;
   margin: 0;
   width: 100%;
-  padding: .4em .5em .5em;
-  line-height: 1.1 !important;
+  padding: .5em;
   max-height: 200px;
   overflow-y: auto;
   resize: none;
   color: hsl(200, 14%, 28%);
   background: hsl(200, 47%, 93%);
-  line-height: 1.1 !important;
   border: 1px solid hsl(200, 47%, 85%);
   border-top: 0;
   box-shadow: inset 0 1px 2px hsla(200, 14%, 28%, .25);
   border-radius: 0 0 3px 3px;
-  font-size: .75em;
+  font-size: 0.8em;
   -webkit-transition: all .2s ease-out;
   -moz-transition:    all .2s ease-out;
   -o-transition:      all .2s ease-out;
   transition:         all .2s ease-out;
+  opacity: .9;
 }
+  .preview-code code:focus,
   .preview-code code:hover {
-    background: hsl(200, 47%, 95%);
+    background: hsl(200, 47%, 94%);
+    opacity: 1;
   }
   .preview-code code:focus {
-    outline: 0;
-    background: hsl(200, 47%, 97%);
-    box-shadow: inset 0 1px 2px hsla(200, 14%, 28%, .1),
-                      0 0   3px hsla(200, 70%, 35%, .4);
+    background: hsl(200, 47%, 95%);
+    box-shadow: inset 0 1px 2px hsla(200, 14%, 28%, .15),
+                      0 0   3px hsla(200, 70%, 35%, .3);
   }
   .preview-code:last-child code {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: hsl(200, 14%, 70%);
+}
+
+.token.punctuation {
+  color: hsl(200, 14%, 60%);
+}
+.namespace {
+	opacity: .7;
+}
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number {
+  color: hsl(6, 72%, 31%);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string {
+  color: hsl(200, 14%, 45%);
+  color: hsl(6, 34%, 56%);
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: hsl(6, 34%, 56%);
+	background: hsla(0, 0%, 100%, .25);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: hsl(200, 47%, 35%);
+}
+
+
+.token.regex,
+.token.important {
+	color: #e90;
+}
+
+.token.important {
+	font-weight: bold;
+}
+
+

@@ -44,6 +44,7 @@ accomplished by adjusting the saturation and brightness.
     <td style="background:hsl(6, 65%, 45%)"><code>hsl(6, 60%, 54%)</code>
     <td style="background:hsl(6, 72%, 31%)"><code>hsl(6, 72%, 31%)</code>
     <td style="background:hsl(6, 34%, 56%)"><code>hsl(6, 34%, 56%)</code>
+    <td style="background:hsl(6, 40%, 38%)"><code>hsl(6, 40%, 38%)</code>
     <td style="background:hsl(6, 64%, 60%)"><code>hsl(6, 64%, 60%)</code>
   </tr>
 </table>
@@ -203,10 +204,6 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
 /*
 Code
 ----
-For displaying code, we prefer [Ubuntu Mono](http://font.ubuntu.com),
-falling back on some fonts that should look better at smaller sizes than the
-default monospace fonts.
-
 You can display non-HTML code snippets by specifying another language in the
 code fence:
 
@@ -226,14 +223,14 @@ pre, code, var {
   border: 1px solid hsla(200, 47%, 85%, .5);
   border-radius: 3px;
   font-style: normal;
-  font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
+	font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
 }
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   padding: .4em .5em .5em;
   overflow-y: auto;
-  line-height: 1.1 !important;
+  line-height: 1.3;
 }
 
 [contenteditable] {
