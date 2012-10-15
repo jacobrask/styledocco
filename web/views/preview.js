@@ -12,11 +12,11 @@ var PreviewView = View.extend({
 
   initialize: function() {
     _.bindAll(this);
+    this.$codeEl = this.$('code');
     this.render();
     this.model.collection.on('change', this.updateCss);
     this.on('iframeChange', this.updateHeight);
     this.updateCss();
-    this.$codeEl = this.$('code');
     this.highlight();
   },
 
@@ -63,6 +63,7 @@ var PreviewView = View.extend({
 
   render: function() {
     var el = this.el;
+    this.$codeEl.attr('title', "Click to edit");
     el.parentNode.insertBefore(
       make('.preview', [
         this.iframe = make('iframe', {
