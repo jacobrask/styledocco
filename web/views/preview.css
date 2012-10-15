@@ -35,11 +35,19 @@ Editable code blocks will be automatically resized to fit the text inside.
     <textarea class="preview-code">Code</textarea>
 */
 .preview-code {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.preview-code code {
   position: relative;
   z-index: 2;
   display: block;
   margin: 0;
   width: 100%;
+  padding: .4em .5em .5em;
+  line-height: 1.1 !important;
   max-height: 200px;
   overflow-y: auto;
   resize: none;
@@ -56,16 +64,16 @@ Editable code blocks will be automatically resized to fit the text inside.
   -o-transition:      all .2s ease-out;
   transition:         all .2s ease-out;
 }
-  .preview-code:hover {
+  .preview-code code:hover {
     background: hsl(200, 47%, 95%);
   }
-  .preview-code:focus {
+  .preview-code code:focus {
     outline: 0;
     background: hsl(200, 47%, 97%);
     box-shadow: inset 0 1px 2px hsla(200, 14%, 28%, .1),
                       0 0   3px hsla(200, 70%, 35%, .4);
   }
-  .preview-code:last-child {
+  .preview-code:last-child code {
     border-bottom: 0;
     border-radius: 0 0 5px 5px;
   }

@@ -228,15 +228,14 @@ pre, code, var {
   font-style: normal;
   font-family: "Ubuntu Mono", "Andale Mono", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Consolas", "Lucida Console", monospace;
 }
-pre code {
-  padding: 0;
-  background: transparent;
-  border: 0;
-}
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   padding: .4em .5em .5em;
   overflow-y: auto;
   line-height: 1.1 !important;
+}
+
+[contenteditable] {
+  outline: 0;
 }

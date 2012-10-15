@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
+/*var Prism = */ require('prism');
 var Backbone = require('backbone');
 Backbone.$ = require('jquery-browserify');
 var View = Backbone.View;
@@ -15,10 +16,13 @@ var PreviewView = View.extend({
     this.model.collection.on('change', this.updateCss);
     this.on('iframeChange', this.updateHeight);
     this.updateCss();
+    this.$codeEl = this.$('code');
+    this.highlight();
   },
 
   events: {
-    'input': 'updateHtml'
+    'input code': 'updateHtml',
+    'blur code': 'highlight'
   },
 
   // Get the actual height of the iframe's content by getting the distance
@@ -80,7 +84,7 @@ var PreviewView = View.extend({
   },
 
   updateHtml: function() {
-    this.iframe.contentDocument.body.innerHTML = this.el.innerText;
+    this.iframe.contentDocument.body.innerHTML = this.$codeEl.text();
     this.trigger('iframeChange');
   },
   updateCss: function() {
@@ -96,6 +100,24 @@ var PreviewView = View.extend({
     this.getHeight(_.bind(function(height) {
       this.iframe.parentNode.style.height = (height + 20) + 'px';
     }, this));
+  },
+
+
+  highlight: function() {
+    this.$codeEl.html(
+      Prism.highlight(this.getText(), Prism.languages.markup)
+    );
+  },
+
+  getText: function() {
+    var $el = this.$codeEl;
+    if ($.browser.webkit)
+      $el.find('div').replaceWith(function() { return "\n" + this.innerHTML; });
+    if ($.browser.msie)
+      $el.find('p').replaceWith(function() { return this.innerHTML + "<br>"; });
+    if ($.browser.mozilla || $.browser.opera || $.browser.msie)
+      $el.find('br').replaceWith("\n");
+    return $el.text().replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 });
 

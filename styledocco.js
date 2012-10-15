@@ -64,8 +64,8 @@ var getComments = function(css) {
 };
 
 var previewTemplate = _.template(
-  '<pre class="preview-code" contenteditable spellcheck="false">' +
-  '<code class="language-html"><%- code %></code></pre>'
+  '<pre class="preview-code">' +
+  '<code class="language-html" contenteditable spellcheck="false"><%- code %></code></pre>'
 );
 
 var tokenize = exports.tokenize = function(docs) {
