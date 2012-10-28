@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
-/*var Prism = */ require('prism');
+/*var Prism = */require('../vendor/prism');
 var Backbone = require('backbone');
 Backbone.$ = require('jquery-browserify');
 var View = Backbone.View;
