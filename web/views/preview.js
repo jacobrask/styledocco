@@ -1,9 +1,9 @@
 'use strict';
 
 var _ = require('underscore');
-/*var Prism = */require('../vendor/prism');
+var Prism = window.Prism; require('../vendor/prism');
 var Backbone = require('backbone');
-Backbone.$ = require('jquery-browserify');
+var $ = Backbone.$ = require('jquery-browserify');
 var View = Backbone.View;
 
 var make = require('../../share/domsugar')(document);
@@ -67,14 +67,14 @@ var PreviewView = View.extend({
     el.parentNode.insertBefore(
       make('.preview', [
         this.iframe = make('iframe', {
-          src: 'javascript:999',
+          src: 'javascript:0',
           scrolling: 'no',
           id: this.iframeId = _.uniqueId('iframe')
         })
       ]),
       el
     );
-    this.getIframeDoc(function(doc, ev) {
+    this.getIframeDoc(function(doc) {
       doc.write(
         '<!DOCTYPE html><html><head><style></style><script></script></head><body>' +
         el.innerText || ''
@@ -91,7 +91,7 @@ var PreviewView = View.extend({
   updateCss: function() {
     var coll = this.model.collection;
     var css = coll.pluck('css').join('') + this.model.get('extraCss');
-    this.getIframeDoc(_.bind(function(doc, ev) {
+    this.getIframeDoc(_.bind(function(doc) {
       doc.head.getElementsByTagName('style')[0].textContent = css;
       this.trigger('iframeChange');
     }, this));

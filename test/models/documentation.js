@@ -1,7 +1,6 @@
 'use strict';
 
 var buster = require('buster');
-var nock = require('nock');
 var Docu = require('../../web/models/documentation');
 
 buster.testCase("Render documentation", {

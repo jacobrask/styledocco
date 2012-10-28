@@ -46,9 +46,12 @@ var htmlFilename = function(file, basePath) {
 // Find first file matching `re` in `dir`.
 var findFile = function(dir, re, cb) {
   fs.stat(dir, function(err, stat) {
-    var files = fs.readdir(dir, function(err, files) {
+    if (err || !stat.isDirectory()) {
+      return cb(new Error('Directory ' + dir + ' not found.'));
+    }
+    fs.readdir(dir, function(err, files) {
       files = files.sort().filter(function(file) { return file.match(re); });
-      if (!files.length) cb(new Error('No file found.'));
+      if (!files.length) cb(new Error('No files found.'));
       else cb(null, path.join(dir, files[0]));
     });
   });
@@ -187,7 +190,7 @@ var cli = function(options) {
       findFile(options.basePath, /^readme\.m(ark)?d(own)?/i, function(err, file) {
         if (file != null && err == null) return read(file);
         findFile(process.cwd(), /^readme\.m(ark)?d(own)?/i, function(err, file) {
-          if (err != null) file = resourcesDir + 'README.md';
+          if (err != null) file = resourcesDir + 'README.md'; // Default readme
           read(file);
         });
       });

@@ -13,7 +13,7 @@ var Preview = Model.extend({
   // Get the actual height of the iframe's content by getting the distance
   // between the element`s offsetParent and the bottom-most point of any child
   // elements. `offsetHeight` does not work with absolute or fixed positioned elements.
-  getHeight: function() {
+  getHeight: function () {
     var elem = this.iframe.contentDocument.body;
     if (elem.childElementCount === 0) return elem.offsetHeight;
     var win = elem.ownerDocument.defaultView;
@@ -27,7 +27,7 @@ var Preview = Model.extend({
     var extraHeight = parseInt(win.getComputedStyle(elem).getPropertyValue('padding-bottom'), 10);
     var height = Math.max.apply(Math, childHeights) + extraHeight;
     return Math.max(height, elem.offsetHeight);
-  };
+  }
 
 });
 

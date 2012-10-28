@@ -8,7 +8,7 @@ buster.testCase("Render documentation", {
     this.server = this.useFakeServer();
   },
   tearDown: function() {
-    this.server.restore;
+    this.server.restore();
   },
   "Fetch stylesheets": function(done) {
     var docu = new Docu({ path: 'foo.css' });

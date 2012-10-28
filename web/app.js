@@ -4,6 +4,7 @@
 'use strict';
 
 var doc = document;
+var styledocco = window.styledocco;
 
 // External dependencies
 // =====================

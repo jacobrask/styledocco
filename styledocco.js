@@ -52,7 +52,7 @@ var getComments = function(css) {
     if (lines.length && checkType(lines[0]) === 'multistart') {
       do {
         docs += formatDocs(lines.shift());
-      } while (lines.length && checkType(lines[0]) !== 'multiend')
+      } while (lines.length && checkType(lines[0]) !== 'multiend');
     }
     // Ignore the code
     while (lines.length && (checkType(lines[0]) === 'code' || checkType(lines[0]) === 'multiend')) {

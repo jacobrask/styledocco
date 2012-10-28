@@ -2,5 +2,13 @@
   "strict": true,
   "node": true,
   "browser": true,
+
+  "maxcomplexity": 6,
+  "maxdepth": 3,
+  "maxparams": 3,
+  "newcap":  true,
+  "undef":   true,
+  "unused":  true,
+
   "eqnull": true
 }
