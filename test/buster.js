@@ -4,7 +4,7 @@ config['StyleDocco'] = {
   env: 'node',
   tests: [
     'cli.js',
-    'models/*.js'
+    'parser.js'
   ]
 };
 

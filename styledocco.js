@@ -39,45 +39,46 @@ var formatDocs = function(str) {
   return str + '\n';
 };
 
-var getComments = function(css) {
+var getComments = function (css) {
   if (typeof css != 'string') return '';
   var lines = css.split('\n');
   var docs = '';
+  var is = function (type) { return !!lines.length && checkType(lines[0]) === type; };
+  var isnt = function (type) { return !!lines.length && checkType(lines[0]) !== type; };
+  var save = function () { docs += formatDocs(lines.shift()); };
+  var discard = function () { lines.shift(); };
+
   while (lines.length) {
-    // First check for any single line comments.
-    while (lines.length && checkType(lines[0]) === 'single') {
-      docs += formatDocs(lines.shift());
-    }
+    while (is('single')) save();
     // A multi line comment starts here, add lines until comment ends.
-    if (lines.length && checkType(lines[0]) === 'multistart') {
-      do {
-        docs += formatDocs(lines.shift());
-      } while (lines.length && checkType(lines[0]) !== 'multiend');
+    if (is('multistart')) {
+      while (isnt('multiend')) save();
+      save(); // Save multiend line. `do..while` didn't work well with `shift()`
     }
-    // Ignore the code
-    while (lines.length && (checkType(lines[0]) === 'code' || checkType(lines[0]) === 'multiend')) {
-      lines.shift();
-    }
+    // Ignore code and endings of ignored multi line comments
+    while (is('code') || is('multiend')) discard();
     docs += '\n';
   }
   return docs;
 };
+
 
 var previewTemplate = _.template(
   '<pre class="preview-code">' +
   '<code class="language-html" contenteditable spellcheck="false"><%- code %></code></pre>'
 );
 
-var tokenize = exports.tokenize = function(docs) {
+var tokenize = function(docs) {
   var tokens = marked.lexer(docs);
-  _.forEach(tokens, function(token) {
+  for (var i, len = tokens.length, token; i < len; i++) {
+    token = tokens[i];
     // Replace HTML code blocks with editable `pre`'s
     if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
       token.type = 'html';
       token.pre = true;
       token.text = previewTemplate({ code: token.text });
     }
-  });
+  }
   return tokens;
 };
 
@@ -88,3 +89,6 @@ module.exports = function(css) {
     )
   );
 };
+module.exports.tokenize = tokenize;
+module.exports.getComments = getComments;
+module.exports.checkType = checkType;
