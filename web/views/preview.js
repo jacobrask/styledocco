@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; /*global $:false,Prism:false*/
 
 var _ = require('underscore');
 /*var Prism = */require('../vendor/prism');
@@ -32,7 +32,7 @@ var PreviewView = View.extend({
     this.getIframeDoc(function(doc) {
       $(doc).ready(function() {
         var el = doc.body;
-        if (el.childElementCount == 0) return el.offsetHeight;
+        if (el.childElementCount === 0) return el.offsetHeight;
         var win = el.ownerDocument.defaultView;
         var children = el.getElementsByTagName('*');
         for (var i = 0, l = children.length, childHeights = [], child; i < l; i++) {

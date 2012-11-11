@@ -27,7 +27,7 @@ var Preview = Model.extend({
     var extraHeight = parseInt(win.getComputedStyle(elem).getPropertyValue('padding-bottom'), 10);
     var height = Math.max.apply(Math, childHeights) + extraHeight;
     return Math.max(height, elem.offsetHeight);
-  };
+  }
 
 });
 
