@@ -3,7 +3,6 @@ var config = module.exports;
 config['StyleDocco'] = {
   env: 'node',
   tests: [
-    'cli.js',
     'models/*.js'
   ]
 };

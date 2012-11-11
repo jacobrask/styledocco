@@ -12,43 +12,17 @@ Suggestions, feature requests and bug reports are welcome either at [GitHub](htt
 Installation
 ------------
 
-StyleDocco requires [Node.js](http://nodejs.org). After installing Node.js, run `npm install -fg styledocco` or clone this repository and run `./bin/styledocco`.
-
 StyleDocco is free and open source software, released under the [MIT license](https://raw.github.com/jacobrask/styledocco/master/LICENSE).
 
 
 Usage
 =====
 
-`styledocco [options] [STYLESHEET(S)]`
-
-Options
--------
-
- * `--name`, `-n`    Name of the project
- * `--out`, `-o`     Output directory *(default: "docs")*
- * `--preprocessor`  Custom preprocessor command. *(optional)* (ex: `--preprocessor "~/bin/lessc"`)
- * `--include`       Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include plugin.css --include app.js`)
- * `--verbose`       Show log messages when generating the documentation. *(default: false)*
- *                   Stylesheet (or directory of stylesheets) to process.
-
-Usage examples
---------------
-
-Generate documentation for *My Project* in the `docs` folder, from the files in the `css` directory.
-
-`styledocco -n "My Project" css`
-
-Generate documentation for *My Project* in the `mydocs` folder. Use the `--compass` option for SASS to make Compass imports available.
-
-`styledocco -n "My Project" -o mydocs --preprocessor "scss --compass" styles`
-
-
 Syntax
 ------
 
 ```css
-/* Provides extra visual weight and identifies the primary action in a set of buttons.
+/** Provides extra visual weight and identifies the primary action in a set of buttons.
 
     <button class="btn primary">Primary</button> */
 .btn.primary {
@@ -64,11 +38,6 @@ See the `examples` folder for more in-depth examples.
 Tips and tricks
 ---------------
 
- * StyleDocco will automatically compile any SASS, SCSS, Less or Stylus files before they are applied to the page. You can also enter a custom preprocessor command if you want to pass custom parameters to the preprocessor.
- * If your project includes a `README.md` file, it will be used as the base for an `index.html`.
- * If you don't specify a custom name, StyleDocco will use the name from a `package.json` file if it finds one.
- * Put some whitespace before a comment block to exclude it from the documentation.
- * Level 1 headings will automatically create a new section in the documentation.
  * Add `:hover`, `:focus`, etc as class names in example code and the pseudo class styles will be applied in the preview.
 
 
