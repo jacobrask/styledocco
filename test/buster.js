@@ -1,5 +1,6 @@
 var config = module.exports;
 
+/*
 config['StyleDocco'] = {
   env: 'node',
   tests: [
@@ -7,7 +8,6 @@ config['StyleDocco'] = {
   ]
 };
 
-/*
 config['Views'] = {
   env: 'browser',
   // Tests are Browserified via grunt

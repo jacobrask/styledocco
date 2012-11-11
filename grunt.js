@@ -9,9 +9,6 @@ module.exports = function(grunt) {
       'dist/docs.js': {
         entries: [ 'web/app.js' ],
         aliases: [ 'jquery:jquery-browserify' ]
-      },
-      'test/lib/views.js': {
-        entries: [ 'test/navigation.js', 'test/previews.js' ]
       }
     },
     jade: {
@@ -52,21 +49,15 @@ module.exports = function(grunt) {
         globalstrict: true
       },
       globals: {
-        styledocco: true,
-        buster: true, assert: true, refute: true, test: true
+        styledocco: true
       }
-    },
-    buster: {
-      test: { config: 'test/buster.js' }
     }
   });
 
   // Default task.
   grunt.registerTask('default', 'jade browserify:dist/docs.js min mincss');
   grunt.registerTask('dev', 'concat browserify:dist/docs.js');
-  grunt.registerTask('test', 'browserify:test/lib/tests.js buster');
 
   grunt.loadNpmTasks("grunt-contrib"); 
   grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-buster');
 };
