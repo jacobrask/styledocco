@@ -1,12 +1,10 @@
-/*
-Top navigation styles
-=====================
-*/
-/* ## Project name
+/**
+# Top navigation styles
+
+## Project name
 
     <a href="#" class="brand">StyleDocco</a>
-    <a href="#" class="brand :hover">StyleDocco</a>
-*/
+    <a href="#" class="brand :hover">StyleDocco</a> */
 .brand {
   float: left;
   margin-right: 20px;

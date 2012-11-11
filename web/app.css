@@ -1,18 +1,17 @@
-/*
+/**
 StyleDocco layout structure and shared styles
 =============================================
-Defines typography, colors and base layouts for StyleDocco.
-*/
+Defines typography, colors and base layouts for StyleDocco. */
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 body {
-  /* Top/bottom paddings for bars */
   margin: 0;
+  /* Top/bottom paddings for bars */
   padding: 4em 0;
 }
-/* The main content is centered in a container with a maximum width of **1100px**. */
+/** The main content is centered in a container with a maximum width of **1100px**. */
 .container {
   max-width: 1100px;
   margin: 0 auto;
@@ -23,7 +22,7 @@ iframe, img {
 }
 
 
-/*
+/**
 Colors
 ------
 The primary hue is **200°**, and the secondary hue is **6°**. 
@@ -47,8 +46,7 @@ accomplished by adjusting the saturation and brightness.
     <td style="background:hsl(6, 40%, 38%)"><code>hsl(6, 40%, 38%)</code>
     <td style="background:hsl(6, 64%, 60%)"><code>hsl(6, 64%, 60%)</code>
   </tr>
-</table>
-*/
+</table> */
 body {
   background-color: #fefeff; /* We can't get this light with hsl */
   color: hsl(200, 14%, 28%);
@@ -57,10 +55,9 @@ h1, h2, h3, h4, h5, h6,
 th, strong {
   color: hsl(200, 32%, 28%);
 }
-/*
+/**
     <a href="#">Link</a>
-    <a href="#" class=":hover">Hovered link</a>
-*/
+    <a href="#" class=":hover">Hovered link</a> */
 a {
   color: hsl(6, 65%, 45%);
 }
@@ -69,7 +66,7 @@ a {
   }
 
 
-/*
+/**
 Typography and whitespace
 -------------------------
 We use the generic `sans-serif` font family to get Arial on Windows and
@@ -78,8 +75,7 @@ Helvetica on Mac. The body font-size is
 with body text scaled down to the equivalent of **14px**. The line height is
 set to **1.618**.
 
-    <p>Lorem ipsum dolor sit amet.</p>
-*/
+    <p>Lorem ipsum dolor sit amet.</p> */
 body {
   font-family: sans-serif;
   line-height: 1.618; /* 22.652px */
@@ -89,7 +85,7 @@ pre, table,
 h5, h6 {
   font-size: 0.875em; /* 14px */
 }
-/* Headings get font-sizes at a [ratio of 4:5](http://modularscale.com),
+/** Headings get font-sizes at a [ratio of 4:5](http://modularscale.com),
 but we skip a few steps.
 
     <h1>Heading 1</h1>
@@ -97,8 +93,7 @@ but we skip a few steps.
     <h3>Heading 3</h3>
     <h4>Heading 4</h4>
     <h5>Heading 5</h5>
-    <h6>Heading 6</h6>
-*/
+    <h6>Heading 6</h6> */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
@@ -123,7 +118,8 @@ h4 {
 h5 {
   text-transform: uppercase;
 }
-/* All body content get **½ em** bottom margin. Headings get **2 em** top margin
+/**
+All body content get **½ em** bottom margin. Headings get **2 em** top margin
 and other elements **1 em** top margin. Adjactent headings get a reduced top
 margin.
 
@@ -158,7 +154,7 @@ ul, ol {
   padding-left: 2em;
 }
 
-/* Add the `ui` class to an element to remove all margins, padding and list
+/** Add the `ui` class to an element to remove all margins, padding and list
 styles from it and its children.
 
     <div class="ui">
@@ -173,7 +169,7 @@ styles from it and its children.
 }
 
 
-/*
+/**
 Interactive elements
 --------------------
 Links, buttons and inputs.
@@ -189,7 +185,7 @@ a {
   a:hover {
     text-decoration: underline;
   }
-/* Links inside headings only get hover styles.
+/** Links inside headings only get hover styles.
 
     <h4><a href="#">Link</a> | <a href="#" class=":hover">Hovered link</a></h4>
 */
@@ -201,7 +197,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
 }
 
 
-/*
+/**
 Code
 ----
 You can display non-HTML code snippets by specifying another language in the

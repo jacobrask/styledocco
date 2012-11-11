@@ -1,4 +1,4 @@
-/* # Previews and code
+/** # Previews and code
 Previews are rendered in sandboxed iframes with the documented CSS applied.
 The code is editable and the previews will be automatically updated.
 
@@ -29,8 +29,7 @@ enlarge the previews and other browsers have not implemented CSS `resize`. */
   max-height: 100%;
   min-height: 100%;
 }
-/*
-Editable code blocks will be automatically resized to fit the text inside.
+/** Editable code blocks will be automatically resized to fit the text inside.
 
     <textarea class="preview-code">Code</textarea>
 */
@@ -127,5 +126,3 @@ Editable code blocks will be automatically resized to fit the text inside.
 .token.important {
 	font-weight: bold;
 }
-
-

@@ -1,4 +1,4 @@
-/* Bars
+/** Bars
 ==========
 Bars for navigation or settings, fixed to top or bottom. */
 .bar {
@@ -7,7 +7,7 @@ Bars for navigation or settings, fixed to top or bottom. */
   z-index: 1010;
   min-height: 3em;
   line-height: 3em;
-/* The bars have a slightly faded background and a little transparency. */
+/** The bars have a slightly faded background and a little transparency. */
   background-image: -webkit-linear-gradient(hsl(200, 14%, 95%),
                                            hsla(201, 14%, 88%, .97));
   background-image:    -moz-linear-gradient(hsl(200, 14%, 95%),
@@ -20,7 +20,7 @@ Bars for navigation or settings, fixed to top or bottom. */
 .bar {
   border: 0 solid hsla(200, 14%, 28%, .2);
 }
-/* The top bar also has a subtle drop shadow.
+/** The top bar also has a subtle drop shadow.
 
     <nav class="bar top"></nav>
 */

@@ -8,24 +8,21 @@ marked.setOptions({ sanitize: false, gfm: true });
 // Regular expressions to match comments. We only match comments in
 // the beginning of lines. 
 var commentRegexs = {
-  single: /^\/\//, // Single line comments for Sass, Less and Stylus
-  multiStart: /^\/\*/,
-  multiEnd: /\*\//
+  start: /\/\*\*/,
+  end: /\*\/.*/
 };
 
 // Check if a string is code or a comment (and which type of comment).
 var checkType = function(str) {
   // Treat multi start and end on same row as a single line comment.
-  if (str.match(commentRegexs.multiStart) && str.match(commentRegexs.multiEnd)) {
+  if (str.match(commentRegexs.start) && str.match(commentRegexs.end)) {
     return 'single';
   // Checking for multi line comments first to avoid matching single line
   // comment symbols inside multi line blocks.
-  } else if (str.match(commentRegexs.multiStart)) {
-    return 'multistart';
-  } else if (str.match(commentRegexs.multiEnd)) {
-    return 'multiend';
-  } else if ((commentRegexs.single != null) && str.match(commentRegexs.single)) {
-    return 'single';
+  } else if (str.match(commentRegexs.start)) {
+    return 'start';
+  } else if (str.match(commentRegexs.end)) {
+    return 'end';
   } else {
     return 'code';
   }
@@ -49,13 +46,14 @@ var getComments = function(css) {
       docs += formatDocs(lines.shift());
     }
     // A multi line comment starts here, add lines until comment ends.
-    if (lines.length && checkType(lines[0]) === 'multistart') {
-      do {
+    if (lines.length && checkType(lines[0]) === 'start') {
+      while (lines.length && checkType(lines[0]) !== 'end') {
         docs += formatDocs(lines.shift());
-      } while (lines.length && checkType(lines[0]) !== 'multiend')
+      }
+      docs += formatDocs(lines.shift()); // add end line as well
     }
     // Ignore the code
-    while (lines.length && (checkType(lines[0]) === 'code' || checkType(lines[0]) === 'multiend')) {
+    while (lines.length && (checkType(lines[0]) === 'code' || checkType(lines[0]) === 'end')) {
       lines.shift();
     }
     docs += '\n';
