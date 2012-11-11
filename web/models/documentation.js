@@ -44,7 +44,7 @@ var Documentation = Model.extend({
     });
   },
 
-  error: function() {
+  error: function (req, err, ex) {
     this.set('docs', "Could not fetch documentation from " + this.get('path'));
   },
 

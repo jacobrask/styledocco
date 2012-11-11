@@ -9,13 +9,13 @@ Bars for navigation or settings, fixed to top or bottom. */
   line-height: 3em;
 /* The bars have a slightly faded background and a little transparency. */
   background-image: -webkit-linear-gradient(hsl(200, 14%, 95%),
-                                           hsla(200, 14%, 88%, .95));
+                                           hsla(201, 14%, 88%, .97));
   background-image:    -moz-linear-gradient(hsl(200, 14%, 95%),
-                                           hsla(200, 14%, 88%, .95));
+                                           hsla(200, 14%, 88%, .97));
   background-image:      -o-linear-gradient(hsl(200, 14%, 95%),
-                                           hsla(200, 14%, 88%, .95));
+                                           hsla(200, 14%, 88%, .97));
   background-image:         linear-gradient(hsl(200, 14%, 95%),
-                                           hsla(200, 14%, 88%, .95));
+                                           hsla(200, 14%, 88%, .97));
 }
 .bar {
   border: 0 solid hsla(200, 14%, 28%, .2);

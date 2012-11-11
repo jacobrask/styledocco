@@ -36,17 +36,19 @@ var ajax = function(path, cb) {
 };
 
 var docus = new DocuCollection();
-_.forEach(styledocco.config.stylesheets, function(file) {
+_.forEach(styledocco.project.stylesheets, function(file) {
   docus.add(new Docu({ path: file }));
 });
 
-async.map(styledocco.config.includes, ajax, function(err, res) {
-  docus.forEach(function(docu) {
-    docu.set('extraCss', res.join(''));
+if (styledocco.project.includes) {
+  async.map(styledocco.project.includes, ajax, function(err, res) {
+    docus.forEach(function(docu) {
+      docu.set('extraCss', res.join(''));
+    });
   });
-});
+}
 
-var navBar = new NavBarModel({ name: styledocco.config.name });
+var navBar = new NavBarModel({ name: styledocco.project.name });
 
 var Router = Backbone.Router.extend({
   routes: {

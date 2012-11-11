@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta charset="utf-8">
+    <script>
+      var styledocco = {
+        project: {
+          name: "StyleDocco",
+          // Array of CSS file paths.
+          stylesheets: [
+            '../web/app.css',
+            '../web/bar.css',
+            '../web/views/navbar.css',
+            '../web/views/preview.css'
+          ]
+        }
+      };
+    </script>
+    <link rel="stylesheet" href="../dist/docs.css">
+    <script src="../dist/docs.js"></script>
+  </head>
+  <body>
+    <div class="bar top">
+      <div id="navbar" class="container"></div>
+    </div>
+    <section id="content" class="container">
+      <article class="section">
+        <div class="docs">
+          <p>Write an introduction to your project here.</p>
+        </div>
+      </article>
+    </section>
+  </body>
+</html>
+<!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco).-->
