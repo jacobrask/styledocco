@@ -5,27 +5,13 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: '<json:package.json>',
-    min: {
-      dist: {
-        src: [ 'dist/docs.js' ],
-        dest: 'dist/docs.js'
-      }
-    },
     browserify: {
+      'dist/docs.js': {
+        entries: [ 'web/app.js' ],
+        aliases: [ 'jquery:jquery-browserify' ]
+      },
       'test/lib/views.js': {
         entries: [ 'test/navigation.js', 'test/previews.js' ]
-      }
-    },
-    concat: {
-      dist: {
-        src: [ 'web/*.css', 'web/views/*.css' ],
-        dest: 'dist/docs.css'
-      }
-    },
-    mincss: {
-      dist: {
-        files: { 'dist/docs.css': [ '<config:concat.dist.src>' ]
-        }
       }
     },
     jade: {
@@ -35,9 +21,27 @@ module.exports = function(grunt) {
         options: { client: false, pretty: true }
       }
     },
+    concat: {
+      dist: {
+        src: [ 'web/*.css', 'web/views/*.css' ],
+        dest: 'dist/docs.css'
+      }
+    },
+    min: {
+      dist: {
+        src: [ 'dist/docs.js' ],
+        dest: 'dist/docs.js'
+      }
+    },
+    mincss: {
+      dist: {
+        files: { 'dist/docs.css': [ '<config:concat.dist.src>' ]
+        }
+      }
+    },
     watch: {
       files: [ 'web/**', 'grunt.js' ],
-      tasks: 'jade concat'
+      tasks: 'browserify concat'
     },
     jshint: {
       options: {
@@ -59,7 +63,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', 'jade browserify:dist/docs.js min mincss');
-  grunt.registerTask('dev', 'concat');
+  grunt.registerTask('dev', 'concat browserify:dist/docs.js');
   grunt.registerTask('test', 'browserify:test/lib/tests.js buster');
 
   grunt.loadNpmTasks("grunt-contrib"); 
