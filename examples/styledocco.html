@@ -7,17 +7,20 @@
       var styledocco = {
         project: {
           name: "StyleDocco",
-          // Array of CSS file paths.
           stylesheets: [
             '../web/app.css',
             '../web/bar.css',
             '../web/views/navbar.css',
             '../web/views/preview.css'
+          ],
+          includes: [
+            'styledocco-examples.css'
           ]
         }
       };
     </script>
     <link rel="stylesheet" href="../dist/docs.css">
+    <link rel="stylesheet" href="styledocco-docs.css">
     <script src="../dist/docs.js"></script>
   </head>
   <body>
