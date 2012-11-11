@@ -48,9 +48,19 @@ var Documentation = Model.extend({
     this.set('docs', "Could not fetch documentation from " + this.get('path'));
   },
 
+  // Prefix @imports and urls in files with the same prefix as the input CSS
+  normalizePaths: function (str) {
+    var pre = path.dirname(this.get('path'));
+    if (pre) pre = pre + '/';
+    return str.replace(
+      /(url\(|@import\s["'])([^'"]*)/,
+      function (str, p1, p2) { return p1 + pre + p2; }
+    );
+  },
+
   parse: function(res) {
     return {
-      css: res,
+      css: this.normalizePaths(res),
       docs: styledocco(res)
     };
   },
