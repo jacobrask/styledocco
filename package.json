@@ -21,11 +21,11 @@
     "uglify-js": "1.3.x"
   },
   "devDependencies": {
-    "backbone-browserify": "0.9.x",
+    "backbone": "git://github.com/documentcloud/backbone.git#ca250f67f696e7377",
     "buster": "0.6.x",
     "buster-test-cli": "0.6.x",
     "grunt": "0.3.x",
-    "grunt-browserify": "0.1.x",
+    "grunt-browserify": "git://github.com/aearly/grunt-browserify.git#1d74712ad6ae8",
     "grunt-contrib": "0.1.x",
     "jshint": "0.7.x",
     "jquery-browserify": "1.8.x",
