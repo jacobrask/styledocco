@@ -38,10 +38,10 @@ var PreviewView = View.extend({
         for (var i = 0, l = children.length, childHeights = [], child; i < l; i++) {
           child = children[i];
           childHeights.push(child.offsetTop + child.offsetHeight +
-            parseInt(win.getComputedStyle(child).getPropertyValue('margin-bottom'), 10)
+            parseInt(win.getComputedStyle(child).marginBottom, 10)
           );
         }
-        var extraHeight = parseInt(win.getComputedStyle(el).getPropertyValue('padding-bottom'), 10);
+        var extraHeight = parseInt(win.getComputedStyle(el).paddingBottom, 10);
         var height = Math.max.apply(Math, childHeights) + extraHeight;
         cb(Math.max(height, el.offsetHeight));
       });
@@ -67,7 +67,6 @@ var PreviewView = View.extend({
     el.parentNode.insertBefore(
       make('.preview', [
         this.iframe = make('iframe', {
-          src: 'javascript:999',
           scrolling: 'no',
           id: this.iframeId = _.uniqueId('iframe')
         })

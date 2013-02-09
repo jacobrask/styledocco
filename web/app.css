@@ -228,6 +228,11 @@ pre {
   overflow-y: auto;
   line-height: 1.3;
 }
+pre code {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
 
 [contenteditable] {
   outline: 0;

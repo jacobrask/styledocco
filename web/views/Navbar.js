@@ -35,7 +35,7 @@ var MenuItemView = View.extend({
 });
 
 
-var NavBarView = View.extend({
+var NavbarView = View.extend({
 
   initialize: function() {
     _.bindAll(this);
@@ -58,4 +58,4 @@ var NavBarView = View.extend({
 
 });
 
-module.exports = NavBarView;
+module.exports = NavbarView;

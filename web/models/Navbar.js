@@ -2,10 +2,10 @@
 
 var Model = require('backbone').Model;
 
-var NavBar = Model.extend({
+var Navbar = Model.extend({
   defaults: {
     name: ''
   }
 });
 
-module.exports = NavBar;
+module.exports = Navbar;

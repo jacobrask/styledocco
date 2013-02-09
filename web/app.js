@@ -1,5 +1,5 @@
-// StyleDocco main application JavaScript
-// ======================================
+// StyleDocco main application
+// ===========================
 
 'use strict';
 
@@ -15,12 +15,12 @@ var Backbone = require('backbone');
 
 // Internal modules
 // ================
-var NavBarView = require('./views/navbar');
-var NavBarModel = require('./models/navbar');
+var NavbarView = require('./views/Navbar');
+var NavbarModel = require('./models/Navbar');
 
-var Docu = require('./models/documentation');
-var DocuCollection = require('./models/documentationcollection');
-var DocuView = require('./views/documentation');
+var Docu = require('./models/Documentation');
+var DocuCollection = require('./models/DocumentationCollection');
+var DocuView = require('./views/Documentation');
 
 
 // Initialize models
@@ -28,42 +28,40 @@ var DocuView = require('./views/documentation');
 // Do as much as possible before DOM ready to start sending out XHR's immediately.
 
 // Wrapper around jQuery.ajax to make it compatible with async.
-var ajax = function(path, cb) {
+var ajax = function (path, cb) {
   $.ajax(path, {
-    success: function(data, code, req) { cb(null, data, code, req); },
-    error: function(req, err, ex) { cb(ex || new Error(err), req); }
+    success: function (data, code, req) { cb(null, data, code, req); },
+    error: function (req, err, ex) { cb(ex || new Error(err), req); }
   });
 };
 
 var docus = new DocuCollection();
-_.forEach(styledocco.project.stylesheets, function(file) {
+_.forEach(styledocco.project.stylesheets, function (file) {
   docus.add(new Docu({ path: file }));
 });
 
 if (styledocco.project.includes) {
-  async.map(styledocco.project.includes, ajax, function(err, res) {
-    docus.forEach(function(docu) {
+  async.map(styledocco.project.includes, ajax, function (err, res) {
+    docus.forEach(function (docu) {
       docu.set('extraCss', res.join(''));
     });
   });
 }
 
-var navBar = new NavBarModel({ name: styledocco.project.name });
+var navbar = new NavbarModel({ name: styledocco.project.name });
 
 var Router = Backbone.Router.extend({
   routes: {
     ':doc': 'docs'
   },
-  docs: function(page) {
-    var mod = docus.find(function(mod) { return mod.get('name') === page; });
+  docs: function (page) {
+    var mod = docus.find(function (mod) { return mod.get('name') === page; });
     // TODO: Add error handling.
     if (mod == null) return;
     var docuView = new DocuView({ model: mod });
-    var el = doc.getElementById('content');
-    el.innerHTML = '';
-    el.appendChild(
-      docuView.render().el
-    );
+    var elem = doc.getElementById('content');
+    elem.innerHTML = '';
+    elem.appendChild(docuView.render().el);
   }
 });
 
@@ -78,10 +76,10 @@ $(doc).ready(function() {
   // Disable `pushState` as there are no server routes
   Backbone.history.start({ pushState: false });
 
-  var navBarView = new NavBarView({
+  var navbarView = new NavbarView({
     el: doc.getElementById('navbar'),
     collection: docus,
-    model: navBar
+    model: navbar
   });
 
 });
