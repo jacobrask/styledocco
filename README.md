@@ -7,8 +7,6 @@ You can write HTML snippets in your stylesheet comments, prefixed with 4 spaces 
 
 Suggestions, feature requests and bug reports are welcome either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
-[![Build Status](https://secure.travis-ci.org/jacobrask/styledocco.png)](http://travis-ci.org/jacobrask/styledocco)
-
 Installation
 ------------
 
