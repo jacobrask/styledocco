@@ -4,6 +4,7 @@
 'use strict';
 
 var doc = document;
+var project = window.styledocco.project;
 
 // External dependencies
 // =====================
@@ -25,7 +26,6 @@ var DocuView = require('./views/Documentation');
 
 // Initialize models
 // =================
-// Do as much as possible before DOM ready to start sending out XHR's immediately.
 
 // Wrapper around jQuery.ajax to make it compatible with async.
 var ajax = function (path, cb) {
@@ -36,19 +36,19 @@ var ajax = function (path, cb) {
 };
 
 var docus = new DocuCollection();
-_.forEach(styledocco.project.stylesheets, function (file) {
+_.forEach(project.stylesheets, function (file) {
   docus.add(new Docu({ path: file }));
 });
 
-if (styledocco.project.includes) {
-  async.map(styledocco.project.includes, ajax, function (err, res) {
+if (project.includes) {
+  async.map(project.includes, ajax, function (err, res) {
     docus.forEach(function (docu) {
       docu.set('extraCss', res.join(''));
     });
   });
 }
 
-var navbar = new NavbarModel({ name: styledocco.project.name });
+var navbar = new NavbarModel({ name: project.name });
 
 var Router = Backbone.Router.extend({
   routes: {

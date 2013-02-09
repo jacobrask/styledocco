@@ -27,7 +27,7 @@ var PreviewView = View.extend({
 
   // Get the actual height of the iframe's content by getting the distance
   // between the element`s offsetParent and the bottom-most point of any child
-  // elements. `offsetHeight` does not work with absolute or fixed positioned elements.
+  // elements. `offsetHeight` does not work with positioned elements.
   getHeight: function(cb) {
     this.getIframeDoc(function(doc) {
       $(doc).ready(function() {
@@ -73,7 +73,7 @@ var PreviewView = View.extend({
       ]),
       el
     );
-    this.getIframeDoc(function(doc, ev) {
+    this.getIframeDoc(function(doc) {
       doc.write(
         '<!DOCTYPE html><html><head><style></style><script></script></head><body>' +
         el.innerText || ''
@@ -90,7 +90,7 @@ var PreviewView = View.extend({
   updateCss: function() {
     var coll = this.model.collection;
     var css = coll.pluck('css').join('') + this.model.get('extraCss');
-    this.getIframeDoc(_.bind(function(doc, ev) {
+    this.getIframeDoc(_.bind(function(doc) {
       doc.head.getElementsByTagName('style')[0].textContent = css;
       this.trigger('iframeChange');
     }, this));

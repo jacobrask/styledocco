@@ -40,13 +40,30 @@ module.exports = function(grunt) {
       files: [ 'web/**', 'grunt.js' ],
       tasks: 'browserify concat'
     },
+    lint: {
+      files: [ 'web/app.js', 'web/models/*.js', 'web/views/*.js' ]
+    },
     jshint: {
       options: {
-        strict: true,
         browser: true,
         node: true,
+        camelcase: true,
+        immed: true,
+        newcap: true,
+        undef: true,
+        unused: true,
+        strict: true,
+        maxparams: 3,
+        maxdepth: 3,
+        maxstatements: 15,
+        maxcomplexity: 6,
+        maxlen: 80,
+        boss: true,
         eqnull: true,
-        globalstrict: true
+        es5: true,
+        globalstrict: true,
+        laxbreak: true,
+        supernew: true
       },
       globals: {
         styledocco: true

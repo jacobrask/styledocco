@@ -1,6 +1,22 @@
 {
-  "strict": true,
-  "node": true,
   "browser": true,
-  "eqnull": true
+  "node": true,
+
+  "camelcase": true,
+  "immed": true,
+  "newcap": true,
+  "undef": true,
+  "unused": true,
+  "strict": true,
+  "maxparams": 3,
+  "maxdepth": 3,
+  "maxstatements": 15,
+  "maxcomplexity": 6,
+  "maxlen": 80,
+
+  "boss": true,
+  "eqnull": true,
+  "es5": true,
+  "laxbreak": true,
+  "supernew": true
 }
