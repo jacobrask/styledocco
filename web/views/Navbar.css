@@ -7,7 +7,7 @@
     <a href="#" class="brand :hover">StyleDocco</a> */
 .brand {
   float: left;
-  margin-right: 20px;
+  margin-right: 1.5em;
   font-weight: bold;
   text-decoration: none;
 }
@@ -39,7 +39,7 @@
 }
 .menu a {
   display: block;
-  margin-right: 15px;
+  margin-right: 1.5em;
 }
   .menu a:hover {
     color: hsl(200, 0%, 0%);

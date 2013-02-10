@@ -10,8 +10,8 @@ var project = window.styledocco.project;
 // =====================
 var async = require('async');
 var _ = require('underscore');
-var $ = require('jquery');
 var Backbone = require('backbone');
+var $ = Backbone.$ = require('jquery-browserify');
 
 
 // Internal modules
@@ -26,24 +26,30 @@ var DocuView = require('./views/Documentation');
 
 // Initialize models
 // =================
-
-// Wrapper around jQuery.ajax to make it compatible with async.
-var ajax = function (path, cb) {
-  $.ajax(path, {
-    success: function (data, code, req) { cb(null, data, code, req); },
-    error: function (req, err, ex) { cb(ex || new Error(err), req); }
-  });
-};
-
 var docus = new DocuCollection();
-_.forEach(project.stylesheets, function (file) {
-  docus.add(new Docu({ path: file }));
+_.forEach(project.stylesheets, function (ss) {
+  if (ss.name == null || (ss.path == null && ss.css == null)) return;
+  var params = { name: ss.name };
+  if (ss.path) {
+    params.path = ss.path;
+  } else {
+    params.css = ss.css;
+    params.docs = ss.docs;
+    params.isLocal = true;
+  }
+  docus.add(new Docu(params));
 });
 
 if (project.includes) {
-  async.map(project.includes, ajax, function (err, res) {
-    docus.forEach(function (docu) {
-      docu.set('extraCss', res.join(''));
+  _.forEach(project.includes, function (path) {
+    var ext = path.match(/\.(css|js)$/i);
+    if (ext == null) return;
+    var type = ext[1].toLowerCase();
+    type = type.charAt(0).toUpperCase() + type.slice(1);
+    $.ajax(path).done(function (code) {
+      docus.forEach(function (docu) {
+        docu.set('include' + type, code);
+      });
     });
   });
 }
@@ -70,7 +76,7 @@ var Router = Backbone.Router.extend({
 // ================
 // The only place where we interact with the pre-existing DOM.
 
-$(doc).ready(function() {
+$(doc).ready(function () {
 
   var router = new Router();
   // Disable `pushState` as there are no server routes

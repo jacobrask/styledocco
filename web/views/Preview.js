@@ -1,9 +1,9 @@
-'use strict'; /*global $:false,Prism:false*/
+'use strict'; /*global Prism:false*/
 
 var _ = require('underscore');
 /*var Prism = */require('../vendor/prism');
 var Backbone = require('backbone');
-Backbone.$ = require('jquery-browserify');
+var $ = Backbone.$ = require('jquery-browserify');
 var View = Backbone.View;
 
 var make = require('../../share/domsugar')(document);
@@ -83,15 +83,17 @@ var PreviewView = View.extend({
     return this;
   },
 
-  updateHtml: function() {
+  updateHtml: function () {
     this.iframe.contentDocument.body.innerHTML = this.$codeEl.text();
     this.trigger('iframeChange');
   },
-  updateCss: function() {
+  updateCss: function () {
     var coll = this.model.collection;
-    var css = coll.pluck('css').join('') + this.model.get('extraCss');
-    this.getIframeDoc(_.bind(function(doc) {
+    var css = coll.pluck('css').join('') + this.model.get('includeCss');
+    var js = this.model.get('includeJs');
+    this.getIframeDoc(_.bind(function (doc) {
       doc.head.getElementsByTagName('style')[0].textContent = css;
+      doc.head.getElementsByTagName('script')[0].textContent = js;
       this.trigger('iframeChange');
     }, this));
     return this;
@@ -101,7 +103,6 @@ var PreviewView = View.extend({
       this.iframe.parentNode.style.height = (height + 20) + 'px';
     }, this));
   },
-
 
   highlight: function() {
     this.$codeEl.html(

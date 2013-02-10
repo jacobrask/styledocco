@@ -11,7 +11,9 @@ var BrandView = View.extend({
   tagName: 'a',
   className: 'brand',
 
-  attributes: { href: './' },
+  attributes: {
+    href: location.protocol + '//' + location.host + location.pathname
+  },
 
   render: function() {
     this.el.innerText = this.model.get('name');

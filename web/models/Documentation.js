@@ -9,8 +9,8 @@ Backbone.$ = require('jquery');
 var Model = Backbone.Model;
 var marked = require('marked');
 marked.setOptions({ sanitize: false, gfm: true });
-var path = require('path');
 var styledocco = require('../../styledocco');
+var path = require('path');
 
 
 var Documentation = Model.extend({
@@ -18,15 +18,16 @@ var Documentation = Model.extend({
   defaults: {
     name: '',
     css: '',
-    extraCss: '',
+    includeCss: '',
+    includeJs: '',
     path: '',
-    docs: 'Loading stylesheet documentation&hellip;'
+    docs: 'Loading stylesheet documentation&hellip;',
+    isLocal: false
   },
 
-  initialize: function() {
+  initialize: function () {
     _.bindAll(this);
-    this.fetch();
-    this.set('name', this.baseFileName(this.get('path')));
+    if (!this.isLocal) this.fetch();
   },
 
 
@@ -58,16 +59,11 @@ var Documentation = Model.extend({
     );
   },
 
-  parse: function(res) {
+  parse: function (res) {
     return {
       css: this.normalizePaths(res),
       docs: styledocco(res)
     };
-  },
-
-  // Get a filename without the extension and leading _
-  baseFileName: function(name) {
-    return path.basename(name, path.extname(name)).replace(/^_/, '');
   }
 
 });
