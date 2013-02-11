@@ -1,28 +1,41 @@
 {
   "name": "styledocco",
   "description": "Generate documentation and style/pattern guides from stylesheet comments.",
-  "keywords": [ "styleguide", "css", "documentation", "pattern guide" ],
-  "author": { "name": "Jacob Rask", "email": "jacob@jacobrask.net" },
+  "keywords": [
+    "styleguide",
+    "css",
+    "documentation",
+    "pattern guide"
+  ],
+  "author": {
+    "name": "Jacob Rask",
+    "email": "jacob@jacobrask.net"
+  },
   "version": "0.7.0alpha",
   "homepage": "http://jacobrask.github.com/styledocco/",
-  "licenses": [ { "type": "MIT", "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
-  "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
-  "repository": { "type": "git", "url": "git://github.com/jacobrask/styledocco.git" },
-  "engines": { "node": ">=0.4.0" },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/jacobrask/styledocco/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jacobrask/styledocco.git"
+  },
+  "engines": {
+    "node": ">=0.4.0"
+  },
   "preferGlobal": true,
   "devDependencies": {
-    "async": "0.1.x",
-    "backbone": "0.9.x",
-    "buster": "0.6.x",
-    "buster-test-cli": "0.6.x",
-    "grunt": "0.3.x",
-    "grunt-browserify": "0.1.x",
-    "grunt-contrib": "0.1.x",
-    "jade": "0.27.x",
-    "jshint": "0.7.x",
-    "jquery-browserify": "1.8.x",
-    "marked": "0.2.x",
-    "underscore": "1.3.x"
+    "backbone": "~0.9.10",
+    "less": "~1.3.3",
+    "grunt": "~0.3.17",
+    "grunt-contrib": "~0.3.0",
+    "grunt-browserify": "~0.1.2"
   },
   "scripts": {
     "prepublish": "grunt"

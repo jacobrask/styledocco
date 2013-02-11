@@ -11,6 +11,12 @@ module.exports = function(grunt) {
         aliases: [ 'jquery:jquery-browserify' ]
       }
     },
+    concat: {
+      dist: {
+        src: [ 'web/*.css', 'web/views/*.css' ],
+        dest: 'dist/docs.css'
+      }
+    },
     jade: {
       html: {
         src: [ 'web/index.jade' ],
@@ -18,27 +24,9 @@ module.exports = function(grunt) {
         options: { client: false, pretty: true }
       }
     },
-    concat: {
-      dist: {
-        src: [ 'web/*.css', 'web/views/*.css' ],
-        dest: 'dist/docs.css'
-      }
-    },
-    min: {
-      dist: {
-        src: [ 'dist/docs.js' ],
-        dest: 'dist/docs.js'
-      }
-    },
-    mincss: {
-      dist: {
-        files: { 'dist/docs.css': [ '<config:concat.dist.src>' ]
-        }
-      }
-    },
     watch: {
       files: [ 'web/**', 'grunt.js' ],
-      tasks: 'browserify concat'
+      tasks: 'browserify concat jade'
     },
     lint: {
       files: [ 'web/app.js', 'web/models/*.js', 'web/views/*.js' ]
@@ -72,8 +60,7 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', 'jade browserify:dist/docs.js min mincss');
-  grunt.registerTask('dev', 'concat browserify:dist/docs.js');
+  grunt.registerTask('default', 'browserify concat jade');
 
   grunt.loadNpmTasks("grunt-contrib"); 
   grunt.loadNpmTasks('grunt-browserify');
