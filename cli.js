@@ -24,15 +24,38 @@ var minjs = uglifyjs;
 var pluck = function(arr, prop) {
   return arr.map(function(item) { return item[prop]; });
 };
+
+var isType = function(o, type) {
+    return Object.prototype.toString.call(o) === '[object ' + type + ']';
+}
+
 var flatten = function(arr) {
   return arr.reduce(function(tot, cur) {
     return tot.concat(isArray(cur) ? flatten(cur) : cur);
   }, []);
 };
 var inArray = function(arr, str) { return arr.indexOf(str) !== -1; };
-var isArray = function(obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
+var isArray = function(obj) { return isType(obj, 'Array'); };
+var isString = function(obj) { return isType(obj, 'String'); };
+
+var urlsRelative = function(css, path) {
+    if (isString(css) && isString(path)) {
+        path = path.indexOf('/', path.length -1) > -1? path : path + '/';
+        var regex = /(url\(["']?)([^/'"][\w/.]*)/gm;
+        return css.replace(regex, "$1" + path + "$2");
+    } else {
+        throw new Error('1st and 2nd args must be strings.');
+    }
 };
+
+var dirUp = function(steps) {
+    if ( ! steps) return '';
+    var str = '';
+    for (var i = 0; i < steps; ++i) {
+        str += '../';
+    }
+    return str;
+}
 
 // Get a filename without the extension
 var baseFilename = function(str) {
@@ -265,6 +288,9 @@ var cli = function(options) {
       var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
       // Render files
       var htmlFiles = files.map(function(file) {
+      var relativePath = file.path.split('/');
+      relativePath.pop();
+      relativePath = dirUp(options.out.split('/').length) + relativePath.join('/');
         return {
           path: file.path,
           html: resources.template({
@@ -273,7 +299,7 @@ var cli = function(options) {
             project: { name: options.name, menu: menu },
             resources: {
               docs: { js: minjs(docsScript), css: mincss(resources.docs.css) },
-              previews: { js: minjs(resources.previews.js), css: mincss(previewStyles) }
+              previews: { js: minjs(resources.previews.js), css: mincss(urlsRelative(previewStyles, relativePath)) }
             }
           })
         };
@@ -303,3 +329,4 @@ var cli = function(options) {
 module.exports = cli;
 module.exports.htmlFilename = htmlFilename;
 module.exports.menuLinks = menuLinks;
+module.exports.urlsRelative = urlsRelative;
