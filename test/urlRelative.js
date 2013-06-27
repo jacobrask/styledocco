@@ -1,6 +1,9 @@
-var urlsRelative = require('./cli').urlsRelative
+var urlsRelative = require('../cli').urlsRelative
   , expect = require('chai').expect
   ;
+
+// Allow non-mocha frameworks to skip over these tests.
+if (!global.describe) { process.exit(); }
 
 describe('urlsRelative', function() {
     var path = 'root';
