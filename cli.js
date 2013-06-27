@@ -145,6 +145,7 @@ var preprocess = function(file, pp, options, cb) {
 
 var cli = function(options) {
 
+  var errorMessages = { noFiles: 'No css files found' };
   var resourcesDir = __dirname + '/share/';
 
   // Filetypes and matching preprocessor binaries.
@@ -229,7 +230,7 @@ var cli = function(options) {
           if (!(path.extname(file) in fileTypes)) return false;
           return true;
         }).sort();
-        if (!files.length) cb(new Error('Failed to process files.'));
+        if (!files.length) cb(new Error(errorMessages.noFiles + ' in path "' + options['in'] + '"'));
         cb(null, files);
       });
     },
@@ -250,7 +251,14 @@ var cli = function(options) {
       };
     }
   }, function(err, resources) {
-    if (err != null) throw new SDError('Could not process files.', err);
+    if (err != null) {
+      if (err.message.indexOf(errorMessages.noFiles) > -1) {
+        console.error(err);
+        return;
+      } else {
+        throw new SDError('Could not process files.', err);
+      }
+    }
     var menu = menuLinks(resources.files, options.basePath);
     // Run files through preprocessor and StyleDocco parser.
     async.map(resources.files, function(file, cb) {
