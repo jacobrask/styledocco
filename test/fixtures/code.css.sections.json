@@ -2,7 +2,7 @@
   {
     "title": "",
     "slug": "",
-    "docs": "<p> Various types of code blocks in documentation \n</p>\n<pre><code class=\"lang-php\">&lt;?php\necho &#39;PHP Code without rendered preview&#39;;\n?&gt;</code></pre>\n<textarea class=\"preview-code\" spellcheck=\"false\">&lt;p&gt;HTML to be rendered&lt;/p&gt; </textarea>",
+    "docs": "<p> Various types of code blocks in documentation </p>\n<pre><code class=\"lang-php\">&lt;?php\necho &#39;PHP Code without rendered preview&#39;;\n?&gt;</code></pre>\n<textarea class=\"preview-code\" spellcheck=\"false\">&lt;p&gt;HTML to be rendered&lt;/p&gt; </textarea>",
     "code": "body {\n  background: red;\n  color: white;\n}"
   }
 ]

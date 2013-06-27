@@ -2,7 +2,7 @@
   {
     "title": "Invalid",
     "slug": "invalid",
-    "docs": "<h1 id=\"invalid\">Invalid</h1>\n<p> And this one?\n</p>\n<h2 id=\"second-level-header\">Second level header</h2>\n<p>Some random text.\n\n</p>\n<p>p {\n    margin: 0;\n}\n\n</p>",
+    "docs": "<h1 id=\"invalid\">Invalid</h1>\n<p> And this one?</p>\n<h2 id=\"second-level-header\">Second level header</h2>\n<p>Some random text.</p>\n<p>p {\n    margin: 0;\n}</p>",
     "code": "What happens with this string?\n\n\nbody {\n    background: white;\n    color: black;"
   }
 ]
