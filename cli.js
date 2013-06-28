@@ -1,7 +1,6 @@
 'use strict';
 
 var async = require('async');
-var cleancss = require('clean-css');
 var exec = require('child_process').exec;
 var findit = require('findit');
 var fs = require('fs');
@@ -9,8 +8,8 @@ var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
 var path = require('path');
-var uglifyjs = require('uglify-js');
 var util = require('util');
+var helper = require('./helper');
 
 var styledocco = require('./styledocco');
 
@@ -19,33 +18,6 @@ var version = require('./package').version;
 marked.setOptions({ sanitize: false, gfm: true });
 
 // Helper functions
-var mincss = function(css) { return cleancss.process(css); };
-var minjs = uglifyjs;
-var pluck = function(arr, prop) {
-  return arr.map(function(item) { return item[prop]; });
-};
-
-var isType = function(o, type) {
-    return Object.prototype.toString.call(o) === '[object ' + type + ']';
-}
-
-var flatten = function(arr) {
-  return arr.reduce(function(tot, cur) {
-    return tot.concat(util.isArray(cur) ? flatten(cur) : cur);
-  }, []);
-};
-var inArray = function(arr, str) { return arr.indexOf(str) !== -1; };
-var isString = function(obj) { return isType(obj, 'String'); };
-
-var urlsRelative = function(css, path) {
-    if (isString(css) && isString(path)) {
-        path = path.indexOf('/', path.length -1) > -1? path : path + '/';
-        var regex = /(url\(["']?)([^/'"][\w/.]*)/gm;
-        return css.replace(regex, "$1" + path + "$2");
-    } else {
-        throw new Error('1st and 2nd args must be strings.');
-    }
-};
 
 var dirUp = function(steps) {
     if ( ! steps) return '';
@@ -200,7 +172,7 @@ var cli = function(options) {
         if (err != null) return cb(err);
         var code = { js: js, css: '' };
         var files = options.include.filter(function(file) {
-          return inArray(['.css', '.js'], path.extname(file));
+          return helper.inArray(['.css', '.js'], path.extname(file));
         });
         async.filter(files, path.exists, function(files) {
           async.reduce(files, code, function(tot, cur, cb) {
@@ -278,10 +250,10 @@ var cli = function(options) {
     }, function(err, files) {
       if (err != null) throw err;
       // Get the combined CSS from all files.
-      var previewStyles = pluck(files, 'css').join('');
+      var previewStyles = helper.pluck(files, 'css').join('');
       previewStyles += resources.previews.css;
       // Build a JSON string of all files and their headings, for client side search.
-      var searchIndex = flatten(files.map(function(file) {
+      var searchIndex = helper.flatten(files.map(function(file) {
         var arr = [ { title: baseFilename(file.path),
                       filename: basePathname(file.path, options.basePath),
                       url: htmlFilename(file.path, options.basePath) } ];
@@ -305,8 +277,8 @@ var cli = function(options) {
             sections: file.docs,
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: minjs(docsScript), css: mincss(resources.docs.css) },
-              previews: { js: minjs(resources.previews.js), css: mincss(urlsRelative(previewStyles, relativePath)) }
+              docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) },
+              previews: { js: helper.minjs(resources.previews.js), css: helper.mincss(helper.urlsRelative(previewStyles, relativePath)) }
             }
           })
         };
@@ -319,7 +291,7 @@ var cli = function(options) {
           sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
           project: { name: options.name, menu: menu },
           resources: {
-            docs: { js: minjs(docsScript), css: mincss(resources.docs.css) }
+            docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) }
           }
         })
       });
@@ -336,4 +308,5 @@ var cli = function(options) {
 module.exports = cli;
 module.exports.htmlFilename = htmlFilename;
 module.exports.menuLinks = menuLinks;
-module.exports.urlsRelative = urlsRelative;
+
+// vim: set sw=2 expandtab
