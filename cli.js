@@ -31,11 +31,10 @@ var isType = function(o, type) {
 
 var flatten = function(arr) {
   return arr.reduce(function(tot, cur) {
-    return tot.concat(isArray(cur) ? flatten(cur) : cur);
+    return tot.concat(util.isArray(cur) ? flatten(cur) : cur);
   }, []);
 };
 var inArray = function(arr, str) { return arr.indexOf(str) !== -1; };
-var isArray = function(obj) { return isType(obj, 'Array'); };
 var isString = function(obj) { return isType(obj, 'String'); };
 
 var urlsRelative = function(css, path) {
