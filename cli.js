@@ -224,7 +224,7 @@ var cli = function(options) {
   }, function(err, resources) {
     if (err != null) {
       if (err.message.indexOf(errorMessages.noFiles) > -1) {
-        console.error(err);
+        console.error(new SDError('Nothing to do', err).message);
         return;
       } else {
         throw new SDError('Could not process files.', err);
