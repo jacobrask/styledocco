@@ -31,6 +31,15 @@ module.exports = {
     } else {
       throw new Error('1st and 2nd args must be strings.');
     }
+  },
+
+  // Filetypes and matching preprocessor binaries.
+  fileTypes: {
+    '.css': null,
+    '.sass': 'sass',
+    '.scss': 'scss',
+    '.less': 'lessc',
+    '.styl': 'stylus'
   }
 }
 
