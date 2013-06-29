@@ -73,7 +73,41 @@ Tips and tricks
  * Add `:hover`, `:focus`, etc as class names in example code and the pseudo class styles will be applied in the preview.
 
 
+Change Log
+==========
+
+v0.6.2 - June 30, 2013
+----------------------
+
+ * Find assets recursively in Windows
+ * Fail gracefully on no files error
+ * Relative url() paths are now preserved
+
+v0.6.1 - August 20, 2012
+------------------------
+
+ * Mute all preprocessor errors unless using verbose option
+ * Don't try to preprocess SASS partials
+ * Design tweaks
+
+v0.6.0 - August 15, 2012
+------------------------
+
+ * Remove custom resources option, as client side scripts/styles are vital to the functionality
+ * Editable, auto-updating code examples
+ * Documentation-wide search
+ * Page specific Table of Contents
+
+v0.5.0 - July 23, 2012
+------------------------
+
+ * Render previews in sandboxed iframes
+ * Resizing of iframes for responsive debugging
+ * All processed CSS is included in all previews
+ * Allow custom JavaScript and CSS files to be included in previews
+ * Updated design with topbar instead of sidebar and new colors
+
 Acknowledgements
-----------------
+================
 
 A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Knyle Style Sheets](https://github.com/kneath/kss) have also been sources of inspiration for StyleDocco.
