@@ -1,6 +1,7 @@
 'use strict';
 
-var htmlFilename = require('../cli.js').htmlFilename;
+var cliPath = '../src/cli.js';
+var htmlFilename = require(cliPath).htmlFilename;
 
 exports["HTML filename"] = function(test) {
   test.equal(htmlFilename('bar/baz/foo/bar.css', 'bar/baz'), 'foo-bar.html');
@@ -9,7 +10,7 @@ exports["HTML filename"] = function(test) {
   test.done();
 };
 
-var menuLinks = require('../cli.js').menuLinks;
+var menuLinks = require(cliPath).menuLinks;
 exports["Link objects from paths"] = function(test) {
   var links = menuLinks([ 'a/a.css', 'a/b.css', 'a/c/d.css' ], 'a');
   test.deepEqual(links, { './': [ { name: 'a', href: 'a.html', directory: './' },

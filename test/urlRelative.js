@@ -1,4 +1,4 @@
-var urlsRelative = require('../helper').urlsRelative
+var urlsRelative = require('../src/helper').urlsRelative
   , expect = require('chai').expect
   ;
 

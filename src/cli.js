@@ -12,7 +12,7 @@ var helper = require('./helper');
 var gather = require('./gather');
 
 var styledocco = require('./styledocco');
-var version = require('./package').version;
+var version = require('../package').version;
 
 marked.setOptions({ sanitize: false, gfm: true });
 

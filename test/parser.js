@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var styledocco = require('../styledocco');
+var styledocco = require('../src/styledocco');
 
 var readFileSync = function(path) {
   if (typeof window === 'undefined') {

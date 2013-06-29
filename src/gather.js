@@ -31,7 +31,7 @@ var getFiles = function(inPath, cb) {
   });
 };
 
-var resourcesDir = __dirname + '/share/';
+var resourcesDir = __dirname + '/../share/';
 
 // TODO Write unit tests for these
 module.exports = function(options) {

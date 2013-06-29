@@ -62,4 +62,4 @@ if (options.name == null) {
   catch (ex) { options.name = ''; }
 }
 
-require('../cli.js')(options);
+require('../src/cli.js')(options);
