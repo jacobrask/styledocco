@@ -1,3 +1,4 @@
+// vim: set shiftwidth=2 expandtab:
 'use strict';
 
 var util = require('util');
@@ -42,5 +43,3 @@ module.exports = {
     '.styl': 'stylus'
   }
 }
-
-// vim: set sw=2 expandtab

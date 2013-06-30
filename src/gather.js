@@ -1,3 +1,6 @@
+// vim: set shiftwidth=2: expandtab:
+'use strict';
+
 var fs = require('fs');
 var async = require('async');
 var findit = require('findit');
@@ -113,5 +116,3 @@ module.exports = function(options) {
     }
   };
 }
-
-// vim: set sw=2 expandtab

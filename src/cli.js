@@ -1,3 +1,4 @@
+// vim: set shiftwidth=2 expandtab:
 'use strict';
 
 var async = require('async');
@@ -202,5 +203,3 @@ var cli = function(options) {
 module.exports = cli;
 module.exports.htmlFilename = htmlFilename;
 module.exports.menuLinks = menuLinks;
-
-// vim: set sw=2 expandtab
