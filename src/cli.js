@@ -2,7 +2,6 @@
 'use strict';
 
 var async = require('async');
-var exec = require('child_process').exec;
 var fs = require('fs');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
@@ -11,7 +10,7 @@ var util = require('util');
 
 var helper = require('./helper');
 var gather = require('./gather');
-
+var extract = require('./extract');
 var styledocco = require('./styledocco');
 var version = require('../package').version;
 
@@ -20,7 +19,7 @@ marked.setOptions({ sanitize: false, gfm: true });
 // TODO:
 // Divide code into steps
 // 1. gather [done]
-// 2. extract
+// 2. extract [done]
 // 3. render
 
 // Helper functions
@@ -75,26 +74,6 @@ var menuLinks = function(files, basePath) {
   }, {});
 };
 
-var preprocess = function(file, pp, options, cb) {
-  // stdin would have been nice here, but not all preprocessors (less)
-  // accepts that, so we need to read the file both here and for the parser.
-  // Don't process SASS partials.
-  if (file.match(/(^|\/)_.*\.s(c|s)ss$/) != null) {
-    process.nextTick(function() { cb(null, ''); });
-  } else if (pp != null) {
-    exec(pp + ' ' + file, function(err, stdout, stderr) {
-      // log('styledocco: preprocessing ' + file + ' with ' + pp);
-      // Fail gracefully on preprocessor errors
-      if (err != null && options.verbose) console.error(err.message);
-      if (stderr.length && options.verbose) console.error(stderr);
-      cb(null, stdout || '');
-    });
-  } else {
-    fs.readFile(file, 'utf8', cb);
-  }
-};
-
-
 var cli = function(options) {
 
   var errorMessages = { noFiles: 'No css files found' };
@@ -128,21 +107,13 @@ var cli = function(options) {
     var menu = menuLinks(resources.files, options.basePath);
     // Run files through preprocessor and StyleDocco parser.
     async.map(resources.files, function(file, cb) {
-      async.parallel({
-        css: async.apply(preprocess, file,
-               options.preprocessor || helper.fileTypes[path.extname(file)], options),
-        docs: function(cb) {
-          fs.readFile(file, 'utf8', function(err, code) {
-            if (err != null) return cb(err);
-            cb(null, styledocco(code));
-          });
-        }
-      }, function(err, data) {
+      async.parallel(extract(options, file), function(err, data) {
         if (err != null) return cb(err);
         data.path = file;
         cb(null, data);
       });
     }, function(err, files) {
+      // 3. Render
       if (err != null) throw err;
       // Get the combined CSS from all files.
       var previewStyles = helper.pluck(files, 'css').join('');
@@ -162,9 +133,9 @@ var cli = function(options) {
       var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
       // Render files
       var htmlFiles = files.map(function(file) {
-      var relativePath = file.path.split('/');
-      relativePath.pop();
-      relativePath = dirUp(options.out.split('/').length) + relativePath.join('/');
+        var relativePath = file.path.split('/');
+        relativePath.pop();
+        relativePath = dirUp(options.out.split('/').length) + relativePath.join('/');
         return {
           path: file.path,
           html: resources.template({
