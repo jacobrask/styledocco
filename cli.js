@@ -127,7 +127,7 @@ var preprocess = function(file, pp, options, cb) {
   // stdin would have been nice here, but not all preprocessors (less)
   // accepts that, so we need to read the file both here and for the parser.
   // Don't process SASS partials.
-  if (file.match(/(^|\/)_.*\.s(c|s)ss$/) != null) {
+  if (file.match(/(^|\/)_.*\.s(c|a)ss$/) != null) {
     process.nextTick(function() { cb(null, ''); });
   } else if (pp != null) {
     pp += ' ';
