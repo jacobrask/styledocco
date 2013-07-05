@@ -2,7 +2,7 @@
 
 var async = require('async');
 var cleancss = require('clean-css');
-var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var findit = require('findit');
 var fs = require('fs');
 var jade = require('jade');
@@ -130,12 +130,30 @@ var preprocess = function(file, pp, options, cb) {
   if (file.match(/(^|\/)_.*\.s(c|s)ss$/) != null) {
     process.nextTick(function() { cb(null, ''); });
   } else if (pp != null) {
-    exec(pp + ' ' + file, function(err, stdout, stderr) {
-      // log('styledocco: preprocessing ' + file + ' with ' + pp);
-      // Fail gracefully on preprocessor errors
+    pp += ' ';
+    pp += file;
+    pp = pp.split(' ');
+    pp = spawn(pp.shift(), pp);
+
+    pp.stderr.setEncoding('utf8');
+    pp.stdout.setEncoding('utf8');
+
+    var stdout = '';
+
+    pp.on('error', function(err) {
       if (err != null && options.verbose) console.error(err.message);
-      if (stderr.length && options.verbose) console.error(stderr);
-      cb(null, stdout || '');
+    });
+
+    pp.on('close', function() {
+      cb(null, stdout);
+    });
+
+    pp.stderr.on('data', function(data) {
+      if (data.length && options.verbose) console.error(data);
+    });
+
+    pp.stdout.on('data', function(data) {
+      stdout += data;
     });
   } else {
     fs.readFile(file, 'utf8', cb);
