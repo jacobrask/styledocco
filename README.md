@@ -76,6 +76,11 @@ Tips and tricks
 Change Log
 ==========
 
+v0.6.3 - July 09, 2013
+----------------------
+
+ * Do not add relative paths to data URLs
+
 v0.6.2 - June 30, 2013
 ----------------------
 
