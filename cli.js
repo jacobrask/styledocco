@@ -27,7 +27,7 @@ var pluck = function(arr, prop) {
 
 var isType = function(o, type) {
     return Object.prototype.toString.call(o) === '[object ' + type + ']';
-}
+};
 
 var flatten = function(arr) {
   return arr.reduce(function(tot, cur) {
@@ -55,7 +55,7 @@ var dirUp = function(steps) {
         str += '../';
     }
     return str;
-}
+};
 
 // Get a filename without the extension
 var baseFilename = function(str) {
@@ -356,3 +356,4 @@ module.exports = cli;
 module.exports.htmlFilename = htmlFilename;
 module.exports.menuLinks = menuLinks;
 module.exports.urlsRelative = urlsRelative;
+module.exports.preprocess = preprocess;
