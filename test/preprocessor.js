@@ -21,14 +21,4 @@ describe('preprocess', function() {
         });
     });
 
-    it('should return the contents of a large file', function(done) {
-        var inputFile = 'test/fixtures/largefile.txt';
-        var inputData = fs.readFileSync(inputFile, 'utf8');
-
-        preprocess(inputFile, 'cat', { verbose: false }, function(err, data) {
-            expect(data).to.equal(inputData);
-            done(err);
-        });
-    });
-
 });
