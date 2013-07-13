@@ -1,7 +1,7 @@
 // vim: set shiftwidth=2 expandtab:
 'use strict';
 
-var exec       = require('child_process').exec
+var spawn      = require('child_process').spawn
   , fs         = require('fs')
   , async      = require('async')
   , path       = require('path')
@@ -11,18 +11,35 @@ var exec       = require('child_process').exec
   ;
 
 var preprocess = function(file, pp, options, cb) {
+  var stdout = '';
   // stdin would have been nice here, but not all preprocessors (less)
   // accepts that, so we need to read the file both here and for the parser.
   // Don't process SASS partials.
-  if (file.match(/(^|\/)_.*\.s(c|s)ss$/) != null) {
+  if (file.match(/(^|\/)_.*\.s(c|a)ss$/) != null) {
     process.nextTick(function() { cb(null, ''); });
   } else if (pp != null) {
-    exec(pp + ' ' + file, function(err, stdout, stderr) {
-      // log('styledocco: preprocessing ' + file + ' with ' + pp);
-      // Fail gracefully on preprocessor errors
+    pp += ' ' + file;
+    pp = pp.split(' ');
+
+    pp = spawn(pp.shift(), pp);
+
+    pp.stderr.setEncoding('utf8');
+    pp.stdout.setEncoding('utf8');
+
+    pp.on('error', function(err) {
       if (err != null && options.verbose) console.error(err.message);
-      if (stderr.length && options.verbose) console.error(stderr);
-      cb(null, stdout || '');
+    });
+
+    pp.on('close', function() {
+      cb(null, stdout);
+    });
+
+    pp.stderr.on('data', function(data) {
+      if (data.length && options.verbose) console.error(data);
+    });
+
+    pp.stdout.on('data', function(data) {
+      stdout += data;
     });
   } else {
     fs.readFile(file, 'utf8', cb);
