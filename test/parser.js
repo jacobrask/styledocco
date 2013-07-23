@@ -40,6 +40,8 @@ exports["Sections"] = function(test) {
     var css = readFileSync(fixturePath + fix);
     var blocks = readFileSync(fixturePath + fix + '.sections.json');
     var extracted = JSON.parse(JSON.stringify(styledocco(css)));
+    styledocco.escapeHtml(extracted);
+    extracted = styledocco.makeSections(extracted);
     var saved = JSON.parse(blocks);
     test.deepEqual(extracted, saved, "Match output with fixture " + fix);
   });

@@ -113,6 +113,8 @@ var cli = function(options) {
         cb(null, data);
       });
     }, function(err, files) {
+      styledocco.escapeHtml(files[0].docs);
+      files[0].docs = styledocco.makeSections(files[0].docs);
       // 3. Render
       if (err != null) throw err;
       // Get the combined CSS from all files.
@@ -154,7 +156,7 @@ var cli = function(options) {
         path: path.join(options.basePath, 'index'),
         html: resources.template({
           title: '',
-          sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
+          sections: styledocco.makeSections(styledocco.parseDocs([{ docs: resources.readme, code: '' }])),
           project: { name: options.name, menu: menu },
           resources: {
             docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) }

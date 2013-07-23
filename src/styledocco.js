@@ -1,6 +1,7 @@
 'use strict';
 
 var marked = require('marked');
+var util =   require('util');
 marked.setOptions({ sanitize: false, gfm: true });
 
 // Regular expressions to match comments. We only match comments in
@@ -85,24 +86,15 @@ var separate = function(css) {
   return blocks;
 };
 
-
-var makeSections = exports.makeSections = function(blocks) {
-  return blocks
-    .map(function(block) {
-      // Run comments through marked.lexer to get Markdown tokens.
-      block.docs = marked.lexer(block.docs);
-      return block;
-    })
-    .map(function(block) {
-      // If we encounter code blocks in documentation, add preview HTML.
-      var newBlock = {
-        code: block.code,
-        docs: block.docs.reduce(function(tokens, token) {
+var escapeHtml = function(blocks) {
+    return blocks.map(function(block) {
+        block.docs.reduce(function(tokens, token) {
           if (token.type === 'code' && (token.lang == null || token.lang === 'html')) {
             token.type = 'html';
             token.pre = true;
             token.text = '<textarea class="preview-code" spellcheck="false">' + htmlEntities(token.text) + '</textarea>';
           // Add permalink `id`s and some custom properties to headings.
+          // TODO Move this to the template.
           } else if (token.type === 'heading') {
             var slug = slugify(token.text);
             token.type = 'html';
@@ -116,15 +108,35 @@ var makeSections = exports.makeSections = function(blocks) {
           tokens.push(token);
           return tokens;
         }, [])
+        return block;
+    });
+}
+
+var parseDocs = function(blocks) {
+  return blocks
+    .map(function(block) {
+      // Run comments through marked.lexer to get Markdown tokens.
+      block.docs = marked.lexer(block.docs);
+      return block;
+    })
+    .map(function(block) {
+      // If we encounter code blocks in documentation, add preview HTML.
+      var newBlock = {
+        code: block.code,
+        docs: block.docs
       };
       // Keep marked's custom links property on the docs array.
       newBlock.docs.links = block.docs.links;
       return newBlock;
     }, [])
+}
+
+var makeSections = exports.makeSections = function(blocks) {
+  return blocks
     .reduce(function(sections, cur) {
       // Split into sections with headings as delimiters.
       var docs = cur.docs;
-      while (docs.length) {
+      while (util.isArray(docs) && docs.length) {
         // New or first section, add title/slug properties.
         if (docs[0]._split || sections.length === 0) {
           var title = docs[0]._origText;
@@ -136,7 +148,7 @@ var makeSections = exports.makeSections = function(blocks) {
           sections[sections.length-1].docs.push(docs.shift());
         }
         // Keep marked's custom links property on the docs arrays.
-        sections[sections.length-1].docs.links = docs.links;
+        sections[sections.length-1].docs.links = docs.links || {};
       }
       // No docs in file, just add the CSS.
       if (sections.length === 0) {
@@ -159,8 +171,10 @@ var makeSections = exports.makeSections = function(blocks) {
 };
 
 module.exports = function(css) {
-  return makeSections(separate(css));
+  return parseDocs(separate(css));
 };
 
 module.exports.makeSections = makeSections;
 module.exports.separate = separate;
+module.exports.parseDocs = parseDocs;
+module.exports.escapeHtml = escapeHtml;
