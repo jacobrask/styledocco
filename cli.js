@@ -221,7 +221,7 @@ var cli = function(options) {
         var files = options.include.filter(function(file) {
           return inArray(['.css', '.js'], path.extname(file));
         });
-        async.filter(files, path.exists, function(files) {
+        async.filter(files, fs.exists, function(files) {
           async.reduce(files, code, function(tot, cur, cb) {
             fs.readFile(cur, 'utf8', function(err, contents) {
               if (err != null) return cb(err);
