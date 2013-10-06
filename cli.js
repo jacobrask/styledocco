@@ -41,7 +41,7 @@ var isString = function(obj) { return isType(obj, 'String'); };
 var urlsRelative = function(css, path) {
     if (isString(css) && isString(path)) {
         path = path.indexOf('/', path.length -1) > -1? path : path + '/';
-        var regex = /(url\(["']?)(?!data:)([^/'"][\w/.]*)/gm;
+        var regex = /(url\(["']?)(?!(https?|data):)([^/'"][\w/.]*)/gm;
         return css.replace(regex, "$1" + path + "$2");
     } else {
         throw new Error('1st and 2nd args must be strings.');
