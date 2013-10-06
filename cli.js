@@ -42,7 +42,6 @@ var urlsRelative = function(css, path) {
     if (isString(css) && isString(path)) {
         path = path.indexOf('/', path.length -1) > -1? path : path + '/';
         var regex = /(url\(["']?)(?!https?:|data:)([^/'"][\w/.]*)/gm;
-        console.log(css.replace(regex, "$1" + path + "$2"));
         return css.replace(regex, "$1" + path + "$2");
     } else {
         throw new Error('1st and 2nd args must be strings.');
