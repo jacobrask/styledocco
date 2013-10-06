@@ -8,7 +8,7 @@ if (!global.describe) { process.exit(); }
 describe('urlsRelative', function() {
     var path = 'root';
     var nested_path = 'nested/root';
-    var error_msg = '1st and 2nd args must be strings.'
+    var error_msg = '1st and 2nd args must be strings.';
 
     var long_css = {
         orig: [
@@ -65,6 +65,11 @@ describe('urlsRelative', function() {
             orig: long_css.orig.join(' '),
             with_path: long_css.with_path.join(' '),
             with_nested_path: long_css.with_nested_path.join(' ')
+        },
+        ignore: {
+            data: 'body { background: url(data:image/png .. etc); }',
+            http: 'body { background: url(http://example.com/some/remote/path/foo.gif); }',
+            https: 'body { background: url(https://example.com/some/remote/path/foo.gif); }'
         }
     };
 
@@ -129,6 +134,18 @@ describe('urlsRelative', function() {
 
     it('works for multiple matches on the same line', function() {
         expect(urlsRelative(stubs.multi_url.orig, path)).to.equal(stubs.multi_url.with_path);
+    });
+
+    it('should ignore a data uri', function() {
+        expect(urlsRelative(stubs.ignore.data, path)).to.equal(stubs.ignore.data);
+    });
+
+    it('should ignore a http url', function() {
+        expect(urlsRelative(stubs.ignore.http, path)).to.equal(stubs.ignore.http);
+    });
+
+    it('should ignore a https url', function() {
+        expect(urlsRelative(stubs.ignore.https, path)).to.equal(stubs.ignore.https);
     });
 
 });
