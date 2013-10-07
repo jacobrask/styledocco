@@ -17,27 +17,35 @@ var bodyEl = document.getElementsByTagName('body')[0];
 var pseudos = [ 'link', 'visited', 'hover', 'active', 'focus', 'target',
                 'enabled', 'disabled', 'checked' ];
 var pseudoRe = new RegExp(":((" + pseudos.join(")|(") + "))", "gi");
-var processedPseudoClasses = toArray(document.styleSheets)
-  .map(function(ss) {
-    return toArray(ss.cssRules)
-      .filter(function(rule) {
-        // Keep only rules with pseudo classes.
-        return rule.selectorText && rule.selectorText.match(pseudoRe);
-      })
-      .map(function(rule) {
-        // Replace : with . and encoded :
-        return rule.cssText.replace(pseudoRe, ".\\3A $1");
-      })
-      .join('');
-  })
-  .join('');
-if (processedPseudoClasses.length) {
-  // Add a new style element with the processed pseudo class styles.
-  var styleEl = document.createElement('style');
-  styleEl.innerText = processedPseudoClasses;
-  var oldStyleEl = document.getElementsByTagName('style')[0];
-  oldStyleEl.parentNode.insertBefore(styleEl, oldStyleEl);
-}
+
+var applyPseudoStyles = function () {
+  var processedPseudoClasses = toArray(document.styleSheets)
+    .map(function(ss) {
+      return toArray(ss.cssRules)
+        .filter(function(rule) {
+          // Keep only rules with pseudo classes.
+          return rule.selectorText && rule.selectorText.match(pseudoRe);
+        })
+        .map(function(rule) {
+          // Replace : with . and encoded :
+          return rule.cssText.replace(pseudoRe, ".\\3A $1");
+        })
+        .join('');
+    })
+    .join('');
+  if (processedPseudoClasses.length) {
+    // Add a new style element with the processed pseudo class styles.
+    var styleEl = document.createElement('style');
+    styleEl.innerText = processedPseudoClasses;
+    var oldStyleEl = document.getElementsByTagName('style')[0];
+    oldStyleEl.parentNode.insertBefore(styleEl, oldStyleEl);
+  }
+};
+
+// running processCSS immediately causes nothing to be done as document.styleSheets
+// doesn't have all the CSS yet. This timeout is enough time for document.styleSheets
+// to be updated and the pseudo styles to be added
+setTimeout(applyPseudoStyles, 1);
 
 // Resizing
 // ========
