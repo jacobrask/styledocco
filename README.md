@@ -76,6 +76,15 @@ Tips and tricks
 Change Log
 ==========
 
+v0.6.4 - Oct 07, 2013
+---------------------
+
+ * Large preprocessor outputs hit the maxBuffer limit (#87)
+ * Relative image path is no longer added to data: URLs (#88)
+ * Replace path.exists with fs.exists (#92)
+ * Can now use a backslash to separate directories on Windows (#95)
+ * HTTP URLs in paths now behave correctly (#97)
+
 v0.6.3 - July 09, 2013
 ----------------------
 
