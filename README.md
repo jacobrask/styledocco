@@ -76,6 +76,11 @@ Tips and tricks
 Change Log
 ==========
 
+v0.6.5 - Nov 17, 2013
+---------------------
+
+ * Fix failure to install on some systems (#94)
+
 v0.6.4 - Oct 07, 2013
 ---------------------
 

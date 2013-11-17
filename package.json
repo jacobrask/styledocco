@@ -4,7 +4,7 @@
   "keywords": [ "styleguide", "css", "documentation", "design", "patterns" ],
   "author": "Jacob Rask <jacob@jacobrask.net>",
   "contributors": ["David Marrs <david@marrsbytes.com>"],
-  "version": "0.6.4",
+  "version": "0.6.5",
   "homepage": "http://jacobrask.github.com/styledocco/",
   "licenses": [ { "type": "MIT", "url": "http://github.com/jacobrask/styledocco/raw/master/LICENSE" } ],
   "bugs": { "url": "https://github.com/jacobrask/styledocco/issues" },
