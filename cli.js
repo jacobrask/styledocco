@@ -94,7 +94,7 @@ var getFiles = function(inPath, cb) {
     if (stat.isFile()) {
       cb(null, [ inPath ]);
     } else {
-      var finder = findit.find(inPath);
+      var finder = findit(inPath);
       var files = [];
       finder.on('file', function(file) { files.push(file); });
       finder.on('end', function() { cb(null, files); });
@@ -357,3 +357,4 @@ module.exports.htmlFilename = htmlFilename;
 module.exports.menuLinks = menuLinks;
 module.exports.urlsRelative = urlsRelative;
 module.exports.preprocess = preprocess;
+module.exports.getFiles = getFiles;

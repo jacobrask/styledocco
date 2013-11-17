@@ -14,7 +14,7 @@
   "dependencies": {
     "async": "0.1.x",
     "clean-css": "0.4.x",
-    "findit": "git://github.com/marrs/node-findit.git",
+    "findit": "~1.1.0",
     "jade": "0.23.x",
     "marked": "0.2.x",
     "mkdirp": "0.x.x",
