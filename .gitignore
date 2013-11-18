@@ -1,2 +1,3 @@
 node_modules/
 test-browser/tests.js
+coverage/
