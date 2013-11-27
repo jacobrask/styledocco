@@ -113,8 +113,10 @@ var cli = function(options) {
         cb(null, data);
       });
     }, function(err, files) {
-      styledocco.escapeHtml(files[0].docs);
-      files[0].docs = styledocco.makeSections(files[0].docs);
+      for (var i = 0, len = files.length; i < len; ++i) {
+        styledocco.escapeHtml(files[i].docs);
+        files[i].docs = styledocco.makeSections(files[i].docs);
+      }
       // 3. Render
       if (err != null) throw err;
       // Get the combined CSS from all files.
