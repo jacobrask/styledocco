@@ -311,6 +311,8 @@ var cli = function(options) {
         }));
       }));
       searchIndex = 'var searchIndex=' + JSON.stringify(searchIndex) + ';';
+      var processJS = function(src) { return options.minify ? minjs(src) : src; };
+      var processCSS = function(src) { return options.minify ? mincss(src) : src; };
       var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
       // Render files
       var htmlFiles = files.map(function(file) {
@@ -324,8 +326,8 @@ var cli = function(options) {
             sections: file.docs,
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: minjs(docsScript), css: mincss(resources.docs.css) },
-              previews: { js: minjs(resources.previews.js), css: mincss(urlsRelative(previewStyles, relativePath)) }
+              docs: { js: processJS(docsScript), css: processCSS(resources.docs.css) },
+              previews: { js: processJS(resources.previews.js), css: processCSS(urlsRelative(previewStyles, relativePath)) }
             }
           })
         };
@@ -338,7 +340,7 @@ var cli = function(options) {
           sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
           project: { name: options.name, menu: menu },
           resources: {
-            docs: { js: minjs(docsScript), css: mincss(resources.docs.css) }
+            docs: { js: processJS(docsScript), css: processCSS(resources.docs.css) }
           }
         })
       });
