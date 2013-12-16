@@ -37,6 +37,7 @@ var options = optimist
   .describe('out', 'Output directory').alias('o', 'out')['default']('out', 'docs')
   .describe('preprocessor', 'Custom preprocessor command')
   .describe('include', 'Extra CSS/JavaScript to include in previews')
+  .describe('minify', 'Minify CSS/JavaScript')['default']('minify', 'true')
   .describe('verbose', 'Print status messages to stdout')
   .describe('version', 'Display StyleDocco version')
   .argv;
