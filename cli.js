@@ -1,7 +1,6 @@
 'use strict';
 
 var async = require('async');
-var cleancss = require('clean-css');
 var spawn = require('child_process').spawn;
 var findit = require('findit');
 var fs = require('fs');
@@ -9,7 +8,6 @@ var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
 var path = require('path');
-var uglifyjs = require('uglify-js');
 var util = require('util');
 
 var styledocco = require('./styledocco');
@@ -19,8 +17,6 @@ var version = require('./package').version;
 marked.setOptions({ sanitize: false, gfm: true });
 
 // Helper functions
-var mincss = function(css) { return cleancss.process(css); };
-var minjs = uglifyjs;
 var pluck = function(arr, prop) {
   return arr.map(function(item) { return item[prop]; });
 };
@@ -324,8 +320,8 @@ var cli = function(options) {
             sections: file.docs,
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: minjs(docsScript), css: mincss(resources.docs.css) },
-              previews: { js: minjs(resources.previews.js), css: mincss(urlsRelative(previewStyles, relativePath)) }
+              docs: { js: docsScript, css: resources.docs.css },
+              previews: { js: resources.previews.js, css: urlsRelative(previewStyles, relativePath) }
             }
           })
         };
@@ -338,7 +334,7 @@ var cli = function(options) {
           sections: styledocco.makeSections([{ docs: resources.readme, code: '' }]),
           project: { name: options.name, menu: menu },
           resources: {
-            docs: { js: minjs(docsScript), css: mincss(resources.docs.css) }
+            docs: { js: docsScript, css: resources.docs.css }
           }
         })
       });
