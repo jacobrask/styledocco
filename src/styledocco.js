@@ -115,6 +115,10 @@ var escapeHtml = function(blocks) {
 var parseDocs = function(blocks) {
   return blocks
     .map(function(block) {
+      // An empty comment containing whitespace is still an empty comment.
+      if (/^\W*$/.test(block.docs)) {
+        block.docs = '';
+      }
       // Run comments through marked.lexer to get Markdown tokens.
       block.docs = marked.lexer(block.docs);
       return block;
