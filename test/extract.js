@@ -71,6 +71,20 @@ describe('styledocco', function() {
     }]);
   });
 
+  it('identifies separate nodes with an empty line', function() {
+    var stub = {
+      comment: 'example',
+      code: 'html {}'
+    };
+    var docs = node_array()
+    docs.push(helper.parse_tree.paragraph(' ' + stub.comment));
+    docs.push(helper.parse_tree.paragraph(stub.comment + ' '));
+    expect(sdocco('/* {comment}\n\n{comment} */\n{code}'.supplant(stub))).to.eql([{
+      code: stub.code + '\n',
+      docs: docs
+    }]);
+  });
+
   it('interprets html in comment as a paragraph', function() {
     var stub = {
       comment: ' <strong>example</strong> ',
@@ -115,17 +129,4 @@ describe('styledocco', function() {
     }]);
   });
 
-  it('identifies separate nodes with an empty line', function() {
-    var stub = {
-      comment: 'example',
-      code: 'html {}'
-    };
-    var docs = node_array()
-    docs.push(helper.parse_tree.paragraph(' ' + stub.comment));
-    docs.push(helper.parse_tree.paragraph(stub.comment + ' '));
-    expect(sdocco('/* {comment}\n\n{comment} */\n{code}'.supplant(stub))).to.eql([{
-      code: stub.code + '\n',
-      docs: docs
-    }]);
-  });
 });
