@@ -30,6 +30,15 @@ exports.parse_tree = {
       text: s
     };
   },
+  heading: function(d, s) {
+    var n = this.custom("heading", s);
+    n.depth = d;
+    delete n.text;  // chai eql depends on order of properties
+    n.text = s;
+    return n;
+  },
   paragraph: function(s) { return this.custom("paragraph", s); },
-  code:      function(s) { return this.custom("code", s); }
+  heading1:  function(s) { return this.heading(1, s.substr(2).trim()); },
+  heading2:  function(s) { return this.heading(2, s.substr(3).trim()); },
+  code:      function(s) { return this.custom("code", s);      }
 };

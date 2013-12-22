@@ -32,6 +32,14 @@ describe('styledocco', function() {
   var code_node = function(s) {
     return build_node("code", s);
   }
+
+  var heading1_node = function(s) {
+    return build_node("heading1", s);
+  };
+
+  var heading2_node = function(s) {
+    return build_node("heading2", s);
+  };
   
   it('produces an empty token from an empty comment', function() {
     expect(sdocco('/* */')).to.eql([{
@@ -129,4 +137,41 @@ describe('styledocco', function() {
     }]);
   });
 
+  it('interprets a line begining with # as a heading of depth 1', function() {
+    var stub = {
+      comment: ' #example ',
+      code: 'html {}'
+    };
+    expect(sdocco('/*{comment}*/\n{code}'.supplant(stub))).to.eql([{
+      code: stub.code + '\n',
+      docs: heading1_node(stub.comment)
+    }]);
+  });
+
+  it('interprets a line begining with ## as a heading of depth 2', function() {
+    var stub = {
+      comment: ' ##example ',
+      code: 'html {}'
+    };
+    expect(sdocco('/*{comment}*/\n{code}'.supplant(stub))).to.eql([{
+      code: stub.code + '\n',
+      docs: heading2_node(stub.comment)
+    }]);
+  });
+
+  it('interprets a line after a heading as a different node', function() {
+    var stub = {
+      comment: '#example\n',
+      example: '    <code>',
+      code: 'html {}'
+    };
+    var docs = node_array()
+    docs.push(helper.parse_tree.heading1(' ' + stub.comment));
+    docs.push(helper.parse_tree.code(stub.example.trim()));
+
+    expect(sdocco('/*{comment}{example}*/\n{code}'.supplant(stub))).to.eql([{
+      code: stub.code + '\n',
+      docs: docs
+    }]);
+  });
 });
