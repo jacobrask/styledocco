@@ -1,10 +1,7 @@
 var gather = require('../src/gather')
   , expect = require('chai').expect
+  , helper = require('./helpers')
   ;
-
-function this_dir(s) {
-  return __dirname + '/' + (s || '');
-}
 
 // Allow non-mocha frameworks to skip over these tests.
 if (!global.describe) { process.exit(); }
@@ -19,7 +16,7 @@ describe('gather', function() {
 
   describe('files', function() {
     it('Ignores hidden files', function(done) {
-      gather({"in": [this_dir('fixtures/input-files')]}).files(function(err, files) {
+      gather({"in": [helper.this_dir('fixtures/input-files')]}).files(function(err, files) {
         for (var i in files) {
           expect(files[i]).to.not.match(/^\./);
         }
@@ -28,7 +25,7 @@ describe('gather', function() {
     });
 
     it('has a file extension matching the allowed file types', function(done) {
-      gather({"in": [this_dir('fixtures/input-files')]}).files(function(err, files) {
+      gather({"in": [helper.this_dir('fixtures/input-files')]}).files(function(err, files) {
         for (var i in files) {
           // Expect css, scss, sass, less, or styl.
           expect(files[i]).to.match(/.*\.(s?[ca]ss|less|styl)$/);
