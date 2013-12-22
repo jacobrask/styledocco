@@ -113,6 +113,7 @@ var cli = function(options) {
         cb(null, data);
       });
     }, function(err, files) {
+      // 2.5 Pre-render
       for (var i = 0, len = files.length; i < len; ++i) {
         styledocco.escapeHtml(files[i].docs);
         files[i].docs = styledocco.makeSections(files[i].docs);
@@ -137,6 +138,7 @@ var cli = function(options) {
       var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
       // Render files
       var htmlFiles = files.map(function(file) {
+        //console.log('file', file);
         var relativePath = file.path.split('/');
         relativePath.pop();
         relativePath = dirUp(options.out.split('/').length) + relativePath.join('/');
