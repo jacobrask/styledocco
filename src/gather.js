@@ -38,6 +38,7 @@ var resourcesDir = __dirname + '/../share/';
 
 // TODO Write unit tests for these
 module.exports = function(options) {
+  // TODO: Cache each method result so that we can treat these as resources.
   return {
     template: function(cb) {
       fs.readFile(resourcesDir + 'docs.jade', 'utf8', function(err, contents) {

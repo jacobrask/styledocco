@@ -108,70 +108,71 @@ var cli = function(options) {
     // Run files through preprocessor and StyleDocco parser.
     async.map(resources.files, function(file, cb) {
       async.parallel(extract(options, file), function(err, data) {
-        if (err != null) return cb(err);
         data.path = file;
         cb(null, data);
       });
     }, function(err, files) {
-      // 2.5 Pre-render
-      for (var i = 0, len = files.length; i < len; ++i) {
-        styledocco.escapeHtml(files[i].docs);
-        files[i].docs = styledocco.makeSections(files[i].docs);
-      }
-      // 3. Render
-      if (err != null) throw err;
-      // Get the combined CSS from all files.
-      var previewStyles = helper.pluck(files, 'css').join('');
-      previewStyles += resources.previews.css;
-      // Build a JSON string of all files and their headings, for client side search.
-      var searchIndex = helper.flatten(files.map(function(file) {
-        var arr = [ { title: baseFilename(file.path),
-                      filename: basePathname(file.path, options.basePath),
-                      url: htmlFilename(file.path, options.basePath) } ];
-        return arr.concat(file.docs.map(function(section) {
-          return { title: section.title,
-                   filename: basePathname(file.path, options.basePath),
-                   url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
+      async.map(files, function(data, cb) {
+        // 2.5 Pre-render
+        if (err != null) return cb(err);
+        styledocco.escapeHtml(data.docs);
+        data.docs = styledocco.makeSections(data.docs);
+        cb(null, data);
+      }, function(err, files) {
+        // 3. Render
+        if (err != null) throw err;
+        // Get the combined CSS from all files.
+        var previewStyles = helper.pluck(files, 'css').join('');
+        previewStyles += resources.previews.css;
+        // Build a JSON string of all files and their headings, for client side search.
+        var searchIndex = helper.flatten(files.map(function(file) {
+          var arr = [ { title: baseFilename(file.path),
+                        filename: basePathname(file.path, options.basePath),
+                        url: htmlFilename(file.path, options.basePath) } ];
+          return arr.concat(file.docs.map(function(section) {
+            return { title: section.title,
+                     filename: basePathname(file.path, options.basePath),
+                     url: htmlFilename(file.path, options.basePath) + '#' + section.slug };
+          }));
         }));
-      }));
-      searchIndex = 'var searchIndex=' + JSON.stringify(searchIndex) + ';';
-      var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
-      // Render files
-      var htmlFiles = files.map(function(file) {
-        //console.log('file', file);
-        var relativePath = file.path.split('/');
-        relativePath.pop();
-        relativePath = dirUp(options.out.split('/').length) + relativePath.join('/');
-        return {
-          path: file.path,
+        searchIndex = 'var searchIndex=' + JSON.stringify(searchIndex) + ';';
+        var docsScript = '(function(){' + searchIndex + resources.docs.js + '})();';
+        // Render files
+        var htmlFiles = files.map(function(file) {
+          var relativePath = file.path.split('/');
+          relativePath.pop();
+          relativePath = dirUp(options.out.split('/').length) + relativePath.join('/');
+          return {
+            path: file.path,
+            html: resources.template({
+              title: baseFilename(file.path),
+              sections: file.docs,
+              project: { name: options.name, menu: menu },
+              resources: {
+                docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) },
+                previews: { js: helper.minjs(resources.previews.js), css: helper.mincss(helper.urlsRelative(previewStyles, relativePath)) }
+              }
+            })
+          };
+        });
+        // Add readme with "fake" index path.
+        htmlFiles.push({
+          path: path.join(options.basePath, 'index'),
           html: resources.template({
-            title: baseFilename(file.path),
-            sections: file.docs,
+            title: '',
+            sections: styledocco.makeSections(styledocco.parseDocs([{ docs: resources.readme, code: '' }])),
             project: { name: options.name, menu: menu },
             resources: {
-              docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) },
-              previews: { js: helper.minjs(resources.previews.js), css: helper.mincss(helper.urlsRelative(previewStyles, relativePath)) }
+              docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) }
             }
           })
-        };
-      });
-      // Add readme with "fake" index path.
-      htmlFiles.push({
-        path: path.join(options.basePath, 'index'),
-        html: resources.template({
-          title: '',
-          sections: styledocco.makeSections(styledocco.parseDocs([{ docs: resources.readme, code: '' }])),
-          project: { name: options.name, menu: menu },
-          resources: {
-            docs: { js: helper.minjs(docsScript), css: helper.mincss(resources.docs.css) }
-          }
-        })
-      });
-      // Write files to the output dir.
-      htmlFiles.forEach(function(file) {
-        var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
-        log('styledocco: writing ' + file.path + ' -> ' + dest);
-        fs.writeFileSync(dest, file.html);
+        });
+        // Write files to the output dir.
+        htmlFiles.forEach(function(file) {
+          var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
+          log('styledocco: writing ' + file.path + ' -> ' + dest);
+          fs.writeFileSync(dest, file.html);
+        });
       });
     });
   });

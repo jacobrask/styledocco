@@ -94,7 +94,7 @@ var escapeHtml = function(blocks) {
             token.pre = true;
             token.text = '<textarea class="preview-code" spellcheck="false">' + htmlEntities(token.text) + '</textarea>';
           // Add permalink `id`s and some custom properties to headings.
-          // TODO Move this to the template.
+            // TODO Move this to the template.
           } else if (token.type === 'heading') {
             var slug = slugify(token.text);
             token.type = 'html';
