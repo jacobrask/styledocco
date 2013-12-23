@@ -27,11 +27,13 @@
     "jshint": "0.7.x",
     "nodeunit": "0.7.x",
     "chai": "latest",
-    "mocha": "latest"
+    "mocha": "latest",
+    "istanbul": "latest"
   },
   "main": "./styledocco",
   "bin": "./bin/styledocco",
   "scripts": {
-    "test": "nodeunit test; mocha test"
+    "test": "nodeunit test; mocha test",
+    "coverage": "istanbul cover _mocha -- -R spec"
   }
 }
