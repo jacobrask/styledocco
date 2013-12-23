@@ -139,7 +139,7 @@ describe('styledocco', function() {
 
   it('interprets a line begining with # as a heading of depth 1', function() {
     var stub = {
-      comment: ' #example ',
+      comment: ' #heading ',
       code: 'html {}'
     };
     expect(sdocco('/*{comment}*/\n{code}'.supplant(stub))).to.eql([{
@@ -150,7 +150,7 @@ describe('styledocco', function() {
 
   it('interprets a line begining with ## as a heading of depth 2', function() {
     var stub = {
-      comment: ' ##example ',
+      comment: ' ##heading ',
       code: 'html {}'
     };
     expect(sdocco('/*{comment}*/\n{code}'.supplant(stub))).to.eql([{
@@ -161,7 +161,7 @@ describe('styledocco', function() {
 
   it('interprets a line after a heading as a different node', function() {
     var stub = {
-      comment: '#example\n',
+      comment: '#heading\n',
       example: '    <code>',
       code: 'html {}'
     };
@@ -172,6 +172,30 @@ describe('styledocco', function() {
     expect(sdocco('/*{comment}{example}*/\n{code}'.supplant(stub))).to.eql([{
       code: stub.code + '\n',
       docs: docs
+    }]);
+  });
+
+  it('strips leading and trailing whitespace from heading1 nodes', function() {
+    var stub = {
+      comment: '#  heading \n',
+      code: 'html {}'
+    };
+
+    expect(sdocco('/*{comment}*/\n{code}'.supplant(stub))).to.eql([{
+      code: stub.code + '\n',
+      docs: heading1_node(stub.comment)
+    }]);
+  });
+
+  it('strips leading and trailing whitespace from heading2 nodes', function() {
+    var stub = {
+      comment: '##  heading \n',
+      code: 'html {}'
+    };
+
+    expect(sdocco('/*{comment}*/\n{code}'.supplant(stub))).to.eql([{
+      code: stub.code + '\n',
+      docs: heading2_node(stub.comment)
     }]);
   });
 });
