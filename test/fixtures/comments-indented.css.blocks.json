@@ -1,0 +1,6 @@
+[
+  {
+    "docs": "input[type=\"text\"] {\n    background: white;\n}",
+    "code": "body {\n    background: white;\n}\n\n"
+  }
+]
