@@ -7,7 +7,7 @@ marked.setOptions({ sanitize: false, gfm: true });
 // Regular expressions to match comments. We only match comments in
 // the beginning of lines. 
 var commentRegexs = {
-  single: /^\/\//, // Single line comments for Sass, Less and Stylus
+  single: /^\s*\/\//, // Single line comments for Sass, Less and Stylus
   multiStart: /^\/\*/,
   multiEnd: /\*\//
 };
