@@ -76,6 +76,12 @@ Tips and tricks
 Change Log
 ==========
 
+v0.6.6 - Jan 28, 2014
+---------------------
+
+ * Fix failure to render iframes in new versions of Chrome (#100)
+ * Make it an option to minify the code (#106)
+
 v0.6.5 - Nov 17, 2013
 ---------------------
 
