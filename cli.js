@@ -105,7 +105,7 @@ var getFiles = function(inPath, cb) {
 // Make `link` objects for the menu.
 var menuLinks = function(files, basePath) {
   return files.map(function(file) {
-    var parts = path.dirname(file).split('/');
+    var parts = path.dirname(file).split(path.sep);
     parts.shift(); // Remove base directory name
     return {
       name: baseFilename(file),
