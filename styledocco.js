@@ -11,13 +11,26 @@ var commentRegexs = {
   multiEnd: /\*\//
 };
 
+// Hashing identification from national header
+var hashCode = function(str) {
+  var hash = 0, i, chr, len;
+  if (str.length == 0) return hash;
+  for (i = 0, len = str.length; i < len; i++) {
+    chr   = str.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 // Make an URL slug from `str`.
 var slugify = function(str) {
-  return encodeURIComponent(
+  var slug = encodeURIComponent(
     str.trim().toLowerCase()
       .replace(/[^\w ]+/g,'')
       .replace(/ +/g,'-')
   );
+  return slug.length <= 1 ? hashCode(str) : slug;
 };
 
 // Check if a string is code or a comment (and which type of comment).
