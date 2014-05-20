@@ -113,8 +113,7 @@ var separate = function(css) {
     }
     
     // Remove empty line start in document
-    docs = trimNewLines(docs);
-    if(docs.length) {
+    if(trimNewLines(docs).length) {
       blocks.push({ docs: docs, code: code });
     }
   }
