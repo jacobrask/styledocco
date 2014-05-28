@@ -34,14 +34,14 @@ var applyPseudoStyles = function () {
     .join('');
   if (processedPseudoClasses.length) {
     // Add a new style element with the processed pseudo class styles.
-    var head = document.head || document.getElementsByTagName('head')[0],
-    style = document.createElement('style');
-    if (style.styleSheet) {
-      style.styleSheet.cssText = processedPseudoClasses;
+    var headTag = document.head || document.getElementsByTagName('head')[0],
+    styleEl = document.createElement('style');
+    if (styleEl.styleSheet) {
+      styleEl.styleSheet.cssText = processedPseudoClasses;
     } else {
-      style.appendChild(document.createTextNode(processedPseudoClasses));
+      styleEl.appendChild(document.createTextNode(processedPseudoClasses));
     }
-    head.appendChild(style);
+    headTag.appendChild(styleEl);
   }
 };
 
