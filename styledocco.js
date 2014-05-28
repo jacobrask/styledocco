@@ -7,24 +7,44 @@ marked.setOptions({ sanitize: false, gfm: true });
 // the beginning of lines. 
 var commentRegexs = {
   single: /^\/\//, // Single line comments for Sass, Less and Stylus
+  multiStartIgnore: /^\/\*+\!/, // Multi line ignore documentation
   multiStart: /^\/\*/,
   multiEnd: /\*\//
 };
 
+// Hashing identification from national header
+var hashCode = function(str) {
+  var hash = 0, i, chr, len;
+  if (str.length == 0) return hash;
+  for (i = 0, len = str.length; i < len; i++) {
+    chr   = str.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 // Make an URL slug from `str`.
 var slugify = function(str) {
-  return encodeURIComponent(
+  var slug = encodeURIComponent(
     str.trim().toLowerCase()
       .replace(/[^\w ]+/g,'')
       .replace(/ +/g,'-')
   );
+  return slug.length <= 1 ? hashCode(str) : slug;
 };
 
 // Check if a string is code or a comment (and which type of comment).
 var checkType = function(str) {
+  // Checking ignoring multi line comments
+  if (str.match(commentRegexs.multiStartIgnore) && str.match(commentRegexs.multiEnd)) {
+    return 'ignore';
   // Treat multi start and end on same row as a single line comment.
-  if (str.match(commentRegexs.multiStart) && str.match(commentRegexs.multiEnd)) {
+  } else if (str.match(commentRegexs.multiStart) && str.match(commentRegexs.multiEnd)) {
     return 'single';
+  // Checking for ignoring multi line comments first to avoid matching single line
+  } else if (str.match(commentRegexs.multiStartIgnore)) {
+    return 'multistartignore';
   // Checking for multi line comments first to avoid matching single line
   // comment symbols inside multi line blocks.
   } else if (str.match(commentRegexs.multiStart)) {
@@ -65,6 +85,17 @@ var separate = function(css) {
   var docs, code, line, blocks = [];
   while (lines.length) {
     docs = code = '';
+    // A multi line ignoring comment starts here, add lines until comment ends.
+    if (lines.length && checkType(lines[0]) === 'multistartignore') {
+      while (lines.length) {
+        line = lines.shift();
+        if (checkType(line) === 'multiend') break;
+      }
+    }
+    // First check for any single line ignore comments.
+    while (lines.length && checkType(lines[0]) === 'ignore') {
+      line = lines.shift();
+    }
     // First check for any single line comments.
     while (lines.length && checkType(lines[0]) === 'single') {
       docs += formatDocs(lines.shift());
@@ -80,7 +111,11 @@ var separate = function(css) {
     while (lines.length && (checkType(lines[0]) === 'code' || checkType(lines[0]) === 'multiend')) {
       code += formatCode(lines.shift());
     }
-    blocks.push({ docs: docs, code: code });
+    
+    // Remove empty line start in document
+    if(trimNewLines(docs).length) {
+      blocks.push({ docs: docs, code: code });
+    }
   }
   return blocks;
 };

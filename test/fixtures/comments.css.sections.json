@@ -3,6 +3,6 @@
     "title": "",
     "slug": "",
     "docs": "<p>input[type=&quot;text&quot;] {\n    background: white;\n}</p>",
-    "code": "body {\n    background: white;\n}"
+    "code": ""
   }
 ]
