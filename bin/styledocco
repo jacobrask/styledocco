@@ -23,7 +23,7 @@ var commonprefix = function(arr) {
     }
     return res;
   });
-  var lastSlash = prefix.lastIndexOf(path.sep || '/');
+  var lastSlash = prefix.lastIndexOf(path.sep);
   return lastSlash === -1 ? prefix : prefix.substr(0, lastSlash+1);
 };
 
