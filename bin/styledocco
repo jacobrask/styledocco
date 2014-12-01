@@ -17,12 +17,14 @@ if (optimist.argv.version != null) {
 var commonprefix = function(arr) {
   if (!arr.length) return null;
   if (arr.length === 1) return arr[0];
-  return arr.reduce(function(res, cur) {
+  var prefix =  arr.reduce(function(res, cur) {
     while (res !== cur.slice(0, res.length)) {
       res = res.slice(0, -1);
     }
     return res;
   });
+  var lastSlash = prefix.lastIndexOf(path.sep);
+  return lastSlash === -1 ? prefix : prefix.substr(0, lastSlash+1);
 };
 
 var isArray = function(obj) {
