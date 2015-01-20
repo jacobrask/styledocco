@@ -47,7 +47,7 @@ Generate documentation for *My Project* in the `mydocs` folder, from source file
 
 Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the Twitter Bootstap theme
 
-`styledocco -n "My Project" -o mydocs -s mydocs --theme=/styledocco-bootstrap-theme/share/
+`styledocco -n "My Project" -o mydocs -s mydocs --theme=/styledocco-bootstrap-theme/share/`
 
 Syntax
 ------
