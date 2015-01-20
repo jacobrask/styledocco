@@ -40,7 +40,7 @@ var options = optimist
   .describe('minify', 'Minify CSS/JavaScript')['default']('minify', true)
   .describe('verbose', 'Print status messages to stdout')
   .describe('version', 'Display StyleDocco version')
-  .describe('template', 'Sets the route folder for you style')
+  .describe('theme', 'Sets the route folder for you style')
   .argv;
 
 options['in'] = options._.length ? options._ : ['./'];

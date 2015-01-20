@@ -1,0 +1,73 @@
+!!! 5
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title
+      if title && project.name
+        #{title} | #{project.name}
+      else if project.name
+        #{project.name}
+      else if title
+        #{title}
+    link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
+    link(rel='stylesheet', href='http://getbootstrap.com/assets/css/docs.min.css')
+    if (resources.docs && resources.docs.css)
+      style !{resources.docs.css}
+    if (resources.previews && resources.previews.js)
+      script(type="text/preview") !{resources.previews.js}
+    if (resources.previews && resources.previews.css)
+      style(type="text/preview") !{resources.previews.css}
+  body
+    header.navbar.navbar-static-top.bs-docs-nav#top(role='banner')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.bs-navbar-collapse')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='index.html') #{project.name}
+        nav.collapse.navbar-collapse.bs-navbar-collapse(role='navigation')
+          ul.nav.navbar-nav
+            - var dropdownid = 0
+            each links, folder in project.menu
+              if folder != './' || links.length > 10
+                - if (folder === './') folder = 'files'
+                - dropdownid++
+                li.dropdown
+                  a.dropdown-toggle(href="#", data-toggle="dropdown") #{folder}&nbsp;
+                    b.caret
+                  ul.dropdown-menu
+                    each link in links
+                      li: a(href="#{link.href}") #{link.name}
+              else
+                each link in links
+                  li: a(href="#{link.href}") #{link.name}
+    #content.bs-docs-header
+      .container
+        h1
+          if title && project.name
+            #{title}
+          else if project.name
+            #{project.name}
+    .container.bs-docs-container
+        .row
+          .col-md-9(role='main')
+             each section, i in sections
+              .bs-docs-section
+                !{section.docs}
+          .col-md-3
+            .bs-docs-sidebar.hidden-print(role='complementary')
+              ul.nav.bs-docs-sidenav
+              a.back-to-top(href="#top") Back to top
+    footer.bs-docs-footer(role="contentinfo")
+      .container
+        p &copy; #{project.name}
+    if (resources.docs && resources.docs.js)
+      script !{resources.docs.js}
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
+    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
+    script(src='http://getbootstrap.com/assets/js/docs.min.js')
+<!-- Generated with StyleDocco (http://jacobrask.github.com/styledocco). -->
