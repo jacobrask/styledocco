@@ -31,7 +31,7 @@ Options
  * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "~/bin/lessc"`)
  * `--include`         Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include mysite.css --include app.js`)
  * `--verbose`         Show log messages when generating the documentation. *(default: false)*
- * `--template`        Use a different template
+ * `--theme` 	       Use a different template
  *                     Stylesheet (or directory of stylesheets) to process.
 
 Usage examples
@@ -48,7 +48,7 @@ Generate documentation for *My Project* in the `mydocs` folder, from source file
 
 Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. specify a custom template
 
-`styledocco -n "My Project" -o mydocs -s mydocs --template=styledocco-bootstrap-theme/share/
+`styledocco -n "My Project" -o mydocs -s mydocs --theme=styledocco-bootstrap-theme/share/
 
 
 
