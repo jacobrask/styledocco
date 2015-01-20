@@ -31,6 +31,7 @@ Options
  * `--preprocessor`    Custom preprocessor command. *(optional)* (ex: `--preprocessor "~/bin/lessc"`)
  * `--include`         Include specified CSS and/or JavaScript files in the previews. *(optional)* (ex: `--include mysite.css --include app.js`)
  * `--verbose`         Show log messages when generating the documentation. *(default: false)*
+ * `--theme`           Specify a theme to use [Twitter Bootsrap Theme](https://github.com/konitter/styledocco-bootstrap-theme)
  *                     Stylesheet (or directory of stylesheets) to process.
 
 Usage examples
@@ -44,6 +45,9 @@ Generate documentation for *My Project* in the `mydocs` folder, from source file
 
 `styledocco -n "My Project" -o mydocs -s mydocs --preprocessor "scss --compass" styles`
 
+Generate documentation for *My Project* in the `mydocs` folder, from source files in the `styles` folder. Use the Twitter Bootstap theme
+
+`styledocco -n "My Project" -o mydocs -s mydocs --theme=/styledocco-bootstrap-theme/share/`
 
 Syntax
 ------
@@ -75,6 +79,11 @@ Tips and tricks
 
 Change Log
 ==========
+
+v0.6.67- Jan 20, 2015
+---------------------
+
+ * Added option to allow themes to be used
 
 v0.6.6 - Jan 28, 2014
 ---------------------
