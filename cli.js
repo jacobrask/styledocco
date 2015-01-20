@@ -162,9 +162,9 @@ var preprocess = function(file, pp, options, cb) {
 
 
 var cli = function(options) {
-
+  
   var errorMessages = { noFiles: 'No css files found' };
-  var resourcesDir = __dirname + '/share/';
+  var resourcesDir = (options.template == null) ? __dirname + '/share/' : options.template;
 
   // Filetypes and matching preprocessor binaries.
   var fileTypes = {
@@ -194,6 +194,7 @@ var cli = function(options) {
   // Fetch all static resources.
   async.parallel({
     template: function(cb) {
+      console.log(resourcesDir + 'docs.jade')
       fs.readFile(resourcesDir + 'docs.jade', 'utf8', function(err, contents) {
         if (err != null) return cb(err);
         cb(null, jade.compile(contents));

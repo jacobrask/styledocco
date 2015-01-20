@@ -1,0 +1,3 @@
+[submodule "styledocco-bootstrap-theme"]
+	path = styledocco-bootstrap-theme
+	url = https://github.com/konitter/styledocco-bootstrap-theme.git
