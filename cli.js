@@ -2,7 +2,7 @@
 
 var async = require('async');
 var cleancss = require('clean-css');
-var spawn = require('child_process').spawn;
+var spawn = require('cross-spawn');
 var findit = require('findit');
 var fs = require('fs');
 var jade = require('jade');
